@@ -1,8 +1,9 @@
 // import "reflect-metdata";
+import 'dotenv/config'
 import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from "@apollo/server/standalone";
 
-// import db from "./db";
+import db from "./db";
 import { buildSchema } from "type-graphql";
 
 
