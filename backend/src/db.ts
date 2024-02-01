@@ -8,6 +8,6 @@ export default new DataSource({
     password: process.env.PASSWORD_DB,
     database: process.env.DATABASE_DB,
     synchronize : true,
-    logging: ["query", "error"]
-    // entities : ['src/entities/*.ts']
+    logging: ["query", "error"],
+    entities : ['src/entities/*.ts']
 })

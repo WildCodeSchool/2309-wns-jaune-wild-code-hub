@@ -1,0 +1,43 @@
+services:
+  backend:
+    build:  ./backend
+    ports: 
+    - 4000:4000
+    volumes:
+      - ./backend/src:/app/src
+    environment:
+      - WDS_SOCKET_HOST=127.0.0.1
+      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true
+    depends_on:
+      db:
+        condition: service_healthy
+    # env_file: 
+    #   - ./backend/.env
+  db:
+    image: postgres
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d wildcodehub -U root"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: wildcodehub
+    ports:
+      - 5433:5432
+    volumes:
+      - wildcodehub-data:/var/lib/postgresql/data
+  adminer:
+    image: adminer
+    depends_on:
+      - db
+    restart: always
+    ports:
+      - 8081:8080
+
+volumes:
+  wildcodehub-data:
+
