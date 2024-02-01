@@ -3,10 +3,10 @@ import {
     PrimaryGeneratedColumn,
     CreateDateColumn,
     Column,
-    // ManyToOne,
-    // JoinTable,
-    // ManyToMany,
-    // UpdateDateColumn,
+    ManyToOne,
+    JoinTable,
+    ManyToMany,
+    UpdateDateColumn,
   } from "typeorm";
   import { Length, Min } from "class-validator";
   import { Field, Float, ID, InputType, ObjectType } from "type-graphql";
