@@ -3,7 +3,7 @@ import {
   User,
 } from "../entities/user.entity";
 import datasource from "../db";
-import { validate } from "class-validator";
+// import { validate } from "class-validator";
 // import AggregateError from "aggregate-error";
 export default class AdsService {
   db: Repository<User>;

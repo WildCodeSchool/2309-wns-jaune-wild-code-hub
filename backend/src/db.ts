@@ -2,12 +2,13 @@ import { DataSource } from "typeorm";
 
 export default new DataSource({
     type: "postgres",
-    host : process.env.HOST_DB,
+    host : "db",
     port : 5432,
-    username : process.env.USERNAME_DB,
-    password: process.env.PASSWORD_DB,
-    database: process.env.DATABASE_DB,
+    username : "root",
+    password: "root",
+    database: "wildcodehub",
     synchronize : true,
     logging: ["query", "error"],
     entities : ['src/entities/*.ts']
-})
+    
+});

@@ -5,8 +5,6 @@
   "main": "index.ts",
   "scripts": {
     "start": "ts-node-dev --watch ./src ./src/index.ts",
-    "loadFixtures": "fixtures-ts-node-esm load ./src/fixtures --dataSource=./src/db.ts --sync",
-    "loadFixturesLocal": "fixtures-ts-node-esm load ./src/fixtures --dataSource=./src/dbLocalFixtures.ts --sync",
     "generate": "graphql-codegen --watch"
   },
   "author": "",

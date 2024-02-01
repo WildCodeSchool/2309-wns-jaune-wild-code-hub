@@ -58,15 +58,15 @@ export class User {
   ban: boolean;
 
   @Field()
-  @Column()
+  @CreateDateColumn({default: () => "CURRENT_TIMESTAMP"})
   last_login: Date;
 
   @Field()
-  @Column()
+  @CreateDateColumn({default: () => "CURRENT_TIMESTAMP"})
   created_at: Date;
 
   @Field()
-  @Column()
+  @CreateDateColumn({default: () => "CURRENT_TIMESTAMP"})
   update_at: Date;
 }
   
