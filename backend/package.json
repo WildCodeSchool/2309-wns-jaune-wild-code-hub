@@ -1,10 +1,13 @@
 {
-  "name": "backend",
+  "name": "WildCodeHubBackend",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "index.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "ts-node-dev --watch ./src ./src/index.ts",
+    "loadFixtures": "fixtures-ts-node-esm load ./src/fixtures --dataSource=./src/db.ts --sync",
+    "loadFixturesLocal": "fixtures-ts-node-esm load ./src/fixtures --dataSource=./src/dbLocalFixtures.ts --sync",
+    "generate": "graphql-codegen --watch"
   },
   "author": "",
   "license": "ISC",
