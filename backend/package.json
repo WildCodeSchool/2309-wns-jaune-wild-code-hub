@@ -13,7 +13,6 @@
     "@apollo/server": "^4.10.0",
     "@graphql-tools/load-files": "^7.0.0",
     "@graphql-tools/merge": "^9.0.1",
-    "class-validator": "^0.14.1",
     "dotenv": "^16.4.1",
     "graphql": "^16.8.1",
     "graphql-scalars": "^1.22.4",
@@ -29,6 +28,7 @@
     "@graphql-codegen/typescript-resolvers": "^4.0.1",
     "@types/cors": "^2.8.17",
     "@types/node": "^20.11.15",
+    "class-validator": "^0.14.1",
     "typeorm-fixtures-cli": "^4.0.0",
     "typescript": "^5.3.3"
   }

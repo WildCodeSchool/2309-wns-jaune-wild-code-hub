@@ -8,7 +8,7 @@ import {
 export class UserResolver {
   @Query(() => [User])
   async listUsers() {
-    const users = await new UsersService().listUsers();
+    const users = await new UsersService().list();
     return users;
   }
 }

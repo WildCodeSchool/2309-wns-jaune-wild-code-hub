@@ -5,12 +5,12 @@ import {
 import datasource from "../db";
 // import { validate } from "class-validator";
 // import AggregateError from "aggregate-error";
-export default class AdsService {
+export default class UsersService {
   db: Repository<User>;
   constructor() {
     this.db = datasource.getRepository(User);
   }
-  async listUsers() {
+  async list() {
     return this.db.find();
   }
 
