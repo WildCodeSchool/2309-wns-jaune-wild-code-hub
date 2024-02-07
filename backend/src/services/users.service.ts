@@ -1,7 +1,7 @@
 import { In, Like, Repository } from "typeorm";
 import { User, CreateUserInput } from "../entities/user.entity";
 import { validate } from "class-validator";
-import datasource from "../db";
+import datasource from "../lib/db";
 //import { aggregateErrors } from "../lib/utilities";
 // import { validate } from "class-validator";
 // import AggregateError from "aggregate-error";

@@ -1,7 +1,7 @@
 import { In, Like, Repository } from "typeorm";
-import datasource from "../db";
+import datasource from "../lib/db";
 import { Project } from "../entities/project.entity";
- 
+
 export default class ProjectsService {
   db: Repository<Project>;
   constructor() {
@@ -10,5 +10,4 @@ export default class ProjectsService {
   async list() {
     return this.db.find();
   }
-
 }
