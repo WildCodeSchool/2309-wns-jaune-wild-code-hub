@@ -11,7 +11,7 @@ async function main() {
 
   await db.initialize();
 
-  const isMigrate = false;
+  const isMigrate = true;
   
   if(isMigrate) {
     migrate(db)

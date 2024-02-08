@@ -5,6 +5,7 @@
   "main": "index.ts",
   "scripts": {
     "start": "ts-node-dev --watch ./src ./src/index.ts",
+    "migrate": "ts-node-dev src/migrate.ts",
     "generate": "graphql-codegen --watch"
   },
   "author": "",
