@@ -14,6 +14,18 @@ services:
         condition: service_healthy
     env_file: 
       - ./backend/.env
+  frontend:
+    build:  ./frontend
+    ports: 
+    - 3000:3000
+    volumes:
+      - ./frontend/src:/app/src
+    environment:
+      - WDS_SOCKET_HOST=127.0.0.1
+      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true
+    env_file: 
+      - ./frontend/.env
   db:
     image: postgres:15
     restart: always
