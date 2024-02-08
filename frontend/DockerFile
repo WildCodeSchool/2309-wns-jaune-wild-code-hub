@@ -8,8 +8,9 @@ RUN npm i
 COPY src src
 COPY public public
 COPY codegen.ts .
-COPY next.config.js .
+COPY next.config.mjs .
 COPY tsconfig.json .
+
 
 
 CMD npm run dev
