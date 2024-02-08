@@ -2,8 +2,8 @@ import { DataSource } from "typeorm";
 
 export default new DataSource({
   type: "postgres",
-  host: "db",
-  port: 5432,
+  host: "localhost",
+  port: 5434,
   username: "root",
   password: "root",
   database: "wildcodehub-test",
