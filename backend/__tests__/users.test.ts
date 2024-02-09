@@ -26,6 +26,7 @@ export const FIND_USER_BY_ID = `#graphql
         }
     }
 `;
+
 export const CREATE_USER = `#graphql
     mutation Users($data: CreateUserInput!) {
       createUser(data: $data) {            
@@ -59,6 +60,13 @@ export const UPDATE_USER = `#graphql
     }
   }
 `
+export const DELETE_USER = `#graphql
+    mutation User ($id: Float!) {
+      deleteUser(id: $id) {            
+          pseudo
+        }
+    }
+`;
 
 //------------------- TYPAGE ---------------------//
 
@@ -75,6 +83,10 @@ export const UPDATE_USER = `#graphql
 
   type ResponseDataUpdate = {
     updateUser: User;
+  }
+
+  type ResponseDataDelete = {
+    deleteUser: User;
   }
 
 
@@ -173,10 +185,20 @@ describe("Test for a new user", () => {
         id: "1"
       }  
     });
-    console.log("toto", JSON.stringify(response));
     assert(response.body.kind === "single");
     expect(response.body.singleResult.data?.findUserById?.firstname).toEqual("Toto");
     });
 
+    it("Delete user", async () => { 
+      const response = await server.executeOperation<ResponseDataDelete>({
+        query: DELETE_USER,   
+        variables: {
+          id : 1
+        }   
+      });
+      assert(response.body.kind === "single");
+      console.log("ksdqndfknkdfn", JSON.stringify(response.body.singleResult)); 
+      expect(response.body.singleResult.data?.deleteUser?.pseudo).toEqual("tata");
+    });
 
 });

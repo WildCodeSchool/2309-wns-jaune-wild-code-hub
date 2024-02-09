@@ -42,4 +42,13 @@ export default class UsersService {
     }
     return await this.db.save(userToSave);
   }
+
+  async delete (id: number) {
+    const userToDelete = await this.find(id);
+    if (!userToDelete) {
+      throw new Error("L'user n'existe pas!");
+    }
+
+    return await this.db.remove(userToDelete);
+  }
 }

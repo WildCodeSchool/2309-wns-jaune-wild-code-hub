@@ -34,4 +34,10 @@ export class UserResolver {
     const updateUser = await new UsersService().update(+id, otherData);
     return updateUser;
   }
+
+  @Mutation(() => User)
+  async deleteUser(@Arg("id") id: number) {
+    const delUser = await new UsersService().delete(id);
+    return delUser;
+  }
 }
