@@ -105,3 +105,31 @@ export class CreateUserInput {
   @Field()
   run_counter: number;
 }
+
+@InputType()
+export class UpdateUserInput {
+
+  @Field(() => ID)
+  id: number;
+
+  @Field({ nullable: true })
+  lastname: string;
+
+  @Field({ nullable: true })
+  firstname: string;
+
+  @Field({ nullable: true })
+  pseudo: string;
+
+  @Field({ nullable: true })
+  email: string;
+
+  @Field({ nullable: true })
+  password: string;
+
+  @Field({ nullable: true })
+  ban: boolean;
+
+  @Field({ nullable: true })
+  run_counter: number;
+}
