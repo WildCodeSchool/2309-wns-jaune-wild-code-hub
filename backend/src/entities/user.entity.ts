@@ -66,6 +66,10 @@ export class User {
   ban: boolean;
 
   @Field()
+  @Column({ default: 1 })
+  run_counter: number;
+
+  @Field()
   @CreateDateColumn({ default: () => "CURRENT_TIMESTAMP" })
   last_login: Date;
 
@@ -97,4 +101,7 @@ export class CreateUserInput {
 
   @Field()
   ban: boolean;
+
+  @Field()
+  run_counter: number;
 }
