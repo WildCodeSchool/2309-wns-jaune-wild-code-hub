@@ -3,12 +3,14 @@ services:
     build:  ./backend
     ports: 
     - 4000:4000
+    profiles: ["dev", "production", "test"]
     volumes:
       - ./backend/src:/app/src
     environment:
       - WDS_SOCKET_HOST=127.0.0.1
       - CHOKIDAR_USEPOLLING=true
       - WATCHPACK_POLLING=true
+      
     depends_on:
       db:
         condition: service_healthy
@@ -18,6 +20,7 @@ services:
      build: ./frontend
      ports:
        - 3000:3000
+     profiles: ["dev", "production", "test"]
      volumes:
        - ./frontend/src:/app/src
      environment:
@@ -29,6 +32,7 @@ services:
     #    - ./.env
   db:
     image: postgres:15
+    profiles: ["dev", "production", "test"]
     restart: always
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -d wildcodehub -U root"]
@@ -45,6 +49,7 @@ services:
       - wildcodehub-data:/var/lib/postgresql/data
   adminer:
     image: adminer
+    profiles: ["dev", "production", "test"]
     depends_on:
       - db
     restart: always
@@ -53,6 +58,7 @@ services:
 
   db_test:
     image: postgres:15
+    profiles: ["test"]
     restart: always
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -d wildcodehub-test -U root"]
