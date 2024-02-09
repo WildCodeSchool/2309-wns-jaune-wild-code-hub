@@ -5,10 +5,8 @@ import datasourceInitial from "../src/lib/db"; //on importe la datasource de tes
 import datasource from "../src/lib/db_test"; //on importe la datasource initial pour le spyOn
 import { User } from "../src/entities/user.entity";
 import assert from "assert";
-import { isUUID } from "class-validator";
 
 let server: ApolloServer;
-
 
 //-------------- REQUETE APOLLO -----------------//
 export const LIST_USERS = `#graphql
@@ -43,6 +41,25 @@ export const CREATE_USER = `#graphql
     }
 `;
 
+export const UPDATE_USER = `#graphql
+  mutation User($data: UpdateUserInput!) {
+    updateUser(data: $data) {
+      id
+      last_login
+      password
+      pseudo
+      role
+      run_counter
+      update_at
+      lastname
+      firstname
+      email
+      ban
+      created_at
+    }
+  }
+`
+
 //------------------- TYPAGE ---------------------//
 
   type ResponseData = {
@@ -55,6 +72,11 @@ export const CREATE_USER = `#graphql
   type ResponseDataCreate = {
     createUser: User;
   }
+
+  type ResponseDataUpdate = {
+    updateUser: User;
+  }
+
 
 //-------------------- DATA ---------------------//
 
@@ -112,6 +134,28 @@ describe("Test for a new user", () => {
     const id = response.body.singleResult.data?.createUser?.id;     
     expect(id).not.toBeNull();   
     expect(response.body.singleResult.data?.createUser?.firstname).toEqual("Toto");
+  });
+
+  it("Update user", async () => { 
+    const response = await server.executeOperation<ResponseDataUpdate>({
+      query: UPDATE_USER,   
+      variables: {
+        data:{
+          id : 1,
+          lastname :"tata",
+          firstname : "Toto",
+          pseudo : "tata",
+          email : "tata@gmail.com",
+          password: "tata",
+          ban : false,
+          run_counter : 1
+        }
+      }   
+    });
+    assert(response.body.kind === "single");
+    const id = response.body.singleResult.data?.updateUser?.id;     
+    expect(id).not.toBeNull();   
+    expect(response.body.singleResult.data?.updateUser?.pseudo).toEqual("tata");
   });
 
   it("Find users after creation of the user in the db", async () => {
