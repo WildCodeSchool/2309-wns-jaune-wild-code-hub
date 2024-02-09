@@ -38,6 +38,7 @@ export const CREATE_USER = `#graphql
             email
             password
             ban
+            run_counter
         }
     }
 `;
@@ -102,7 +103,8 @@ describe("Test for a new user", () => {
           pseudo : "Toto",
           email : "toto@gmail.com",
           password: "toto",
-          ban : false
+          ban : false,
+          run_counter : 1
         }
       }   
     });
