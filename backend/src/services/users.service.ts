@@ -1,10 +1,10 @@
 import { In, Like, Repository } from "typeorm";
-import { User, CreateUserInput } from "../entities/user.entity";
+import { User, CreateUserInput, UpdateUserInput } from "../entities/user.entity";
 import { validate } from "class-validator";
 import datasource from "../lib/db";
 //import { aggregateErrors } from "../lib/utilities";
-// import { validate } from "class-validator";
 // import AggregateError from "aggregate-error";
+
 export default class UsersService {
   db: Repository<User>;
   constructor() {
@@ -24,13 +24,22 @@ export default class UsersService {
 
   async create(data: CreateUserInput) {
     const newUser = this.db.create({ ...data });
-
-    /* const errors = await validate(newUser);
-    console.log("ERRORS => ", errors);
-
-    if (errors.length !== 0) {
-     
-    }*/
     return await this.db.save(newUser);
+  }
+
+  async update(id: number, data: Omit<UpdateUserInput, "id">) {
+    const userToUpdate = await this.find(id);
+    if (!userToUpdate) {
+      throw new Error("L'user n'existe pas!");
+    }
+    const userToSave = this.db.merge(userToUpdate, {
+      ...data,
+    });
+    const errors = await validate(userToSave);
+    if (errors.length !== 0) {
+      console.log(errors);
+      throw new Error("il y a eu une erreur");
+    }
+    return await this.db.save(userToSave);
   }
 }
