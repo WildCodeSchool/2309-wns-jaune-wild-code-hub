@@ -163,7 +163,7 @@ describe("Test for a new user", () => {
     const response = await server.executeOperation<ResponseDataListUser>({
       query: LIST_USERS,      
     });
-    // console.log("toto", JSON.stringify(response));
+
     assert(response.body.kind === "single");
     expect(response.body.singleResult.data?.listUsers).toHaveLength(0);   
   });
@@ -184,7 +184,7 @@ describe("Test for a new user", () => {
         }
       }   
     })
-    console.log("response.body CREATE USER", response.body)
+
     assert(response.body.kind === "single");
     const id = response.body.singleResult.data?.createUser?.id;     
     expect(id).not.toBeNull();   
@@ -228,7 +228,7 @@ describe("Test for a new user", () => {
         role: "ADMIN"
       }     
     });
-    console.log("response", JSON.stringify(response.body))
+
     assert(response.body.kind === "single");
     expect(response.body.singleResult.data?.listUsersByRole).toHaveLength(1);
   });
