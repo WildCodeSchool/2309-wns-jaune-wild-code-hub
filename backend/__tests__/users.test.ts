@@ -57,7 +57,7 @@ export const FIND_USER_BY_PSEUDO = `#graphql
 
 export const CREATE_USER = `#graphql
     mutation Users($data: CreateUserInput!) {
-      createUser(data: $data) {            
+      register(data: $data) {            
             id
             lastname
             firstname
@@ -119,7 +119,7 @@ export const DELETE_USER = `#graphql
   }
 
   type ResponseDataCreate = {
-    createUser: User;
+    register: User;
   }
 
   type ResponseDataUpdate = {
@@ -186,9 +186,9 @@ describe("Test for a new user", () => {
     })
 
     assert(response.body.kind === "single");
-    const id = response.body.singleResult.data?.createUser?.id;     
+    const id = response.body.singleResult.data?.register?.id;     
     expect(id).not.toBeNull();   
-    expect(response.body.singleResult.data?.createUser?.firstname).toEqual("Toto");
+    expect(response.body.singleResult.data?.register?.firstname).toEqual("Toto");
   });
 
   it("Update user", async () => { 
@@ -207,6 +207,7 @@ describe("Test for a new user", () => {
         }
       }   
     });
+    console.log("response.body UPDATE User", JSON.stringify(response.body));
     assert(response.body.kind === "single");
     const id = response.body.singleResult.data?.updateUser?.id;     
     expect(id).not.toBeNull();   

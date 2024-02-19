@@ -1,6 +1,7 @@
 import { Arg, Float, Mutation, Query, Resolver } from "type-graphql";
 import UsersService from "../services/users.service";
 import { User, CreateUserInput, UpdateUserInput, ROLE, UserWithoutPassword } from "../entities/user.entity";
+import * as argon2 from "argon2";
 
 @Resolver()
 export class UserResolver {
@@ -51,6 +52,10 @@ export class UserResolver {
   @Mutation(() => UserWithoutPassword)
   async updateUser(@Arg("data") data: UpdateUserInput) {
     const { id, ...otherData } = data;
+    console.log(data)
+    if (otherData.password) {
+      otherData.password = await argon2.hash(otherData.password);
+    }
     const updateUser = await new UsersService().update(+id, otherData);
     return updateUser;
   }
