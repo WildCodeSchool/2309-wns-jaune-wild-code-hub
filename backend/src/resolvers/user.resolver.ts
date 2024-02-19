@@ -15,11 +15,29 @@ export class UserResolver {
     if (isNaN(+id)) {
       throw new Error("Indiquez un id correct");
     }
-    const userById = await new UsersService().find(+id);
+    const userById = await new UsersService().findById(+id);
     if (!userById) {
       throw new Error("Attention, le client n'existe pas");
     }
     return userById;
+  }
+
+  @Query(() => User)
+  async findUserByEmail(@Arg("email") email: string) {
+    const userByEmail = await new UsersService().findByEmail(email);
+    if (!userByEmail) {
+      throw new Error("Attention, le client n'existe pas");
+    }
+    return userByEmail;
+  }
+
+  @Query(() => User)
+  async findUserByPseudo(@Arg("pseudo") pseudo: string) {
+    const userByPseudo = await new UsersService().findByPseudo(pseudo);
+    if (!userByPseudo) {
+      throw new Error("Attention, le client n'existe pas");
+    }
+    return userByPseudo;
   }
 
   @Mutation(() => User)
