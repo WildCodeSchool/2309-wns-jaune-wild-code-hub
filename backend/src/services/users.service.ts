@@ -55,7 +55,7 @@ export default class UsersService {
   async update(id: number, data: Omit<UpdateUserInput, "id">) {
     const userToUpdate = await this.findById(id);
     if (!userToUpdate) {
-      throw new Error("L'user n'existe pas!");
+      throw new Error("The user does not exist !");
     }
     const userToSave = this.db.merge(userToUpdate, {
       ...data,
@@ -63,7 +63,7 @@ export default class UsersService {
     const errors = await validate(userToSave);
     if (errors.length !== 0) {
       console.log(errors);
-      throw new Error("il y a eu une erreur");
+      throw new Error("Error format data");
     }
     return await this.db.save(userToSave);
   }
@@ -71,7 +71,7 @@ export default class UsersService {
   async delete (id: number) {
     const userToDelete = await this.findById(id);
     if (!userToDelete) {
-      throw new Error("L'user n'existe pas!");
+      throw new Error("The user does not exist !");
     }
 
     return await this.db.remove(userToDelete);

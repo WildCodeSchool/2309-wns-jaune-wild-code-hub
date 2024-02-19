@@ -12,30 +12,30 @@ export class UserResolver {
 
   @Query(() => [User])
   async listUsersByRole(@Arg("role") role: ROLE) {
-    if (!role || role == null) throw new Error("Indiquez un role !");
+    if (!role || role == null) throw new Error("Indicate a role!");
     const users = await new UsersService().listByRole(role);
     return users;
   }
 
   @Query(() => User)
   async findUserById(@Arg("id") id: string) {
-    if (isNaN(+id)) throw new Error("Indiquez un id correct");
+    if (isNaN(+id)) throw new Error("Specify a correct id");
     const userById = await new UsersService().findById(+id);
-    if (!userById) throw new Error("Attention, le client n'existe pas");
+    if (!userById) throw new Error("Please note, the client does not exist");
     return userById;
   }
 
   @Query(() => User)
   async findUserByEmail(@Arg("email") email: string) {
     const userByEmail = await new UsersService().findByEmail(email);
-    if (!userByEmail) throw new Error("Attention, le client n'existe pas");
+    if (!userByEmail) throw new Error("Please note, the client does not exist");
     return userByEmail;
   }
 
   @Query(() => User)
   async findUserByPseudo(@Arg("pseudo") pseudo: string) {
     const userByPseudo = await new UsersService().findByPseudo(pseudo);
-    if (!userByPseudo) throw new Error("Attention, le client n'existe pas");
+    if (!userByPseudo) throw new Error("Please note, the client does not exist");
     return userByPseudo;
   }
 
