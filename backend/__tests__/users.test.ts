@@ -27,6 +27,24 @@ export const FIND_USER_BY_ID = `#graphql
     }
 `;
 
+export const FIND_USER_BY_EMAIL = `#graphql
+    query User ($email: String!) {
+      findUserByEmail(email: $email) {            
+            id
+            email
+        }
+    }
+`;
+
+export const FIND_USER_BY_PSEUDO = `#graphql
+    query User ($pseudo: String!) {
+      findUserByPseudo(pseudo: $pseudo) {            
+            id
+            pseudo
+        }
+    }
+`;
+
 export const CREATE_USER = `#graphql
     mutation Users($data: CreateUserInput!) {
       createUser(data: $data) {            
@@ -73,8 +91,16 @@ export const DELETE_USER = `#graphql
   type ResponseData = {
     listUsers: User[]
   }
-  type ResponseDataFindOneUser = {
+  type ResponseDataFindUserById = {
     findUserById: User;
+  }
+
+  type ResponseDataFindUserByEmail = {
+    findUserByEmail: User;
+  }
+
+  type ResponseDataFindUserByPseudo = {
+    findUserByPseudo: User;
   }
 
   type ResponseDataCreate = {
@@ -179,7 +205,7 @@ describe("Test for a new user", () => {
   });
 
   it("Find user by ID", async () => {
-    const response = await server.executeOperation<ResponseDataFindOneUser>({
+    const response = await server.executeOperation<ResponseDataFindUserById>({
       query: FIND_USER_BY_ID,  
       variables: {
         id: "1"
@@ -189,6 +215,29 @@ describe("Test for a new user", () => {
     expect(response.body.singleResult.data?.findUserById?.firstname).toEqual("Toto");
     });
 
+    it("Find user by Email", async () => {
+      const response = await server.executeOperation<ResponseDataFindUserByEmail>({
+        query: FIND_USER_BY_EMAIL,  
+        variables: {
+          email: "tata@gmail.com"
+        }  
+      });
+      console.log("response", JSON.stringify(response.body))
+      assert(response.body.kind === "single");
+      expect(response.body.singleResult.data?.findUserByEmail?.email).toEqual("tata@gmail.com");
+      });
+
+      it("Find user by Pseudo", async () => {
+        const response = await server.executeOperation<ResponseDataFindUserByPseudo>({
+          query: FIND_USER_BY_PSEUDO,  
+          variables: {
+            pseudo: "tata"
+          }  
+        });
+        assert(response.body.kind === "single");
+        expect(response.body.singleResult.data?.findUserByPseudo?.pseudo).toEqual("tata");
+        });
+
     it("Delete user", async () => { 
       const response = await server.executeOperation<ResponseDataDelete>({
         query: DELETE_USER,   
@@ -197,7 +246,6 @@ describe("Test for a new user", () => {
         }   
       });
       assert(response.body.kind === "single");
-      console.log("ksdqndfknkdfn", JSON.stringify(response.body.singleResult)); 
       expect(response.body.singleResult.data?.deleteUser?.pseudo).toEqual("tata");
     });
 

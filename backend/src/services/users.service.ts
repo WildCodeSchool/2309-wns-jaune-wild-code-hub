@@ -14,9 +14,25 @@ export default class UsersService {
     return this.db.find();
   }
 
-  async find(id: number) {
+  async findById (id: number) {
     const user = await this.db.findOne({
       where: { id },
+    });
+
+    return user;
+  }
+
+  async findByEmail (email: string) {
+    const user = await this.db.findOne({
+      where: { email },
+    });
+
+    return user;
+  }
+
+  async findByPseudo (pseudo: string) {
+    const user = await this.db.findOne({
+      where: { pseudo },
     });
 
     return user;
@@ -28,7 +44,7 @@ export default class UsersService {
   }
 
   async update(id: number, data: Omit<UpdateUserInput, "id">) {
-    const userToUpdate = await this.find(id);
+    const userToUpdate = await this.findById(id);
     if (!userToUpdate) {
       throw new Error("L'user n'existe pas!");
     }
@@ -44,7 +60,7 @@ export default class UsersService {
   }
 
   async delete (id: number) {
-    const userToDelete = await this.find(id);
+    const userToDelete = await this.findById(id);
     if (!userToDelete) {
       throw new Error("L'user n'existe pas!");
     }
