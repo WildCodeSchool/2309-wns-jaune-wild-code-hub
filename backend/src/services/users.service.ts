@@ -47,12 +47,12 @@ export default class UsersService {
     return user;
   }
 
-  async create(data: CreateUserInput) {
+  async create (data: CreateUserInput) {
     const newUser = this.db.create({ ...data });
     return await this.db.save(newUser);
   }
 
-  async update(id: number, data: Omit<UpdateUserInput, "id">) {
+  async update (id: number, data: Omit<UpdateUserInput, "id">) {
     const userToUpdate = await this.findById(id);
     if (!userToUpdate) {
       throw new Error("The user does not exist !");
