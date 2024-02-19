@@ -11,7 +11,7 @@ import {
 import { Length, Min } from "class-validator";
 import { Field, Float, ID, InputType, ObjectType } from "type-graphql";
 
-type ROLE = "ADMIN" | "USER";
+export type ROLE = "ADMIN" | "USER";
 
 @ObjectType()
 @Entity()

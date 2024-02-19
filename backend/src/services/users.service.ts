@@ -1,5 +1,5 @@
 import { In, Like, Repository } from "typeorm";
-import { User, CreateUserInput, UpdateUserInput } from "../entities/user.entity";
+import { User, CreateUserInput, UpdateUserInput, ROLE } from "../entities/user.entity";
 import { validate } from "class-validator";
 import datasource from "../lib/db";
 //import { aggregateErrors } from "../lib/utilities";
@@ -10,8 +10,17 @@ export default class UsersService {
   constructor() {
     this.db = datasource.getRepository(User);
   }
+
   async list() {
     return this.db.find();
+  }
+
+  async listByRole(role: ROLE) {
+    return this.db.find({
+      where: {
+        role : role
+      }
+    });
   }
 
   async findById (id: number) {

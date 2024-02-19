@@ -18,6 +18,16 @@ export const LIST_USERS = `#graphql
     }
 `;
 
+export const LIST_USERS_BY_ROLE = `#graphql
+    query Users ($role: String!) {
+      listUsersByRole(role: $role) {            
+            id
+            pseudo
+            role
+        }
+    }
+`;
+
 export const FIND_USER_BY_ID = `#graphql
     query User ($id: String!) {
       findUserById(id: $id) {            
@@ -88,9 +98,14 @@ export const DELETE_USER = `#graphql
 
 //------------------- TYPAGE ---------------------//
 
-  type ResponseData = {
+  type ResponseDataListUser = {
     listUsers: User[]
   }
+
+  type ResponseDataListUserByRole = {
+    listUsersByRole: User[]
+  }
+
   type ResponseDataFindUserById = {
     findUserById: User;
   }
@@ -145,7 +160,7 @@ afterAll(async () => {
 
 describe("Test for a new user", () => {
   it("Find 0 users", async () => {
-    const response = await server.executeOperation<ResponseData>({
+    const response = await server.executeOperation<ResponseDataListUser>({
       query: LIST_USERS,      
     });
     // console.log("toto", JSON.stringify(response));
@@ -197,11 +212,23 @@ describe("Test for a new user", () => {
   });
 
   it("Find users after creation of the user in the db", async () => {
-    const response = await server.executeOperation<ResponseData>({
+    const response = await server.executeOperation<ResponseDataListUser>({
       query: LIST_USERS,    
     });
     assert(response.body.kind === "single");
     expect(response.body.singleResult.data?.listUsers).toHaveLength(1);
+  });
+
+  it("Find list users by role", async () => {
+    const response = await server.executeOperation<ResponseDataListUserByRole>({
+      query: LIST_USERS_BY_ROLE,
+      variables: {
+        role: "USER"
+      }     
+    });
+    console.log("response", JSON.stringify(response.body))
+    assert(response.body.kind === "single");
+    expect(response.body.singleResult.data?.listUsersByRole).toHaveLength(1);
   });
 
   it("Find user by ID", async () => {
@@ -222,7 +249,6 @@ describe("Test for a new user", () => {
           email: "tata@gmail.com"
         }  
       });
-      console.log("response", JSON.stringify(response.body))
       assert(response.body.kind === "single");
       expect(response.body.singleResult.data?.findUserByEmail?.email).toEqual("tata@gmail.com");
       });
@@ -248,5 +274,4 @@ describe("Test for a new user", () => {
       assert(response.body.kind === "single");
       expect(response.body.singleResult.data?.deleteUser?.pseudo).toEqual("tata");
     });
-
 });

@@ -1,6 +1,6 @@
 import { Arg, Float, Mutation, Query, Resolver } from "type-graphql";
 import UsersService from "../services/users.service";
-import { User, CreateUserInput, UpdateUserInput } from "../entities/user.entity";
+import { User, CreateUserInput, UpdateUserInput, ROLE } from "../entities/user.entity";
 
 @Resolver()
 export class UserResolver {
@@ -10,33 +10,32 @@ export class UserResolver {
     return users;
   }
 
+  @Query(() => [User])
+  async listUsersByRole(@Arg("role") role: ROLE) {
+    if (!role || role == null) throw new Error("Indiquez un role !");
+    const users = await new UsersService().listByRole(role);
+    return users;
+  }
+
   @Query(() => User)
   async findUserById(@Arg("id") id: string) {
-    if (isNaN(+id)) {
-      throw new Error("Indiquez un id correct");
-    }
+    if (isNaN(+id)) throw new Error("Indiquez un id correct");
     const userById = await new UsersService().findById(+id);
-    if (!userById) {
-      throw new Error("Attention, le client n'existe pas");
-    }
+    if (!userById) throw new Error("Attention, le client n'existe pas");
     return userById;
   }
 
   @Query(() => User)
   async findUserByEmail(@Arg("email") email: string) {
     const userByEmail = await new UsersService().findByEmail(email);
-    if (!userByEmail) {
-      throw new Error("Attention, le client n'existe pas");
-    }
+    if (!userByEmail) throw new Error("Attention, le client n'existe pas");
     return userByEmail;
   }
 
   @Query(() => User)
   async findUserByPseudo(@Arg("pseudo") pseudo: string) {
     const userByPseudo = await new UsersService().findByPseudo(pseudo);
-    if (!userByPseudo) {
-      throw new Error("Attention, le client n'existe pas");
-    }
+    if (!userByPseudo) throw new Error("Attention, le client n'existe pas");
     return userByPseudo;
   }
 
