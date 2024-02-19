@@ -88,42 +88,6 @@ export class User {
   update_at: Date;
 }
 
-@ObjectType()
-export class UserWithoutPassword implements Omit<User, "password"> {
-  @Field()
-  id: number;
-
-  @Field()
-  lastname: string;
-
-  @Field()
-  firstname: string;
-
-  @Field()
-  pseudo: string;
-
-  @Field()
-  email: string;
-
-  @Field()
-  role: ROLE;
-
-  @Field()
-  ban: boolean;
-
-  @Field()
-  run_counter: number;
-
-  @Field()
-  last_login: Date;
-
-  @Field()
-  created_at: Date;
-
-  @Field()
-  update_at: Date;
-}
-
 @InputType()
 export class CreateUserInput {
   @Field()
