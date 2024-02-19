@@ -102,6 +102,9 @@ export class CreateUserInput {
   @Field()
   ban: boolean;
 
+  @Field({ nullable: true })
+  role: ROLE;
+
   @Field()
   run_counter: number;
 }
@@ -129,6 +132,9 @@ export class UpdateUserInput {
 
   @Field({ nullable: true })
   ban: boolean;
+
+  @Field({ nullable: true })
+  role: ROLE;
 
   @Field({ nullable: true })
   run_counter: number;
