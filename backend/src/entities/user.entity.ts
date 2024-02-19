@@ -1,4 +1,5 @@
 import {
+  BeforeInsert,
   Entity,
   PrimaryGeneratedColumn,
   CreateDateColumn,
@@ -10,12 +11,17 @@ import {
 } from "typeorm";
 import { Length, Min } from "class-validator";
 import { Field, Float, ID, InputType, ObjectType } from "type-graphql";
-
+import * as argon2 from "argon2";
 export type ROLE = "ADMIN" | "USER";
 
 @ObjectType()
 @Entity()
 export class User {
+  @BeforeInsert()
+  protected async hashPassword() {
+    this.password = await argon2.hash(this.password);
+  }
+
   @Field(() => ID)
   @PrimaryGeneratedColumn()
   id: number;
@@ -79,6 +85,42 @@ export class User {
 
   @Field()
   @CreateDateColumn({ default: () => "CURRENT_TIMESTAMP" })
+  update_at: Date;
+}
+
+@ObjectType()
+export class UserWithoutPassword implements Omit<User, "password"> {
+  @Field()
+  id: number;
+
+  @Field()
+  lastname: string;
+
+  @Field()
+  firstname: string;
+
+  @Field()
+  pseudo: string;
+
+  @Field()
+  email: string;
+
+  @Field()
+  role: ROLE;
+
+  @Field()
+  ban: boolean;
+
+  @Field()
+  run_counter: number;
+
+  @Field()
+  last_login: Date;
+
+  @Field()
+  created_at: Date;
+
+  @Field()
   update_at: Date;
 }
 

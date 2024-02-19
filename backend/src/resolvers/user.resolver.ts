@@ -1,6 +1,6 @@
 import { Arg, Float, Mutation, Query, Resolver } from "type-graphql";
 import UsersService from "../services/users.service";
-import { User, CreateUserInput, UpdateUserInput, ROLE } from "../entities/user.entity";
+import { User, CreateUserInput, UpdateUserInput, ROLE, UserWithoutPassword } from "../entities/user.entity";
 
 @Resolver()
 export class UserResolver {
@@ -12,7 +12,6 @@ export class UserResolver {
 
   @Query(() => [User])
   async listUsersByRole(@Arg("role") role: ROLE) {
-    if (!role || role == null) throw new Error("Indicate a role!");
     const users = await new UsersService().listByRole(role);
     return users;
   }
@@ -41,11 +40,15 @@ export class UserResolver {
 
   @Mutation(() => User)
   async createUser(@Arg("data") data: CreateUserInput) {
+    const user = await new UsersService().findByEmail(data.email);
+    if (user) {
+      throw new Error("This email is already in use!");
+    }
     const newUser = await new UsersService().create(data);
     return newUser;
   }
 
-  @Mutation(() => User)
+  @Mutation(() => UserWithoutPassword)
   async updateUser(@Arg("data") data: UpdateUserInput) {
     const { id, ...otherData } = data;
     const updateUser = await new UsersService().update(+id, otherData);
