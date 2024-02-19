@@ -39,7 +39,7 @@ export class UserResolver {
   }
 
   @Mutation(() => User)
-  async createUser(@Arg("data") data: CreateUserInput) {
+  async register(@Arg("data") data: CreateUserInput) {
     const user = await new UsersService().findByEmail(data.email);
     if (user) {
       throw new Error("This email is already in use!");
