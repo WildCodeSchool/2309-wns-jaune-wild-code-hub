@@ -179,10 +179,12 @@ describe("Test for a new user", () => {
           email : "toto@gmail.com",
           password: "toto",
           ban : false,
+          role: "ADMIN",
           run_counter : 1
         }
       }   
-    });
+    })
+    console.log("response.body CREATE USER", response.body)
     assert(response.body.kind === "single");
     const id = response.body.singleResult.data?.createUser?.id;     
     expect(id).not.toBeNull();   
@@ -223,7 +225,7 @@ describe("Test for a new user", () => {
     const response = await server.executeOperation<ResponseDataListUserByRole>({
       query: LIST_USERS_BY_ROLE,
       variables: {
-        role: "USER"
+        role: "ADMIN"
       }     
     });
     console.log("response", JSON.stringify(response.body))
