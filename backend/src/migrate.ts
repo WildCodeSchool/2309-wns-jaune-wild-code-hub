@@ -2,8 +2,14 @@ import { User } from "./entities/user.entity";
 import fakeUsers from "./fakeData/user";
 import { Project } from "./entities/project.entity";
 import fakeProjects from "./fakeData/project";
+import * as argon2 from "argon2";
 
 export default async function migrate (db : any) {
+
+    for (let i = 0; i < fakeUsers.length; i++) {
+        const newPassword = await argon2.hash(fakeUsers[i].password);
+        fakeUsers[i].password = newPassword;
+    }
 
     //Migrate User
     await db.getRepository(User).clear();

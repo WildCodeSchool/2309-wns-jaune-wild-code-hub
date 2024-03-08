@@ -1,4 +1,5 @@
 import {
+  BeforeInsert,
   Entity,
   PrimaryGeneratedColumn,
   CreateDateColumn,
@@ -10,12 +11,17 @@ import {
 } from "typeorm";
 import { Length, Min } from "class-validator";
 import { Field, Float, ID, InputType, ObjectType } from "type-graphql";
-
-type ROLE = "ADMIN" | "USER";
+import * as argon2 from "argon2";
+export type ROLE = "ADMIN" | "USER";
 
 @ObjectType()
 @Entity()
 export class User {
+  @BeforeInsert()
+  protected async hashPassword() {
+    this.password = await argon2.hash(this.password);
+  }
+
   @Field(() => ID)
   @PrimaryGeneratedColumn()
   id: number;
@@ -66,6 +72,10 @@ export class User {
   ban: boolean;
 
   @Field()
+  @Column({ default: 1 })
+  run_counter: number;
+
+  @Field()
   @CreateDateColumn({ default: () => "CURRENT_TIMESTAMP" })
   last_login: Date;
 
@@ -97,4 +107,41 @@ export class CreateUserInput {
 
   @Field()
   ban: boolean;
+
+  @Field({ nullable: true })
+  role: ROLE;
+
+  @Field()
+  run_counter: number;
+}
+
+@InputType()
+export class UpdateUserInput {
+
+  @Field(() => ID)
+  id: number;
+
+  @Field({ nullable: true })
+  lastname: string;
+
+  @Field({ nullable: true })
+  firstname: string;
+
+  @Field({ nullable: true })
+  pseudo: string;
+
+  @Field({ nullable: true })
+  email: string;
+
+  @Field({ nullable: true })
+  password: string;
+
+  @Field({ nullable: true })
+  ban: boolean;
+
+  @Field({ nullable: true })
+  role: ROLE;
+
+  @Field({ nullable: true })
+  run_counter: number;
 }
