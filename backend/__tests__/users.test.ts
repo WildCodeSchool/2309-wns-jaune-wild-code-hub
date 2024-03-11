@@ -3,7 +3,7 @@ import { UserResolver } from "../src/resolvers/user.resolver";
 import { ApolloServer } from "@apollo/server";
 import datasourceInitial from "../src/lib/db"; //on importe la datasource de test
 import datasource from "../src/lib/db_test"; //on importe la datasource initial pour le spyOn
-import { User } from "../src/entities/user.entity";
+import { User, Message } from "../src/entities/user.entity";
 import assert from "assert";
 
 let server: ApolloServer;
@@ -88,6 +88,16 @@ export const UPDATE_USER = `#graphql
     }
   }
 `
+
+export const LOGIN_USER = `#graphql
+  query User ($infos: InputLogin!) {
+    login(infos: $infos) {
+      success
+      message
+    }
+  }
+`
+
 export const DELETE_USER = `#graphql
     mutation User ($id: Float!) {
       deleteUser(id: $id) {            
@@ -128,6 +138,10 @@ export const DELETE_USER = `#graphql
 
   type ResponseDataDelete = {
     deleteUser: User;
+  }
+
+  type ResponseDataLogin = {
+    login: Message;
   }
 
 
@@ -212,6 +226,22 @@ describe("Test for a new user", () => {
     const id = response.body.singleResult.data?.updateUser?.id;     
     expect(id).not.toBeNull();   
     expect(response.body.singleResult.data?.updateUser?.pseudo).toEqual("tata");
+  });
+
+  it("Login user", async () => { 
+    const response = await server.executeOperation<ResponseDataLogin>({
+      query: LOGIN_USER,   
+      variables: {
+        infos:{
+          email: "tata@gmail.com",
+          password: "tata",
+        }
+      }   
+    });
+    console.log("response.body Login User", JSON.stringify(response.body));
+    assert(response.body.kind === "single");
+    console.log("response.body.singleResult", JSON.stringify(response.body.singleResult)); 
+    expect(response.body.singleResult.data?.login?.success).toEqual(true);
   });
 
   it("Find users after creation of the user in the db", async () => {
