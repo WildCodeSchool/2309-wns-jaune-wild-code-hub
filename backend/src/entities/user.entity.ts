@@ -88,6 +88,7 @@ export class User {
   update_at: Date;
 }
 
+
 @InputType()
 export class CreateUserInput {
   @Field()
@@ -144,4 +145,25 @@ export class UpdateUserInput {
 
   @Field({ nullable: true })
   run_counter: number;
+}
+
+@InputType()
+export class InputLogin {
+  @Field({ nullable: true })
+  email: string;
+
+  @Field({ nullable: true })
+  pseudo: string;
+
+  @Field()
+  password: string;
+}
+
+@ObjectType()
+export class Message {
+  @Field()
+  success: boolean;
+
+  @Field()
+  message: string;
 }
