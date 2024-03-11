@@ -54,11 +54,10 @@ export class UserResolver {
 
     }
 
-    console.log("--- je suis la ligne 57", )
     if (!user) {
       throw new Error("Vérifiez vos informations");
     }
-    console.log('Ligne 61', user)
+
     const isPasswordValid = await argon2.verify(user.password, infos.password);
     const m = new Message();
     if (isPasswordValid) {
@@ -67,9 +66,7 @@ export class UserResolver {
         .setExpirationTime("2h")
         .sign(new TextEncoder().encode(`${process.env.SECRET_KEY}`));
 
-      console.log('avant cookie')
       let cookies = new Cookies(ctx.req, ctx.res);
-      console.log('après cookie')
       cookies.set("token", token, { httpOnly: true });
 
       m.message = "Bienvenue!";
