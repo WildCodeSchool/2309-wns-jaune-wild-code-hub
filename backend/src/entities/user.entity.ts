@@ -145,3 +145,21 @@ export class UpdateUserInput {
   @Field({ nullable: true })
   run_counter: number;
 }
+
+@ObjectType()
+export class Message {
+  @Field()
+  success: boolean;
+
+  @Field()
+  message: string;
+}
+
+@InputType()
+export class InputLogin {
+  @Field()
+  email: string;
+
+  @Field()
+  password: string;
+}
