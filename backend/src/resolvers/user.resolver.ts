@@ -44,7 +44,16 @@ export class UserResolver {
 
   @Query(() => Message)
   async login(@Arg("infos") infos: InputLogin, @Ctx() ctx: MyContext) {
-    const user = await new UsersService().findByEmail(infos.email);
+    let user;
+    if (!infos.email && !infos.pseudo) {
+      throw new Error("Vérifiez vos informations");
+    } else if (infos.email) {
+      user = await new UsersService().findByEmail(infos.email);
+    } else {
+      user = await new UsersService().findByPseudo(infos.pseudo);
+
+    }
+
     if (!user) {
       throw new Error("Vérifiez vos informations");
     }
