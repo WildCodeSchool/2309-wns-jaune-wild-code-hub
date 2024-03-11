@@ -74,18 +74,8 @@ export const CREATE_USER = `#graphql
 export const UPDATE_USER = `#graphql
   mutation User($data: UpdateUserInput!) {
     updateUser(data: $data) {
-      id
-      last_login
-      password
-      pseudo
-      role
-      run_counter
-      update_at
-      lastname
-      firstname
-      email
-      ban
-      created_at
+      message
+      success
     }
   }
 `
@@ -126,7 +116,7 @@ export const DELETE_USER = `#graphql
   }
 
   type ResponseDataUpdate = {
-    updateUser: User;
+    updateUser: Message;
   }
 
   type ResponseDataDelete = {
@@ -211,10 +201,8 @@ describe("Test for a new user", () => {
       }   
     });
     console.log("response.body UPDATE User", JSON.stringify(response.body));
-    assert(response.body.kind === "single");
-    const id = response.body.singleResult.data?.updateUser?.id;     
-    expect(id).not.toBeNull();   
-    expect(response.body.singleResult.data?.updateUser?.pseudo).toEqual("tata");
+    assert(response.body.kind === "single");  
+    expect(response.body.singleResult.data?.updateUser?.success).toEqual(true);
   });
 
   it("Find users after creation of the user in the db", async () => {

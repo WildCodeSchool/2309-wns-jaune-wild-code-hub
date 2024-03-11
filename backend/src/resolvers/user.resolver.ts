@@ -86,14 +86,22 @@ export class UserResolver {
     return newUser;
   }
 
-  @Mutation(() => User)
+  @Mutation(() => Message)
   async updateUser(@Arg("data") data: UpdateUserInput) {
     const { id, ...otherData } = data;
     if (otherData.password) {
       otherData.password = await argon2.hash(otherData.password);
     }
     const updateUser = await new UsersService().update(+id, otherData);
-    return updateUser;
+    const m = new Message();
+    if (updateUser) {
+      m.message = "User update !";
+      m.success = true;
+    } else {
+      m.message = "Unable to update user !";
+      m.success = false;
+    }
+    return m;
   }
 
   @Mutation(() => Message)
