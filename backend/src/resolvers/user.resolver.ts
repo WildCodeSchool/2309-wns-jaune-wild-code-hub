@@ -46,7 +46,7 @@ export class UserResolver {
   async login(@Arg("infos") infos: InputLogin, @Ctx() ctx: MyContext) {
     let user;
     if (!infos.email && !infos.pseudo) {
-      throw new Error("Vérifiez vos informations");
+      throw new Error("Check your login information !");
     } else if (infos.email) {
       user = await new UsersService().findByEmail(infos.email);
     } else {
@@ -55,7 +55,7 @@ export class UserResolver {
     }
 
     if (!user) {
-      throw new Error("Vérifiez vos informations");
+      throw new Error("Check your login information !");
     }
 
     const isPasswordValid = await argon2.verify(user.password, infos.password);
@@ -69,10 +69,10 @@ export class UserResolver {
       let cookies = new Cookies(ctx.req, ctx.res);
       cookies.set("token", token, { httpOnly: true });
 
-      m.message = "Bienvenue!";
+      m.message = "Welcome !";
       m.success = true;
     } else {
-      m.message = "Vérifiez vos informations";
+      m.message = "Check your login information !";
       m.success = false;
     }
     return m;
@@ -96,9 +96,19 @@ export class UserResolver {
     return updateUser;
   }
 
-  @Mutation(() => User)
+  @Mutation(() => Message)
   async deleteUser(@Arg("id") id: number) {
     const delUser = await new UsersService().delete(id);
-    return delUser;
+    const m = new Message();
+
+    if (delUser) {
+      m.message = "User deleted!";
+      m.success = true;
+    } else {
+      m.message = "Unable to delete user!";
+      m.success = false;
+    }
+
+    return m;
   }
 }
