@@ -88,7 +88,6 @@ export class User {
   update_at: Date;
 }
 
-
 @InputType()
 export class CreateUserInput {
   @Field()
@@ -118,7 +117,6 @@ export class CreateUserInput {
 
 @InputType()
 export class UpdateUserInput {
-
   @Field(() => ID)
   id: number;
 

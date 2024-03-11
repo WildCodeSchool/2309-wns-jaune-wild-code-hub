@@ -1,7 +1,10 @@
-import { Arg, Float, Mutation, Query, Resolver } from "type-graphql";
+import { Arg, Float, Ctx,  Mutation, Query, Resolver } from "type-graphql";
 import UsersService from "../services/users.service";
-import { User, CreateUserInput, UpdateUserInput, ROLE } from "../entities/user.entity";
+import { User, CreateUserInput, UpdateUserInput, ROLE, Message, InputLogin } from "../entities/user.entity";
 import * as argon2 from "argon2";
+import { SignJWT } from "jose";
+import { MyContext } from "..";
+import Cookies from "cookies";
 
 @Resolver()
 export class UserResolver {
@@ -37,6 +40,32 @@ export class UserResolver {
     const userByPseudo = await new UsersService().findByPseudo(pseudo);
     if (!userByPseudo) throw new Error("Please note, the client does not exist");
     return userByPseudo;
+  }
+
+  @Query(() => Message)
+  async login(@Arg("infos") infos: InputLogin, @Ctx() ctx: MyContext) {
+    const user = await new UsersService().findByEmail(infos.email);
+    if (!user) {
+      throw new Error("Vérifiez vos informations");
+    }
+    const isPasswordValid = await argon2.verify(user.password, infos.password);
+    const m = new Message();
+    if (isPasswordValid) {
+      const token = await new SignJWT({ email: user.email })
+        .setProtectedHeader({ alg: "HS256", typ: "jwt" })
+        .setExpirationTime("2h")
+        .sign(new TextEncoder().encode(`${process.env.SECRET_KEY}`));
+
+      let cookies = new Cookies(ctx.req, ctx.res);
+      cookies.set("token", token, { httpOnly: true });
+
+      m.message = "Bienvenue!";
+      m.success = true;
+    } else {
+      m.message = "Vérifiez vos informations";
+      m.success = false;
+    }
+    return m;
   }
 
   @Mutation(() => User)
