@@ -93,7 +93,8 @@ export const UPDATE_USER = `#graphql
 export const DELETE_USER = `#graphql
     mutation User ($id: Float!) {
       deleteUser(id: $id) {            
-          pseudo
+          message
+          success
         }
     }
 `;
@@ -129,7 +130,7 @@ export const DELETE_USER = `#graphql
   }
 
   type ResponseDataDelete = {
-    deleteUser: User;
+    deleteUser: Message;
   }
 
 //-------------------- DATA ---------------------//
@@ -277,6 +278,6 @@ describe("Test for a new user", () => {
         }   
       });
       assert(response.body.kind === "single");
-      expect(response.body.singleResult.data?.deleteUser?.pseudo).toEqual("tata");
+      expect(response.body.singleResult.data?.deleteUser?.success).toEqual(true);
     });
 });
