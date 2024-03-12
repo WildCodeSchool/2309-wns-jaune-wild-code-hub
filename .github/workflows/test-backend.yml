@@ -3,29 +3,42 @@ name: test backend
 on: push
 
 jobs:
+  runner-job:
+    # You must use a Linux environment when using service containers or container jobs
+    runs-on: ubuntu-latest
+
+    # Service containers to run with `runner-job`
+    services:
+      # Label used to access the service container
+      postgres:
+        # Docker Hub image
+        image: postgres
+        # Provide the password for postgres
+        env:
+          POSTGRES_PASSWORD: postgres
+        # Set health checks to wait until postgres has started
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          # Maps tcp port 5432 on service container to the host
+          - 5434:5432
+
   test:
     name: 🔧 Test
     runs-on: ubuntu-latest
-
+    defaults:
+      run:
+        working-directory: backend
     steps:
       - name: 📂 Checkout repo
         uses: actions/checkout@v4
-      - name: Create env file
-        run: |
-          cd backend
-          touch .env
-          echo SECRET_KEY="${{ secrets.ENV_BACKEND_SECRET_KEY }}" >> .env
-          cat .env
-      - name: Start containers
-        run: docker compose --profile dev up -d --build
       - name: ⬇️ Installation des dépendances
-        run: |
-          cd backend
-          npm install
+        run: npm install
       - name: 🚀 Lancement des tests
-        run: |
-          cd backend
-          npm run test:ci
+        run: npm run test:ci
 
   build-image:
     needs: test
@@ -47,3 +60,38 @@ jobs:
           push: true
           context: "{{defaultContext}}:client"
           tags: ${{secrets.DOCKERHUB_USERNAME}}/dev:latest
+
+          jobs:
+            # Label of the runner job
+            runner-job:
+              # You must use a Linux environment when using service containers or container jobs
+              runs-on: ubuntu-latest
+
+              # Service containers to run with `runner-job`
+              services:
+                # Label used to access the service container
+                postgres:
+                  # Docker Hub image
+                  image: postgres
+                  # Provide the password for postgres
+                  env:
+                    POSTGRES_PASSWORD: postgres
+                  # Set health checks to wait until postgres has started
+                  options: >-
+                    --health-cmd pg_isready
+                    --health-interval 10s
+                    --health-timeout 5s
+                    --health-retries 5
+                  ports:
+                    # Maps tcp port 5432 on service container to the host
+                    - 5432:5432
+
+              steps:
+                # Downloads a copy of the code in your repository before running CI tests
+                - name: Check out repository code
+                  uses: actions/checkout@v4
+
+                # Performs a clean installation of all dependencies in the `package.json` file
+                # For more information, see https://docs.npmjs.com/cli/ci.html
+                - name: Install dependencies
+                  run: npm ci
