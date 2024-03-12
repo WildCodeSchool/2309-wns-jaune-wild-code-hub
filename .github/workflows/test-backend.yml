@@ -3,11 +3,9 @@ name: test backend
 on: push
 
 jobs:
-  runner-job:
-    # You must use a Linux environment when using service containers or container jobs
+  test:
+    name: 🔧 Test
     runs-on: ubuntu-latest
-
-    # Service containers to run with `runner-job`
     services:
       # Label used to access the service container
       postgres:
@@ -26,9 +24,6 @@ jobs:
           # Maps tcp port 5432 on service container to the host
           - 5434:5432
 
-  test:
-    name: 🔧 Test
-    runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: backend
