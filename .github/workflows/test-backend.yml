@@ -39,6 +39,7 @@ jobs:
 
   build-image:
     needs: test
+    if: github.ref == 'refs/heads/dev'
     name: 🐋 Docker build
     runs-on: ubuntu-latest
     steps:
@@ -56,4 +57,4 @@ jobs:
         with:
           push: true
           context: "{{defaultContext}}:backend"
-          tags: ${{secrets.DOCKERHUB_USERNAME}}/wildcodehub:latest
+          tags: ${{secrets.DOCKERHUB_USERNAME}}/wildcodehub-dev-backend:latest
