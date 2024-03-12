@@ -6,16 +6,16 @@ jobs:
   test:
     name: 🔧 Test
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: backend
+
     steps:
       - name: 📂 Checkout repo
         uses: actions/checkout@v4
       - name: Start containers
         run: docker compose --profile dev up --build
       - name: ⬇️ Installation des dépendances
-        run: npm install
+        run: |
+          cd backend
+          npm install
       - name: 🚀 Lancement des tests
         run: npm run test:ci
 
