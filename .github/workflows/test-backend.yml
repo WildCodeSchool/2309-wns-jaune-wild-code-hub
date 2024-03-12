@@ -23,7 +23,9 @@ jobs:
           cd backend
           npm install
       - name: 🚀 Lancement des tests
-        run: npm run test:ci
+        run: |
+          cd backend
+          npm run test:ci
 
   build-image:
     needs: test
