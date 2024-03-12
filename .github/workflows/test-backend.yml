@@ -17,7 +17,7 @@ jobs:
           echo SECRET_KEY="${{ secrets.ENV_BACKEND_SECRET_KEY }}" >> .env
           cat .env
       - name: Start containers
-        run: docker compose --profile dev up --build
+        run: docker compose --profile dev up -d --build
       - name: ⬇️ Installation des dépendances
         run: |
           cd backend
