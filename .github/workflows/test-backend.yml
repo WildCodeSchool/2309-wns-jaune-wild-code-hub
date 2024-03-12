@@ -10,6 +10,12 @@ jobs:
     steps:
       - name: 📂 Checkout repo
         uses: actions/checkout@v4
+      - name: Create env file
+        run: |
+          cd backend
+          touch .env
+          echo SECRET_KEY="${{ secrets.ENV_BACKEND_SECRET_KEY }}" >> .env
+          cat .env
       - name: Start containers
         run: docker compose --profile dev up --build
       - name: ⬇️ Installation des dépendances
