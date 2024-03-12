@@ -56,4 +56,4 @@ jobs:
         with:
           push: true
           context: "{{defaultContext}}:client"
-          tags: ${{secrets.DOCKERHUB_USERNAME}}/dev:latest
+          tags: ${{secrets.DOCKERHUB_USERNAME}}/2309-wns-jaune-wild-code-hub:latest
