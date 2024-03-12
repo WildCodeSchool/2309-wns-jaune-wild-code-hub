@@ -12,6 +12,8 @@ jobs:
     steps:
       - name: 📂 Checkout repo
         uses: actions/checkout@v4
+      - name: Start containers
+        run: docker compose --profile dev up --build
       - name: ⬇️ Installation des dépendances
         run: npm install
       - name: 🚀 Lancement des tests
