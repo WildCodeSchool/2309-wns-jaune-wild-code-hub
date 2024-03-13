@@ -18,9 +18,15 @@ const Register = () => {
         email: '',
         password: ''
     });
-    const [errors, setErrors] = useState({});
+    const [errors, setErrors] = useState({
+        lastname: '',
+        firstname: '',
+        pseudo: '',
+        email: '',
+        password: ''
+    });
 
-    const handleInputChange = (e) => {
+    const handleInputChange = (e: { target: { name: string; value: string; }; }) => {
         const { name, value } = e.target;
         setFormData(prevState => ({
             ...prevState,
@@ -28,14 +34,20 @@ const Register = () => {
         }));
     }
 
-    const handleSubmit = (e) => {
+    const handleSubmit = (e: { preventDefault: () => void; }) => {
         e.preventDefault();
-        const newErrors = {};
+        const newErrors = {
+            lastname: '',
+            firstname: '',
+            pseudo: '',
+            email: '',
+            password: ''
+        };
 
         // Vérification des champs
         if (!formData.lastname.trim()) {
             newErrors.lastname = 'Last name is required.';
-        }
+        } 
         if (!formData.firstname.trim()) {
             newErrors.firstname = 'First name is required.';
         }
@@ -48,11 +60,17 @@ const Register = () => {
         if (!formData.password.trim()) {
             newErrors.password = 'Password is required.';
         }
+        
+        for (const key in newErrors) {
+            if (newErrors[key as keyof typeof newErrors] === "") {
+                delete newErrors[key as keyof typeof newErrors];
+            }
+        }
 
         setErrors(newErrors);
-
         if (Object.keys(newErrors).length === 0) {
             // Code pour soumettre le formulaire si tout est valide
+            console.log("totto")
         }
     }
 
