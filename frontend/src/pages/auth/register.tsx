@@ -76,13 +76,8 @@ const Register = () => {
     }
 
     return (
-        <Box 
-        display="flex" 
-        justifyContent="center" 
-        alignItems="center" 
-        height="100vh"
-    >
-        <Box width="400px">
+        <Box className="main-box">
+        <Box className="form-box">
             <main>
                 <h1>Welcome to Wild Code Hub !</h1>
                 <form onSubmit={handleSubmit}>
