@@ -1,6 +1,13 @@
 import { REGISTER } from "@/requetes/mutations/auth.mutations";
 import { useMutation } from "@apollo/client";
 import { useRouter } from "next/router";
+import {
+    FormControl,
+    FormLabel,
+    Input,
+    Button,
+    ButtonGroup
+  } from '@chakra-ui/react';
 
 function Register() {
     const router = useRouter();
@@ -28,23 +35,24 @@ function Register() {
     //   }
     // };
     return (
-      <main>
-        {/* <form onSubmit={handleSubmit}> */}
-        <form>
-        <h1>Welcome to Wild code Hub !</h1>
-          <div>
-            <input type="text" name="email" placeholder="Indiquez votre email" />
-          </div>
-          <div>
-            <input
-              type="password"
-              name="password"
-              placeholder="Indiquez votre mot de passe"
-            />
-          </div>
-          <input type="submit" />
-        </form>
-      </main>
+        <main>
+            <h1>Welcome to Wild Code Hub !</h1>
+            <FormControl>
+                <FormLabel>Enter your Last Name</FormLabel>
+                <Input type='lastname' />
+                <FormLabel>Enter your First Name</FormLabel>
+                <Input type='firstname' />
+                <FormLabel>Enter your Pseudo</FormLabel>
+                <Input type='pseudo' />
+                <FormLabel>Enter your email</FormLabel>
+                <Input type='email' />
+                <FormLabel>Enter your Password</FormLabel>
+                <Input type='password' />
+            </FormControl>
+            <Button colorScheme='green' variant='solid'>
+                Submit
+            </Button>
+        </main>
     );
   }
   
