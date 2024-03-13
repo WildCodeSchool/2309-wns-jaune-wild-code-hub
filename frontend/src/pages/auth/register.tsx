@@ -8,6 +8,7 @@ import {
     FormErrorMessage,
     Input,
     Button,
+    Box,
   } from '@chakra-ui/react';
 
 const Register = () => {
@@ -75,39 +76,48 @@ const Register = () => {
     }
 
     return (
-        <main>
-            <h1>Welcome to Wild Code Hub !</h1>
-            <form onSubmit={handleSubmit}>
-                <FormControl isInvalid={!!errors.lastname}>
-                    <FormLabel>Last Name</FormLabel>
-                    <Input type='text' name='lastname' value={formData.lastname} onChange={handleInputChange} />
-                    <FormErrorMessage>{errors.lastname}</FormErrorMessage>
-                </FormControl>
-                <FormControl isInvalid={!!errors.firstname}>
-                    <FormLabel>First Name</FormLabel>
-                    <Input type='text' name='firstname' value={formData.firstname} onChange={handleInputChange} />
-                    <FormErrorMessage>{errors.firstname}</FormErrorMessage>
-                </FormControl>
-                <FormControl isInvalid={!!errors.pseudo}>
-                    <FormLabel>Pseudo</FormLabel>
-                    <Input type='text' name='pseudo' value={formData.pseudo} onChange={handleInputChange} />
-                    <FormErrorMessage>{errors.pseudo}</FormErrorMessage>
-                </FormControl>
-                <FormControl isInvalid={!!errors.email}>
-                    <FormLabel>Email</FormLabel>
-                    <Input type='email' name='email' value={formData.email} onChange={handleInputChange} />
-                    <FormErrorMessage>{errors.email}</FormErrorMessage>
-                </FormControl>
-                <FormControl isInvalid={!!errors.password}>
-                    <FormLabel>Password</FormLabel>
-                    <Input type='password' name='password' value={formData.password} onChange={handleInputChange} />
-                    <FormErrorMessage>{errors.password}</FormErrorMessage>
-                </FormControl>
-                <Button type='submit' colorScheme='green' variant='solid'>
-                    Submit
-                </Button>
-            </form>
-        </main>
+        <Box 
+        display="flex" 
+        justifyContent="center" 
+        alignItems="center" 
+        height="100vh"
+    >
+        <Box width="400px">
+            <main>
+                <h1>Welcome to Wild Code Hub !</h1>
+                <form onSubmit={handleSubmit}>
+                    <FormControl isInvalid={!!errors.lastname}>
+                        <FormLabel>Enter Last Name</FormLabel>
+                        <Input type='text' name='lastname' value={formData.lastname} onChange={handleInputChange} />
+                        <FormErrorMessage>{errors.lastname}</FormErrorMessage>
+                    </FormControl>
+                    <FormControl isInvalid={!!errors.firstname}>
+                        <FormLabel>Enter First Name</FormLabel>
+                        <Input type='text' name='firstname' value={formData.firstname} onChange={handleInputChange} />
+                        <FormErrorMessage>{errors.firstname}</FormErrorMessage>
+                    </FormControl>
+                    <FormControl isInvalid={!!errors.pseudo}>
+                        <FormLabel>Chosse your Pseudo</FormLabel>
+                        <Input type='text' name='pseudo' value={formData.pseudo} onChange={handleInputChange} />
+                        <FormErrorMessage>{errors.pseudo}</FormErrorMessage>
+                    </FormControl>
+                    <FormControl isInvalid={!!errors.email}>
+                        <FormLabel>Enter your Email</FormLabel>
+                        <Input type='email' name='email' value={formData.email} onChange={handleInputChange} />
+                        <FormErrorMessage>{errors.email}</FormErrorMessage>
+                    </FormControl>
+                    <FormControl isInvalid={!!errors.password}>
+                        <FormLabel>Choose your Password</FormLabel>
+                        <Input type='password' name='password' value={formData.password} onChange={handleInputChange} />
+                        <FormErrorMessage>{errors.password}</FormErrorMessage>
+                    </FormControl>
+                    <Button type="submit" colorScheme="green" variant="solid">
+                        Submit
+                    </Button>
+                </form>
+            </main>
+        </Box>
+    </Box>
     );
 }
 
