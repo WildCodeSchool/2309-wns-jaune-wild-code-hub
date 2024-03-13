@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 
 export const REGISTER = gql`
-  mutation Register($data: InputRegister!) {
+  mutation Register($data: CreateUserInput!) {
     register(data: $data) {
       pseudo
       run_counter
