@@ -1,59 +1,96 @@
+import { useState } from "react";
 import { REGISTER } from "@/requetes/mutations/auth.mutations";
 import { useMutation } from "@apollo/client";
 import { useRouter } from "next/router";
 import {
     FormControl,
     FormLabel,
+    FormErrorMessage,
     Input,
     Button,
-    ButtonGroup
   } from '@chakra-ui/react';
 
-function Register() {
-    const router = useRouter();
-  
-    // const [register, { error }] = useMutation<
-    //   RegisterMutation,
-    //   RegisterMutationVariables
-    // >(REGISTER, {
-    //   onCompleted: (data) => {
-    //     console.log(data);
-    //     router.push("/auth/login");
-    //   },
-    //   onError(error) {
-    //     console.log(error);
-    //   },
-    // });
-    // const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    //   e.preventDefault();
-    //   const formData = new FormData(e.currentTarget);
-    //   const data = Object.fromEntries(formData) as InputRegister;
-    //   if (data.email && data.password) {
-    //     register({
-    //       variables: { infos: { email: data.email, password: data.password } },
-    //     });
-    //   }
-    // };
+const Register = () => {
+    const [formData, setFormData] = useState({
+        lastname: '',
+        firstname: '',
+        pseudo: '',
+        email: '',
+        password: ''
+    });
+    const [errors, setErrors] = useState({});
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prevState => ({
+            ...prevState,
+            [name]: value
+        }));
+    }
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const newErrors = {};
+
+        // Vérification des champs
+        if (!formData.lastname.trim()) {
+            newErrors.lastname = 'Last name is required.';
+        }
+        if (!formData.firstname.trim()) {
+            newErrors.firstname = 'First name is required.';
+        }
+        if (!formData.pseudo.trim()) {
+            newErrors.pseudo = 'Pseudo is required.';
+        }
+        if (!formData.email.trim()) {
+            newErrors.email = 'Email is required.';
+        }
+        if (!formData.password.trim()) {
+            newErrors.password = 'Password is required.';
+        }
+
+        setErrors(newErrors);
+
+        if (Object.keys(newErrors).length === 0) {
+            // Code pour soumettre le formulaire si tout est valide
+        }
+    }
+
     return (
         <main>
             <h1>Welcome to Wild Code Hub !</h1>
-            <FormControl>
-                <FormLabel>Enter your Last Name</FormLabel>
-                <Input type='lastname' />
-                <FormLabel>Enter your First Name</FormLabel>
-                <Input type='firstname' />
-                <FormLabel>Enter your Pseudo</FormLabel>
-                <Input type='pseudo' />
-                <FormLabel>Enter your email</FormLabel>
-                <Input type='email' />
-                <FormLabel>Enter your Password</FormLabel>
-                <Input type='password' />
-            </FormControl>
-            <Button colorScheme='green' variant='solid'>
-                Submit
-            </Button>
+            <form onSubmit={handleSubmit}>
+                <FormControl isInvalid={!!errors.lastname}>
+                    <FormLabel>Last Name</FormLabel>
+                    <Input type='text' name='lastname' value={formData.lastname} onChange={handleInputChange} />
+                    <FormErrorMessage>{errors.lastname}</FormErrorMessage>
+                </FormControl>
+                <FormControl isInvalid={!!errors.firstname}>
+                    <FormLabel>First Name</FormLabel>
+                    <Input type='text' name='firstname' value={formData.firstname} onChange={handleInputChange} />
+                    <FormErrorMessage>{errors.firstname}</FormErrorMessage>
+                </FormControl>
+                <FormControl isInvalid={!!errors.pseudo}>
+                    <FormLabel>Pseudo</FormLabel>
+                    <Input type='text' name='pseudo' value={formData.pseudo} onChange={handleInputChange} />
+                    <FormErrorMessage>{errors.pseudo}</FormErrorMessage>
+                </FormControl>
+                <FormControl isInvalid={!!errors.email}>
+                    <FormLabel>Email</FormLabel>
+                    <Input type='email' name='email' value={formData.email} onChange={handleInputChange} />
+                    <FormErrorMessage>{errors.email}</FormErrorMessage>
+                </FormControl>
+                <FormControl isInvalid={!!errors.password}>
+                    <FormLabel>Password</FormLabel>
+                    <Input type='password' name='password' value={formData.password} onChange={handleInputChange} />
+                    <FormErrorMessage>{errors.password}</FormErrorMessage>
+                </FormControl>
+                <Button type='submit' colorScheme='green' variant='solid'>
+                    Submit
+                </Button>
+            </form>
         </main>
     );
-  }
-  
-  export default Register;
+}
+
+export default Register;
