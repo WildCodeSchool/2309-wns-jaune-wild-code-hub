@@ -1,4 +1,4 @@
-import { background } from "@chakra-ui/react";
+import { background, defineStyleConfig } from "@chakra-ui/react";
 
 const box =  {
     main: {

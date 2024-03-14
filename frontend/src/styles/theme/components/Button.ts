@@ -1,4 +1,4 @@
-import { background, defineStyleConfig } from "@chakra-ui/react";
+import { defineStyleConfig } from "@chakra-ui/react";
 
 
 const Button = defineStyleConfig({
@@ -35,7 +35,7 @@ const Button = defineStyleConfig({
       // The default size and variant values
       defaultProps: {
         size: 'md',
-        variant: 'solids',
+        variant: 'solid',
       },
 })
 
