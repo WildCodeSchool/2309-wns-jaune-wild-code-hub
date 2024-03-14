@@ -1,6 +1,8 @@
 import { extendTheme, type ThemeConfig } from "@chakra-ui/react";
 import colors from "./colors";
+import styles from "./styles";
 // import Button from "./components/Button"
+import components from "./components";
 
 const config: ThemeConfig = {
   initialColorMode: "dark",
@@ -10,9 +12,7 @@ const config: ThemeConfig = {
 const overrides = {
   config,
   colors,
-  //components:{
-  // import of custom component
-  // Button,
-  // }
+  styles,
+  components,
 };
 export default extendTheme(overrides);

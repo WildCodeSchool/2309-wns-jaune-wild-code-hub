@@ -1,4 +1,7 @@
+import global from "./global"
+
 const styles = {
+  global,
   fonts: {
     main: "Source Sans 3,sans-serif",
   },
