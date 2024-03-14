@@ -5,22 +5,22 @@ const cardsInfos = [
   {
     title: "Faster than local",
     imageSrc: "bunnyIcon.svg",
-    text: "Some fucking text about some bullshit capacity we don't have",
+    text: "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Inventore in incidunt cupiditate placeat ipsam a facere libero deserunt iste eius. Ipsam dolorum, maxime et error odio nobis eveniet temporibus modi",
   },
   {
     title: "Faster than local",
     imageSrc: "bunnyIcon.svg",
-    text: "Some fucking text about some bullshit capacity we don't have",
+    text: "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Inventore in incidunt cupiditate placeat ipsam a facere libero deserunt iste eius. Ipsam dolorum, maxime et error odio nobis eveniet temporibus modi",
   },
   {
     title: "Faster than local",
     imageSrc: "bunnyIcon.svg",
-    text: "Some fucking text about some bullshit capacity we don't have",
+    text: "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Inventore in incidunt cupiditate placeat ipsam a facere libero deserunt iste eius. Ipsam dolorum, maxime et error odio nobis eveniet temporibus modi",
   },
   {
     title: "Faster than local",
     imageSrc: "bunnyIcon.svg",
-    text: "Some fucking text about some bullshit capacity we don't have",
+    text: "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Inventore in incidunt cupiditate placeat ipsam a facere libero deserunt iste eius. Ipsam dolorum, maxime et error odio nobis eveniet temporibus modi",
   },
 ];
 
@@ -132,7 +132,7 @@ export default function Home() {
           <Heading color={"text"}>Accelarate your git worflow</Heading>
         </Flex>
         <Flex w={"50%"} h={"100%"} py={"5rem"} backgroundColor={"grey"}>
-          SOME FUCKING VIDEO
+          SOME VIDEO MATRIX STYLE
         </Flex>
       </Flex>
     </Box>
