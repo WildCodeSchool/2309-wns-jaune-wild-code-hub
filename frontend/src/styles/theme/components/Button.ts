@@ -1,43 +1,40 @@
 import { defineStyleConfig } from "@chakra-ui/react";
 
-
 const Button = defineStyleConfig({
-    baseStyle: {
-        fontWeight: 'bold',
-        textTransform: 'uppercase',
-        borderRadius: 'base', // <-- border radius is same for all variants and sizes
-      },
-      // Two sizes: sm and md
-      sizes: {
-        sm: {
-          fontSize: 'sm',
-          px: 4, // <-- px is short for paddingLeft and paddingRight
-          py: 3, // <-- py is short for paddingTop and paddingBottom
-        },
-        md: {
-          fontSize: 'md',
-          px: 6, // <-- these values are tokens from the design system
-          py: 4, // <-- these values are tokens from the design system
-        },
-      },
-      // Two variants: outline and solid
-      variants: {
-        outline: {
-          border: '2px solid',
-          borderColor: 'purple.500',
-          color: 'red.500',
-        },
-        solid: {
-          bg: 'purple.500',
-          color: 'white',
-        },
-      },
-      // The default size and variant values
-      defaultProps: {
-        size: 'md',
-        variant: 'solid',
-      },
-})
+  // The styles all button have in common
+  baseStyle: {
+    fontWeight: "bold",
+    borderColor: "transparent",
+    fontSize: "20",
+    px: "0.5rem",
+    py: "0.5rem",
+    borderRadius: "100",
+  },
 
+  variants: {
+    outline: {
+      border: "2px solid",
+      borderColor: "text",
+      color: "text",
+
+      _hover: {
+        borderColor: "transparent",
+        bgColor: "background",
+      },
+    },
+    primary: {
+      bg: "primary",
+      color: "background",
+    },
+    secondary: {
+      border: "2px solid",
+      bg: "secondary",
+      color: "text",
+      _hover: {
+        borderColor: "secondary",
+      },
+    },
+  },
+});
 
 export default Button;

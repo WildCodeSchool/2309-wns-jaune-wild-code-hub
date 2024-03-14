@@ -11,6 +11,7 @@ import {
     Box,
     InputGroup,
     InputRightElement,
+    Text,
   } from '@chakra-ui/react';
 import components from "@/styles/theme/components";
 import { 
@@ -123,47 +124,51 @@ const Register = () => {
 
     return (
         <Box {...components.Box.main}>
-        <Box {...components.Box.form}>
-            <main>
-                <h1>Welcome to Wild Code Hub !</h1>
-                <form onSubmit={handleSubmit}>
-                    <FormControl isInvalid={!!errors.lastname}>
-                        <FormLabel>Enter Last Name</FormLabel>
-                        <Input type='text' name='lastname' value={formData.lastname} onChange={handleInputChange} />
-                        <FormErrorMessage>{errors.lastname}</FormErrorMessage>
-                    </FormControl>
-                    <FormControl isInvalid={!!errors.firstname}>
-                        <FormLabel>Enter First Name</FormLabel>
-                        <Input type='text' name='firstname' value={formData.firstname} onChange={handleInputChange} />
-                        <FormErrorMessage>{errors.firstname}</FormErrorMessage>
-                    </FormControl>
-                    <FormControl isInvalid={!!errors.pseudo}>
-                        <FormLabel>Chosse your Pseudo</FormLabel>
-                        <Input type='text' name='pseudo' value={formData.pseudo} onChange={handleInputChange} />
-                        <FormErrorMessage>{errors.pseudo}</FormErrorMessage>
-                    </FormControl>
-                    <FormControl isInvalid={!!errors.email}>
-                        <FormLabel>Enter your Email</FormLabel>
-                        <Input type='email' name='email' value={formData.email} onChange={handleInputChange} />
-                        <FormErrorMessage>{errors.email}</FormErrorMessage>
-                    </FormControl>
-                        <FormControl isInvalid={!!errors.password}>
-                            <FormLabel>Choose your Password</FormLabel>
-                            <InputGroup>
-                                <Input type={showPassword ? 'text' : 'password'} name='password' value={formData.password} onChange={handleInputChange} />
-                                <InputRightElement>
-                                    <img onClick={togglePasswordVisibility} src={showPassword ? '/eyePasswordVisible.png' : '/eyePasswordNotVisible.png'} alt="Eye Password" style={{ cursor: "pointer" }} />
-                                </InputRightElement>
-                            </InputGroup>
-                            <FormErrorMessage>{errors.password}</FormErrorMessage>
-                        </FormControl>
-                    <Button type="submit">
-                        Submit
-                    </Button>
-                </form>
-            </main>
+            <Box {...components.Box.containerBox} >
+                <Text fontSize='5xl' color="white" as='b'>Welcome to Wild Code Hub !</Text >
+                <Box {...components.Box.form} p={3}>
+                    <main>
+                        <form onSubmit={handleSubmit}>
+                            <FormControl isInvalid={!!errors.lastname} mb={3}>
+                                <FormLabel>Enter Last Name</FormLabel>
+                                <Input type='text' name='lastname' value={formData.lastname} onChange={handleInputChange} />
+                                <FormErrorMessage>{errors.lastname}</FormErrorMessage>
+                            </FormControl>
+                            <FormControl isInvalid={!!errors.firstname} mb={3}>
+                                <FormLabel>Enter First Name</FormLabel>
+                                <Input type='text' name='firstname' value={formData.firstname} onChange={handleInputChange} />
+                                <FormErrorMessage>{errors.firstname}</FormErrorMessage>
+                            </FormControl>
+                            <FormControl isInvalid={!!errors.pseudo} mb={3}>
+                                <FormLabel>Chosse your Pseudo</FormLabel>
+                                <Input type='text' name='pseudo' value={formData.pseudo} onChange={handleInputChange} />
+                                <FormErrorMessage>{errors.pseudo}</FormErrorMessage>
+                            </FormControl>
+                            <FormControl isInvalid={!!errors.email} mb={3}>
+                                <FormLabel>Enter your Email</FormLabel>
+                                <Input type='email' name='email' value={formData.email} onChange={handleInputChange} />
+                                <FormErrorMessage>{errors.email}</FormErrorMessage>
+                            </FormControl>
+                                <FormControl isInvalid={!!errors.password} mb={3}>
+                                    <FormLabel>Choose your Password</FormLabel>
+                                    <InputGroup>
+                                        <Input type={showPassword ? 'text' : 'password'} name='password' value={formData.password} onChange={handleInputChange} />
+                                        <InputRightElement>
+                                            <img onClick={togglePasswordVisibility} src={showPassword ? '/eyePasswordVisible.png' : '/eyePasswordNotVisible.png'} alt="Eye Password" style={{ cursor: "pointer" }} />
+                                        </InputRightElement>
+                                    </InputGroup>
+                                    <FormErrorMessage>{errors.password}</FormErrorMessage>
+                                </FormControl>
+                                <Box textAlign="center">
+                                <Button type="submit" variant="secondary" mt={3}>
+                                    Submit
+                                </Button>
+                            </Box>
+                        </form>
+                    </main>
+                </Box>
+            </Box>
         </Box>
-    </Box>
     );
 }
 

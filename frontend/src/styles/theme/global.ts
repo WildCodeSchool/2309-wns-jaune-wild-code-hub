@@ -1,5 +1,3 @@
-import { background } from "@chakra-ui/react";
-
 const global =  {
   // Exemple de class css global
   // ".main-box": {

@@ -1,4 +1,4 @@
-import { background, defineStyleConfig } from "@chakra-ui/react";
+import { Container, background, defineStyleConfig } from "@chakra-ui/react";
 
 const box =  {
     main: {
@@ -7,8 +7,13 @@ const box =  {
         alignItems: "center",
         height: "100vh",
     },
+    containerBox : {
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center" ,
+    },
     form: {
-        width: "500px",
+        width: "400px",
     },
 }
 
