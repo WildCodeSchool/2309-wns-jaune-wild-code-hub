@@ -10,6 +10,8 @@ import {
     Button,
     Box,
   } from '@chakra-ui/react';
+import button from "@/styles/theme/components/Button";
+import box from "@/styles/theme/components/Box";
 
 const Register = () => {
     const [formData, setFormData] = useState({
@@ -76,8 +78,8 @@ const Register = () => {
     }
 
     return (
-        <Box className="main-box">
-        <Box className="form-box">
+        <Box {...box.main}>
+        <Box {...box.form}>
             <main>
                 <h1>Welcome to Wild Code Hub !</h1>
                 <form onSubmit={handleSubmit}>
@@ -106,7 +108,13 @@ const Register = () => {
                         <Input type='password' name='password' value={formData.password} onChange={handleInputChange} />
                         <FormErrorMessage>{errors.password}</FormErrorMessage>
                     </FormControl>
-                    <Button type="submit" colorScheme="green" variant="solid">
+                    <Button {...button.primary.defaultProps} type="submit" variant="solid">
+                        Submit
+                    </Button>
+                    <Button {...button.secondary.defaultProps} type="submit" variant="solid">
+                        Submit
+                    </Button>
+                    <Button {...button.tertiary.defaultProps} type="submit" variant="solid">
                         Submit
                     </Button>
                 </form>
