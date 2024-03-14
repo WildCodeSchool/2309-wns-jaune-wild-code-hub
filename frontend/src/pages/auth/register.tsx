@@ -9,10 +9,19 @@ import {
     Input,
     Button,
     Box,
+    InputGroup,
+    InputRightElement,
   } from '@chakra-ui/react';
 import components from "@/styles/theme/components";
+import { 
+    emailRegex,
+    pseudoRegex,
+    passwordRegex,
+    checkRegex,
+} from "@/regex";
 
 const Register = () => {
+    const [showPassword, setShowPassword] = useState(false);
     const [formData, setFormData] = useState({
         lastname: '',
         firstname: '',
@@ -48,19 +57,51 @@ const Register = () => {
 
         // Vérification des champs
         if (!formData.lastname.trim()) {
-            newErrors.lastname = 'Last name is required.';
+            newErrors.lastname += 'Last name is required. ';
         } 
+
+        if (formData.lastname.length < 2 || formData.lastname.length > 20) {
+            newErrors.lastname += '2 - 50 characters for lastname. ';
+        }
+
         if (!formData.firstname.trim()) {
-            newErrors.firstname = 'First name is required.';
+            newErrors.firstname += 'First name is required. ';
         }
+
+        if (formData.firstname.length < 2 || formData.firstname.length > 20) {
+            newErrors.firstname += '2 - 50 characters for firstname. ';
+        }
+
         if (!formData.pseudo.trim()) {
-            newErrors.pseudo = 'Pseudo is required.';
+            newErrors.pseudo += 'Pseudo is required. ';
         }
+
+        if (formData.pseudo.length < 2 || formData.pseudo.length > 20) {
+            newErrors.pseudo += '2 - 20 characters for pseudo. ';
+        }
+
+        if (!checkRegex(pseudoRegex, formData.pseudo)) {
+            newErrors.pseudo += 'Invaid format pseudo.';
+        }
+
         if (!formData.email.trim()) {
-            newErrors.email = 'Email is required.';
+            newErrors.email += 'Email is required. ';
         }
+
+        if (!checkRegex(emailRegex, formData.email)) {
+            newErrors.email += 'Invaid format email. ';
+        }
+
         if (!formData.password.trim()) {
-            newErrors.password = 'Password is required.';
+            newErrors.password += 'Password is required. ';
+        }
+
+        if (formData.password.length < 8) {
+            newErrors.password += '8 minimum characters for password. ';
+        }
+
+        if (!checkRegex(passwordRegex, formData.password)) {
+            newErrors.password += 'Requires at least 1 uppercase letter, 1 number, and 1 special character. ';
         }
         
         for (const key in newErrors) {
@@ -74,6 +115,10 @@ const Register = () => {
             // Code pour soumettre le formulaire si tout est valide
             console.log("totto")
         }
+    }
+
+    const togglePasswordVisibility  = () => {
+        setShowPassword(!showPassword);
     }
 
     return (
@@ -102,11 +147,16 @@ const Register = () => {
                         <Input type='email' name='email' value={formData.email} onChange={handleInputChange} />
                         <FormErrorMessage>{errors.email}</FormErrorMessage>
                     </FormControl>
-                    <FormControl isInvalid={!!errors.password}>
-                        <FormLabel>Choose your Password</FormLabel>
-                        <Input type='password' name='password' value={formData.password} onChange={handleInputChange} />
-                        <FormErrorMessage>{errors.password}</FormErrorMessage>
-                    </FormControl>
+                        <FormControl isInvalid={!!errors.password}>
+                            <FormLabel>Choose your Password</FormLabel>
+                            <InputGroup>
+                                <Input type={showPassword ? 'text' : 'password'} name='password' value={formData.password} onChange={handleInputChange} />
+                                <InputRightElement>
+                                    <img onClick={togglePasswordVisibility} src={showPassword ? '/eyePasswordVisible.png' : '/eyePasswordNotVisible.png'} alt="Eye Password" style={{ cursor: "pointer" }} />
+                                </InputRightElement>
+                            </InputGroup>
+                            <FormErrorMessage>{errors.password}</FormErrorMessage>
+                        </FormControl>
                     <Button type="submit">
                         Submit
                     </Button>
