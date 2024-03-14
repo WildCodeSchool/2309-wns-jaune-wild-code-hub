@@ -1,4 +1,5 @@
-import theme from "@/styles/theme/index";
+import theme from "../styles/theme/index";
+
 import { ChakraProvider } from "@chakra-ui/react";
 import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
 import type { AppProps } from "next/app";
