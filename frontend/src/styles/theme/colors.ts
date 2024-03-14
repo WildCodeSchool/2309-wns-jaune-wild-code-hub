@@ -7,5 +7,6 @@ const colors = {
   grey: "#363636",
   placeholder: "#A0AEC0",
   background2: "#151515",
+  textSecondary: "#807D7D",
 };
 export default colors;
