@@ -1,5 +1,10 @@
 import { useState } from "react";
 import { REGISTER } from "@/requetes/mutations/auth.mutations";
+import {
+    CreateUserInput,
+    RegisterMutation,
+    RegisterMutationVariables,
+  } from "@/types/graphql";
 import { useMutation } from "@apollo/client";
 import { useRouter } from "next/router";
 import {
@@ -22,6 +27,22 @@ import {
 } from "@/regex";
 
 const Register = () => {
+
+    const router = useRouter();
+
+    const [register, { error }] = useMutation<
+        RegisterMutation,
+        RegisterMutationVariables
+    >(REGISTER, {
+        onCompleted: (data) => {
+        console.log(data);
+        router.push("/auth/login");
+        },
+        onError(error) {
+        console.log(error);
+        },
+    });
+
     const [showPassword, setShowPassword] = useState(false);
     const [formData, setFormData] = useState({
         lastname: '',
@@ -46,7 +67,7 @@ const Register = () => {
         }));
     }
 
-    const handleSubmit = (e: { preventDefault: () => void; }) => {
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const newErrors = {
             lastname: '',
@@ -113,8 +134,21 @@ const Register = () => {
 
         setErrors(newErrors);
         if (Object.keys(newErrors).length === 0) {
-            // Code pour soumettre le formulaire si tout est valide
-            console.log("totto")
+            // const data = formData as CreateUserInput;
+            const formData = new FormData(e.currentTarget);
+            const data = Object.fromEntries(formData) as unknown as CreateUserInput;
+            register({
+            variables: { 
+                data: {
+                    ban: false,
+                    email: data.email,
+                    firstname: data.firstname,
+                    lastname: data.lastname,
+                    password: data.password,
+                    pseudo: data.pseudo,
+                    run_counter: 1,
+                } },
+            });
         }
     }
 
@@ -126,30 +160,30 @@ const Register = () => {
         <Box {...components.Box.main}>
             <Box {...components.Box.containerBox} >
                 <Text fontSize='5xl' color="white" as='b'>Welcome to Wild Code Hub !</Text >
-                <Box {...components.Box.form} p={3}>
+                <Box {...components.Box.form} p={2}>
                     <main>
                         <form onSubmit={handleSubmit}>
-                            <FormControl isInvalid={!!errors.lastname} mb={3}>
+                            <FormControl isInvalid={!!errors.lastname} mb={2}>
                                 <FormLabel>Enter Last Name</FormLabel>
                                 <Input type='text' name='lastname' value={formData.lastname} onChange={handleInputChange} />
                                 <FormErrorMessage>{errors.lastname}</FormErrorMessage>
                             </FormControl>
-                            <FormControl isInvalid={!!errors.firstname} mb={3}>
+                            <FormControl isInvalid={!!errors.firstname} mb={2}>
                                 <FormLabel>Enter First Name</FormLabel>
                                 <Input type='text' name='firstname' value={formData.firstname} onChange={handleInputChange} />
                                 <FormErrorMessage>{errors.firstname}</FormErrorMessage>
                             </FormControl>
-                            <FormControl isInvalid={!!errors.pseudo} mb={3}>
+                            <FormControl isInvalid={!!errors.pseudo} mb={2}>
                                 <FormLabel>Chosse your Pseudo</FormLabel>
                                 <Input type='text' name='pseudo' value={formData.pseudo} onChange={handleInputChange} />
                                 <FormErrorMessage>{errors.pseudo}</FormErrorMessage>
                             </FormControl>
-                            <FormControl isInvalid={!!errors.email} mb={3}>
+                            <FormControl isInvalid={!!errors.email} mb={2}>
                                 <FormLabel>Enter your Email</FormLabel>
                                 <Input type='email' name='email' value={formData.email} onChange={handleInputChange} />
                                 <FormErrorMessage>{errors.email}</FormErrorMessage>
                             </FormControl>
-                                <FormControl isInvalid={!!errors.password} mb={3}>
+                                <FormControl isInvalid={!!errors.password} mb={2}>
                                     <FormLabel>Choose your Password</FormLabel>
                                     <InputGroup>
                                         <Input type={showPassword ? 'text' : 'password'} name='password' value={formData.password} onChange={handleInputChange} />
@@ -160,7 +194,7 @@ const Register = () => {
                                     <FormErrorMessage>{errors.password}</FormErrorMessage>
                                 </FormControl>
                                 <Box textAlign="center">
-                                <Button type="submit" variant="secondary" mt={3}>
+                                <Button type="submit" variant="secondary" mt={2}>
                                     Submit
                                 </Button>
                             </Box>
