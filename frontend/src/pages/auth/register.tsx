@@ -108,13 +108,13 @@ const Register = () => {
                         <Input type='password' name='password' value={formData.password} onChange={handleInputChange} />
                         <FormErrorMessage>{errors.password}</FormErrorMessage>
                     </FormControl>
-                    <Button {...button.primary.defaultProps} type="submit" variant="solid">
+                    <Button type="submit">
                         Submit
                     </Button>
-                    <Button {...button.secondary.defaultProps} type="submit" variant="solid">
+                    <Button type="submit" variant="outline">
                         Submit
                     </Button>
-                    <Button {...button.tertiary.defaultProps} type="submit" variant="solid">
+                    <Button  type="submit" variant="solid">
                         Submit
                     </Button>
                 </form>
