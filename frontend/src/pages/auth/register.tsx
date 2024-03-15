@@ -158,7 +158,6 @@ const Register = () => {
 
         setErrors(newErrors);
         if (Object.keys(newErrors).length === 0) {
-            // const data = formData as CreateUserInput;
             const formData = new FormData(e.currentTarget);
             const data = Object.fromEntries(formData) as unknown as CreateUserInput;
             register({
@@ -188,29 +187,29 @@ const Register = () => {
                     <main>
                         <form onSubmit={handleSubmit}>
                             <FormControl isInvalid={!!errors.lastname} mb={2}>
-                                <FormLabel>Enter Last Name</FormLabel>
-                                <Input type='text' name='lastname' value={formData.lastname} onChange={handleInputChange} />
+                                <FormLabel color="text">Enter Last Name</FormLabel>
+                                <Input color="placeholder" bg="white" type='text' name='lastname' value={formData.lastname} onChange={handleInputChange} />
                                 <FormErrorMessage>{errors.lastname}</FormErrorMessage>
                             </FormControl>
                             <FormControl isInvalid={!!errors.firstname} mb={2}>
-                                <FormLabel>Enter First Name</FormLabel>
-                                <Input type='text' name='firstname' value={formData.firstname} onChange={handleInputChange} />
+                                <FormLabel color="text">Enter First Name</FormLabel>
+                                <Input color="placeholder" bg="white" type='text' name='firstname' value={formData.firstname} onChange={handleInputChange} />
                                 <FormErrorMessage>{errors.firstname}</FormErrorMessage>
                             </FormControl>
                             <FormControl isInvalid={!!errors.pseudo} mb={2}>
-                                <FormLabel>Chosse your Pseudo</FormLabel>
-                                <Input type='text' name='pseudo' value={formData.pseudo} onChange={handleInputChange} />
+                                <FormLabel color="text">Chosse your Pseudo</FormLabel>
+                                <Input color="placeholder" bg="white" type='text' name='pseudo' value={formData.pseudo} onChange={handleInputChange} />
                                 <FormErrorMessage>{errors.pseudo}</FormErrorMessage>
                             </FormControl>
                             <FormControl isInvalid={!!errors.email} mb={2}>
-                                <FormLabel>Enter your Email</FormLabel>
-                                <Input type='email' name='email' value={formData.email} onChange={handleInputChange} />
+                                <FormLabel color="text">Enter your Email</FormLabel>
+                                <Input color="placeholder" bg="white" type='email' name='email' value={formData.email} onChange={handleInputChange} />
                                 <FormErrorMessage>{errors.email}</FormErrorMessage>
                             </FormControl>
                                 <FormControl isInvalid={!!errors.password} mb={2}>
-                                    <FormLabel>Choose your Password</FormLabel>
+                                    <FormLabel color="text">Choose your Password</FormLabel>
                                     <InputGroup>
-                                        <Input type={showPassword ? 'text' : 'password'} name='password' value={formData.password} onChange={handleInputChange} />
+                                        <Input color="placeholder" bg="white" type={showPassword ? 'text' : 'password'} name='password' value={formData.password} onChange={handleInputChange} />
                                         <InputRightElement>
                                             <img onClick={togglePasswordVisibility} src={showPassword ? '/eyePasswordVisible.png' : '/eyePasswordNotVisible.png'} alt="Eye Password" style={{ cursor: "pointer" }} />
                                         </InputRightElement>
