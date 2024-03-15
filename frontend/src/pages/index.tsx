@@ -26,7 +26,12 @@ const cardsInfos = [
 
 export default function Home() {
   return (
-    <Box bgImage={"url('/loop.svg')"} bgColor={"background"}>
+    <Flex
+      direction={"column"}
+      bgImage="url(/loop.svg)"
+      bgRepeat={"no-repeat"}
+      bgColor={"background"}
+    >
       <Flex
         direction="column"
         alignItems="center"
@@ -34,13 +39,7 @@ export default function Home() {
         style={{ height: "100vh", width: "100%" }}
         gap={"2rem"}
       >
-        <Heading
-          fontSize={"64"}
-          textAlign={"center"}
-          fontFamily={"Poppins, sans-serif"}
-          fontWeight="700"
-          color={"white"}
-        >
+        <Heading variant="homepage" textAlign="center">
           Create, collaborate, make an impact
         </Heading>
         <Text
@@ -60,26 +59,21 @@ export default function Home() {
           <Button variant={"secondary"}>Start for free</Button>
         </Stack>
       </Flex>
+
       <Flex
         direction="column"
         alignItems="center"
         justify={"center"}
-        style={{ height: "100vh", width: "100%" }}
+        style={{ height: "60vh", width: "100%" }}
         gap={"2rem"}
       >
-        <Heading
-          fontSize={"64"}
-          textAlign={"center"}
-          fontFamily={"Poppins, sans-serif"}
-          fontWeight="700"
-          color={"white"}
-        >
+        <Heading variant={"homepage"} textAlign={"center"}>
           Discover our online Code Editor
         </Heading>
         <Text
           color={"text"}
           fontSize={"26"}
-          fontFamily={"Source Sans 3, sans-serif"}
+          fontFamily={"source"}
           textAlign={"center"}
           width={"55%"}
         >
@@ -91,19 +85,24 @@ export default function Home() {
         <Button variant="secondary">Discover</Button>
       </Flex>
       <Flex
-        direction="column"
-        alignItems="center"
-        justify={"center"}
-        style={{ height: "100vh", width: "100%" }}
-        gap={"2rem"}
+        direction={"column"}
+        bgImage={"url(loop2.svg)"}
+        bgPos={"bottom"}
+        bgRepeat={"no-repeat"}
       >
-        <Flex w={"100%"} gap={"2rem"} height={"100vh"} p={"2rem"}>
+        <Flex
+          w={"100%"}
+          gap={"2rem"}
+          minHeight={"100vh"}
+          p={"2rem"}
+          flexWrap={"nowrap"}
+        >
           {cardsInfos.map((cardInfos, index) => (
             <HomeCard
               title={cardInfos.title}
               iconSrc={cardInfos.imageSrc}
-              h="66%"
-              // alignSelf={index % 2 ? "flex-end" : "flex-start"}
+              h="30rem"
+              w={"20rem"}
               mt={
                 index === 1
                   ? "15%"
@@ -118,23 +117,52 @@ export default function Home() {
             </HomeCard>
           ))}
         </Flex>
-      </Flex>
-      <Flex
-        direction="row"
-        alignItems="center"
-        justify={"center"}
-        style={{ height: "100vh", width: "100%" }}
-        gap={"2rem"}
-        px={"2rem"}
-        py={"4rem"}
-      >
-        <Flex w={"50%"} p={"2rem"} h={"100%"}>
-          <Heading color={"text"}>Accelarate your git worflow</Heading>
+        <Flex
+          direction="row"
+          alignItems="center"
+          justify={"center"}
+          style={{ height: "100vh", width: "100%" }}
+          gap={"1rem"}
+          pl={"2rem"}
+          py={"6rem"}
+        >
+          <Flex
+            w={"50%"}
+            p={"2rem"}
+            h={"100%"}
+            direction={"column"}
+            justifyContent={"space-between"}
+          >
+            <Box>
+              <Heading variant={"homepage"} textAlign={"left"}>
+                Accelarate your git worflow
+              </Heading>
+              <Text color={"textSecondary"} fontSize={"26px"} py={"3rem"}>
+                Our comminuty has more than 9 weeks of history, so we will need
+                to change this, but you can still join us
+              </Text>
+            </Box>
+            <Button variant={"secondary"} w={"fit-content"} px={"3rem"}>
+              Join us
+            </Button>
+          </Flex>
+          <Flex
+            w={"50%"}
+            h={"100%"}
+            py={"5rem"}
+            backgroundColor={"grey"}
+            justify={"center"}
+            align={"center"}
+            color="text"
+            fontSize="46px"
+            fontWeight={"bold"}
+          >
+            SOME VIDEO MATRIX STYLE
+          </Flex>
         </Flex>
-        <Flex w={"50%"} h={"100%"} py={"5rem"} backgroundColor={"grey"}>
-          SOME VIDEO MATRIX STYLE
-        </Flex>
+
+        <Flex bg={"background2"} w={"100%"} h={"10rem"}></Flex>
       </Flex>
-    </Box>
+    </Flex>
   );
 }

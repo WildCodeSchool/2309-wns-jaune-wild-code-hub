@@ -1,12 +1,11 @@
 import {
   Card,
   CardBody,
-  CardHeader,
   Heading,
-  Icon,
   Text,
   Image,
   CardProps,
+  Box,
 } from "@chakra-ui/react";
 import React, { PropsWithChildren } from "react";
 interface HomeCardProps extends CardProps {
@@ -20,23 +19,32 @@ const HomeCard = ({
   ...props
 }: HomeCardProps & PropsWithChildren) => {
   return (
-    <Card bg={"background2"} borderRadius={"100"} {...props}>
-      <div
-        style={{
-          position: "absolute",
-          width: "100%",
-          height: "100%",
-          borderRadius: "100px",
-          right: "5%",
-          border: "1px solid white",
-        }}
-      ></div>
-      <CardBody display="flex" flexDirection={"column"} alignItems={"center"}>
+    <Card bg={"transparent"} {...props}>
+      <Box
+        borderRadius={100}
+        w={"100%"}
+        h="100%"
+        position={"absolute"}
+        bg={"#202020"}
+        opacity={"80%"}
+        left={"5%"}
+        bottom={"2%"}
+      ></Box>
+      <CardBody
+        border="1px solid white"
+        display="flex"
+        flexDirection={"column"}
+        alignItems={"center"}
+        bg={"transparent"}
+        zIndex={1}
+        borderRadius={"100"}
+        h={"100%"}
+      >
         <Image src={iconSrc} alt="bunny" py={"2.5rem"}></Image>
         <Heading
           mb={"1rem"}
           color={"text"}
-          fontSize={"33px"}
+          fontSize={"26px"}
           fontFamily={"source"}
         >
           {title}
@@ -44,7 +52,7 @@ const HomeCard = ({
         <Text
           color={"textSecondary"}
           textAlign={"center"}
-          px={"2rem"}
+          px={"1.5rem"}
           fontFamily={"source"}
         >
           {children}
