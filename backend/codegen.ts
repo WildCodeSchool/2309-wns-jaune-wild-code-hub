@@ -6,9 +6,10 @@ const config: CodegenConfig = {
     './src/types/resolvers-types.ts': {
       config: {
         useIndexSignature: true,
+        // maybeValue: "T | undefined",
       },
       plugins: ['typescript', 'typescript-resolvers'],
     },
-  },
+  }
 };
 export default config;
