@@ -30,19 +30,7 @@ const Register = () => {
 
     const router = useRouter();
 
-    const [register, { error }] = useMutation<
-        RegisterMutation,
-        RegisterMutationVariables
-    >(REGISTER, {
-        onCompleted: (data) => {
-        console.log(data);
-        router.push("");
-        },
-        onError(error) {
-        console.log(error);
-        },
-    });
-
+    
     const [showPassword, setShowPassword] = useState(false);
     const [formData, setFormData] = useState({
         lastname: '',
@@ -57,6 +45,42 @@ const Register = () => {
         pseudo: '',
         email: '',
         password: ''
+    });
+    
+    const [register, { error }] = useMutation<
+        RegisterMutation,
+        RegisterMutationVariables
+    >(REGISTER, {
+        onCompleted: (data) => {
+        console.log(data);
+        router.push("/auth/login");
+        },
+        onError(error) {
+        console.log(error.message);
+        const newErrors = {
+            lastname: '',
+            firstname: '',
+            pseudo: '',
+            email: '',
+            password: ''
+        }
+        if (error.message === "This email and pseudo is already in use!") {
+            newErrors.email += 'This email is already in use !';
+            newErrors.pseudo += 'This pseudo is already in use !';
+        } else if (error.message === "This email is already in use!") {
+            newErrors.email += 'This email is already in use !';
+        } else if (error.message === "This pseudo is already in use!"){
+            newErrors.pseudo += 'This pseudo is already in use !';
+        }
+
+        for (const key in newErrors) {
+            if (newErrors[key as keyof typeof newErrors] === "") {
+                delete newErrors[key as keyof typeof newErrors];
+            }
+        }
+
+        setErrors(newErrors);
+        },
     });
 
     const handleInputChange = (e: { target: { name: string; value: string; }; }) => {

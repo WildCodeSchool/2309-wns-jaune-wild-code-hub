@@ -84,9 +84,16 @@ export class UserResolver {
   @Mutation(() => User)
   async register(@Arg("data") data: CreateUserInput) {
     const user = await new UsersService().findByEmail(data.email);
-    if (user) throw new Error("This email is already in use!");
     const pseudo = await new UsersService().findByPseudo(data.pseudo);
-    if (pseudo) throw new Error("This pseudo is already in use!");
+
+    if (user && pseudo) {
+      throw new Error("This email and pseudo is already in use!");
+    } else if (user) {
+      throw new Error("This email is already in use!");
+    } else if (pseudo) {
+      throw new Error("This pseudo is already in use!");
+    }
+    
     const newUser = await new UsersService().create(data);
     return newUser;
   }
