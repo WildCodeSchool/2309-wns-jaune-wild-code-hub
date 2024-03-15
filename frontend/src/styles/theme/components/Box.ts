@@ -15,6 +15,9 @@ const box =  {
     form: {
         width: "400px",
     },
+    formModal: {
+        width: "85%",
+    },
 }
 
 export default box;

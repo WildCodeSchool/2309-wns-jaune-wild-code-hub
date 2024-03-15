@@ -95,6 +95,7 @@ export type QueryListUsersByRoleArgs = {
 
 
 export type QueryLoginArgs = {
+  [x: string]: any;
   infos: InputLogin;
 };
 

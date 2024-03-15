@@ -36,7 +36,7 @@ const Register = () => {
     >(REGISTER, {
         onCompleted: (data) => {
         console.log(data);
-        router.push("/auth/login");
+        router.push("");
         },
         onError(error) {
         console.log(error);

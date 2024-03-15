@@ -1,12 +1,11 @@
-import Head from "next/head";
-import Image from "next/image";
-import { Inter } from "next/font/google";
+import Login from "@/components/login";
 
 export default function Home() {
   return (
     <>
       <main>
       <p>Home Page</p>
+      <Login />
       </main>
     </>
   );
