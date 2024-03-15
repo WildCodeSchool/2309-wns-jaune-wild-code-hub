@@ -104,7 +104,7 @@ const Login = () => {
                                     <InputGroup>
                                         <Input color="placeholder" bg="white" type={showPassword ? 'text' : 'password'} name='password' value={formData.password} onChange={handleInputChange} />
                                         <InputRightElement>
-                                            <img onClick={togglePasswordVisibility} src={showPassword ? '/eyePasswordVisible.png' : '/eyePasswordNotVisible.png'} alt="Eye Password" style={{ cursor: "pointer" }} />
+                                            <img onClick={togglePasswordVisibility} src={!showPassword ? '/eyePasswordVisible.png' : '/eyePasswordNotVisible.png'} alt="Eye Password" style={{ cursor: "pointer" }} />
                                         </InputRightElement>
                                     </InputGroup>
                                     <FormErrorMessage>{errors.password}</FormErrorMessage>
