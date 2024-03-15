@@ -180,7 +180,7 @@ const Register = () => {
     }
 
     return (
-        <Box {...components.Box.main}>
+        <Box {...components.Box.main} bgColor={"background"} bgRepeat={"no-repeat"} bgImage="url(/BGForm.png)">
             <Box {...components.Box.containerBox} >
                 <Text fontSize='5xl' color="white" as='b'>Welcome to Wild Code Hub !</Text >
                 <Box {...components.Box.form} p={2}>
