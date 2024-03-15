@@ -32,15 +32,7 @@ const app = express();
 const httpServer = http.createServer(app);
 
 async function main() {
-  
-  // const schema = await buildSchema({
-    //   resolvers: [UserResolver],
-    // });
     
-    // const server = new ApolloServer<{}>({
-      //   schema,
-      // });
-      
       const schema = await buildSchema({
         resolvers: [UserResolver, ProjectResolver],
         validate: false,
