@@ -17,6 +17,7 @@ import { User } from "./entities/user.entity";
 import { jwtVerify } from "jose";
 import UserService from "./services/users.service";
 import { customAuthChecker } from "./lib/authChecker";
+import { ProjectResolver } from "./resolvers/project.resolver";
 
 export interface MyContext {
   req: express.Request;
@@ -41,7 +42,7 @@ async function main() {
       // });
       
       const schema = await buildSchema({
-        resolvers: [UserResolver],
+        resolvers: [UserResolver, ProjectResolver],
         validate: false,
         authChecker: customAuthChecker,
       });

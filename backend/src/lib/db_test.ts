@@ -9,5 +9,5 @@ export default new DataSource({
   database: "wildcodehub-test",
   synchronize: true,
   logging: ["query", "error"],
-  entities: ["src/entities/*.ts"],
+  entities: ["src/entities/*.ts"], 
 });
