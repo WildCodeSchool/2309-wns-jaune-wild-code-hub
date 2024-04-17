@@ -1,6 +1,6 @@
 import { In, Like, Repository } from "typeorm";
 import datasource from "../lib/db";
-import { File, CreateFileInput } from "../entities/createfile.entity";
+import { File, CreateFileInput } from "../entities/file.entity";
 
 export default class FilesService {
   db: Repository<File>;

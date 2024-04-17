@@ -25,7 +25,7 @@ export class File {
   @Field()
   @Column({ length: 100 })
   @Length(1, 100, {
-    message: " le nom du fichier doit contenir entre 1 et 100 caractères",
+    message: " le nom du fichier doit contenir entre 1 et 100 caractères ",
   })
   name: string;
 
@@ -63,9 +63,6 @@ export class CreateFileInput {
   name: string;
 
   @Field()
-  category: string;
-
-  @Field()
   language: string;
 
   @Field()
@@ -73,10 +70,4 @@ export class CreateFileInput {
 
   @Field({ nullable: true })
   content: string;
-
-  @Field()
-  created_at: Date;
-
-  @Field()
-  update_at: Date;
 }
