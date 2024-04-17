@@ -41,4 +41,4 @@ jobs:
           context: ./client
           file: ./client/Dockerfile
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/main-server-client:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/main-server-frontend:latest
