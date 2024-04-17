@@ -41,14 +41,14 @@ export class User {
   firstname: string;
 
   @Field()
-  @Column({ length: 20 })
+  @Column({ unique: true, length: 20 })
   @Length(3, 20, {
     message: "Le pseudo doit contenir entre 3 et 20 caractères",
   })
   pseudo: string;
 
   @Field()
-  @Column({ length: 200 })
+  @Column({ unique: true, length: 200 })
   @Length(5, 200, {
     message: "L'email doit contenir entre 5 et 200 caractères",
   })

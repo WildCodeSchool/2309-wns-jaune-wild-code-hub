@@ -25,9 +25,9 @@ export default async function migrate(db: any) {
   await projectRepository.save(fakeProjects);
 
   //Migrate File
-  await db.getRepository(File).clear();
-  await db.query("ALTER SEQUENCE file_id_seq RESTART WITH 1");
-  const fileRepository = db.getRepository(File);
-  await fileRepository.save(fakeFile);
-  console.log("Succes migrate database !");
+  // await db.getRepository(File).clear();
+  // await db.query("ALTER SEQUENCE file_id_seq RESTART WITH 1");
+  // const fileRepository = db.getRepository(File);
+  // await fileRepository.save(fakeFile);
+  // console.log("Succes migrate database !");
 }

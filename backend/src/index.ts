@@ -17,6 +17,7 @@ import { User } from "./entities/user.entity";
 import { jwtVerify } from "jose";
 import UserService from "./services/users.service";
 import { customAuthChecker } from "./lib/authChecker";
+import { ProjectResolver } from "./resolvers/project.resolver";
 
 export interface MyContext {
   req: express.Request;
@@ -31,17 +32,9 @@ const app = express();
 const httpServer = http.createServer(app);
 
 async function main() {
-  
-  // const schema = await buildSchema({
-    //   resolvers: [UserResolver],
-    // });
     
-    // const server = new ApolloServer<{}>({
-      //   schema,
-      // });
-      
       const schema = await buildSchema({
-        resolvers: [UserResolver],
+        resolvers: [UserResolver, ProjectResolver],
         validate: false,
         authChecker: customAuthChecker,
       });
@@ -97,16 +90,6 @@ async function main() {
     migrate(db);
   }
   console.log(`🚀 Server lancé sur http://localhost:4000/`);
-  // const { url } = await startStandaloneServer(server, {
-    //   listen: { port: 4000 },
-    //   context: async ({ req, res }) => {
-      //     return {};
-      //   },
-      // });
-      
-      // await db.initialize();
-      
-      // console.log(`🚀  Server ready at: ${url}`);
-    }
+}
 
 main();
