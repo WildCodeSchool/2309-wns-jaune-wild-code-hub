@@ -99,6 +99,7 @@ export default function Home() {
         >
           {cardsInfos.map((cardInfos, index) => (
             <HomeCard
+              key={`Card-Info-${index}`}
               title={cardInfos.title}
               iconSrc={cardInfos.imageSrc}
               h="30rem"
