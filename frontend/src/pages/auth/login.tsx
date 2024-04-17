@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { useState } from "react";
 import { useRouter } from "next/router";
 import {
@@ -112,11 +113,11 @@ const Login = () => {
                                 <Box textAlign="center">
                                     <Box mt={5}>
                                         <Link href='/auth/forgetpassword'>
-                                            <Text fontSize='xs' color="primary" as='b'>Forget password ?</Text >
+                                            <Text fontSize='xs' color="primary" as='b'>Forget password ?</Text>
                                         </Link>
                                     </Box>
                                     <Box mt={5}>
-                                        <Text fontSize='xs' color="grey" as='b'>Don't have an account? </Text >
+                                        <Text fontSize='xs' color="grey" as='b'>Don&apos;t have an account?</Text>
                                         <Link href='/auth/register'>
                                             <Text fontSize='xs' color="accent" as='b'>Sign up</Text >
                                         </Link>

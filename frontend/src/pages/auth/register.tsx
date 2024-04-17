@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { useState } from "react";
 import { REGISTER } from "@/requetes/mutations/auth.mutations";
 import {
@@ -80,7 +81,7 @@ const Register = () => {
         }
 
         setErrors(newErrors);
-        },
+        }
     });
 
     const handleInputChange = (e: { target: { name: string; value: string; }; }) => {
