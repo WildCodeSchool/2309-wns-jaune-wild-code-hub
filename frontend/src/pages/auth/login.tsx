@@ -89,7 +89,7 @@ const Login = () => {
 
     return (
         <Box {...components.Box.main} bgColor={"background"} bgRepeat={"no-repeat"} bgImage="url(/BGForm.png)">
-            <Box {...components.Box.containerBox} p={30}>
+            <Box {...components.Box.containerBox} p={"30"}>
                 <Text fontSize='3xl' color="white" as='b' mb={10}>Connect to your Hub !</Text >
                 <Box {...components.Box.formModal} p={2}>
                     <main>
