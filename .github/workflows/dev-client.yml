@@ -5,7 +5,9 @@ name: Compile and push client image
 on:
   # Triggers the workflow on push or pull request events but only for the master branch
   push:
-    branches: ["staging"]
+    branches: ["dev"]
+  pull_request:
+    branches: ["dev"]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -41,4 +43,4 @@ jobs:
           context: ./client
           file: ./client/Dockerfile
           push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.DOCKER_HUB_CLIENT_IMAGE_NAME }}:latest
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/dev-server-frontend:latest
