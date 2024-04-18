@@ -12,7 +12,7 @@ services:
       - WATCHPACK_POLLING=true
 
     depends_on:
-      db:
+      db-dev:
         condition: service_healthy
     env_file:
       - ./backend/.env
@@ -30,7 +30,7 @@ services:
       - NEXT_PUBLIC_IMAGE_URL=http://localhost:8000
     #  env_file:
     #    - ./.env
-  db:
+  db-dev:
     image: postgres:15
     profiles: ["dev", "production", "test"]
     restart: always
@@ -40,9 +40,9 @@ services:
       timeout: 5s
       retries: 10
     environment:
-      POSTGRES_USER: root
-      POSTGRES_PASSWORD: root
-      POSTGRES_DB: wildcodehub
+      POSTGRES_USER: ${USERNAME_DB}
+      POSTGRES_PASSWORD: ${PASSWORD_DB}
+      POSTGRES_DB: ${DATABASE_DB}
     ports:
       - 5433:5432
     volumes:
@@ -51,7 +51,7 @@ services:
     image: adminer
     profiles: ["dev", "production", "test"]
     depends_on:
-      - db
+      - db-dev
     restart: always
     ports:
       - 8081:8080
@@ -66,9 +66,9 @@ services:
       timeout: 5s
       retries: 10
     environment:
-      POSTGRES_USER: root
-      POSTGRES_PASSWORD: root
-      POSTGRES_DB: wildcodehub-test
+      POSTGRES_USER: ${USERNAME_DB}
+      POSTGRES_PASSWORD: ${PASSWORD_DB}
+      POSTGRES_DB: ${DATABASE_DB}
     ports:
       - 5434:5432
     volumes:
