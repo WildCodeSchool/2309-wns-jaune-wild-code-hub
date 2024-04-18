@@ -40,7 +40,7 @@ export default function Home() {
         gap={"2rem"}
       >
         <Heading variant="homepage" textAlign="center">
-          Create, collaborate, make an impact
+          Create, collaborate, make an impact TOTO v2 
         </Heading>
         <Text
           color={"text"}
