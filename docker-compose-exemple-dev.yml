@@ -1,12 +1,8 @@
 services:
   backend:
-    # build: ./backend
-    image: wildcodehub/dev-server-backend
+    image: wildcodehub/dev-server-backend:latest
     ports:
       - 4000:4000
-    profiles: ["dev", "production", "test"]
-#    volumes:
- #     - ./backend/src:/app/src
     environment:
       - WDS_SOCKET_HOST=127.0.0.1
       - CHOKIDAR_USEPOLLING=true
@@ -18,24 +14,17 @@ services:
     env_file:
       - ./.env
   frontend:
-    #build: ./frontend
     command: sh -c "npm run build && npm run start"
-    image: wildcodehub/dev-server-frontend
+    image: wildcodehub/dev-server-frontend:latest
     ports:
       - 3000:3000
-    profiles: ["dev", "production", "test"]
-  #  volumes:
-   #   - ./frontend/src:/app/src
     environment:
       - WDS_SOCKET_HOST=127.0.0.1
       - CHOKIDAR_USEPOLLING=true
       - WATCHPACK_POLLING=true
       - NEXT_PUBLIC_IMAGE_URL=http://localhost:8000
-    #  env_file:
-    #    - ./.env
   db:
     image: postgres:15
-    profiles: ["dev", "production", "test"]
     restart: always
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -d wildcodehub -U root"]
@@ -50,46 +39,16 @@ services:
       - 5433:5432
     volumes:
       - wildcodehub-data:/var/lib/postgresql/data
-  adminer:
-    image: adminer
-    profiles: ["dev", "production", "test"]
-    depends_on:
-      - db
-    restart: always
-    ports:
-      - 8090:8080
 
-  db_test:
-    image: postgres:15
-    profiles: ["test"]
-    restart: always
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -d wildcodehub-test -U root"]
-      interval: 5s
-      timeout: 5s
-      retries: 10
-    environment:
-      POSTGRES_USER: root
-      POSTGRES_PASSWORD: root
-      POSTGRES_DB: wildcodehub-test
-    ports:
-      - 5434:5432
-    volumes:
-      - wildcodehub-data-test:/var/lib/postgresql/data
   nginx:
     image: nginx:1.21.3
-    ##depends_on:
-    ## - backend
-    ##² - frontend
     restart: always
     ports:
-      - ${GATEWAY_PORT:-8000}:80
+      - ${GATEWAY_PORT:-8001}:80
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf
-#      - web-client-build:/web-client-build
       - ./logs:/var/log/nginx
 
 volumes:
   wildcodehub-data:
   wildcodehub-data-test:
- # web-client-build:
