@@ -46,8 +46,8 @@ services:
     ports:
       - ${GATEWAY_PORT:-8000}:80
     volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf
-      - ./logs:/var/log/nginx
+      - ./nginx-main.conf:/etc/nginx/nginx-main.conf
+      - ./logs:/var/log/nginx-main
 
 volumes:
   wildcodehub-data:
