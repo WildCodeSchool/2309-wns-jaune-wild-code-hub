@@ -1,4 +1,4 @@
-import { Container, background, defineStyleConfig } from "@chakra-ui/react";
+import { ResponsiveValue } from "@chakra-ui/react";
 
 const box =  {
     main: {
@@ -9,11 +9,14 @@ const box =  {
     },
     containerBox : {
         display: "flex",
-        flexDirection: "column",
+        flexDirection: "column" as ResponsiveValue<"column" | "row">,
         alignItems: "center" ,
     },
     form: {
         width: "400px",
+    },
+    formModal: {
+        width: "85%",
     },
 }
 

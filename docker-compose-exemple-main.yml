@@ -1,0 +1,54 @@
+services:
+  backend:
+    image: wildcodehub/main-server-backend:latest
+    ports:
+      - 4000:4000
+    environment:
+      - WDS_SOCKET_HOST=127.0.0.1
+      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true
+
+    depends_on:
+      db:
+        condition: service_healthy
+    env_file:
+      - ./.env
+  frontend:
+    command: sh -c "npm run build && npm run start"
+    image: wildcodehub/main-server-frontend:latest
+    ports:
+      - 3000:3000
+    environment:
+      - WDS_SOCKET_HOST=127.0.0.1
+      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true
+      - NEXT_PUBLIC_IMAGE_URL=http://localhost:8000
+  db:
+    image: postgres:15
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d wildcodehub -U root"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: wildcodehub
+    ports:
+      - 5433:5432
+    volumes:
+      - wildcodehub-data:/var/lib/postgresql/data
+
+  nginx:
+    image: nginx:1.21.3
+    restart: always
+    ports:
+      - ${GATEWAY_PORT:-8000}:80
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./logs:/var/log/nginx
+
+volumes:
+  wildcodehub-data:
+  wildcodehub-data-test:
