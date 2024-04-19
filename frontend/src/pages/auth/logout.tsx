@@ -17,7 +17,7 @@ function Logout() {
     <main
       className={`flex min-h-screen flex-col items-center justify-between p-24`}
     >
-      {loading ? "Veuillez patienter..." : "Vous êtes déconnectés!"}
+      {loading ? "Please wait..." : "You are disconnected !"}
     </main>
   );
 }

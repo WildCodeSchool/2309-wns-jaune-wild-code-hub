@@ -25,7 +25,6 @@ const Login = () => {
     const [login, { error }] = useLazyQuery<
         LoginQuery,
         LoginQueryVariables
-        // QueryLoginArgs
     >(LOGIN, {
         onCompleted: (data) => {
             if (data.login.success) {
@@ -91,7 +90,6 @@ const Login = () => {
     const togglePasswordVisibility  = () => {
         setShowPassword(!showPassword);
     }
-    const { isOpen, onOpen, onClose } = useDisclosure();
 
     return (
         <Box {...components.Box.main} bgColor={"background"} bgRepeat={"no-repeat"} bgImage="url(/BGForm.png)">
