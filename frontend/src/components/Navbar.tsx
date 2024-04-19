@@ -1,21 +1,42 @@
-import { Box, Button, Flex, Wrap } from "@chakra-ui/react";
+import { Box, Button, Flex, Icon } from "@chakra-ui/react";
 import React from "react";
 import Searchbar from "./Searchbar";
-import { useRouter } from "next/navigation";
+import { useParams, usePathname, useRouter } from "next/navigation";
 
 const Navbar = () => {
   const router = useRouter();
+  const params = useParams();
+  const pathname = usePathname();
+  console.log("pathname", pathname);
+  console.log("params", params);
   return (
-    <Flex justify={"space-between"} position={"fixed"} w={"100%"} zIndex={2}>
-      <Box>{"< Wild Code Hub />"}</Box>
+    <Flex
+      justify={"space-between"}
+      position={"fixed"}
+      w={"100%"}
+      p={"1rem"}
+      bgColor={"background"}
+      zIndex={2}
+      alignItems={"center"}
+    >
+      <Button variant={"link"} onClick={() => router.push("/")}>
+        {"< Wild Code Hub />"}
+      </Button>
       <Searchbar />
       <Box gap={"2rem"}>
-        <Button variant="ghost" onClick={() => router.push("/auth/login")}>
-          Log in
-        </Button>
-        <Button variant="primary" onClick={() => router.push("/auth/register")}>
-          Sign In
-        </Button>
+        {pathname != "/auth/login" && (
+          <Button variant="ghost" onClick={() => router.push("/auth/login")}>
+            Log in
+          </Button>
+        )}
+        {pathname != "/auth/register" && (
+          <Button
+            variant="primary"
+            onClick={() => router.push("/auth/register")}
+          >
+            Sign In
+          </Button>
+        )}
       </Box>
     </Flex>
   );
