@@ -45,7 +45,6 @@ export class UserResolver {
   @Query(() => Message)
   async login(@Arg("infos") infos: InputLogin, @Ctx() ctx: MyContext) {
     let user;
-    console.log("email", infos.email)
     if (!infos.email && !infos.pseudo) {
       throw new Error("Check your login information !");
     } else if (infos.email) {
@@ -54,13 +53,11 @@ export class UserResolver {
       user = await new UsersService().findByPseudo(infos.pseudo);
 
     }
-    console.log(user)
     if (!user) {
       throw new Error("Check your login information !");
     }
 
     const isPasswordValid = await argon2.verify(user.password, infos.password);
-    console.log(isPasswordValid)
     const m = new Message();
     if (isPasswordValid) {
       const token = await new SignJWT({ 
@@ -82,7 +79,6 @@ export class UserResolver {
       m.message = "Check your login information !";
       m.success = false;
     }
-    console.log(m)
     return m;
   }
 
