@@ -44,7 +44,7 @@ services:
       POSTGRES_PASSWORD: ${PASSWORD_DB}
       POSTGRES_DB: ${DATABASE_DB}
     ports:
-      - 5433:5432
+      - 5434:5432
     volumes:
       - wildcodehub-data:/var/lib/postgresql/data
   adminer:
@@ -70,7 +70,7 @@ services:
       POSTGRES_PASSWORD: root
       POSTGRES_DB: wildcodehub-test
     ports:
-      - 5434:5432
+      - 5435:5432
     volumes:
       - wildcodehub-data-test:/var/lib/postgresql/data
 
