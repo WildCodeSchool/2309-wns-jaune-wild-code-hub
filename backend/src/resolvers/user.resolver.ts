@@ -54,30 +54,30 @@ export class UserResolver {
       user = await new UsersService().findByPseudo(infos.pseudo);
 
     }
-
+    console.log(user)
     if (!user) {
       throw new Error("Check your login information !");
     }
 
     const isPasswordValid = await argon2.verify(user.password, infos.password);
+    console.log(isPasswordValid)
     const m = new Message();
     if (isPasswordValid) {
-      const token = await new SignJWT({ email: user.email })
+      const token = await new SignJWT({ email: user.email, role: user.role })
         .setProtectedHeader({ alg: "HS256", typ: "jwt" })
         .setExpirationTime("2h")
         .sign(new TextEncoder().encode(`${process.env.SECRET_KEY}`));
 
-      console.log("token", token)
       let cookies = new Cookies(ctx.req, ctx.res);
       cookies.set("token", token, { httpOnly: true });
 
-      console.log("cookie", cookies)
       m.message = "Welcome !";
       m.success = true;
     } else {
       m.message = "Check your login information !";
       m.success = false;
     }
+    console.log(m)
     return m;
   }
 

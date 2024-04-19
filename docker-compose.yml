@@ -28,8 +28,8 @@ services:
       - CHOKIDAR_USEPOLLING=true
       - WATCHPACK_POLLING=true
       - NEXT_PUBLIC_IMAGE_URL=http://localhost:8000
-    #  env_file:
-    #    - ./.env
+    env_file:
+       - ./frontend/.env
   db-dev:
     image: postgres:15
     profiles: ["dev", "production", "test"]
