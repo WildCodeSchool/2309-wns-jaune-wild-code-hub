@@ -5,7 +5,6 @@ import "dotenv/config";
 
 import { buildSchema } from "type-graphql";
 import db from "./lib/db";
-import migrate from "./migrate";
 import { UserResolver } from "./resolvers/user.resolver";
 
 import express from "express";

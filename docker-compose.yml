@@ -9,11 +9,11 @@ services:
     environment:
       - WDS_SOCKET_HOST=127.0.0.1
       - CHOKIDAR_USEPOLLING=true
-      - WATCHPACK_POLLING=true
-
+      - WATCHPACK_POLLING=true 
     depends_on:
       db-dev:
         condition: service_healthy
+    command: sh -c 'npm run migrate && npm start' 
     env_file:
       - ./backend/.env
   frontend:
