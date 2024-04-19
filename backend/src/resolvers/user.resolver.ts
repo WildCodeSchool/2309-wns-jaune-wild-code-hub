@@ -63,7 +63,12 @@ export class UserResolver {
     console.log(isPasswordValid)
     const m = new Message();
     if (isPasswordValid) {
-      const token = await new SignJWT({ email: user.email, role: user.role })
+      const token = await new SignJWT({ 
+        email: user.email,
+        role: user.role,
+        pseudo: user.pseudo,
+        id : user.id
+      })
         .setProtectedHeader({ alg: "HS256", typ: "jwt" })
         .setExpirationTime("2h")
         .sign(new TextEncoder().encode(`${process.env.SECRET_KEY}`));
@@ -129,6 +134,19 @@ export class UserResolver {
       m.success = false;
     }
 
+    return m;
+  }
+
+  @Query(() => Message)
+  async logout(@Ctx() ctx: MyContext) {
+    if (ctx.user) {
+      let cookies = new Cookies(ctx.req, ctx.res);
+      cookies.set("token");
+    }
+    const m = new Message();
+    m.message = "You have been disconnected !";
+    m.success = true;
+    
     return m;
   }
 }
