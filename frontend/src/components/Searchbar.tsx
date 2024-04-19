@@ -8,6 +8,7 @@ const Searchbar = () => {
       borderRadius={100}
       align={"center"}
       px={"1rem"}
+      padding={"0.5rem"}
       bg={"background2"}
       color={"white"}
       w={"40%"}
@@ -15,6 +16,7 @@ const Searchbar = () => {
       <Input
         variant={"unstyled"}
         borderRadius={100}
+        pl={"1rem"}
         placeholder="Search for projects"
         border={"transparent"}
         _focus={{ outline: "none" }}
