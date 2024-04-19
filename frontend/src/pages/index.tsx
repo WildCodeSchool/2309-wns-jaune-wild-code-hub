@@ -27,10 +27,12 @@ const cardsInfos = [
 export default function Home() {
   return (
     <Flex
+      width={"100%"}
       direction={"column"}
       bgImage="url(/loop.svg)"
       bgRepeat={"no-repeat"}
       bgColor={"background"}
+      bgSize={"100%"}
     >
       <Flex
         direction="column"
@@ -92,9 +94,9 @@ export default function Home() {
       >
         <Flex
           w={"100%"}
-          gap={"2rem"}
           minHeight={"100vh"}
           p={"2rem"}
+          justify={"space-around"}
           flexWrap={"nowrap"}
         >
           {cardsInfos.map((cardInfos, index) => (
