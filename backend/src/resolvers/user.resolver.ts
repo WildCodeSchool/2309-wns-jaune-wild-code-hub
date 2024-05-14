@@ -45,7 +45,6 @@ export class UserResolver {
   @Query(() => Message)
   async login(@Arg("infos") infos: InputLogin, @Ctx() ctx: MyContext) {
     let user;
-    console.log("email", infos.email)
     if (!infos.email && !infos.pseudo) {
       throw new Error("Check your login information !");
     } else if (infos.email) {
@@ -54,7 +53,6 @@ export class UserResolver {
       user = await new UsersService().findByPseudo(infos.pseudo);
 
     }
-
     if (!user) {
       throw new Error("Check your login information !");
     }
@@ -62,16 +60,19 @@ export class UserResolver {
     const isPasswordValid = await argon2.verify(user.password, infos.password);
     const m = new Message();
     if (isPasswordValid) {
-      const token = await new SignJWT({ email: user.email })
+      const token = await new SignJWT({ 
+        email: user.email,
+        role: user.role,
+        pseudo: user.pseudo,
+        id : user.id
+      })
         .setProtectedHeader({ alg: "HS256", typ: "jwt" })
         .setExpirationTime("2h")
         .sign(new TextEncoder().encode(`${process.env.SECRET_KEY}`));
 
-      console.log("token", token)
       let cookies = new Cookies(ctx.req, ctx.res);
       cookies.set("token", token, { httpOnly: true });
 
-      console.log("cookie", cookies)
       m.message = "Welcome !";
       m.success = true;
     } else {
@@ -129,6 +130,19 @@ export class UserResolver {
       m.success = false;
     }
 
+    return m;
+  }
+
+  @Query(() => Message)
+  async logout(@Ctx() ctx: MyContext) {
+    if (ctx.user) {
+      let cookies = new Cookies(ctx.req, ctx.res);
+      cookies.set("token");
+    }
+    const m = new Message();
+    m.message = "You have been disconnected !";
+    m.success = true;
+    
     return m;
   }
 }

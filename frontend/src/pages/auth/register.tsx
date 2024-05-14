@@ -53,8 +53,8 @@ const Register = () => {
         RegisterMutationVariables
     >(REGISTER, {
         onCompleted: (data) => {
-        console.log(data);
-        router.push("/auth/login");
+            console.log(data)
+            router.push("/auth/login");
         },
         onError(error) {
         console.log(error.message);

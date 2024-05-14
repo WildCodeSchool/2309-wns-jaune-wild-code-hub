@@ -16,7 +16,7 @@ import {
   } from '@chakra-ui/react';
 import components from "@/styles/theme/components";
 import { LOGIN } from "@/requetes/queries/auth.queries";
-import { InputLogin, QueryLoginArgs, LoginQuery } from "@/types/graphql";
+import { InputLogin, QueryLoginArgs, LoginQuery, LoginQueryVariables } from "@/types/graphql";
 import { useLazyQuery } from "@apollo/client";
 
 const Login = () => {
@@ -24,8 +24,18 @@ const Login = () => {
 
     const [login, { error }] = useLazyQuery<
         LoginQuery,
-        QueryLoginArgs
-    >(LOGIN);
+        LoginQueryVariables
+    >(LOGIN, {
+        onCompleted: (data) => {
+            if (data.login.success) {
+                console.log(data)
+                router.push("/");
+            }
+        },
+        onError: (error) => {
+            console.log(error);
+          },
+    });
 
     const [showPassword, setShowPassword] = useState(false);
     const [formData, setFormData] = useState({
@@ -71,14 +81,8 @@ const Login = () => {
         if (Object.keys(newErrors).length === 0) {
             const formData = new FormData(e.currentTarget);
             const data = Object.fromEntries(formData) as InputLogin;
-              login({
-                variables: { infos: { email: data.email, password: data.password } },
-                onCompleted(data) {
-                    if (data.login.success) {
-                        console.log(data)
-                        router.reload();
-                    }
-                  },  
+            login({
+                variables: { infos: { email: data.email, password: data.password } } 
             });
         }
     }
@@ -86,7 +90,6 @@ const Login = () => {
     const togglePasswordVisibility  = () => {
         setShowPassword(!showPassword);
     }
-    const { isOpen, onOpen, onClose } = useDisclosure();
 
     return (
         <Box {...components.Box.main} bgColor={"background"} bgRepeat={"no-repeat"} bgImage="url(/BGForm.png)">
