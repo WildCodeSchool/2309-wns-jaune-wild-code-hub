@@ -30,7 +30,7 @@ const checkToken = async (token: string | undefined, request: NextRequest) => {
   let response: NextResponse<unknown> = NextResponse.next();
 
   if (request.nextUrl.pathname.startsWith("/auth/logout")) {
-    setOrDeleteCookies(request, response, null, true)
+    setOrDeleteCookies(response, null, true)
     response = NextResponse.redirect(new URL("/auth/login", request.url));
   }
   if (!token) {
@@ -43,7 +43,7 @@ const checkToken = async (token: string | undefined, request: NextRequest) => {
       response = NextResponse.next();
     }
     
-    setOrDeleteCookies(request, response, null, true)
+    setOrDeleteCookies(response, null, true)
     return response;
   }
   
@@ -63,7 +63,7 @@ const checkToken = async (token: string | undefined, request: NextRequest) => {
         response = NextResponse.redirect(new URL("/400", request.url));
       }
 
-      setOrDeleteCookies(request, response, payload, false)
+      setOrDeleteCookies(response, payload, false)
       return response;
     }
     return NextResponse.redirect(new URL("/auth/login", request.url));
@@ -75,13 +75,13 @@ const checkToken = async (token: string | undefined, request: NextRequest) => {
       response = NextResponse.redirect(new URL("/auth/login", request.url));
     }
 
-    setOrDeleteCookies(request, response, null, true)
+    setOrDeleteCookies(response, null, true)
 
     return response;
   }
 }
 
-const setOrDeleteCookies = (request: NextRequest, response: NextResponse, payload : Payload | null,  deleteCookies: boolean) => {
+const setOrDeleteCookies = (response: NextResponse, payload : Payload | null,  deleteCookies: boolean) => {
   const cookies = ["email", "role", "pseudo", "id", "token"];
 
   if (deleteCookies) {
