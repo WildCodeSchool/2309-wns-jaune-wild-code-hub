@@ -11,14 +11,14 @@ interface Payload {
 
 const SECRET_KEY = process.env.SECRET_KEY || "";
 
-export default async function middleware(request: NextRequest) {
+const middleware = async (request: NextRequest) => {
   const { cookies } = request;
   const token = cookies.get("token");
   
   return await checkToken(token?.value, request);
 }
 
-export async function verify(token: string): Promise<Payload> {
+export const verify = async (token: string): Promise<Payload> => {
   const { payload } = await jwtVerify<Payload>(
     token,
     new TextEncoder().encode(SECRET_KEY)
@@ -26,14 +26,11 @@ export async function verify(token: string): Promise<Payload> {
   return payload;
 }
 
-async function checkToken(token: string | undefined, request: NextRequest) {
+const checkToken = async (token: string | undefined, request: NextRequest) => {
   let response: NextResponse<unknown> = NextResponse.next();
-  console.log("checktoken", token)
+
   if (request.nextUrl.pathname.startsWith("/auth/logout")) {
-    response.cookies.delete("email");
-    response.cookies.delete("role");
-    response.cookies.delete("pseudo");
-    response.cookies.delete("id");
+    setOrDeleteCookies(response, null, true)
     response = NextResponse.redirect(new URL("/auth/login", request.url));
   }
   if (!token) {
@@ -46,10 +43,7 @@ async function checkToken(token: string | undefined, request: NextRequest) {
       response = NextResponse.next();
     }
     
-    response.cookies.delete("email");
-    response.cookies.delete("role");
-    response.cookies.delete("pseudo");
-    response.cookies.delete("id");
+    setOrDeleteCookies(response, null, true)
     return response;
   }
   
@@ -69,19 +63,43 @@ async function checkToken(token: string | undefined, request: NextRequest) {
         response = NextResponse.redirect(new URL("/400", request.url));
       }
 
-      response.cookies.set("email", payload.email);
-      response.cookies.set("role", payload.role);
-      response.cookies.set("pseudo", payload.pseudo);
-      response.cookies.set("id", payload.id);
-
+      setOrDeleteCookies(response, payload, false)
       return response;
     }
     return NextResponse.redirect(new URL("/auth/login", request.url));
   } catch (err) {
-    console.error("Verification failed", err);
-    return NextResponse.redirect(new URL("/auth/login", request.url));
+
+    if (request.nextUrl.pathname.startsWith("/auth/login")) {
+      response = NextResponse.next();
+    } else {
+      response = NextResponse.redirect(new URL("/auth/login", request.url));
+    }
+
+    setOrDeleteCookies(response, null, true)
+
+    return response;
   }
 }
+
+const setOrDeleteCookies = (response: NextResponse, payload : Payload | null,  deleteCookies: boolean) => {
+  const cookies = ["email", "role", "pseudo", "id", "token"];
+
+  if (deleteCookies) {
+    cookies.forEach(cookie => {
+      response.cookies.delete(cookie);
+    });
+  } else {
+    if (payload) {
+      cookies.forEach(cookie => {
+        if (payload[cookie as keyof Payload] !== undefined) {
+          response.cookies.set(cookie, payload[cookie as keyof Payload]);
+        }
+      });
+    }
+  }
+}
+
+export default middleware;
 
 export const config = {
   matcher: "/:path*",
