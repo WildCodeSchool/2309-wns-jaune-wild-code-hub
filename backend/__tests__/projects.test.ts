@@ -32,26 +32,26 @@ export const FIND_PROJECT_BY_ID = `#graphql
 export const FIND_PROJECT_BY_NAME = `#graphql
     query Project ($name: String!) {
       findProjectByName(name: $name) {            
-            id
-            name
-            category
-        }
+        id
+        name
+        category
+      }
     }
 `;
 
 export const LIST_PROJECTS_BY_CATEGORY = `#graphql
     query projects ($category: String!) {
-      findUserByPseudo(category: $category) {            
-            id
-            name
-            category
-        }
+      listProjectsByCategory(category: $category) {            
+        id
+        name
+        category
+      }
     }
 `;
 
 export const CREATE_PROJECT = `#graphql
-    mutation Projects($data: CreateProjectInput!) {
-      register(data: $data) {            
+    mutation Projects ($data: CreateProjectInput!) {
+      createProject(data: $data) {            
             id
             name
             category
@@ -72,7 +72,7 @@ export const UPDATE_PROJECT = `#graphql
 `
 
 export const DELETE_PROJECT = `#graphql
-    mutation  ($id: String!) {
+    mutation Project ($id: Float!) {
       deleteProject(id: $id) {            
           message
           success
@@ -155,16 +155,14 @@ describe("Test for a new project", () => {
         data:{
           name :"Project1",
           category : "Javascript",
-          private : false,
-          created_at: '24-03-18 15:34:24',
-          update_at : '24-03-18 16:34:24'
+          private : false
         }
       }   
     })
 
     assert(response.body.kind === "single");
     const id = response.body.singleResult.data?.createProject?.id;     
-    expect(id).not.toBeNull();   
+    expect(id).not.toBeNull(); 
     expect(response.body.singleResult.data?.createProject?.name).toEqual("Project1");
   });
 
@@ -176,13 +174,10 @@ describe("Test for a new project", () => {
           id : 1,
           name :"Project2",
           category : "Javascript",
-          private : false,
-          created_at: '24-03-18 15:34:24',
-          update_at : '24-03-18 16:34:24'
+          private : false
         }
       }   
     });
-    console.log("response.body UPDATE Project", JSON.stringify(response.body));
     assert(response.body.kind === "single");  
     expect(response.body.singleResult.data?.updateProject?.success).toEqual(true);
   });
@@ -194,7 +189,7 @@ describe("Test for a new project", () => {
     assert(response.body.kind === "single");
     expect(response.body.singleResult.data?.listProjects).toHaveLength(1);
   });
-
+  
   it("Find list projects by category", async () => {
     const response = await server.executeOperation<ResponseDataListProjectByCategory>({
       query: LIST_PROJECTS_BY_CATEGORY,
@@ -202,11 +197,11 @@ describe("Test for a new project", () => {
         category: "Javascript"
       }     
     });
-
+    
     assert(response.body.kind === "single");
     expect(response.body.singleResult.data?.listProjectsByCategory).toHaveLength(1);
   });
-
+  
   it("Find project by ID", async () => {
     const response = await server.executeOperation<ResponseDataFindProjectById>({
       query: FIND_PROJECT_BY_ID,  
@@ -216,10 +211,10 @@ describe("Test for a new project", () => {
     });
     assert(response.body.kind === "single");
     expect(response.body.singleResult.data?.findProjectById?.name).toEqual("Project2");
-    });
-
-    it("Find project by Name", async () => {
-      const response = await server.executeOperation<ResponseDataFindProjectByName>({
+  });
+  
+  it("Find project by Name", async () => {
+    const response = await server.executeOperation<ResponseDataFindProjectByName>({
         query: FIND_PROJECT_BY_NAME,  
         variables: {
           name: "Project2"
@@ -228,15 +223,16 @@ describe("Test for a new project", () => {
       assert(response.body.kind === "single");
       expect(response.body.singleResult.data?.findProjectByName?.name).toEqual("Project2");
       });
-
-     it("Delete project", async () => { 
-      const response = await server.executeOperation<ResponseDataDelete>({
-        query: DELETE_PROJECT,   
-        variables: {
-          id : 1
-        }   
+      
+      it("Delete project", async () => { 
+        const response = await server.executeOperation<ResponseDataDelete>({
+          query: DELETE_PROJECT,   
+          variables: {
+            id : 1
+          }   
+        });
+        console.log("response.body DELETE Project", JSON.stringify(response.body));
+        assert(response.body.kind === "single");
+        expect(response.body.singleResult.data?.deleteProject?.success).toEqual(true);
       });
-      assert(response.body.kind === "single");
-      expect(response.body.singleResult.data?.deleteProject?.success).toEqual(true);
-    });
 });
