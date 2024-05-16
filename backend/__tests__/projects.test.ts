@@ -1,10 +1,10 @@
 import { buildSchema, buildSchemaSync } from "type-graphql";
-import { ProjectResolver } from "./src/resolvers/project.resolver";
+import { ProjectResolver } from "../src/resolvers/project.resolver";
 import { ApolloServer } from "@apollo/server";
-import datasourceInitial from "./src/lib/db"; //on importe la datasource de test
-import datasource from "./src/lib/db_test"; //on importe la datasource initial pour le spyOn
-import { Project } from "./src/entities/project.entity";
-import { Message } from "./src/entities/user.entity";
+import datasourceInitial from "../src/lib/db"; //on importe la datasource de test
+import datasource from "../src/lib/db_test"; //on importe la datasource initial pour le spyOn
+import { Project } from "../src/entities/project.entity";
+import { Message } from "../src/entities/user.entity";
 import assert from "assert";
 
 let server: ApolloServer;

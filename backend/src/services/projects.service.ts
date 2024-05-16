@@ -28,11 +28,10 @@ export default class ProjectsService {
   }
 
   async listByCategory(category: string) {
-    return this.db.find({
-      where: {
-        category : category
-      }
-    });
+    const projects = await this.db.find();
+    return projects.filter(project => 
+      project.category.toLowerCase() === category.toLowerCase()
+    );
   }
 
   async create (data: CreateProjectInput) {
