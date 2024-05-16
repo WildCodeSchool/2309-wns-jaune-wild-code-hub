@@ -79,7 +79,7 @@ export class User {
   run_counter: number;
 
   @Field()
-  @UpdateDateColumn({ name: 'updated_at', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
+  @UpdateDateColumn({ name: 'last_login', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
   last_login: Date;
 
   @Field()
@@ -90,9 +90,13 @@ export class User {
   @UpdateDateColumn({ name: 'updated_at', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
   update_at: Date;
 
-  @ManyToMany(() => Project)
-  @JoinTable({ name: "users_projects_likes" })
-  usersProjectsLikes: Project[];
+  @ManyToMany(() => Project, project => project.likedByUsers)
+  @JoinTable({
+    name: "users_projects_likes",
+    joinColumn: { name: "user_id" },
+    inverseJoinColumn: { name: "project_id" }
+  })
+  likedProjects: Project[];
 
   @OneToMany(() => UsersProjectsAccesses, UsersProjectsAccesses => UsersProjectsAccesses.user)
   usersProjectsAccesses: UsersProjectsAccesses[];

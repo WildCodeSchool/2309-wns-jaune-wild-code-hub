@@ -9,8 +9,8 @@ import {
     UpdateDateColumn,
     OneToMany
   } from "typeorm";
-  import { Length, Min } from "class-validator";
-  import { Field, Float, ID, InputType, ObjectType } from "type-graphql";
+import { Length, Min } from "class-validator";
+import { Field, Float, ID, InputType, ObjectType } from "type-graphql";
 import { User } from "./user.entity";
 import { UsersProjectsAccesses } from "./userProjectAccesses.entity";
 
@@ -43,8 +43,13 @@ export class Project {
   @UpdateDateColumn({ name: 'updated_at', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
   update_at: Date;
 
-  @ManyToMany(() => User, user => user.usersProjectsLikes)
-  usersProjectsLikes: User[];
+  @ManyToMany(() => User, user => user.likedProjects)
+  @JoinTable({
+    name: "users_projects_likes",
+    joinColumn: { name: "project_id" },
+    inverseJoinColumn: { name: "user_id" }
+  })
+  likedByUsers: User[];
 
   @OneToMany(() => UsersProjectsAccesses, UsersProjectsAccesses => UsersProjectsAccesses.project)
   usersProjectsAccesses: UsersProjectsAccesses[];
