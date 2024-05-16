@@ -125,7 +125,6 @@ export const DELETE_USER = `#graphql
 
 //-------------------- DATA ---------------------//
 
-
 beforeAll(async () => {
   const baseSchema = await buildSchema({
     resolvers: [UserResolver],

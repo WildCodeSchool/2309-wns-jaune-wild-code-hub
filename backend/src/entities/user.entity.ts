@@ -8,11 +8,13 @@ import {
   JoinTable,
   ManyToMany,
   UpdateDateColumn,
+  OneToMany,
 } from "typeorm";
 import { Length, Min } from "class-validator";
 import { Field, Float, ID, InputType, ObjectType } from "type-graphql";
 import * as argon2 from "argon2";
 import { Project } from "./project.entity";
+import { UsersProjectsAccesses } from "./userProjectAccesses.entity";
 export type ROLE = "ADMIN" | "USER";
 
 @ObjectType()
@@ -90,13 +92,11 @@ export class User {
 
   @ManyToMany(() => Project)
   @JoinTable({ name: "users_projects_likes" })
-  projects: Project[];
+  usersProjectsLikes: Project[];
 
-  @ManyToMany(() => Project, project => project.usersAccess)
-  @JoinTable()
-  projectsAccess: Project[];
+  @OneToMany(() => UsersProjectsAccesses, UsersProjectsAccesses => UsersProjectsAccesses.user)
+  usersProjectsAccesses: UsersProjectsAccesses[];
 }
-
 
 @InputType()
 export class CreateUserInput {
@@ -176,3 +176,4 @@ export class Message {
   @Field()
   message: string;
 }
+
