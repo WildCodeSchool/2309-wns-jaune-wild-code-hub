@@ -34,6 +34,15 @@ export default class ProjectsService {
     );
   }
 
+  async listByPublic() {
+    const project = await this.db.find({
+      where: {
+        private : false
+      }
+    });
+    return project;
+  }
+
   async create (data: CreateProjectInput) {
     const newProject = this.db.create({ ...data });
     return await this.db.save(newProject);

@@ -28,6 +28,12 @@ export class ProjectResolver {
   }
 
   @Query(() => [Project])
+  async listPublicProjects() {
+    const projects = await new ProjectsService().listByPublic();
+    return projects;
+  }
+
+  @Query(() => [Project])
   async listProjectsByCategory(@Arg("category") category: string) {
     const projects = await new ProjectsService().listByCategory(category);
     return projects;
