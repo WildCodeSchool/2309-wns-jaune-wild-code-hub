@@ -20,7 +20,7 @@ export class Project {
   id: number;
 
   @Field()
-  @Column({ length: 100 })
+  @Column({ unique: true, length: 100 })
   @Length(3, 100, { message: "Le nom du projet doit contenir entre 3 et 100 caractères" })
   name: string;
 
@@ -41,4 +41,36 @@ export class Project {
   @CreateDateColumn({default: () => "CURRENT_TIMESTAMP"})
   update_at: Date;
 
+}
+
+
+@InputType()
+export class CreateProjectInput {
+  @Field()
+  name: string;
+
+  @Field()
+  category: string;
+
+  @Field()
+  private: boolean;
+ 
+}
+
+
+@InputType()
+export class UpdateProjectInput {
+
+  @Field(() => ID)
+  id: number;
+
+  @Field({ nullable: true })
+  name: string;
+
+  @Field({ nullable: true })
+  category: string;
+ 
+  @Field({ nullable: true })
+  private: boolean;
+ 
 }
