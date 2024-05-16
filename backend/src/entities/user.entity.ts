@@ -91,6 +91,10 @@ export class User {
   @ManyToMany(() => Project)
   @JoinTable({ name: "users_projects_likes" })
   projects: Project[];
+
+  @ManyToMany(() => Project, project => project.usersAccess)
+  @JoinTable({ name: 'users_projects_access' })
+  projectsAccess: Project[];
 }
 
 

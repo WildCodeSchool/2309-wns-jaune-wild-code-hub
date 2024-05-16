@@ -12,7 +12,6 @@ import {
   import { Field, Float, ID, InputType, ObjectType } from "type-graphql";
 import { User } from "./user.entity";
 
-
 @ObjectType()
 @Entity()
 export class Project {
@@ -44,8 +43,11 @@ export class Project {
 
   @ManyToMany(() => User, user => user.projects)
   users: User[];
-}
 
+  @ManyToMany(() => User, user => user.projectsAccess)
+  @JoinTable({ name: 'users_projects_access' })
+  usersAccess: User[];
+}
 
 @InputType()
 export class CreateProjectInput {
@@ -59,7 +61,6 @@ export class CreateProjectInput {
   private: boolean;
  
 }
-
 
 @InputType()
 export class UpdateProjectInput {
