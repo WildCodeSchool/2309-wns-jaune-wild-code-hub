@@ -1,6 +1,7 @@
 import { Box, Button, Flex, Icon } from "@chakra-ui/react";
 import React from "react";
 import Searchbar from "./Searchbar";
+import Logout from "./Logout";
 import { useParams, usePathname, useRouter } from "next/navigation";
 
 const Navbar = () => {
