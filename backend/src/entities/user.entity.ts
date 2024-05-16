@@ -89,7 +89,7 @@ export class User {
   update_at: Date;
 
   @ManyToMany(() => Project)
-  @JoinTable({ name: "user_project_likes" })
+  @JoinTable({ name: "users_projects_likes" })
   projects: Project[];
 }
 
