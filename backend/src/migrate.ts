@@ -7,6 +7,8 @@ import fakeFile from "./fakeData/file";
 import * as argon2 from "argon2";
 import db from "./lib/db";
 import fakeUsersProjectsLikes from "./fakeData/usersProjectsLikes";
+import { UsersProjectsAccesses } from "./entities/userProjectAccesses.entity"; 
+import fakeUsersProjectsAccesses from "./fakeData/usersProjectsAccesses";
 
 async function migrate() {
   // Vérifie si la variable d'environnement est définie et égale à true
@@ -39,6 +41,12 @@ async function migrate() {
     for (let i = 0; i < fakeUsersProjectsLikes.length; i++) {
       await db.query('INSERT INTO "users_projects_likes" (user_id, project_id) VALUES ($1, $2)', [fakeUsersProjectsLikes[i].user_id, fakeUsersProjectsLikes[i].project_id]);
     }
+
+    // Migrate UserProjectAccesses
+    // await db.query('TRUNCATE TABLE "users_projects_accesses" CASCADE');
+    await db.getRepository(UsersProjectsAccesses).clear();
+    const usersProjectsAccessesRepository = db.getRepository(UsersProjectsAccesses);
+    await usersProjectsAccessesRepository.save(fakeUsersProjectsAccesses);
 
     console.log("Succes migrate database !");
   } else {
