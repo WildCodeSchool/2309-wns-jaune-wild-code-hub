@@ -72,7 +72,4 @@ export class ProjectResolver {
     }
     return m;
   }
-
-
-
 }
