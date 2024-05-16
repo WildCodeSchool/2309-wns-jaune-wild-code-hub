@@ -39,8 +39,19 @@ export const FIND_PROJECT_BY_NAME = `#graphql
     }
 `;
 
+export const LIST_PROJECTS_PUBLIC = `#graphql
+    query Projects {
+      listPublicProjects {            
+        id
+        name
+        category
+        private
+      }
+    }
+`;
+
 export const LIST_PROJECTS_BY_CATEGORY = `#graphql
-    query projects ($category: String!) {
+    query Projects ($category: String!) {
       listProjectsByCategory(category: $category) {            
         id
         name
@@ -108,6 +119,10 @@ export const DELETE_PROJECT = `#graphql
 
   type ResponseDataDelete = {
     deleteProject: Message;
+  }
+
+  type ResponseDataListProjectPublic = {
+    listPublicProjects: Project[]
   }
 
 //------------------------------------------ DATA -------------------------------------------//
@@ -220,19 +235,28 @@ describe("Test for a new project", () => {
           name: "Project2"
         }  
       });
-      assert(response.body.kind === "single");
-      expect(response.body.singleResult.data?.findProjectByName?.name).toEqual("Project2");
-      });
+    assert(response.body.kind === "single");
+    expect(response.body.singleResult.data?.findProjectByName?.name).toEqual("Project2");
+  });
+
+  it("Find lists Projects  Public (one result)", async () => {
+    const response = await server.executeOperation<ResponseDataListProjectPublic>({
+      query: LIST_PROJECTS_PUBLIC,      
+    });
+    
+    console.log("response.body PUBLIC", JSON.stringify(response.body));
+    assert(response.body.kind === "single");
+    expect(response.body.singleResult.data?.listPublicProjects).toHaveLength(1);   
+  });
       
-      it("Delete project", async () => { 
-        const response = await server.executeOperation<ResponseDataDelete>({
-          query: DELETE_PROJECT,   
-          variables: {
-            id : 1
-          }   
-        });
-        console.log("response.body DELETE Project", JSON.stringify(response.body));
-        assert(response.body.kind === "single");
-        expect(response.body.singleResult.data?.deleteProject?.success).toEqual(true);
-      });
+  it("Delete project", async () => { 
+    const response = await server.executeOperation<ResponseDataDelete>({
+      query: DELETE_PROJECT,   
+      variables: {
+        id : 1
+      }   
+    });
+    assert(response.body.kind === "single");
+    expect(response.body.singleResult.data?.deleteProject?.success).toEqual(true);
+  });
 });
