@@ -40,7 +40,7 @@ export const FIND_PROJECT_BY_NAME = `#graphql
 `;
 
 export const LIST_PROJECTS_PUBLIC = `#graphql
-  query Projects {
+  query Projects  {
     listPublicProjects {            
       id
       name
@@ -62,7 +62,7 @@ export const LIST_PROJECTS_BY_CATEGORY = `#graphql
 
 export const CREATE_PROJECT = `#graphql
   mutation Projects ($data: CreateProjectInput!) {
-  createProject(data: $data) {            
+    createProject(data: $data) {            
       id
       name
       category

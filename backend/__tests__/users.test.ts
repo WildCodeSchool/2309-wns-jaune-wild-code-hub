@@ -5,6 +5,7 @@ import datasourceInitial from "../src/lib/db"; //on importe la datasource de tes
 import datasource from "../src/lib/db_test"; //on importe la datasource initial pour le spyOn
 import { User, Message } from "../src/entities/user.entity";
 import assert from "assert";
+// import {}
 
 let server: ApolloServer;
 
@@ -57,7 +58,7 @@ export const FIND_USER_BY_PSEUDO = `#graphql
 
 export const CREATE_USER = `#graphql
   mutation Users($data: CreateUserInput!) {
-  register(data: $data) {            
+    register(data: $data) {            
       id
       lastname
       firstname
@@ -235,27 +236,27 @@ describe("Test for a new user", () => {
     expect(response.body.singleResult.data?.findUserById?.firstname).toEqual("Toto");
   });
 
-  it("Find user by Email", async () => {
-    const response = await server.executeOperation<ResponseDataFindUserByEmail>({
-      query: FIND_USER_BY_EMAIL,  
-      variables: {
-        email: "tata@gmail.com"
-      }  
+    it("Find user by Email", async () => {
+      const response = await server.executeOperation<ResponseDataFindUserByEmail>({
+        query: FIND_USER_BY_EMAIL,  
+        variables: {
+          email: "tata@gmail.com"
+        }  
+      });
+      assert(response.body.kind === "single");
+      expect(response.body.singleResult.data?.findUserByEmail?.email).toEqual("tata@gmail.com");
     });
-    assert(response.body.kind === "single");
-    expect(response.body.singleResult.data?.findUserByEmail?.email).toEqual("tata@gmail.com");
-  });
 
-  it("Find user by Pseudo", async () => {
-    const response = await server.executeOperation<ResponseDataFindUserByPseudo>({
-      query: FIND_USER_BY_PSEUDO,  
-      variables: {
-        pseudo: "tata"
-      }  
+    it("Find user by Pseudo", async () => {
+      const response = await server.executeOperation<ResponseDataFindUserByPseudo>({
+        query: FIND_USER_BY_PSEUDO,  
+        variables: {
+          pseudo: "tata"
+        }  
+      });
+      assert(response.body.kind === "single");
+      expect(response.body.singleResult.data?.findUserByPseudo?.pseudo).toEqual("tata");
     });
-    assert(response.body.kind === "single");
-    expect(response.body.singleResult.data?.findUserByPseudo?.pseudo).toEqual("tata");
-  });
 
     it("Delete user", async () => { 
       const response = await server.executeOperation<ResponseDataDelete>({

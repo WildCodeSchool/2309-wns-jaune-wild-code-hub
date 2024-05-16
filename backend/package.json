@@ -7,8 +7,8 @@
     "start": "ts-node-dev --watch ./src ./src/index.ts",
     "generate": "graphql-codegen --watch",
     "migrate": "ts-node-dev src/migrate.ts",
-    "test": "jest --watch",
-    "test:ci": "jest"
+    "test": "jest --runInBand --watch",
+    "test:ci": "jest --runInBand"
   },
   "author": "",
   "license": "ISC",
