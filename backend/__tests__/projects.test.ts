@@ -11,66 +11,66 @@ let server: ApolloServer;
 
 //------------------------------------ REQUETE APOLLO ---------------------------------------//
 export const LIST_PROJECTS = `#graphql
-    query Projects {
-      listProjects {            
-            id
-            name
-        }
+  query Projects {
+    listProjects {            
+      id
+      name
     }
+  }
 `;
 
 export const FIND_PROJECT_BY_ID = `#graphql
-    query Project ($id: String!) {
-      findProjectById(id: $id) {            
-            id
-            name
-            category
-        }
+  query Project ($id: String!) {
+    findProjectById(id: $id) {            
+      id
+      name
+      category
     }
+  }
 `;
 
 export const FIND_PROJECT_BY_NAME = `#graphql
-    query Project ($name: String!) {
-      findProjectByName(name: $name) {            
-        id
-        name
-        category
-      }
+  query Project ($name: String!) {
+    findProjectByName(name: $name) {            
+      id
+      name
+      category
     }
+  }
 `;
 
 export const LIST_PROJECTS_PUBLIC = `#graphql
-    query Projects {
-      listPublicProjects {            
-        id
-        name
-        category
-        private
-      }
+  query Projects {
+    listPublicProjects {            
+      id
+      name
+      category
+      private
     }
+  }
 `;
 
 export const LIST_PROJECTS_BY_CATEGORY = `#graphql
-    query Projects ($category: String!) {
-      listProjectsByCategory(category: $category) {            
-        id
-        name
-        category
-      }
+  query Projects ($category: String!) {
+    listProjectsByCategory(category: $category) {            
+      id
+      name
+      category
     }
+  }
 `;
 
 export const CREATE_PROJECT = `#graphql
-    mutation Projects ($data: CreateProjectInput!) {
-      createProject(data: $data) {            
-            id
-            name
-            category
-            private
-            created_at
-            update_at            
-        }
+  mutation Projects ($data: CreateProjectInput!) {
+  createProject(data: $data) {            
+      id
+      name
+      category
+      private
+      created_at
+      update_at            
     }
+  }
 `;
 
 export const UPDATE_PROJECT = `#graphql
@@ -83,12 +83,12 @@ export const UPDATE_PROJECT = `#graphql
 `
 
 export const DELETE_PROJECT = `#graphql
-    mutation Project ($id: Float!) {
-      deleteProject(id: $id) {            
-          message
-          success
-        }
+  mutation Project ($id: Float!) {
+    deleteProject(id: $id) {            
+      message
+      success
     }
+  }
 `;
 
 //----------------------------------------- TYPAGE -------------------------------------------//
