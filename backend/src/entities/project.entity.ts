@@ -10,6 +10,7 @@ import {
   } from "typeorm";
   import { Length, Min } from "class-validator";
   import { Field, Float, ID, InputType, ObjectType } from "type-graphql";
+import { User } from "./user.entity";
 
 
 @ObjectType()
@@ -41,6 +42,8 @@ export class Project {
   @CreateDateColumn({default: () => "CURRENT_TIMESTAMP"})
   update_at: Date;
 
+  @ManyToMany(() => User, user => user.projects)
+  users: User[];
 }
 
 

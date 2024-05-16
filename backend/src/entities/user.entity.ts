@@ -12,6 +12,7 @@ import {
 import { Length, Min } from "class-validator";
 import { Field, Float, ID, InputType, ObjectType } from "type-graphql";
 import * as argon2 from "argon2";
+import { Project } from "./project.entity";
 export type ROLE = "ADMIN" | "USER";
 
 @ObjectType()
@@ -86,6 +87,10 @@ export class User {
   @Field()
   @CreateDateColumn({ default: () => "CURRENT_TIMESTAMP" })
   update_at: Date;
+
+  @ManyToMany(() => Project)
+  @JoinTable({ name: "user_project_likes" })
+  projects: Project[];
 }
 
 
