@@ -38,11 +38,11 @@ export class File {
   language: string;
 
   @Field()
-  @Column()
+  @Column({ nullable: true })
   type: string;
 
   @Field()
-  @Column()
+  @Column({ nullable: true })
   content: string;
 
   @Field()
@@ -56,6 +56,42 @@ export class File {
 
 @InputType()
 export class CreateFileInput {
+  @Field()
+  project_id: string;
+
+  @Field()
+  name: string;
+
+  @Field()
+  language: string;
+
+  @Field()
+  type: string;
+
+  @Field({ nullable: true })
+  content: string;
+}
+
+@InputType()
+export class UpdateFile {
+  @Field()
+  project_id: string;
+
+  @Field()
+  name: string;
+
+  @Field()
+  language: string;
+
+  @Field()
+  type: string;
+
+  @Field({ nullable: true })
+  content: string;
+}
+
+@InputType()
+export class DeleteFile {
   @Field()
   project_id: string;
 
