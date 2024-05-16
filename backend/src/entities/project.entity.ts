@@ -38,14 +38,14 @@ export class Project {
   created_at: Date;
 
   @Field()
-  @CreateDateColumn({default: () => "CURRENT_TIMESTAMP"})
+  @UpdateDateColumn({ name: 'updated_at', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
   update_at: Date;
 
   @ManyToMany(() => User, user => user.projects)
   users: User[];
 
   @ManyToMany(() => User, user => user.projectsAccess)
-  @JoinTable({ name: 'users_projects_access' })
+  @JoinTable()
   usersAccess: User[];
 }
 

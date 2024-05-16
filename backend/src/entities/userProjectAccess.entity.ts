@@ -15,7 +15,7 @@ import { Field, Float, ID, InputType, ObjectType } from "type-graphql";
 import * as argon2 from "argon2";
 import { Project } from "./project.entity";
 import { User } from "./user.entity";
-export type ROLE = "editor" | "viewer";
+export type ROLE = "EDITOR" | "VIEWER";
 
 @ObjectType()
 @Entity({ name: 'users_projects_access' })
@@ -34,10 +34,10 @@ export class UserProjectAccess {
 
   @Column({
     type: 'enum',
-    enum: ['editor', 'viewer'],
-    default: 'viewer'
+    enum: ['EDITOR', 'VIEWER'],
+    default: 'VIEWER'
   })
-  role: 'editor' | 'viewer';
+  role: ROLE;
 
   @CreateDateColumn({ name: 'created_at', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;

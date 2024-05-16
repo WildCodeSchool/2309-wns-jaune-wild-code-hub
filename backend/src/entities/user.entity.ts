@@ -77,7 +77,7 @@ export class User {
   run_counter: number;
 
   @Field()
-  @CreateDateColumn({ default: () => "CURRENT_TIMESTAMP" })
+  @UpdateDateColumn({ name: 'updated_at', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
   last_login: Date;
 
   @Field()
@@ -85,7 +85,7 @@ export class User {
   created_at: Date;
 
   @Field()
-  @CreateDateColumn({ default: () => "CURRENT_TIMESTAMP" })
+  @UpdateDateColumn({ name: 'updated_at', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
   update_at: Date;
 
   @ManyToMany(() => Project)
@@ -93,7 +93,7 @@ export class User {
   projects: Project[];
 
   @ManyToMany(() => Project, project => project.usersAccess)
-  @JoinTable({ name: 'users_projects_access' })
+  @JoinTable()
   projectsAccess: Project[];
 }
 
