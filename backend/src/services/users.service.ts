@@ -79,6 +79,14 @@ export default class UsersService {
       throw new Error("The user does not exist !");
     }
 
+    userToDelete.likedProjects = [];
+
+    await this.db.createQueryBuilder()
+      .delete()
+      .from(UsersProjectsAccesses)
+      .where("user = :userId", { userId: id })
+      .execute();
+
     return await this.db.remove(userToDelete);
   }
 
