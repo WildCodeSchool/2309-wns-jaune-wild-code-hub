@@ -1,6 +1,7 @@
 import { Entity, Column, CreateDateColumn, UpdateDateColumn, ManyToOne, JoinColumn, PrimaryColumn } from 'typeorm';
 import { User } from './user.entity';
 import { Project } from './project.entity';
+import { Field, ID, InputType } from "type-graphql";
 
 export enum UserRole {
   EDITOR = "EDITOR",
@@ -35,4 +36,29 @@ export class UsersProjectsAccesses {
   @ManyToOne(() => Project, project => project.usersProjectsAccesses)
   @JoinColumn({ name: 'project_id' })
   project: Project;
+}
+
+@InputType()
+export class CreateUserProjectAccessesInput {
+  @Field()
+  user_id: number;
+
+  @Field()
+  project_id: number;
+
+  @Field({ nullable: true })
+  role: UserRole;
+
+}
+
+@InputType()
+export class UpdateUserProjectAccessesInput {
+  @Field()
+  user_id: number;
+
+  @Field()
+  project_id: number;
+
+  @Field({ nullable: true })
+  role: UserRole;
 }

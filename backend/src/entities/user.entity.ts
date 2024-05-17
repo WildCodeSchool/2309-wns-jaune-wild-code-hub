@@ -4,14 +4,13 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   Column,
-  ManyToOne,
   JoinTable,
   ManyToMany,
   UpdateDateColumn,
   OneToMany,
 } from "typeorm";
-import { Length, Min } from "class-validator";
-import { Field, Float, ID, InputType, ObjectType } from "type-graphql";
+import { Length } from "class-validator";
+import { Field, ID, InputType, ObjectType } from "type-graphql";
 import * as argon2 from "argon2";
 import { Project } from "./project.entity";
 import { UsersProjectsAccesses } from "./userProjectAccesses.entity";

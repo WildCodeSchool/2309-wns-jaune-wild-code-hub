@@ -16,7 +16,7 @@ import {
   } from '@chakra-ui/react';
 import components from "@/styles/theme/components";
 import { LOGIN } from "@/requetes/queries/auth.queries";
-import { InputLogin, QueryLoginArgs, LoginQuery, LoginQueryVariables } from "@/types/graphql";
+import { InputLogin, LoginQuery, LoginQueryVariables } from "@/types/graphql";
 import { useLazyQuery } from "@apollo/client";
 
 const Login = () => {

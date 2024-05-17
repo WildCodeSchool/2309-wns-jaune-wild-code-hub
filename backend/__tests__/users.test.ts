@@ -139,7 +139,6 @@ beforeAll(async () => {
   jest
     .spyOn(datasourceInitial, "getRepository")
     .mockReturnValue(datasource.getRepository(User));
-
   await datasource.initialize(); //initialisation de la datasource
   // await datasource.getRepository(User).clear(); //vidage de la table et non drop de la base de donnée complète
 });
@@ -253,6 +252,7 @@ describe("Test for a new user", () => {
           pseudo: "tata"
         }  
       });
+      console.log(response.body)
       assert(response.body.kind === "single");
       expect(response.body.singleResult.data?.findUserByPseudo?.pseudo).toEqual("tata");
     });
