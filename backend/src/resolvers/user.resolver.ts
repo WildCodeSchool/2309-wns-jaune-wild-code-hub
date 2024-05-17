@@ -37,6 +37,13 @@ export class UserResolver {
     return userByEmail;
   }
 
+  @Query(() => User)
+  async findUserByPseudo(@Arg("pseudo") pseudo: string) {
+    const userByPseudo = await new UsersService().findByPseudo(pseudo);
+    if (!userByPseudo) throw new Error("Please note, the client does not exist");
+    return userByPseudo;
+  }
+
   @Query(() => Message)
   async login(@Arg("infos") infos: InputLogin, @Ctx() ctx: MyContext) {
     let user;
