@@ -1,22 +1,27 @@
-import { Flex, IconButton, Input, Box, Button } from "@chakra-ui/react";
+import { LOGOUT } from "@/requetes/queries/auth.queries";
+import { useLazyQuery } from "@apollo/client";
+import { useRouter } from "next/router";
+import { IconButton, Spinner, Tooltip } from "@chakra-ui/react";
+import { FiLogOut } from "react-icons/fi";
 import React from "react";
-import Logout from "@/pages/auth/logout";
 
-const handleLogout = async () => {
-  try {
-    await logout();
-    // je dois ajouter la logique de déconnexion ici, par exemple, rediriger l'utilisateur
-    window.location.reload();
-  } catch (err) {
-    console.error("Logout failed", err);
-  }
+const LogoutButton = () => {
+  const router = useRouter();
+  const [logout, { loading }] = useLazyQuery(LOGOUT, {
+    onCompleted: () => {
+      router.push("/auth/login");
+    },
+    onError: (error) => {
+      console.error("Logout failed", error);
+    },
+  });
 
   return (
     <Tooltip label="Logout" aria-label="Logout Tooltip">
       <IconButton
         icon={<FiLogOut />}
-        onClick={handleLogout}
-        isLoading={logoutLoading}
+        onClick={() => logout()}
+        isLoading={loading}
         aria-label="Logout"
         variant="outline"
         colorScheme="teal"
@@ -25,4 +30,4 @@ const handleLogout = async () => {
   );
 };
 
-export default handleLogout;
+export default LogoutButton;
