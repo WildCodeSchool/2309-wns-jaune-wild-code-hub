@@ -5,6 +5,7 @@ import * as argon2 from "argon2";
 import { SignJWT } from "jose";
 import { MyContext } from "..";
 import Cookies from "cookies";
+import { Project } from "../entities/project.entity";
 
 @Resolver()
 export class UserResolver {
@@ -33,13 +34,6 @@ export class UserResolver {
     const userByEmail = await new UsersService().findByEmail(email);
     if (!userByEmail) throw new Error("Please note, the client does not exist");
     return userByEmail;
-  }
-
-  @Query(() => User)
-  async findUserByPseudo(@Arg("pseudo") pseudo: string) {
-    const userByPseudo = await new UsersService().findByPseudo(pseudo);
-    if (!userByPseudo) throw new Error("Please note, the client does not exist");
-    return userByPseudo;
   }
 
   @Query(() => Message)
@@ -81,7 +75,7 @@ export class UserResolver {
     }
     return m;
   }
-
+  
   @Mutation(() => User)
   async register(@Arg("data") data: CreateUserInput) {
     const user = await new UsersService().findByEmail(data.email);
@@ -116,12 +110,12 @@ export class UserResolver {
     }
     return m;
   }
-
+  
   @Mutation(() => Message)
   async deleteUser(@Arg("id") id: number) {
     const delUser = await new UsersService().delete(id);
     const m = new Message();
-
+    
     if (delUser) {
       m.message = "User deleted!";
       m.success = true;
@@ -129,10 +123,10 @@ export class UserResolver {
       m.message = "Unable to delete user!";
       m.success = false;
     }
-
+    
     return m;
   }
-
+  
   @Query(() => Message)
   async logout(@Ctx() ctx: MyContext) {
     if (ctx.user) {
@@ -145,4 +139,52 @@ export class UserResolver {
     
     return m;
   }
+
+  @Query(() => [Project])
+  async listLikeProject(@Arg("userId") userId: number) {
+    const projects = await new UsersService().listLikedProjects(userId);
+    if (projects.length === 0) {
+      throw new Error("You have no plans !");
+    }
+    return projects;
+  }
+
+  @Mutation(() => Message)
+  async addLikeProject(@Arg("userId") userId: number, @Arg("projectId") projectId: number) {
+
+    const likedProjects = await new UsersService().likeProject(userId, projectId);
+
+    const m = new Message();
+
+    if (likedProjects) {
+      m.message = "You liked";
+      m.success = true;
+    } else {
+      m.message = "Unable to like";
+      m.success = false;
+    }
+
+    return m;
+
+  }
+
+  @Mutation(() => Message)
+  async deleteLikeProject(@Arg("userId") userId: number, @Arg("projectId") projectId: number) {
+
+    const likedProjects = await new UsersService().dislikeProject(userId, projectId);
+
+    const m = new Message();
+
+    if (likedProjects) {
+      m.message = "like deleted";
+      m.success = true;
+    } else {
+      m.message = "unable to remove like";
+      m.success = false;
+    }
+
+    return m;
+    
+  }
+
 }

@@ -2,8 +2,8 @@ import { In, Like, Repository } from "typeorm";
 import { User, CreateUserInput, UpdateUserInput, ROLE } from "../entities/user.entity";
 import { validate } from "class-validator";
 import datasource from "../lib/db";
-//import { aggregateErrors } from "../lib/utilities";
-// import AggregateError from "aggregate-error";
+import ProjectsService from "./projects.service";
+import { Project } from "../entities/project.entity";
 
 export default class UsersService {
   db: Repository<User>;
@@ -76,4 +76,72 @@ export default class UsersService {
 
     return await this.db.remove(userToDelete);
   }
+
+  async listLikedProjects(userId: number) {
+    const user = await this.db.findOne({
+      where: { id: userId },
+      relations: ['likedProjects']
+    });
+  
+    if (!user) {
+      throw new Error("User not found!");
+    }
+  
+    return user.likedProjects;
+  }
+
+  async likeProject(userId: number, projectId: number) {
+    const projectRepository = datasource.getRepository(Project);
+
+    const user = await this.db.findOne({
+      where: { id: userId },
+      relations: ['likedProjects']
+    });
+
+    const project = await projectRepository.findOne({
+      where: { id : projectId },
+    });
+
+    if (!user || !project) {
+      throw new Error("User or project not found!");
+    }
+    const filterByProjectId = user.likedProjects.filter(likedProject => likedProject.id === projectId);
+    
+    if (filterByProjectId.length !== 0) {
+      throw new Error("Project already liked by the user!");
+    }
+  
+    user.likedProjects.push(project);
+    await this.db.save(user);
+
+    return user.likedProjects;
+  }
+
+  async dislikeProject(userId: number, projectId: number) {
+    const projectRepository = datasource.getRepository(Project);
+
+    const user = await this.db.findOne({
+      where: { id: userId },
+      relations: ['likedProjects']
+    });
+
+     const project = await projectRepository.findOne({
+      where: { id : projectId },
+    });
+
+    if (!user || !project) {
+      throw new Error("User or project not found!");
+    }
+
+    const likedProjectIndex = user.likedProjects.findIndex(likedProject => likedProject.id === projectId);
+    if (likedProjectIndex === -1) {
+      throw new Error("The user did not like this project!");
+    }
+
+    user.likedProjects.splice(likedProjectIndex, 1);
+    await this.db.save(user);
+
+    return user.likedProjects;
+  }
 }
+

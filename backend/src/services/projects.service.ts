@@ -72,5 +72,30 @@ export default class ProjectsService {
     return await this.db.remove(projectToDelete);
   }
     
+  async countLikes(projectId: number): Promise<number> {
+    const project = await this.db.findOne({
+      where: { id: projectId },
+      relations: ["likedByUsers"],
+    });
+
+    if (!project) {
+      throw new Error("Project not found!");
+    }
+
+    return project.likedByUsers.length;
+  }
+
+  async listLikedUsers(projectId: number) {
+    const project = await this.db.findOne({
+      where: { id: projectId },
+      relations: ['likedByUsers']
+    });
+  
+    if (!project) {
+      throw new Error("User not found!");
+    }
+  
+    return project.likedByUsers;
+  }
 }
     

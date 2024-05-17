@@ -1,8 +1,7 @@
 import { Arg, Int, Float, Mutation, Query, Resolver } from "type-graphql";
 import { Project, CreateProjectInput, UpdateProjectInput } from "../entities/project.entity";
 import ProjectsService from "../services/projects.service";
-import { Message } from "../entities/user.entity";
-
+import { Message, User } from "../entities/user.entity";
 
 @Resolver()
 export class ProjectResolver {
@@ -38,8 +37,6 @@ export class ProjectResolver {
     const projects = await new ProjectsService().listByCategory(category);
     return projects;
   }
-
-//---------------------------------------- Mutation -----------------------------------------//
 
   @Mutation(() => Project)
   async createProject(@Arg("data") data: CreateProjectInput) {
@@ -78,4 +75,18 @@ export class ProjectResolver {
     }
     return m;
   }
+
+  @Query(() => Int)
+  async countLikesPerProject(@Arg("projectId") projectId: number) {
+    const projectsService = new ProjectsService();
+    const count = await projectsService.countLikes(projectId);
+    return count;
+  }
+
+  @Query(() => [User])
+  async listUsersLikesPerProject(@Arg("projectId") projectId: number) {
+    const projects = await new ProjectsService().listLikedUsers(projectId);
+    return projects;
+  }
+
 }
