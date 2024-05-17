@@ -1,4 +1,4 @@
-import { Arg, Float, Ctx,  Mutation, Query, Resolver } from "type-graphql";
+import { Arg, Float, Ctx,  Mutation, Query, Resolver, Authorized } from "type-graphql";
 import UsersService from "../services/users.service";
 import { User, CreateUserInput, UpdateUserInput, ROLE, Message, InputLogin } from "../entities/user.entity";
 import * as argon2 from "argon2";
@@ -6,10 +6,12 @@ import { SignJWT } from "jose";
 import { MyContext } from "..";
 import Cookies from "cookies";
 import { Project } from "../entities/project.entity";
-import { CreateUserProjectAccessesInput, UpdateUserProjectAccessesInput, UsersProjectsAccesses } from "../entities/userProjectAccesses.entity";
+import { CreateUserProjectAccessesInput } from "../entities/userProjectAccesses.entity";
 
 @Resolver()
 export class UserResolver {
+
+  @Authorized(['ADMIN'])
   @Query(() => [User])
   async listUsers() {
     const users = await new UsersService().list();
@@ -101,6 +103,7 @@ export class UserResolver {
     return newUser;
   }
 
+  @Authorized()
   @Mutation(() => Message)
   async updateUser(@Arg("data") data: UpdateUserInput) {
     const { id, ...otherData } = data;
@@ -119,6 +122,7 @@ export class UserResolver {
     return m;
   }
   
+  @Authorized()
   @Mutation(() => Message)
   async deleteUser(@Arg("id") id: number) {
     const delUser = await new UsersService().delete(id);
@@ -135,6 +139,7 @@ export class UserResolver {
     return m;
   }
   
+  @Authorized()
   @Query(() => Message)
   async logout(@Ctx() ctx: MyContext) {
     if (ctx.user) {
@@ -148,6 +153,7 @@ export class UserResolver {
     return m;
   }
 
+  @Authorized()
   @Query(() => [Project])
   async listLikeProject(@Arg("userId") userId: number) {
     const projects = await new UsersService().listLikedProjects(userId);
@@ -157,6 +163,7 @@ export class UserResolver {
     return projects;
   }
 
+  @Authorized()
   @Mutation(() => Message)
   async addLikeProject(@Arg("userId") userId: number, @Arg("projectId") projectId: number) {
 
@@ -176,6 +183,7 @@ export class UserResolver {
 
   }
 
+  @Authorized()
   @Mutation(() => Message)
   async deleteLikeProject(@Arg("userId") userId: number, @Arg("projectId") projectId: number) {
 
@@ -195,12 +203,14 @@ export class UserResolver {
     
   }
 
+  @Authorized()
   @Query(() => [Project])
   async listAccesProject (@Arg("userId") userId: number) {
     const listAccesProject = await new UsersService().findUsersByAccessesProject(userId);
     return listAccesProject;
   }
 
+  @Authorized()
   @Mutation(() => Message)
   async addAccessProject (@Arg("data") data: CreateUserProjectAccessesInput) {
     const user = await new UsersService().findByAccessesProject(data.user_id, data.project_id);
@@ -226,6 +236,7 @@ export class UserResolver {
     return m;
   }
 
+  @Authorized()
   @Mutation(() => Message)
   async deleteAccessProject (@Arg("userId") userId: number, @Arg("projectId") projectId: number) {
 
