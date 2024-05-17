@@ -78,7 +78,7 @@ export default class UsersService {
     if (!userToDelete) {
       throw new Error("The user does not exist !");
     }
-
+    
     userToDelete.likedProjects = [];
 
     await this.db.createQueryBuilder()
