@@ -17,3 +17,9 @@ export const LOGOUT = gql`
     }
   }
 `;
+
+export const CHECK_AUTH = gql`
+  query CheckAuth {
+    isAuthenticated
+  }
+`;

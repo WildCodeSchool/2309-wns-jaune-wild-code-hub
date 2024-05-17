@@ -1,33 +1,34 @@
-import { LOGOUT } from "@/requetes/queries/auth.queries";
-import { useLazyQuery } from "@apollo/client";
-import { useRouter } from "next/router";
-import { IconButton, Spinner, Tooltip } from "@chakra-ui/react";
-import { FiLogOut } from "react-icons/fi";
+import { Button } from "@chakra-ui/react";
 import React from "react";
+import { useQuery } from "@apollo/client";
+import { LOGOUT } from "@/requetes/queries/auth.queries";
+import { LogoutQuery, LogoutQueryVariables } from "@/types/graphql";
+import { useRouter } from "next/router";
+import Logout from "@/pages/auth/logout";
 
-const LogoutButton = () => {
+function LogoutButton() {
   const router = useRouter();
-  const [logout, { loading }] = useLazyQuery(LOGOUT, {
+
+  const { loading } = useQuery<LogoutQuery, LogoutQueryVariables>(LOGOUT, {
     onCompleted: () => {
       router.push("/auth/login");
     },
-    onError: (error) => {
-      console.error("Logout failed", error);
-    },
   });
 
+  const handleLogout = async () => {
+    try {
+      await Logout();
+      router.push("/auth/login");
+    } catch (error) {
+      console.error("Logout failed", error);
+    }
+  };
+
   return (
-    <Tooltip label="Logout" aria-label="Logout Tooltip">
-      <IconButton
-        icon={<FiLogOut />}
-        onClick={() => logout()}
-        isLoading={loading}
-        aria-label="Logout"
-        variant="outline"
-        colorScheme="teal"
-      />
-    </Tooltip>
+    <Button variant="outline" colorScheme="teal" onClick={handleLogout}>
+      Logout
+    </Button>
   );
-};
+}
 
 export default LogoutButton;

@@ -1,13 +1,26 @@
-import { Box, Button, Flex, Icon } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Flex,
+  Icon,
+  IconButton,
+  Spinner,
+  Tooltip,
+} from "@chakra-ui/react";
 import React from "react";
 import Searchbar from "./Searchbar";
 import Logout from "./Logout";
+import { FiLogOut } from "react-icons/fi";
+import LogoutButton from "./Logout";
+import { LOGOUT } from "@/requetes/queries/auth.queries";
+import { useLazyQuery } from "@apollo/client";
 import { useParams, usePathname, useRouter } from "next/navigation";
 
 const Navbar = () => {
   const router = useRouter();
   const params = useParams();
   const pathname = usePathname();
+
   console.log("pathname", pathname);
   console.log("params", params);
   return (
@@ -39,6 +52,7 @@ const Navbar = () => {
           </Button>
         )}
       </Box>
+      <LogoutButton />
     </Flex>
   );
 };
