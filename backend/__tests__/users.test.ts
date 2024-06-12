@@ -198,7 +198,6 @@ describe("Test for a new user", () => {
         }
       }   
     });
-    console.log("response.body UPDATE User", JSON.stringify(response.body));
     assert(response.body.kind === "single");  
     expect(response.body.singleResult.data?.updateUser?.success).toEqual(true);
   });
@@ -252,7 +251,6 @@ describe("Test for a new user", () => {
           pseudo: "tata"
         }  
       });
-      console.log(response.body)
       assert(response.body.kind === "single");
       expect(response.body.singleResult.data?.findUserByPseudo?.pseudo).toEqual("tata");
     });

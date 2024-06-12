@@ -90,7 +90,6 @@ const Login = () => {
         }
         
         setErrors(newErrors);
-        console.log("je suis dans handle submit verify")
 
         let newData: InputLogin = {
             password: formData.password
