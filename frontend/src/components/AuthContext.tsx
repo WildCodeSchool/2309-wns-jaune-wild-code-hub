@@ -1,11 +1,18 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { useLazyQuery } from "@apollo/client";
 import { CHECK_AUTH }  
+import { useRouter } from "next/router";
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const router= useRouter();
+
+useEffect(()=>{
+  const token= localStorage.getItem('token');
+  setIsAuthenticated(!!token);
+}, []);
 
   const [checkAuth] = useLazyQuery(CHECK_AUTH, {
     onCompleted: (data) => {
