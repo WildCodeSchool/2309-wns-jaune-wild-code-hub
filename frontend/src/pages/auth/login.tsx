@@ -11,13 +11,13 @@ import {
     InputGroup,
     InputRightElement,
     Text,
-    useDisclosure,
     Link,
   } from '@chakra-ui/react';
 import components from "@/styles/theme/components";
 import { LOGIN } from "@/requetes/queries/auth.queries";
-import { InputLogin, QueryLoginArgs, LoginQuery, LoginQueryVariables } from "@/types/graphql";
+import { InputLogin, LoginQuery, LoginQueryVariables } from "@/types/graphql";
 import { useLazyQuery } from "@apollo/client";
+// import { checkRegex, emailRegex, pseudoRegex } from "@/regex";
 
 const Login = () => {
     const router = useRouter();
@@ -39,12 +39,13 @@ const Login = () => {
 
     const [showPassword, setShowPassword] = useState(false);
     const [formData, setFormData] = useState({
-        email: '',
-        password: ''
+        password: '',
+        emailOrPseudo: '', 
     });
     const [errors, setErrors] = useState({
-        email: '',
-        password: ''
+        password: '',
+        emailOrPseudo: '', 
+
     });
 
     const handleInputChange = (e: { target: { name: string; value: string; }; }) => {
@@ -54,37 +55,53 @@ const Login = () => {
             [name]: value
         }));
     }
+    
+    const handleSubmit = (newErrors: any, newData: any) => {
+        if (Object.keys(newErrors).length === 0) {
+            let data = newData as InputLogin;
+            console.log(data)
+            const pseudoConnect = { infos: { pseudo: data.pseudo, password: data.password } };
+            const emailConnect = { infos: { email: data.email, password: data.password } } ; 
+            login({
+                variables: data?.email ? emailConnect : pseudoConnect,
+            });
+        }
+    }
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmitVerify = async (e: React.FormEvent<HTMLFormElement>)  => {
         e.preventDefault();
         const newErrors = {
-            email: '',
-            password: ''
+            password: '',
+            emailOrPseudo: '', 
         };
 
-        if (!formData.email.trim()) {
-            newErrors.email += 'Email is required. ';
+        if (!formData.emailOrPseudo.trim()) {
+            newErrors.emailOrPseudo += 'Email or Pseudo is required. ';
         }
 
         if (!formData.password.trim()) {
             newErrors.password += 'Password is required. ';
         }
 
-        
         for (const key in newErrors) {
             if (newErrors[key as keyof typeof newErrors] === "") {
                 delete newErrors[key as keyof typeof newErrors];
             }
         }
-
+        
         setErrors(newErrors);
-        if (Object.keys(newErrors).length === 0) {
-            const formData = new FormData(e.currentTarget);
-            const data = Object.fromEntries(formData) as InputLogin;
-            login({
-                variables: { infos: { email: data.email, password: data.password } } 
-            });
+
+        let newData: InputLogin = {
+            password: formData.password
         }
+
+        if (!formData.emailOrPseudo.includes("@")) {
+            newData.pseudo = formData.emailOrPseudo;
+        } else {
+            newData.email = formData.emailOrPseudo;
+        }
+
+        handleSubmit(newErrors, newData)
     }
 
     const togglePasswordVisibility  = () => {
@@ -97,11 +114,11 @@ const Login = () => {
                 <Text fontSize='5xl' color="white" as='b' mb={10}>Connect to your Hub !</Text >
                 <Box {...components.Box.form} p={2}>
                     <main>
-                        <form onSubmit={handleSubmit}>
-                            <FormControl isInvalid={!!errors.email} mb={2}>
-                                <FormLabel color="text">Enter your Email *</FormLabel>
-                                <Input color="placeholder" bg="white" type='email' name='email' value={formData.email} onChange={handleInputChange} />
-                                <FormErrorMessage>{errors.email}</FormErrorMessage>
+                        <form onSubmit={handleSubmitVerify}>
+                            <FormControl isInvalid={!!errors.emailOrPseudo} mb={2}>
+                                <FormLabel color="text">Enter your Email or Pseudo*</FormLabel>
+                                <Input color="placeholder" bg="white" type='text' name='emailOrPseudo' value={formData.emailOrPseudo} onChange={handleInputChange} />
+                                <FormErrorMessage>{errors.emailOrPseudo}</FormErrorMessage>
                             </FormControl>
                                 <FormControl isInvalid={!!errors.password} mb={2}>
                                     <FormLabel color="text">Choose your Password *</FormLabel>

@@ -2,6 +2,7 @@ import { In, Like, Repository, SelectQueryBuilder } from "typeorm";
 import datasource from "../lib/db";
 import { Project, CreateProjectInput, UpdateProjectInput } from "../entities/project.entity";
 import { validate } from "class-validator";
+import { UsersProjectsAccesses } from "../entities/userProjectAccesses.entity";
 
 export default class ProjectsService {
   db: Repository<Project>;
@@ -66,11 +67,46 @@ export default class ProjectsService {
 
   async delete (id: number) {
     const projectToDelete = await this.findById(id);
+    console.log(projectToDelete)
     if (!projectToDelete) {
       throw new Error("The project does not exist !");
     }
+
+    projectToDelete.likedByUsers = [];
+
+    await this.db.createQueryBuilder()
+      .delete()
+      .from(UsersProjectsAccesses)
+      .where("project = :projectId", { projectId: id })
+      .execute();
+      
     return await this.db.remove(projectToDelete);
   }
     
+  async countLikes(projectId: number): Promise<number> {
+    const project = await this.db.findOne({
+      where: { id: projectId },
+      relations: ["likedByUsers"],
+    });
+
+    if (!project) {
+      throw new Error("Project not found!");
+    }
+
+    return project.likedByUsers.length;
+  }
+
+  async listLikedUsers(projectId: number) {
+    const project = await this.db.findOne({
+      where: { id: projectId },
+      relations: ['likedByUsers']
+    });
+  
+    if (!project) {
+      throw new Error("User not found!");
+    }
+  
+    return project.likedByUsers;
+  }
 }
     

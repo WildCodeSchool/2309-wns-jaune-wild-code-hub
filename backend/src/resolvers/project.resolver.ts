@@ -1,11 +1,11 @@
-import { Arg, Int, Float, Mutation, Query, Resolver } from "type-graphql";
+import { Arg, Int, Float, Mutation, Query, Resolver, Authorized } from "type-graphql";
 import { Project, CreateProjectInput, UpdateProjectInput } from "../entities/project.entity";
 import ProjectsService from "../services/projects.service";
-import { Message } from "../entities/user.entity";
-
+import { Message, User } from "../entities/user.entity";
 
 @Resolver()
 export class ProjectResolver {
+
   @Query(() => [Project])
   async listProjects() {
     const projects = await new ProjectsService().list();
@@ -39,8 +39,7 @@ export class ProjectResolver {
     return projects;
   }
 
-//---------------------------------------- Mutation -----------------------------------------//
-
+  @Authorized()
   @Mutation(() => Project)
   async createProject(@Arg("data") data: CreateProjectInput) {
     const project = await new ProjectsService().findByName(data.name);
@@ -49,7 +48,7 @@ export class ProjectResolver {
     return newProject;
   }
 
-  
+  @Authorized()
   @Mutation(() => Message)
   async updateProject(@Arg("data") data: UpdateProjectInput) {
     const { id, ...otherData } = data;   
@@ -65,6 +64,7 @@ export class ProjectResolver {
     return m;
   }
 
+  @Authorized()
   @Mutation(() => Message)
   async deleteProject(@Arg("id") id: number) {
     const delUser = await new ProjectsService().delete(id);
@@ -78,4 +78,19 @@ export class ProjectResolver {
     }
     return m;
   }
+
+  @Query(() => Int)
+  async countLikesPerProject(@Arg("projectId") projectId: number) {
+    const projectsService = new ProjectsService();
+    const count = await projectsService.countLikes(projectId);
+    return count;
+  }
+
+  @Authorized()
+  @Query(() => [User])
+  async listUsersLikesPerProject(@Arg("projectId") projectId: number) {
+    const projects = await new ProjectsService().listLikedUsers(projectId);
+    return projects;
+  }
+
 }

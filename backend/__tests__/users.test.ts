@@ -125,7 +125,6 @@ export const DELETE_USER = `#graphql
 
 //-------------------- DATA ---------------------//
 
-
 beforeAll(async () => {
   const baseSchema = await buildSchema({
     resolvers: [UserResolver],
@@ -140,7 +139,6 @@ beforeAll(async () => {
   jest
     .spyOn(datasourceInitial, "getRepository")
     .mockReturnValue(datasource.getRepository(User));
-
   await datasource.initialize(); //initialisation de la datasource
   // await datasource.getRepository(User).clear(); //vidage de la table et non drop de la base de donnée complète
 });
@@ -200,7 +198,6 @@ describe("Test for a new user", () => {
         }
       }   
     });
-    console.log("response.body UPDATE User", JSON.stringify(response.body));
     assert(response.body.kind === "single");  
     expect(response.body.singleResult.data?.updateUser?.success).toEqual(true);
   });

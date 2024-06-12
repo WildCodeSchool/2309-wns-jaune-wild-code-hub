@@ -244,7 +244,6 @@ describe("Test for a new project", () => {
       query: LIST_PROJECTS_PUBLIC,      
     });
     
-    console.log("response.body PUBLIC", JSON.stringify(response.body));
     assert(response.body.kind === "single");
     expect(response.body.singleResult.data?.listPublicProjects).toHaveLength(1);   
   });
