@@ -81,6 +81,7 @@ export type Query = {
   listUsers: Array<User>;
   listUsersByRole: Array<User>;
   login: Message;
+  logout: Message;
 };
 
 
@@ -274,6 +275,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   listUsers?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>;
   listUsersByRole?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryListUsersByRoleArgs, 'role'>>;
   login?: Resolver<ResolversTypes['Message'], ParentType, ContextType, RequireFields<QueryLoginArgs, 'infos'>>;
+  logout?: Resolver<ResolversTypes['Message'], ParentType, ContextType>;
 }>;
 
 export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = ResolversObject<{

@@ -9,6 +9,5 @@ export default new DataSource({
     database: process.env.DATABASE_DB,
     synchronize : true,
     logging: ["query", "error"],
-    entities : ['src/entities/*.ts']
-    
+    entities : ['src/entities/*.ts']  
 });
