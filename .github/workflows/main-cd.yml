@@ -56,12 +56,25 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/main-server-frontend:latest
 
+  # deployment:
+  #   needs: build
+  #   runs-on: ubuntu-latest
+  #     # send deploiement hook
+  #   steps:
+  #     - name: Invoke deployment hook
+  #       uses: distributhor/workflow-webhook@v3
+  #       with:
+  #         webhook_url: ${{ secrets.WEBHOOK_URL_MAIN }}
   deployment:
     needs: build
     runs-on: ubuntu-latest
-      # send deploiement hook
     steps:
       - name: Invoke deployment hook
-        uses: distributhor/workflow-webhook@v3
-        with:
-          webhook_url: ${{ secrets.WEBHOOK_URL_MAIN }}
+        env:
+          SECRET_KEY: ${{ secrets.WEBHOOK_SECRET }}
+        run: |
+          PAYLOAD='{}'
+          SIGNATURE=$(echo -n "$PAYLOAD" | openssl dgst -sha1 -hmac "$SECRET_KEY" | sed 's/^.* //')
+          SIGNATURE="sha1=$SIGNATURE"
+
+          curl -X POST -H "Content-Type: application/json" -H "X-Hub-Signature: $SIGNATURE" -d "$PAYLOAD" ${{ secrets.WEBHOOK_URL_MAIN }}
