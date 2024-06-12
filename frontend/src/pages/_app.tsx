@@ -7,7 +7,7 @@ import Navbar from "@/components/Navbar";
 
 export default function App({ Component, pageProps }: AppProps) {
   const client = new ApolloClient({
-    uri: process.env.NEXT_PUBLIC_API_URI_BACKEND,
+    uri: "http://localhost:4000",
     cache: new InMemoryCache(),
     credentials: "include",
   });

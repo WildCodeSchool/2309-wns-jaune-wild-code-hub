@@ -43,13 +43,13 @@ async function main() {
 
   await server.start();
 
-  const urlFrontend: string | undefined  = process.env.API_URI_FRONTEND;
+  // const urlFrontend: string | undefined  = process.env.API_URI_FRONTEND;
 
-  if (urlFrontend) {
+  // if (urlFrontend) {
     app.use(
       "/",
       cors<cors.CorsRequest>({
-        origin: [urlFrontend, "https://studio.apollographql.com"],
+        origin: ["http://localhost:3000"],
         credentials: true,
       }),
       express.json(),
@@ -76,7 +76,7 @@ async function main() {
         },
       })
     );
-  }
+  // }
   await db.initialize();
   await new Promise<void>((resolve) =>
     httpServer.listen({ port: 4000 }, resolve)
