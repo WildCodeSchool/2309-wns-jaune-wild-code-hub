@@ -60,7 +60,7 @@ const Login = () => {
         if (Object.keys(newErrors).length === 0) {
             let data = newData as InputLogin;
             console.log(data)
-            let pseudoConnect = { infos: { pseudo: data.pseudo, password: data.password } };
+            const pseudoConnect = { infos: { pseudo: data.pseudo, password: data.password } };
             const emailConnect = { infos: { email: data.email, password: data.password } } ; 
             login({
                 variables: data?.email ? emailConnect : pseudoConnect,
