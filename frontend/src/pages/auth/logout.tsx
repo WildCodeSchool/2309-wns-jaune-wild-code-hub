@@ -12,7 +12,11 @@ function Logout() {
     onCompleted: () => {
       router.push("/auth/login");
     },
+    onError(error) {
+    console.log(error.message);
+    }
   });
+
   return (
     <main
       className={`flex min-h-screen flex-col items-center justify-between p-24`}
