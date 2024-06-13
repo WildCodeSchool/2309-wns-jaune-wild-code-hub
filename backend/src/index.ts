@@ -43,40 +43,37 @@ async function main() {
 
   await server.start();
 
-  // const urlFrontend: string | undefined  = process.env.API_URI_FRONTEND;
+  app.use(
+    "/",
+    cors<cors.CorsRequest>({
+      origin: ["http://localhost:3000"],
+      credentials: true,
+    }),
+    express.json(),
+    expressMiddleware(server, {
+      context: async ({ req, res }) => {
+        let user: User | null = null;
 
-  // if (urlFrontend) {
-    app.use(
-      "/",
-      cors<cors.CorsRequest>({
-        origin: ["http://localhost:3000"],
-        credentials: true,
-      }),
-      express.json(),
-      expressMiddleware(server, {
-        context: async ({ req, res }) => {
-          let user: User | null = null;
-  
-          const cookies = new Cookies(req, res);
-          const token = cookies.get("token");
-          if (token) {
-            try {
-              const verify = await jwtVerify<Payload>(
-                token,
-                new TextEncoder().encode(process.env.SECRET_KEY)
-              );
-              user = await new UserService().findByEmail(
-                verify.payload.email
-              );
-            } catch (err) {
-              console.log(err);
-            }
+        const cookies = new Cookies(req, res);
+        const token = cookies.get("token");
+        if (token) {
+          try {
+            const verify = await jwtVerify<Payload>(
+              token,
+              new TextEncoder().encode(process.env.SECRET_KEY)
+            );
+            user = await new UserService().findByEmail(
+              verify.payload.email
+            );
+          } catch (err) {
+            console.log(err);
           }
-          return { req, res, user };
-        },
-      })
-    );
-  // }
+        }
+        return { req, res, user };
+      },
+    })
+  );
+  
   await db.initialize();
   await new Promise<void>((resolve) =>
     httpServer.listen({ port: 4000 }, resolve)
