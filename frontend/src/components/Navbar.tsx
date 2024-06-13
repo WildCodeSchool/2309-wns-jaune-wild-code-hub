@@ -9,9 +9,10 @@ import {
 } from "@chakra-ui/react";
 import React from "react";
 import Searchbar from "./Searchbar";
-import Logout from "./Logout";
+import Logout from "./Logoutbutton";
+import AppearLogoutButton from "./AppearLogout";
 import { FiLogOut } from "react-icons/fi";
-import LogoutButton from "./Logout";
+import LogoutButton from "./Logoutbutton";
 import { LOGOUT } from "@/requetes/queries/auth.queries";
 import { useLazyQuery } from "@apollo/client";
 import { useParams, usePathname, useRouter } from "next/navigation";
@@ -52,7 +53,7 @@ const Navbar = () => {
           </Button>
         )}
       </Box>
-      <LogoutButton />
+      <AppearLogoutButton />
     </Flex>
   );
 };
