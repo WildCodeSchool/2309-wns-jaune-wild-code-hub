@@ -1,37 +1,48 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
-import { useLazyQuery } from "@apollo/client";
-import { CHECK_AUTH }  
-import { useRouter } from "next/router";
+// import React, { createContext, useContext, useState, useEffect } from "react";
+// import { useLazyQuery } from "@apollo/client";
+// import { CHECK_AUTH } from "@/requetes/queries/auth.queries";
+// import { useRouter } from "next/router";
 
-const AuthContext = createContext();
+// const AuthContext = createContext();
 
-export const AuthProvider = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const router= useRouter();
+// export const AuthProvider = ({ children }) => {
+//   const [isAuthenticated, setIsAuthenticated] = useState(false);
+//   const router = useRouter();
 
-useEffect(()=>{
-  const token= localStorage.getItem('token');
-  setIsAuthenticated(!!token);
-}, []);
+//   useEffect(() => {
+//     const token = localStorage.getItem("token");
+//     setIsAuthenticated(!!token);
+//   }, []);
 
-  const [checkAuth] = useLazyQuery(CHECK_AUTH, {
-    onCompleted: (data) => {
-      setIsAuthenticated(data.isAuthenticated);
-    },
-    onError: () => {
-      setIsAuthenticated(false);
-    },
-  });
+//   const [checkAuth] = useLazyQuery(CHECK_AUTH, {
+//     onCompleted: (data) => {
+//       setIsAuthenticated(data.isAuthenticated);
+//     },
+//     onError: () => {
+//       setIsAuthenticated(false);
+//     },
+//   });
 
-  useEffect(() => {
-    checkAuth();
-  }, []);
+//   useEffect(() => {
+//     checkAuth();
+//   }, [checkAuth]);
 
-  return (
-    <AuthContext.Provider value={{ isAuthenticated, setIsAuthenticated }}>
-      {children}
-    </AuthContext.Provider>
-  );
-};
+//   const login = (token) => {
+//     localStorage.setItem("token", token);
+//     setIsAuthenticated(true);
+//     router.push("/");
+//   };
 
-export const useAuth = () => useContext(AuthContext);
+//   const logout = () => {
+//     localStorage.removeItem("token");
+//     setIsAuthenticated(false);
+//     router.push("/auth/login");
+//   };
+//   return (
+//     <AuthContext.Provider value={{ isAuthenticated, setIsAuthenticated }}>
+//       {children}
+//     </AuthContext.Provider>
+//   );
+// };
+
+// export const useAuth = () => useContext(AuthContext);

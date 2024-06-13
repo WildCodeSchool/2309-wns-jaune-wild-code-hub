@@ -7,17 +7,14 @@ import { useRouter } from "next/router";
 function Logout() {
   const router = useRouter();
 
-  const [logout, { loading, data, error }] = useMutation<
-    LogoutQuery,
-    LogoutQueryVariables
-  >(LOGOUT, {
-    onCompleted: () => {
-      router.push("/auth/login");
-    },
-  });
-  useEffect(() => {
-    logout();
-  }, [logout]);
+  const { loading, data, error } = useQuery<LogoutQuery, LogoutQueryVariables>(
+    LOGOUT,
+    {
+      onCompleted: () => {
+        router.push("/auth/login");
+      },
+    }
+  );
 
   return (
     <main
