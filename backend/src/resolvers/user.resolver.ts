@@ -1,13 +1,17 @@
-import { Arg, Float, Ctx,  Mutation, Query, Resolver } from "type-graphql";
+import { Arg, Float, Ctx,  Mutation, Query, Resolver, Authorized } from "type-graphql";
 import UsersService from "../services/users.service";
 import { User, CreateUserInput, UpdateUserInput, ROLE, Message, InputLogin } from "../entities/user.entity";
 import * as argon2 from "argon2";
 import { SignJWT } from "jose";
 import { MyContext } from "..";
 import Cookies from "cookies";
+import { Project } from "../entities/project.entity";
+import { CreateUserProjectAccessesInput } from "../entities/userProjectAccesses.entity";
 
 @Resolver()
 export class UserResolver {
+
+  @Authorized(['ADMIN'])
   @Query(() => [User])
   async listUsers() {
     const users = await new UsersService().list();
@@ -81,7 +85,7 @@ export class UserResolver {
     }
     return m;
   }
-
+  
   @Mutation(() => User)
   async register(@Arg("data") data: CreateUserInput) {
     const user = await new UsersService().findByEmail(data.email);
@@ -99,6 +103,7 @@ export class UserResolver {
     return newUser;
   }
 
+  @Authorized()
   @Mutation(() => Message)
   async updateUser(@Arg("data") data: UpdateUserInput) {
     const { id, ...otherData } = data;
@@ -116,12 +121,13 @@ export class UserResolver {
     }
     return m;
   }
-
+  
+  @Authorized()
   @Mutation(() => Message)
   async deleteUser(@Arg("id") id: number) {
     const delUser = await new UsersService().delete(id);
     const m = new Message();
-
+    
     if (delUser) {
       m.message = "User deleted!";
       m.success = true;
@@ -129,10 +135,11 @@ export class UserResolver {
       m.message = "Unable to delete user!";
       m.success = false;
     }
-
+    
     return m;
   }
-
+  
+  @Authorized()
   @Query(() => Message)
   async logout(@Ctx() ctx: MyContext) {
     if (ctx.user) {
@@ -145,4 +152,107 @@ export class UserResolver {
     
     return m;
   }
+
+  @Authorized()
+  @Query(() => [Project])
+  async listLikeProject(@Arg("userId") userId: number) {
+    const projects = await new UsersService().listLikedProjects(userId);
+    if (projects.length === 0) {
+      throw new Error("You have no plans !");
+    }
+    return projects;
+  }
+
+  @Authorized()
+  @Mutation(() => Message)
+  async addLikeProject(@Arg("userId") userId: number, @Arg("projectId") projectId: number) {
+
+    const likedProjects = await new UsersService().likeProject(userId, projectId);
+
+    const m = new Message();
+
+    if (likedProjects) {
+      m.message = "You liked";
+      m.success = true;
+    } else {
+      m.message = "Unable to like";
+      m.success = false;
+    }
+
+    return m;
+
+  }
+
+  @Authorized()
+  @Mutation(() => Message)
+  async deleteLikeProject(@Arg("userId") userId: number, @Arg("projectId") projectId: number) {
+
+    const likedProjects = await new UsersService().dislikeProject(userId, projectId);
+
+    const m = new Message();
+
+    if (likedProjects) {
+      m.message = "like deleted";
+      m.success = true;
+    } else {
+      m.message = "unable to remove like";
+      m.success = false;
+    }
+
+    return m;
+    
+  }
+
+  @Authorized()
+  @Query(() => [Project])
+  async listAccesProject (@Arg("userId") userId: number) {
+    const listAccesProject = await new UsersService().findUsersByAccessesProject(userId);
+    return listAccesProject;
+  }
+
+  @Authorized()
+  @Mutation(() => Message)
+  async addAccessProject (@Arg("data") data: CreateUserProjectAccessesInput) {
+    const user = await new UsersService().findByAccessesProject(data.user_id, data.project_id);
+    
+    if (user) {
+      throw new Error("This user already has access to this project!");
+    }
+
+    if (user) throw new Error("This name of project is already in use!");
+    
+    const newUserAccessesProject = await new UsersService().createAccessesProject(data);
+    
+    const m = new Message();
+
+    if (newUserAccessesProject) {
+      m.message = "Add user project!";
+      m.success = true;
+    } else {
+      m.message = "Unable to add user project!";
+      m.success = false;
+    }
+
+    return m;
+  }
+
+  @Authorized()
+  @Mutation(() => Message)
+  async deleteAccessProject (@Arg("userId") userId: number, @Arg("projectId") projectId: number) {
+
+    const deleteUserAccessesProject = await new UsersService().deleteAccessesProject(userId, projectId);
+    
+    const m = new Message();
+
+    if (deleteUserAccessesProject) {
+      m.message = "Delete user project!";
+      m.success = true;
+    } else {
+      m.message = "Unable to delete user project!";
+      m.success = false;
+    }
+
+    return m;
+  }
+
 }

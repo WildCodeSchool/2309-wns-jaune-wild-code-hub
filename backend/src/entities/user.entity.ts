@@ -4,14 +4,16 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   Column,
-  ManyToOne,
   JoinTable,
   ManyToMany,
   UpdateDateColumn,
+  OneToMany,
 } from "typeorm";
-import { Length, Min } from "class-validator";
-import { Field, Float, ID, InputType, ObjectType } from "type-graphql";
+import { Length } from "class-validator";
+import { Field, ID, InputType, ObjectType } from "type-graphql";
 import * as argon2 from "argon2";
+import { Project } from "./project.entity";
+import { UsersProjectsAccesses } from "./userProjectAccesses.entity";
 export type ROLE = "ADMIN" | "USER";
 
 @ObjectType()
@@ -76,7 +78,7 @@ export class User {
   run_counter: number;
 
   @Field()
-  @CreateDateColumn({ default: () => "CURRENT_TIMESTAMP" })
+  @UpdateDateColumn({ name: 'last_login', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
   last_login: Date;
 
   @Field()
@@ -84,10 +86,20 @@ export class User {
   created_at: Date;
 
   @Field()
-  @CreateDateColumn({ default: () => "CURRENT_TIMESTAMP" })
+  @UpdateDateColumn({ name: 'updated_at', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
   update_at: Date;
-}
 
+  @ManyToMany(() => Project, project => project.likedByUsers)
+  @JoinTable({
+    name: "users_projects_likes",
+    joinColumn: { name: "user_id" },
+    inverseJoinColumn: { name: "project_id" }
+  })
+  likedProjects: Project[];
+
+  @OneToMany(() => UsersProjectsAccesses, UsersProjectsAccesses => UsersProjectsAccesses.user)
+  usersProjectsAccesses: UsersProjectsAccesses[];
+}
 
 @InputType()
 export class CreateUserInput {
@@ -167,3 +179,4 @@ export class Message {
   @Field()
   message: string;
 }
+

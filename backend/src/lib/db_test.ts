@@ -3,7 +3,7 @@ import { DataSource } from "typeorm";
 export default new DataSource({
   type: "postgres",
   host: "localhost",
-  port: 5434,
+  port: 5435,
   username: "root",
   password: "root",
   database: "wildcodehub-test",

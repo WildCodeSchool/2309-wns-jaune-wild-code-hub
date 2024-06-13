@@ -36,16 +36,12 @@ services:
     profiles: ["dev", "production", "test"]
     restart: always
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -d wildcodehub -U root"]
+      test: ["CMD-SHELL", "pg_isready -d ${DATABASE_DB} -U ${USERNAME_DB}"]
       interval: 5s
       timeout: 5s
       retries: 10
     env_file:
-      - ./db.env
-    # environment:
-    #   POSTGRES_USER: ${USERNAME_DB}
-    #   POSTGRES_PASSWORD: ${PASSWORD_DB}
-    #   POSTGRES_DB: ${DATABASE_DB}
+      - ./.env
     ports:
       - 5434:5432
     volumes:
@@ -68,10 +64,8 @@ services:
       interval: 5s
       timeout: 5s
       retries: 10
-    environment:
-      POSTGRES_USER: root
-      POSTGRES_PASSWORD: root
-      POSTGRES_DB: wildcodehub-test
+    env_file:
+      - .env
     ports:
       - 5435:5432
     volumes:

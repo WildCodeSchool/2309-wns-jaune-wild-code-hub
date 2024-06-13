@@ -7,24 +7,17 @@ import { useRouter } from "next/router";
 function Logout() {
   const router = useRouter();
 
-  const { loading, data, error } = useQuery<LogoutQuery, LogoutQueryVariables>(
-    LOGOUT,
-    {
-      onCompleted: () => {
-        router.push("/auth/login");
-      },
-    }
-  );
+  const { loading } = useQuery<LogoutQuery, LogoutQueryVariables>(LOGOUT, {
+    onCompleted: () => {
+      router.push("/auth/login");
+    },
+  });
 
   return (
     <main
       className={`flex min-h-screen flex-col items-center justify-between p-24`}
     >
-      {loading
-        ? "Please wait..."
-        : error
-        ? "Error during logout"
-        : "You are disconnected !"}
+      {loading ? "Please wait..." : "You are disconnected !"}
     </main>
   );
 }
