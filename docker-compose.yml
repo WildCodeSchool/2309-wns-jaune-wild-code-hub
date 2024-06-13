@@ -40,7 +40,7 @@ services:
       timeout: 5s
       retries: 10
     env_file:
-      - ./.env
+      - /.env
     ports:
       - 5434:5432
     volumes:

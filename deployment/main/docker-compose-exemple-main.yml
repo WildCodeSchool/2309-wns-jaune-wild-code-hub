@@ -19,7 +19,7 @@ services:
     ports:
       - 3000:3000
     env_file:
-      - ./.env
+      - /.env
     environment:
       - WDS_SOCKET_HOST=127.0.0.1
       - CHOKIDAR_USEPOLLING=true
@@ -34,7 +34,7 @@ services:
       timeout: 5s
       retries: 10
     env_file:
-      - ./.env
+      - /.env
     ports:
       - 5433:5432
     volumes:
