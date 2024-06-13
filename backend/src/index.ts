@@ -42,10 +42,11 @@ async function main() {
   });
 
   await server.start();
+
   app.use(
     "/",
     cors<cors.CorsRequest>({
-      origin: ["http://localhost:3000", "https://studio.apollographql.com"],
+      origin: ["http://localhost:3000"],
       credentials: true,
     }),
     express.json(),
@@ -72,6 +73,7 @@ async function main() {
       },
     })
   );
+  
   await db.initialize();
   await new Promise<void>((resolve) =>
     httpServer.listen({ port: 4000 }, resolve)
