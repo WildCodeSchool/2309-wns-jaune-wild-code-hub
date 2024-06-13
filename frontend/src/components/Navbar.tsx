@@ -11,6 +11,7 @@ import React from "react";
 import Searchbar from "./Searchbar";
 import Logout from "./Logoutbutton";
 import AppearLogoutButton from "./AppearLogout";
+import AppearLoginButton from "./AppearLogin";
 import { FiLogOut } from "react-icons/fi";
 import LogoutButton from "./Logoutbutton";
 import { LOGOUT } from "@/requetes/queries/auth.queries";
@@ -38,6 +39,7 @@ const Navbar = () => {
         {"< Wild Code Hub />"}
       </Button>
       <Searchbar />
+
       <Box gap={"2rem"}>
         {pathname != "/auth/login" && (
           <Button variant="ghost" onClick={() => router.push("/auth/login")}>
@@ -53,6 +55,7 @@ const Navbar = () => {
           </Button>
         )}
       </Box>
+      <AppearLoginButton />
       <AppearLogoutButton />
     </Flex>
   );

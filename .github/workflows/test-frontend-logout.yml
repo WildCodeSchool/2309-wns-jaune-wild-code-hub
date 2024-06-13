@@ -1,0 +1,13 @@
+name: Test Logout
+
+on: push
+
+jobs:
+  test-frontend:
+    name: 🔧  Test Logout
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        # Docker hub image
+        image: postgres
+        # Provide the password for postgres
