@@ -11,7 +11,8 @@ const SidebarLayout = ({ children }: PropsWithChildren) => {
       bgColor={"background"}
       bgSize={"100%"}
       paddingTop={"4.5rem"}
-      paddingLeft={"16rem"}
+      paddingLeft={isOpen ? "18rem" : "5rem"}
+      transition="all .5s ease"
       minHeight={"100vh"}
     >
       <Sidebar isOpen={isOpen} setIsOpen={setIsOpen} />
