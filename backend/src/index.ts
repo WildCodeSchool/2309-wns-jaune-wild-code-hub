@@ -17,6 +17,7 @@ import { jwtVerify } from "jose";
 import UserService from "./services/users.service";
 import { customAuthChecker } from "./lib/authChecker";
 import { ProjectResolver } from "./resolvers/project.resolver";
+import { FileResolver } from "./resolvers/file.resolver";
 
 export interface MyContext {
   req: express.Request;
@@ -32,9 +33,9 @@ const httpServer = http.createServer(app);
 
 async function main() {
   const schema = await buildSchema({
-    resolvers: [UserResolver, ProjectResolver],
+    resolvers: [UserResolver, ProjectResolver, FileResolver],
     validate: false,
-    authChecker: customAuthChecker, 
+    authChecker: customAuthChecker,
   });
   const server = new ApolloServer<MyContext>({
     schema,
@@ -62,9 +63,7 @@ async function main() {
               token,
               new TextEncoder().encode(process.env.SECRET_KEY)
             );
-            user = await new UserService().findByEmail(
-              verify.payload.email
-            );
+            user = await new UserService().findByEmail(verify.payload.email);
           } catch (err) {
             console.log(err);
           }
@@ -73,7 +72,7 @@ async function main() {
       },
     })
   );
-  
+
   await db.initialize();
   await new Promise<void>((resolve) =>
     httpServer.listen({ port: 4000 }, resolve)
