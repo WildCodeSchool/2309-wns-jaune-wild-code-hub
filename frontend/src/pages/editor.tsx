@@ -216,16 +216,16 @@ const Editor: React.FC = () => {
                             </Text>
                         </Box>
                     )}
-                    <Text bg="background2" width="3rem">Bash</Text>
+                    <Text bg="background2" width="3rem" pl="5px" pb="0.2rem">Bash</Text>
                     <BashOutput logs={consoleLogs} />
                 </div>
             </Flex>
             <div>
-                <Text bg="background2" width="3rem" p="2px">View</Text>
+                <Text bg="background2" width="3rem" pl="5px" pb="0.2rem">View</Text>
                 <iframe
                     ref={iframeRef}
                     title="Preview"
-                    style={{ width: "100%", height: "80vh", border: "1px solid black", backgroundColor: "#151515" }}
+                    style={{ width: "100%", height: "79vh", border: "1px solid black", backgroundColor: "#151515" }}
                 ></iframe>
             </div>
         </Box>
