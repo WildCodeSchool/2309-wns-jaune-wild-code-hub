@@ -210,9 +210,9 @@ const Editor: React.FC = () => {
                             language={file.language}
                         />
                     ) : (
-                        <Box p={4}width="80vh" height="50vh" bg="gray">
+                        <Box p={4}width="80vh" height="50vh" bg="background2">
                             <Text color="white" textAlign="center">
-                                Sélectionnez un fichier pour éditer son contenu.
+                                Select a file to edit its content.
                             </Text>
                         </Box>
                     )}
