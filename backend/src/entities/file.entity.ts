@@ -7,9 +7,11 @@ import {
   JoinTable,
   ManyToMany,
   UpdateDateColumn,
+  JoinColumn,
 } from "typeorm";
-import { Length, Min } from "class-validator";
+import { Length } from "class-validator";
 import { Field, ID, InputType, ObjectType } from "type-graphql";
+import { Project } from "./project.entity";
 
 @ObjectType()
 @Entity()
@@ -18,9 +20,9 @@ export class File {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Field()
-  @Column()
-  project_id: string;
+  @ManyToOne(() => Project, (project) => project.files)
+  @JoinColumn({ name: "project_id" })
+  project: Project;
 
   @Field()
   @Column({ length: 100 })
@@ -34,11 +36,15 @@ export class File {
   category: string;
 
   @Field()
-  @Column()
+  @Column({ length: 50 })
+  @Length(1, 50, {
+    message: "Language must have between 1 to 50 characters",
+  })
   language: string;
 
   @Field()
-  @Column()
+  @Column({ length: 50 })
+  @Length(1, 50, { message: "Type must have between 1 to 50 characters" })
   type: string;
 
   @Field()
@@ -50,14 +56,39 @@ export class File {
   created_at: Date;
 
   @Field()
-  @CreateDateColumn({ default: () => "CURRENT_TIMESTAMP" })
+  @UpdateDateColumn({
+    name: "updated_at",
+    default: () => "CURRENT_TIMESTAMP",
+    onUpdate: "CURRENT_TIMESTAMP",
+  })
   update_at: Date;
 }
 
 @InputType()
 export class CreateFileInput {
   @Field()
-  project_id: string;
+  project_id: number;
+
+  @Field()
+  name: string;
+
+  @Field()
+  language: string;
+
+  @Field()
+  type: string;
+
+  @Field({ nullable: true })
+  content: string;
+
+  @Field({ nullable: true })
+  category: string;
+}
+
+@InputType()
+export class UpdateFileInput {
+  @Field()
+  id: number;
 
   @Field()
   name: string;
