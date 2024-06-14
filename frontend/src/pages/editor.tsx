@@ -216,6 +216,7 @@ const Editor: React.FC = () => {
                             </Text>
                         </Box>
                     )}
+                    <Text bg="gray" width="3rem">Bash</Text>
                     <BashOutput logs={consoleLogs} />
                 </div>
             </Flex>
