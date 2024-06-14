@@ -216,12 +216,12 @@ const Editor: React.FC = () => {
                             </Text>
                         </Box>
                     )}
-                    <Text bg="gray" width="3rem">Bash</Text>
+                    <Text bg="background2" width="3rem">Bash</Text>
                     <BashOutput logs={consoleLogs} />
                 </div>
             </Flex>
             <div>
-                <Text bg="gray" width="3rem" p="2px">View</Text>
+                <Text bg="background2" width="3rem" p="2px">View</Text>
                 <iframe
                     ref={iframeRef}
                     title="Preview"

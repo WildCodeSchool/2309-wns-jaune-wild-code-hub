@@ -36,7 +36,7 @@ const FileEditor: React.FC<Props> = ({ code, setCode, file, setData, language })
       inherit: true,
       rules: [],
       colors: {
-        "editor.background": "#363636",
+        "editor.background": "#151515",
       },
     });
   };
