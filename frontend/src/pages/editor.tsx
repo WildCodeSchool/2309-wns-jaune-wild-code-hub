@@ -46,7 +46,8 @@ const Editor: React.FC = () => {
             id: 3,
             name: "file 3",
             extension: "js",
-            content: `document.getElementById('app').innerText = "Hello, JavaScript!";`,
+            content: `document.getElementById('app').innerText = "Hello, JavaScript!";
+                    console.log("toto")`,
             language: "javascript",
         },
         {
@@ -219,11 +220,11 @@ const Editor: React.FC = () => {
                 </div>
             </Flex>
             <div>
-                <p>View</p>
+                <Text bg="gray" width="3rem" p="2px">View</Text>
                 <iframe
                     ref={iframeRef}
                     title="Preview"
-                    style={{ width: "100%", height: "80vh", border: "1px solid black", backgroundColor: "white" }}
+                    style={{ width: "100%", height: "80vh", border: "1px solid black", backgroundColor: "#151515" }}
                 ></iframe>
             </div>
         </Box>

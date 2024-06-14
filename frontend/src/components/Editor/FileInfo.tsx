@@ -29,7 +29,14 @@ const FileInfo: React.FC<FileInfoProps> = ({ fileName, onClose, isSelected, onCl
         onClick={onClick}
     >
       <p style={{ marginLeft:"3px", marginRight: "5px" }}>{fileName}</p>
-      <CloseIcon ml="10px" mr="10px" cursor="pointer" onClick={handleCloseClick} />
+      <CloseIcon 
+        ml="9px"
+        mr="9px"
+        width="10px"
+        mt="3px"
+        cursor="pointer"
+        onClick={handleCloseClick}
+        />
     </Box>
   );
 };

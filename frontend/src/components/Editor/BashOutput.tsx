@@ -19,9 +19,9 @@ const BashOutput: React.FC<BashOutputProps> = ({ logs }) => {
   }, [logs]);
 
   return (
-    <Box p={4} bg="gray" color="white" height="150px" overflowY="scroll" mt={4} ref={outputRef}>
+    <Box p={4} bg="background2" color="white" height="220px" overflowY="scroll" mt={4} ref={outputRef}>
       {logs.map((log, index) => (
-        <Box key={index} borderBottom="1px solid #14181F" py={1}>
+        <Box key={index} borderBottom="1px solid white" py={1}>
           <Text color="white" whiteSpace="pre-wrap">{log}</Text>
         </Box>
       ))}
