@@ -1,5 +1,3 @@
-// components/Editor/AddFileForm.tsx
-
 import React, { useState } from "react";
 
 interface AddFileFormProps {

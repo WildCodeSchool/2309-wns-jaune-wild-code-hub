@@ -1,5 +1,6 @@
 import React from "react";
 import { CloseIcon } from "@chakra-ui/icons";
+import { Box } from "@chakra-ui/react";
 
 interface FileInfoProps {
   fileName: string;
@@ -10,29 +11,26 @@ interface FileInfoProps {
 
 const FileInfo: React.FC<FileInfoProps> = ({ fileName, onClose, isSelected, onClick }) => {
   const handleCloseClick = (event: React.MouseEvent) => {
-    event.stopPropagation(); // Prevent triggering the onClick event of the FileInfo div
-
-    // if (window.confirm(`Are you sure you want to close ${fileName}?`)) {
+    event.stopPropagation();
       onClose();
-    // }
   };
 
   return (
-    <div
-      style={{
-        backgroundColor: isSelected ? "#1a202c" : "#2D3649",
-        color: "#ffffff",
-        padding: "1px",
+    <Box
+        bg={isSelected ? "grey" : "background2"}
+        color={isSelected ? "white" : "grey"}
+        p="1px"
+        style={{
         display: "flex",
         alignItems: "center",
         marginRight: "1px",
         cursor: "pointer",
-      }}
-      onClick={onClick}
+        }}
+        onClick={onClick}
     >
       <p style={{ marginLeft:"3px", marginRight: "5px" }}>{fileName}</p>
-      <CloseIcon style={{ marginLeft: "15px", height: "13px"}} cursor="pointer" onClick={handleCloseClick} />
-    </div>
+      <CloseIcon ml="10px" mr="10px" cursor="pointer" onClick={handleCloseClick} />
+    </Box>
   );
 };
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import MonacoEditor, { OnMount, OnChange } from "@monaco-editor/react";
+import MonacoEditor, { OnChange } from "@monaco-editor/react";
 import { editor } from "monaco-editor";
 
 interface File {
@@ -36,7 +36,7 @@ const FileEditor: React.FC<Props> = ({ code, setCode, file, setData, language })
       inherit: true,
       rules: [],
       colors: {
-        "editor.background": "#14181F",
+        "editor.background": "#363636",
       },
     });
   };
