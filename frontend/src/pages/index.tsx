@@ -1,4 +1,5 @@
 import HomeCard from "@/components/HomeCard";
+import Footer from "@/components/Footer";
 import { Box, Button, Flex, Heading, Stack, Text } from "@chakra-ui/react";
 
 const cardsInfos = [
@@ -168,4 +169,5 @@ export default function Home() {
       </Flex>
     </Flex>
   );
+  <Footer />;
 }
