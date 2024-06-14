@@ -10,6 +10,7 @@ import {
 import React from "react";
 import Searchbar from "./Searchbar";
 import Logout from "./Logoutbutton";
+import AppearLoginButton from "./AppearLogin";
 import AppearLogoutButton from "./AppearLogout";
 import { FiLogOut } from "react-icons/fi";
 import LogoutButton from "./Logoutbutton";
