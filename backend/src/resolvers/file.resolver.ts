@@ -6,8 +6,13 @@ import {
   Query,
   Resolver,
 } from "type-graphql";
-import { File, CreateFileInput } from "../entities/file.entity";
-import FilesService from "../services/file.service";
+import {
+  File,
+  CreateFileInput,
+  UpdateFileInput,
+} from "../entities/file.entity";
+import FilesService from "../services/files.service";
+import { Message } from "../entities/user.entity";
 
 @Resolver()
 export class FileResolver {
@@ -22,7 +27,7 @@ export class FileResolver {
     if (!fileById) throw new Error("File does not exit");
     return fileById;
   }
-  
+
   @Authorized()
   @Mutation(() => File)
   async createFile(@Arg("data") data: CreateFileInput) {
@@ -33,5 +38,36 @@ export class FileResolver {
     if (file) throw new Error("This name of project is already in use!");
     const newFile = await new FilesService().create(data);
     return newFile;
+  }
+
+  @Authorized()
+  @Mutation(() => Message)
+  async updateFile(@Arg("data") data: UpdateFileInput) {
+    const { id, ...otherData } = data;
+    const updateFile = await new FilesService().update(id, otherData);
+    const m = new Message();
+    if (updateFile) {
+      m.message = "File update !";
+      m.success = true;
+    } else {
+      m.message = "Unable to update file !";
+      m.success = false;
+    }
+    return m;
+  }
+
+  @Authorized()
+  @Mutation(() => Message)
+  async deleteFile(@Arg("id") id: number) {
+    const delFile = await new FilesService().delete(id);
+    const m = new Message();
+    if (delFile) {
+      m.message = "File deleted!";
+      m.success = true;
+    } else {
+      m.message = "Unable to delete file!";
+      m.success = false;
+    }
+    return m;
   }
 }
