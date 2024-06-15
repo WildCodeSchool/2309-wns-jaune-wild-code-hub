@@ -41,7 +41,7 @@ const FileEditor: React.FC<Props> = ({ code, setCode, file, setData, language })
     });
   };
 
-  const handleEditorDidMount = (editor: any, monaco: any) => { //A ne pas delete editor !
+  const handleEditorDidMount = (editor: any, monaco: any) => { //A ne pas suprimmée editor ! Obliger pour Monaco
     if (!monaco) return;
     defaultTheme(monaco);
     monaco.editor.setTheme("theme");

@@ -20,7 +20,7 @@ const Editor: React.FC = () => {
     const [code, setCode] = useState<string>("");
     const [file, setFile] = useState<File | null>(null);
     const [openFiles, setOpenFiles] = useState<File[]>([]);
-    const [consoleLogs, setConsoleLogs] = useState<string[]>([]);
+    const [consoleLogs, setConsoleLogs] = useState<any[]>([]);
     const iframeRef = useRef<HTMLIFrameElement>(null);
 
     const [data, setData] = useState<File[]>([
@@ -47,7 +47,7 @@ const Editor: React.FC = () => {
             name: "file 3",
             extension: "js",
             content: `document.getElementById('app').innerText = "Hello, JavaScript!";
-                    console.log("toto")`,
+                    console.log("toto"); console.log({ a: 1, b: 2 }); console.log([1, 2, 3]);`,
             language: "javascript",
         },
         {
@@ -81,7 +81,7 @@ const Editor: React.FC = () => {
                   console.log = function(...args) {
                     const logMessage = args.map(arg => typeof arg === 'string' ? arg : JSON.stringify(arg)).join(' ');
                     originalLog.apply(console, args);
-                    window.parent.postMessage({ type: 'console-log', message: logMessage }, '*');
+                    window.parent.postMessage({ type: 'console-log', message: logMessage, rawArgs: args }, '*');
                   };
                   ${jsCode}
                 })();
@@ -108,8 +108,11 @@ const Editor: React.FC = () => {
             if (event.data.type === 'console-log') {
                 setConsoleLogs((prevLogs) => {
                     const newLogs = [...prevLogs];
-                    if (!newLogs.includes(event.data.message)) {
-                        newLogs.push(event.data.message);
+                    const logMessage = event.data.message;
+                    const existingLogIndex = newLogs.findIndex(log => log.message === logMessage);
+                    
+                    if (existingLogIndex === -1) {
+                        newLogs.push({ message: logMessage, rawArgs: event.data.rawArgs });
                     }
                     return newLogs;
                 });
@@ -210,7 +213,7 @@ const Editor: React.FC = () => {
                             language={file.language}
                         />
                     ) : (
-                        <Box p={4}width="80vh" height="50vh" bg="background2">
+                        <Box p={4} width="80vh" height="50vh" bg="background2">
                             <Text color="white" textAlign="center">
                                 Select a file to edit its content.
                             </Text>
