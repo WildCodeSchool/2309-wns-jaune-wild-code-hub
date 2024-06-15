@@ -47,7 +47,8 @@ const Editor: React.FC = () => {
             name: "file 3",
             extension: "js",
             content: `document.getElementById('app').innerText = "Hello, JavaScript!";
-                    console.log("toto"); console.log({ a: 1, b: 2 }); console.log([1, 2, 3]);`,
+                    console.log("toto"); console.log({ a: 1, b: 2 }); console.log([1, 2, 3]);
+                    console.log("toto", [1, 2, 3]); console.log({ a: 1, b: 2 }, [1, 2, 3]);`,
             language: "javascript",
         },
         {

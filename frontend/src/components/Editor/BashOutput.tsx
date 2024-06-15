@@ -1,5 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Box, Text, Code, Accordion, AccordionItem, AccordionButton, AccordionPanel } from "@chakra-ui/react";
+import {
+  Box,
+  Text,
+  Code,
+  Accordion,
+  AccordionItem,
+  AccordionButton,
+  AccordionPanel,
+} from "@chakra-ui/react";
 import { ChevronRightIcon, ChevronDownIcon } from "@chakra-ui/icons";
 
 interface BashOutputProps {
@@ -8,7 +16,7 @@ interface BashOutputProps {
 
 const BashOutput: React.FC<BashOutputProps> = ({ logs }) => {
   const outputRef = useRef<HTMLDivElement>(null);
-  const [accordionIndex, setAccordionIndex] = useState<number | null>(null);
+  const [expandedState, setExpandedState] = useState<{ [logIndex: number]: { [argIndex: number]: boolean } }>({});
 
   useEffect(() => {
     const scrollToBottom = () => {
@@ -20,44 +28,75 @@ const BashOutput: React.FC<BashOutputProps> = ({ logs }) => {
     scrollToBottom();
   }, [logs]);
 
-  const toggleAccordion = (index: number) => {
-    setAccordionIndex(accordionIndex === index ? null : index);
+  const toggleAccordion = (logIndex: number, argIndex: number) => {
+    setExpandedState(prevState => ({
+      ...prevState,
+      [logIndex]: {
+        ...prevState[logIndex],
+        [argIndex]: !prevState[logIndex]?.[argIndex]
+      }
+    }));
   };
 
-  const renderLogMessage = (log: any, index: number) => {
-    const content = typeof log.rawArgs[0] === 'object' ? JSON.stringify(log.rawArgs[0], null, 2) : log.message;
+  const renderLogMessage = (log: any, logIndex: number) => {
+    const renderedMessages: JSX.Element[] = [];
 
-    const isObjectOrArray = (value: any) => {
-      return typeof value === 'object' && value !== null;
+    const processArgs = (args: any[]) => {
+      return args.map((arg, argIndex) => {
+        const content =
+          typeof arg === "object" ? JSON.stringify(arg, null, 2) : arg.toString();
+
+        if (typeof arg === "object") {
+          return (
+            <Accordion allowToggle key={argIndex}>
+              <AccordionItem>
+                <h2>
+                  <AccordionButton
+                    onClick={() => toggleAccordion(logIndex, argIndex)}
+                    bg="background2"
+                  >
+                    {expandedState[logIndex]?.[argIndex] ? (
+                      <ChevronDownIcon />
+                    ) : (
+                      <ChevronRightIcon />
+                    )}
+                    {Array.isArray(arg) ? " Array" : " Object"}
+                  </AccordionButton>
+                </h2>
+                <AccordionPanel>
+                  <Code
+                    color="accent"
+                    bg="background2"
+                    p={2}
+                    display="block"
+                    whiteSpace="pre-wrap"
+                  >
+                    {content}
+                  </Code>
+                </AccordionPanel>
+              </AccordionItem>
+            </Accordion>
+          );
+        } else {
+          return <Text key={argIndex}>{content}</Text>;
+        }
+      });
     };
 
-    if (typeof log.rawArgs[0] === 'object') {
-      return (
-        <Accordion allowToggle key={index}>
-          <AccordionItem>
-            <h2>
-              <AccordionButton onClick={() => toggleAccordion(index)} bg="background2">
-                {isObjectOrArray(log.rawArgs[0]) ? (accordionIndex === index ? <ChevronDownIcon/> : <ChevronRightIcon/>) : ""}
-                {isObjectOrArray(log.rawArgs[0]) ? (Array.isArray(log.rawArgs[0]) ? " Array" : " Object") : ""}
-              </AccordionButton>
-            </h2>
-            <AccordionPanel>
-              <Code color="accent" bg="background2" p={2} display="block" whiteSpace="pre-wrap">
-                {content}
-              </Code>
-            </AccordionPanel>
-          </AccordionItem>
-        </Accordion>
-      );
-    }
-    return <Text whiteSpace="pre-wrap">{log.message}</Text>;
+    renderedMessages.push(...processArgs(log.rawArgs));
+
+    return (
+      <Box whiteSpace="pre-wrap" key={logIndex}>
+        {renderedMessages}
+      </Box>
+    );
   };
 
   return (
     <Box p={4} bg="background2" color="white" height="210px" overflowY="scroll" ref={outputRef}>
-      {logs.map((log, index) => (
-        <Box key={index} borderBottom="1px solid gray" py={1}>
-          {renderLogMessage(log, index)}
+      {logs.map((log, logIndex) => (
+        <Box key={logIndex} borderBottom="1px solid gray" py={1}>
+          {renderLogMessage(log, logIndex)}
         </Box>
       ))}
     </Box>
