@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-
+import { checkRegex, fileNamePattern } from "@/regex";
 interface AddFileFormProps {
   addFile: (fileName: string) => void;
 }
@@ -11,9 +11,7 @@ const AddFileForm: React.FC<AddFileFormProps> = ({ addFile }) => {
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
 
-    const fileNamePattern = /^[^\\\/:*?"<>|]+\.(js|css|html)$/;
-
-    if (!fileNamePattern.test(fileName)) {
+    if (!checkRegex(fileNamePattern, fileName)) {
       setError("File name must be in the format 'name.extension' and the extension must be js, css, or html.");
       return;
     }
