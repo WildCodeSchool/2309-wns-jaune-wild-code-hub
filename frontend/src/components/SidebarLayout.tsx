@@ -1,6 +1,7 @@
 import { Flex } from "@chakra-ui/react";
-import React, { PropsWithChildren, useState } from "react";
+import React, { PropsWithChildren, useEffect, useState } from "react";
 import Sidebar from "./Sidebar";
+import { usePathname } from "next/navigation";
 
 const SidebarLayout = ({ children }: PropsWithChildren) => {
   const [isOpen, setIsOpen] = useState(true);

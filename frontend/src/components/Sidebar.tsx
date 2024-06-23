@@ -1,53 +1,26 @@
 import { ChevronRightIcon, SettingsIcon } from "@chakra-ui/icons";
 import {
-  Avatar,
   Box,
   Flex,
   IconButton,
-  Image,
-  Link,
   LinkBox,
   LinkOverlay,
-  PropsOf,
   SlideFade,
-  Text,
 } from "@chakra-ui/react";
 import NextLink from "next/link";
-import React, { PropsWithChildren, useEffect, useState } from "react";
-import Cookies from "js-cookie";
+import React from "react";
+
+import MeSidebar from "./MeSidebarContent";
+import { usePathname } from "next/navigation";
 
 type Props = {
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-type LinkProps = PropsWithChildren & PropsOf<typeof Link>;
-
-const CustomLink = ({ children, ...props }: LinkProps) => {
-  return (
-    <Link
-      as={NextLink}
-      _hover={{ textDecoration: "none", color: "accent" }}
-      {...props}
-    >
-      {children}
-    </Link>
-  );
-};
-type User = {
-  pseudo: string;
-  role: string;
-};
 const Sidebar = ({ isOpen, setIsOpen }: Props) => {
-  const [user, setUser] = useState<User>({ pseudo: "", role: "USER" });
+  const pathname = usePathname();
 
-  // TODO Get the Avatar of User
-  useEffect(() => {
-    const pseudo = Cookies.get("pseudo") ?? "";
-    const role = Cookies.get("role") ?? "USER";
-
-    setUser({ pseudo, role });
-  }, [Cookies.get("pseudo"), Cookies.get("role")]);
   return (
     <Flex
       id="sidebar"
@@ -95,18 +68,7 @@ const Sidebar = ({ isOpen, setIsOpen }: Props) => {
           enter: { duration: 0.5 },
         }}
       >
-        <Flex id="top-nav" pt={"4rem"} direction={"column"} gap={12}>
-          <Flex id="user" gap={4} alignItems={"center"}>
-            <Avatar name={user.pseudo} />
-            <Text>{user.pseudo}</Text>
-          </Flex>
-          <Flex id="nav" direction={"column"} gap={4}>
-            <CustomLink href="/me/profile">My Profile</CustomLink>
-            <CustomLink href="/me/projects">My projects</CustomLink>
-            <CustomLink href="/me/shared">Shared with me</CustomLink>
-            <CustomLink href="/me/favorites">Favorites</CustomLink>
-          </Flex>
-        </Flex>
+        {pathname.startsWith("/me") && <MeSidebar />}
       </SlideFade>
       <SlideFade in={isOpen} offsetX="-16rem">
         <LinkBox
