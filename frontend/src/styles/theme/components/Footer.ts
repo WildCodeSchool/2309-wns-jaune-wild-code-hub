@@ -6,7 +6,14 @@ const Footer = defineStyleConfig({
   },
 
   variants: {
-    container: {},
+    variants: {
+      homepage: {
+        fontSize: "64",
+        fontFamily: "source",
+        fontWeight: "700",
+        color: "white",
+      },
+    },
   },
 });
 
