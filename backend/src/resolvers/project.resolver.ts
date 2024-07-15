@@ -51,6 +51,12 @@ export class ProjectResolver {
     const projects = await new ProjectsService().listByCategory(category);
     return projects;
   }
+  @Authorized()
+  @Query(() => [Project])
+  async listProjectsByUser(@Arg("id") id: string) {
+    const projects = await new ProjectsService().listByUserId(+id);
+    return projects;
+  }
 
   @Authorized()
   @Mutation(() => Project)

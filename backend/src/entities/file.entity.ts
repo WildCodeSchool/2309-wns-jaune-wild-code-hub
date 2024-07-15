@@ -30,17 +30,18 @@ export class File {
     message: " le nom du fichier doit contenir entre 1 et 100 caractères ",
   })
   name: string;
-
-  @Field()
-  @Column()
-  category: string;
-
-  @Field()
+  
+ @Field()
   @Column({ length: 50 })
   @Length(1, 50, {
     message: "Language must have between 1 to 50 characters",
   })
   language: string;
+  @Field()
+  @Column()
+  category: string;
+
+ 
 
   @Field()
   @Column({ length: 50 })

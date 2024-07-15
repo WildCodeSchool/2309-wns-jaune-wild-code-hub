@@ -1,6 +1,10 @@
 import { In, Like, Repository, SelectQueryBuilder } from "typeorm";
 import datasource from "../lib/db";
-import { Project, CreateProjectInput, UpdateProjectInput } from "../entities/project.entity";
+import {
+  Project,
+  CreateProjectInput,
+  UpdateProjectInput,
+} from "../entities/project.entity";
 import { validate } from "class-validator";
 import { UsersProjectsAccesses } from "../entities/userProjectAccesses.entity";
 
@@ -14,14 +18,14 @@ export default class ProjectsService {
     return this.db.find();
   }
 
-  async findById (id: number) {
+  async findById(id: number) {
     const project = await this.db.findOne({
       where: { id },
     });
     return project;
   }
 
-  async findByName (name: string) {
+  async findByName(name: string) {
     const project = await this.db.findOne({
       where: { name },
     });
@@ -30,26 +34,34 @@ export default class ProjectsService {
 
   async listByCategory(category: string) {
     const projects = await this.db.find();
-    return projects.filter(project => 
-      project.category.toLowerCase() === category.toLowerCase()
+    return projects.filter(
+      (project) => project.category.toLowerCase() === category.toLowerCase()
     );
   }
 
   async listByPublic() {
     const project = await this.db.find({
       where: {
-        private : false
-      }
+        private: false,
+      },
     });
     return project;
   }
+  async listByUserId(id: number) {
+    const projects = await this.db.find({
+      where: {
+        user: { id },
+      },
+    });
+    return projects;
+  }
 
-  async create (data: CreateProjectInput) {
+  async create(data: CreateProjectInput) {
     const newProject = this.db.create({ ...data });
     return await this.db.save(newProject);
   }
 
-  async update (id: number, data: Omit<UpdateProjectInput, "id">) {
+  async update(id: number, data: Omit<UpdateProjectInput, "id">) {
     const projectToUpdate = await this.findById(id);
     if (!projectToUpdate) {
       throw new Error("The project does not exist !");
@@ -65,24 +77,25 @@ export default class ProjectsService {
     return await this.db.save(projectToSave);
   }
 
-  async delete (id: number) {
+  async delete(id: number) {
     const projectToDelete = await this.findById(id);
-    console.log(projectToDelete)
+    console.log(projectToDelete);
     if (!projectToDelete) {
       throw new Error("The project does not exist !");
     }
 
     projectToDelete.likedByUsers = [];
 
-    await this.db.createQueryBuilder()
+    await this.db
+      .createQueryBuilder()
       .delete()
       .from(UsersProjectsAccesses)
       .where("project = :projectId", { projectId: id })
       .execute();
-      
+
     return await this.db.remove(projectToDelete);
   }
-    
+
   async countLikes(projectId: number): Promise<number> {
     const project = await this.db.findOne({
       where: { id: projectId },
@@ -99,14 +112,13 @@ export default class ProjectsService {
   async listLikedUsers(projectId: number) {
     const project = await this.db.findOne({
       where: { id: projectId },
-      relations: ['likedByUsers']
+      relations: ["likedByUsers"],
     });
-  
+
     if (!project) {
       throw new Error("User not found!");
     }
-  
+
     return project.likedByUsers;
   }
 }
-    

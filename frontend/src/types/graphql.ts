@@ -18,6 +18,21 @@ export type Scalars = {
   DateTimeISO: { input: any; output: any; }
 };
 
+export type CreateFileInput = {
+  category?: InputMaybe<Scalars['String']['input']>;
+  content?: InputMaybe<Scalars['String']['input']>;
+  language: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+  project_id: Scalars['Float']['input'];
+  type: Scalars['String']['input'];
+};
+
+export type CreateProjectInput = {
+  category: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+  private: Scalars['Boolean']['input'];
+};
+
 export type CreateUserInput = {
   ban: Scalars['Boolean']['input'];
   email: Scalars['String']['input'];
@@ -27,6 +42,24 @@ export type CreateUserInput = {
   pseudo: Scalars['String']['input'];
   role?: InputMaybe<Scalars['String']['input']>;
   run_counter: Scalars['Float']['input'];
+};
+
+export type CreateUserProjectAccessesInput = {
+  project_id: Scalars['Float']['input'];
+  role?: InputMaybe<Scalars['String']['input']>;
+  user_id: Scalars['Float']['input'];
+};
+
+export type File = {
+  __typename?: 'File';
+  category: Scalars['String']['output'];
+  content: Scalars['String']['output'];
+  created_at: Scalars['DateTimeISO']['output'];
+  id: Scalars['ID']['output'];
+  language: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+  type: Scalars['String']['output'];
+  update_at: Scalars['DateTimeISO']['output'];
 };
 
 export type InputLogin = {
@@ -43,9 +76,62 @@ export type Message = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  addAccessProject: Message;
+  addLikeProject: Message;
+  createFile: File;
+  createProject: Project;
+  deleteAccessProject: Message;
+  deleteFile: Message;
+  deleteLikeProject: Message;
+  deleteProject: Message;
   deleteUser: Message;
   register: User;
+  updateFile: Message;
+  updateProject: Message;
   updateUser: Message;
+};
+
+
+export type MutationAddAccessProjectArgs = {
+  data: CreateUserProjectAccessesInput;
+};
+
+
+export type MutationAddLikeProjectArgs = {
+  projectId: Scalars['Float']['input'];
+  userId: Scalars['Float']['input'];
+};
+
+
+export type MutationCreateFileArgs = {
+  data: CreateFileInput;
+};
+
+
+export type MutationCreateProjectArgs = {
+  data: CreateProjectInput;
+};
+
+
+export type MutationDeleteAccessProjectArgs = {
+  projectId: Scalars['Float']['input'];
+  userId: Scalars['Float']['input'];
+};
+
+
+export type MutationDeleteFileArgs = {
+  id: Scalars['Float']['input'];
+};
+
+
+export type MutationDeleteLikeProjectArgs = {
+  projectId: Scalars['Float']['input'];
+  userId: Scalars['Float']['input'];
+};
+
+
+export type MutationDeleteProjectArgs = {
+  id: Scalars['Float']['input'];
 };
 
 
@@ -56,6 +142,16 @@ export type MutationDeleteUserArgs = {
 
 export type MutationRegisterArgs = {
   data: CreateUserInput;
+};
+
+
+export type MutationUpdateFileArgs = {
+  data: UpdateFileInput;
+};
+
+
+export type MutationUpdateProjectArgs = {
+  data: UpdateProjectInput;
 };
 
 
@@ -75,14 +171,45 @@ export type Project = {
 
 export type Query = {
   __typename?: 'Query';
-  ListProjects: Array<Project>;
+  countLikesPerProject: Scalars['Int']['output'];
+  findFileById: Array<File>;
+  findProjectById: Project;
+  findProjectByName: Project;
   findUserByEmail: User;
   findUserById: User;
   findUserByPseudo: User;
+  listAccesProject: Array<Project>;
+  listFilesByProject: Array<File>;
+  listLikeProject: Array<Project>;
+  listProjects: Array<Project>;
+  listProjectsByCategory: Array<Project>;
+  listProjectsByUser: Array<Project>;
+  listPublicProjects: Array<Project>;
   listUsers: Array<User>;
   listUsersByRole: Array<User>;
+  listUsersLikesPerProject: Array<User>;
   login: Message;
   logout: Message;
+};
+
+
+export type QueryCountLikesPerProjectArgs = {
+  projectId: Scalars['Float']['input'];
+};
+
+
+export type QueryFindFileByIdArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type QueryFindProjectByIdArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type QueryFindProjectByNameArgs = {
+  name: Scalars['String']['input'];
 };
 
 
@@ -101,13 +228,58 @@ export type QueryFindUserByPseudoArgs = {
 };
 
 
+export type QueryListAccesProjectArgs = {
+  userId: Scalars['Float']['input'];
+};
+
+
+export type QueryListFilesByProjectArgs = {
+  project_id: Scalars['String']['input'];
+};
+
+
+export type QueryListLikeProjectArgs = {
+  userId: Scalars['Float']['input'];
+};
+
+
+export type QueryListProjectsByCategoryArgs = {
+  category: Scalars['String']['input'];
+};
+
+
+export type QueryListProjectsByUserArgs = {
+  id: Scalars['String']['input'];
+};
+
+
 export type QueryListUsersByRoleArgs = {
   role: Scalars['String']['input'];
 };
 
 
+export type QueryListUsersLikesPerProjectArgs = {
+  projectId: Scalars['Float']['input'];
+};
+
+
 export type QueryLoginArgs = {
   infos: InputLogin;
+};
+
+export type UpdateFileInput = {
+  content?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['Float']['input'];
+  language: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+  type: Scalars['String']['input'];
+};
+
+export type UpdateProjectInput = {
+  category?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['ID']['input'];
+  name?: InputMaybe<Scalars['String']['input']>;
+  private?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 export type UpdateUserInput = {
@@ -156,6 +328,18 @@ export type LogoutQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type LogoutQuery = { __typename?: 'Query', logout: { __typename?: 'Message', success: boolean, message: string } };
+
+export type ListProjectsByUserQueryVariables = Exact<{
+  listProjectsByUserId: Scalars['String']['input'];
+}>;
+
+
+export type ListProjectsByUserQuery = { __typename?: 'Query', listProjectsByUser: Array<{ __typename?: 'Project', category: string, created_at: any, id: string, name: string, private: boolean, update_at: any }> };
+
+export type ListProjectsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type ListProjectsQuery = { __typename?: 'Query', listProjects: Array<{ __typename?: 'Project', update_at: any, private: boolean, name: string, id: string, created_at: any, category: string }> };
 
 
 export const RegisterDocument = gql`
@@ -279,3 +463,92 @@ export type LogoutQueryHookResult = ReturnType<typeof useLogoutQuery>;
 export type LogoutLazyQueryHookResult = ReturnType<typeof useLogoutLazyQuery>;
 export type LogoutSuspenseQueryHookResult = ReturnType<typeof useLogoutSuspenseQuery>;
 export type LogoutQueryResult = Apollo.QueryResult<LogoutQuery, LogoutQueryVariables>;
+export const ListProjectsByUserDocument = gql`
+    query ListProjectsByUser($listProjectsByUserId: String!) {
+  listProjectsByUser(id: $listProjectsByUserId) {
+    category
+    created_at
+    id
+    name
+    private
+    update_at
+  }
+}
+    `;
+
+/**
+ * __useListProjectsByUserQuery__
+ *
+ * To run a query within a React component, call `useListProjectsByUserQuery` and pass it any options that fit your needs.
+ * When your component renders, `useListProjectsByUserQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useListProjectsByUserQuery({
+ *   variables: {
+ *      listProjectsByUserId: // value for 'listProjectsByUserId'
+ *   },
+ * });
+ */
+export function useListProjectsByUserQuery(baseOptions: Apollo.QueryHookOptions<ListProjectsByUserQuery, ListProjectsByUserQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ListProjectsByUserQuery, ListProjectsByUserQueryVariables>(ListProjectsByUserDocument, options);
+      }
+export function useListProjectsByUserLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ListProjectsByUserQuery, ListProjectsByUserQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ListProjectsByUserQuery, ListProjectsByUserQueryVariables>(ListProjectsByUserDocument, options);
+        }
+export function useListProjectsByUserSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<ListProjectsByUserQuery, ListProjectsByUserQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<ListProjectsByUserQuery, ListProjectsByUserQueryVariables>(ListProjectsByUserDocument, options);
+        }
+export type ListProjectsByUserQueryHookResult = ReturnType<typeof useListProjectsByUserQuery>;
+export type ListProjectsByUserLazyQueryHookResult = ReturnType<typeof useListProjectsByUserLazyQuery>;
+export type ListProjectsByUserSuspenseQueryHookResult = ReturnType<typeof useListProjectsByUserSuspenseQuery>;
+export type ListProjectsByUserQueryResult = Apollo.QueryResult<ListProjectsByUserQuery, ListProjectsByUserQueryVariables>;
+export const ListProjectsDocument = gql`
+    query ListProjects {
+  listProjects {
+    update_at
+    private
+    name
+    id
+    created_at
+    category
+  }
+}
+    `;
+
+/**
+ * __useListProjectsQuery__
+ *
+ * To run a query within a React component, call `useListProjectsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useListProjectsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useListProjectsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useListProjectsQuery(baseOptions?: Apollo.QueryHookOptions<ListProjectsQuery, ListProjectsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ListProjectsQuery, ListProjectsQueryVariables>(ListProjectsDocument, options);
+      }
+export function useListProjectsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ListProjectsQuery, ListProjectsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ListProjectsQuery, ListProjectsQueryVariables>(ListProjectsDocument, options);
+        }
+export function useListProjectsSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<ListProjectsQuery, ListProjectsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<ListProjectsQuery, ListProjectsQueryVariables>(ListProjectsDocument, options);
+        }
+export type ListProjectsQueryHookResult = ReturnType<typeof useListProjectsQuery>;
+export type ListProjectsLazyQueryHookResult = ReturnType<typeof useListProjectsLazyQuery>;
+export type ListProjectsSuspenseQueryHookResult = ReturnType<typeof useListProjectsSuspenseQuery>;
+export type ListProjectsQueryResult = Apollo.QueryResult<ListProjectsQuery, ListProjectsQueryVariables>;
