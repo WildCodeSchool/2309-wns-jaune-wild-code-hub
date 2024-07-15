@@ -9,6 +9,7 @@ import {
     ModalBody,
   } from '@chakra-ui/react';
 import components from "@/styles/theme/components";
+
 const ModalBlack = () => {
 
     const { isOpen, onOpen, onClose } = useDisclosure();

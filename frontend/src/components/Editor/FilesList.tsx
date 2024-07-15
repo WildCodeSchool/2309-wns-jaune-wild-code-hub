@@ -15,7 +15,6 @@ interface FilesListProps {
 
 const FilesList: React.FC<FilesListProps> = ({ data, setFile }) => {
   const handleClick = (file: File) => {
-    console.log(file);
     setFile(file);
   };
 

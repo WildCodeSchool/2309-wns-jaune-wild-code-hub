@@ -34,7 +34,7 @@ const AddFileForm: React.FC<AddFileFormProps> = ({ addFile }) => {
   return (
     <form onSubmit={handleSubmit}>
       <FormControl isInvalid={!!error}>
-        <FormLabel>Nom du fichier :</FormLabel>
+        <FormLabel>Name File :</FormLabel>
         <Input
           type="text"
           value={fileName}
