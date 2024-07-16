@@ -20,11 +20,11 @@ const FileInfo: React.FC<FileInfoProps> = ({ fileName, onClose, isSelected, onCl
         bg={isSelected ? "grey" : "background2"}
         color={isSelected ? "white" : "grey"}
         p="1px"
+        cursor="pointer"
+        mr="1px"
         style={{
-        display: "flex",
-        alignItems: "center",
-        marginRight: "1px",
-        cursor: "pointer",
+          display: "flex",
+          alignItems: "center",
         }}
         onClick={onClick}
     >

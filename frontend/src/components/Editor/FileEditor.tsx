@@ -62,8 +62,8 @@ const FileEditor: React.FC<Props> = ({ code, setCode, file, setData, language })
 
   return (
     <MonacoEditor
-      width="80vh"
-      height="50vh"
+      width="100%"
+      height="50%"
       language={language || "javascript"}
       value={code}
       onChange={handleChange}

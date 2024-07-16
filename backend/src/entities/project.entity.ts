@@ -67,12 +67,13 @@ export class Project {
   )
   usersProjectsAccesses: UsersProjectsAccesses[];
 
-  @OneToMany(() => File, (file) => file.project)
-  files: File[];
 
-  @ManyToOne(() => User, (user) => user.projects)
-  @JoinColumn({ name: "user_id" })
-  user: User;
+  @OneToMany(() => File, (file) => file.project, { cascade: true, eager: true })
+  @Field(() => [File]) 
+  files: File[];
+  // @ManyToOne(() => User, (user) => user.projects)
+  // @JoinColumn({ name: "user_id" })
+  // user: User;
 }
 
 @InputType()

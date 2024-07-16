@@ -20,33 +20,37 @@ export class File {
   @PrimaryGeneratedColumn()
   id: number;
 
+
   @ManyToOne(() => Project, (project) => project.files)
   @JoinColumn({ name: "project_id" })
   project: Project;
 
+
   @Field()
   @Column({ length: 100 })
   @Length(1, 100, {
-    message: " le nom du fichier doit contenir entre 1 et 100 caractères ",
+    message: "The file name must contain between 1 and 100 characters",
   })
   name: string;
-  
- @Field()
-  @Column({ length: 50 })
-  @Length(1, 50, {
-    message: "Language must have between 1 to 50 characters",
-  })
-  language: string;
-  @Field()
-  @Column()
-  category: string;
-
- 
 
   @Field()
   @Column({ length: 50 })
   @Length(1, 50, { message: "Type must have between 1 to 50 characters" })
   type: string;
+
+  @Field()
+  @Column({ length: 10 })
+  @Length(1, 10, {
+    message: "Language must have between 1 to 20 characters",
+  })
+  language: string;
+
+  @Field()
+  @Column({ length: 6 })
+  @Length(1, 6, {
+    message: "Extension must have between 1 to 6 characters",
+  })
+  extension: string;
 
   @Field()
   @Column()
@@ -77,13 +81,13 @@ export class CreateFileInput {
   language: string;
 
   @Field()
+  extension: string;
+
+  @Field()
   type: string;
 
   @Field({ nullable: true })
   content: string;
-
-  @Field({ nullable: true })
-  category: string;
 }
 
 @InputType()
@@ -96,6 +100,9 @@ export class UpdateFileInput {
 
   @Field()
   language: string;
+
+  @Field()
+  extension: string;
 
   @Field()
   type: string;

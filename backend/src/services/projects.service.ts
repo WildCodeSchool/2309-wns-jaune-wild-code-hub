@@ -7,11 +7,14 @@ import {
 } from "../entities/project.entity";
 import { validate } from "class-validator";
 import { UsersProjectsAccesses } from "../entities/userProjectAccesses.entity";
+import { File, CreateFileInput } from "../entities/file.entity";
 
 export default class ProjectsService {
   db: Repository<Project>;
+  fileDb: Repository<File>;
   constructor() {
     this.db = datasource.getRepository(Project);
+    this.fileDb = datasource.getRepository(File);
   }
 
   async list() {
@@ -47,18 +50,48 @@ export default class ProjectsService {
     });
     return project;
   }
-  async listByUserId(id: number) {
-    const projects = await this.db.find({
-      where: {
-        user: { id },
-      },
-    });
-    return projects;
-  }
+
+  // async listByUserId(id: number) {
+  //   const projects = await this.db.find({
+  //     where: {
+  //       user: { id },
+  //     },
+  //   });
+  //   return projects;
+  // }
 
   async create(data: CreateProjectInput) {
-    const newProject = this.db.create({ ...data });
-    return await this.db.save(newProject);
+    const newProject = this.db.create(data);
+    const savedProject = await this.db.save(newProject);
+
+    const files = await this.createDefaultFiles(savedProject.id);
+
+    savedProject.files = files;
+
+    const projectWithFiles = await this.db.findOne({
+      where: { id: savedProject.id },
+      relations: ["files"],
+    });
+
+    return projectWithFiles;
+  }
+
+  async createDefaultFiles(projectId: number) {
+    const defaultFiles = [
+      { name: "index", type: "file", language: "html", extension: "html", content: "", project: {id : projectId } },
+      { name: "style", type: "file", language: "css", extension: "css", content: "", project: {id : projectId } },
+      { name: "index", type: "file", language: "javascript", extension: "js", content: "", project: {id : projectId } },
+    ];
+
+    const files: File[] = [];
+
+    for (const fileData of defaultFiles) {
+      const newFile = this.fileDb.create(fileData);
+      const savedFile = await this.fileDb.save(newFile);
+      files.push(savedFile);
+    }
+
+    return files;
   }
 
   async update(id: number, data: Omit<UpdateProjectInput, "id">) {

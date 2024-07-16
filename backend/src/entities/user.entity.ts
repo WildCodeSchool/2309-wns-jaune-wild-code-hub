@@ -31,28 +31,28 @@ export class User {
   @Field()
   @Column({ length: 50 })
   @Length(3, 50, {
-    message: "Le nom de famille doit contenir entre 3 et 50 caractères",
+    message: "Last name must be between 3 and 50 characters",
   })
   lastname: string;
 
   @Field()
   @Column({ length: 50 })
   @Length(3, 50, {
-    message: "Le prénom doit contenir entre 3 et 50 caractères",
+    message: "The first name must contain between 3 and 50 characters",
   })
   firstname: string;
 
   @Field()
   @Column({ unique: true, length: 20 })
   @Length(3, 20, {
-    message: "Le pseudo doit contenir entre 3 et 20 caractères",
+    message: "The nickname must contain between 3 and 20 characters",
   })
   pseudo: string;
 
   @Field()
   @Column({ unique: true, length: 200 })
   @Length(5, 200, {
-    message: "L'email doit contenir entre 5 et 200 caractères",
+    message: "The email must contain between 5 and 200 characters",
   })
   email: string;
 
@@ -111,8 +111,8 @@ export class User {
   )
   usersProjectsAccesses: UsersProjectsAccesses[];
 
-  @OneToMany(() => Project, (project) => project.user)
-  projects: Project[];
+  // @OneToMany(() => Project, (project) => project.user)
+  // projects: Project[];
 }
 
 @InputType()

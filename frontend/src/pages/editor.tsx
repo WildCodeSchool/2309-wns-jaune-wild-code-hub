@@ -60,6 +60,27 @@ const Editor: React.FC = () => {
             content: `.blue { color: blue; }`,
             language: "css",
         },
+        {
+            id: 5,
+            name: "file 5",
+            extension: "css",
+            content: `.blue { color: blue; }`,
+            language: "css",
+        },
+        {
+            id: 6,
+            name: "file 6",
+            extension: "css",
+            content: `.blue { color: blue; }`,
+            language: "css",
+        },
+        {
+            id: 7,
+            name: "file 7",
+            extension: "css",
+            content: `.blue { color: blue; }`,
+            language: "css",
+        },
     ]);
 
     const getCombinedCode = (): string => {
@@ -185,55 +206,54 @@ const Editor: React.FC = () => {
 
     return (
         <Box
-            {...components.Box.editor}
-            bgColor={"background"}
-            bgRepeat={"no-repeat"}
-            bgImage="url(/BGForm.png)"
+            display="flex"
+            pt="5rem"
         >
-            <Flex>
+
                 <div>
                     <FilesList data={data} setFile={setFile} />
-                    <AddFileForm addFile={handleAddFile} />
+                    {/* <AddFileForm addFile={handleAddFile} /> */}
                 </div>
-                <div>
-                    <Flex>
-                        {openFiles.map((openFile) => (
-                            <FileInfo
-                                key={openFile.id}
-                                fileName={`${openFile.name}.${openFile.extension}`}
-                                onClose={() => handleFileClose(openFile.id)}
-                                isSelected={openFile.id === file?.id}
-                                onClick={() => setFile(openFile)}
-                            />
-                        ))}
-                    </Flex>
-                    {file ? (
-                        <FileEditor
-                            code={code}
-                            setCode={handleCodeChange}
-                            file={file}
-                            setData={setData}
-                            language={file.language}
+            <Box width="40%">
+            <Flex>
+                    {openFiles.map((openFile) => (
+                        <FileInfo
+                            key={openFile.id}
+                            fileName={`${openFile.name}.${openFile.extension}`}
+                            onClose={() => handleFileClose(openFile.id)}
+                            isSelected={openFile.id === file?.id}
+                            onClick={() => setFile(openFile)}
                         />
-                    ) : (
-                        <Box p={4} width="80vh" height="50vh" bg="background2">
-                            <Text color="white" textAlign="center">
-                                Select a file to edit its content.
-                            </Text>
-                        </Box>
-                    )}
-                    <Text bg="background2" width="3rem" pl="5px" pb="0.2rem">Bash</Text>
-                    <BashOutput logs={consoleLogs} />
-                </div>
+                    ))}
             </Flex>
-            <div>
+            {file ? (
+                    <FileEditor
+                        code={code}
+                        setCode={handleCodeChange}
+                        file={file}
+                        setData={setData}
+                        language={file.language}
+                    />
+                ) : (
+                    <Box p={4} width="100%" height="50%" bg="background2">
+                        <Text color="white" textAlign="center">
+                            Select a file to edit its content.
+                        </Text>
+                    </Box>
+                )}
+                <Box height="50%">
+                    <Text bg="background2" width="3rem" pl="5px" pb="0.2rem" >Bash</Text>
+                    <BashOutput logs={consoleLogs} />
+                </Box>
+            </Box>
+            <Box width="40%">
                 <Text bg="background2" width="3rem" pl="5px" pb="0.2rem">View</Text>
                 <iframe
                     ref={iframeRef}
                     title="Preview"
-                    style={{ width: "100%", height: "79vh", border: "1px solid black", backgroundColor: "#151515" }}
+                    style={{ width: "100%", height: "100%", border: "1px solid black", backgroundColor: "#151515" }}
                 ></iframe>
-            </div>
+            </Box>
         </Box>
     );
 };
