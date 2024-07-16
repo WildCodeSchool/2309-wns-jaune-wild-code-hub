@@ -68,7 +68,7 @@ export class Project {
   usersProjectsAccesses: UsersProjectsAccesses[];
 
 
-  @OneToMany(() => File, (file) => file.project, { cascade: true, eager: true })
+  @OneToMany(() => File, (file) => file.project, { cascade: true, onDelete: "CASCADE" })
   @Field(() => [File]) 
   files: File[];
   // @ManyToOne(() => User, (user) => user.projects)

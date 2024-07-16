@@ -21,7 +21,7 @@ export class File {
   id: number;
 
 
-  @ManyToOne(() => Project, (project) => project.files)
+  @ManyToOne(() => Project, (project) => project.files, { onDelete: "CASCADE" })
   @JoinColumn({ name: "project_id" })
   project: Project;
 
