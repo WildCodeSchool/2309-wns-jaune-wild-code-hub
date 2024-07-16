@@ -9,11 +9,11 @@ import {
 } from "@chakra-ui/react";
 import React from "react";
 import Searchbar from "./Searchbar";
-import Logout from "./Logoutbutton";
+import Logout from "./LogoutButton";
 //import AppearLoginButton from "./AppearLogin";
 import AppearLogoutButton from "./AppearLogout";
 import { FiLogOut } from "react-icons/fi";
-import LogoutButton from "./Logoutbutton";
+import LogoutButton from "./LogoutButton";
 import { LOGOUT } from "@/requetes/queries/auth.queries";
 import { useLazyQuery } from "@apollo/client";
 import { useParams, usePathname, useRouter } from "next/navigation";

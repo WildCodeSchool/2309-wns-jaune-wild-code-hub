@@ -1,6 +1,6 @@
 import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
-import LogoutButton from "./Logoutbutton";
+import LogoutButton from "./LogoutButton";
 
 type AppearState = {
   email: string;
