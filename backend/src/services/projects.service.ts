@@ -18,28 +18,43 @@ export default class ProjectsService {
   }
 
   async list() {
-    return this.db.find();
+    // return this.db.find();
+    const projects = await this.db.find({ relations: ["files"] });
+    return projects;
   }
 
   async findById(id: number) {
+    // const project = await this.db.findOne({
+    //   where: { id },
+    // });
     const project = await this.db.findOne({
       where: { id },
+      relations: ["files"],
     });
     return project;
   }
 
   async findByName(name: string) {
+    // const project = await this.db.findOne({
+    //   where: { name },
+    // });
     const project = await this.db.findOne({
       where: { name },
+      relations: ["files"],
     });
     return project;
   }
 
   async listByCategory(category: string) {
-    const projects = await this.db.find();
-    return projects.filter(
-      (project) => project.category.toLowerCase() === category.toLowerCase()
-    );
+    // const projects = await this.db.find();
+    // return projects.filter(
+    //   (project) => project.category.toLowerCase() === category.toLowerCase()
+    // );
+    const projects = await this.db.find({
+      where: { category: Like(`%${category}%`) },
+      relations: ["files"],
+    });
+    return projects;
   }
 
   async listByPublic() {
@@ -47,6 +62,7 @@ export default class ProjectsService {
       where: {
         private: false,
       },
+      relations: ["files"],
     });
     return project;
   }

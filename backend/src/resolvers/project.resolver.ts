@@ -109,7 +109,7 @@ export class ProjectResolver {
     return count;
   }
 
-  @Authorized()
+  // @Authorized()
   @Query(() => [User])
   async listUsersLikesPerProject(@Arg("projectId") projectId: number) {
     const projects = await new ProjectsService().listLikedUsers(projectId);
