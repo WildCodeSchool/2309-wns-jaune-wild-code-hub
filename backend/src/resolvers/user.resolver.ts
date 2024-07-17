@@ -153,7 +153,7 @@ export class UserResolver {
     return m;
   }
 
-  @Authorized()
+  // @Authorized()
   @Query(() => [Project])
   async listLikeProject(@Arg("userId") userId: number) {
     const projects = await new UsersService().listLikedProjects(userId);

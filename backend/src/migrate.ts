@@ -37,6 +37,13 @@ async function migrate() {
     const projectRepository = db.getRepository(Project);
     await projectRepository.save(fakeProjects);
 
+    // Migrate file
+    // await db.getRepository(File).clear();
+    await db.query('TRUNCATE TABLE "file" CASCADE');
+    await db.query("ALTER SEQUENCE file_id_seq RESTART WITH 1");
+    const fileRepository = db.getRepository(File);
+    await fileRepository.save(fakeFile);
+
     //Migrate Like 
     for (let i = 0; i < fakeUsersProjectsLikes.length; i++) {
       await db.query('INSERT INTO "users_projects_likes" (user_id, project_id) VALUES ($1, $2)', [fakeUsersProjectsLikes[i].user_id, fakeUsersProjectsLikes[i].project_id]);

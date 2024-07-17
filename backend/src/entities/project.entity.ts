@@ -8,6 +8,7 @@ import {
   ManyToMany,
   UpdateDateColumn,
   OneToMany,
+  JoinColumn,
 } from "typeorm";
 import { Length, Min } from "class-validator";
 import { Field, Float, ID, InputType, ObjectType } from "type-graphql";
@@ -66,8 +67,13 @@ export class Project {
   )
   usersProjectsAccesses: UsersProjectsAccesses[];
 
-  @OneToMany(() => File, (file) => file.project)
+
+  @OneToMany(() => File, (file) => file.project, { cascade: true, onDelete: "CASCADE" })
+  @Field(() => [File]) 
   files: File[];
+  // @ManyToOne(() => User, (user) => user.projects)
+  // @JoinColumn({ name: "user_id" })
+  // user: User;
 }
 
 @InputType()

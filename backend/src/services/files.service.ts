@@ -49,6 +49,7 @@ export default class FilesService {
     }
     return await this.db.save(fileToSave);
   }
+  
   async delete(id: number) {
     const fileToDelete = await this.findById(id);
     console.log(fileToDelete);

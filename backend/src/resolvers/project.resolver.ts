@@ -14,6 +14,8 @@ import {
 } from "../entities/project.entity";
 import ProjectsService from "../services/projects.service";
 import { Message, User } from "../entities/user.entity";
+import { File } from "../entities/file.entity";
+
 
 @Resolver()
 export class ProjectResolver {
@@ -51,13 +53,23 @@ export class ProjectResolver {
     const projects = await new ProjectsService().listByCategory(category);
     return projects;
   }
+  
+  // @Authorized()
+  // @Query(() => [Project])
+  // async listProjectsByUser(@Arg("id") id: string) {
+  //   const projects = await new ProjectsService().listByUserId(+id);
+  //   return projects;
+  // }
 
   @Authorized()
   @Mutation(() => Project)
   async createProject(@Arg("data") data: CreateProjectInput) {
     const project = await new ProjectsService().findByName(data.name);
+    console.log("DEBUG Resolver : ", data)
     if (project) throw new Error("This name of project is already in use!");
     const newProject = await new ProjectsService().create(data);
+    console.log("DEBUG Resolver - New Project: ", newProject); // Ajout du log
+
     return newProject;
   }
 
@@ -99,7 +111,7 @@ export class ProjectResolver {
     return count;
   }
 
-  @Authorized()
+  // @Authorized()
   @Query(() => [User])
   async listUsersLikesPerProject(@Arg("projectId") projectId: number) {
     const projects = await new ProjectsService().listLikedUsers(projectId);

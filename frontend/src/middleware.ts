@@ -35,7 +35,7 @@ const checkToken = async (token: string | undefined, request: NextRequest) => {
   }
   if (!token) {
     if (
-      request.nextUrl.pathname.startsWith("/private") ||
+      request.nextUrl.pathname.startsWith("/editor") ||
       request.nextUrl.pathname.startsWith("/privateAdmin")
     ) {
       response = NextResponse.redirect(new URL("/auth/login", request.url));

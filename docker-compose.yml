@@ -49,6 +49,7 @@ services:
       - ./.env
     volumes:
       - wildcodehub-data:/var/lib/postgresql/data
+      
   adminer:
     image: adminer
     profiles: ["dev", "production", "test"]

@@ -5,6 +5,7 @@ const fakeProjects = [
     private: false,
     created_at: new Date(),
     updated_at: new Date(),
+    // user_id: "1",
   },
   {
     name: "The first Project",
@@ -12,13 +13,15 @@ const fakeProjects = [
     private: true,
     created_at: new Date(),
     updated_at: new Date(),
+    // user_id: "2",
   },
   {
     name: "The tho Project",
     category: "JavaScript",
-    private: true,
+    private: false,
     created_at: new Date(),
     updated_at: new Date(),
+    // user_id: "3",
   },
   {
     name: "The three Project",
@@ -26,6 +29,7 @@ const fakeProjects = [
     private: true,
     created_at: new Date(),
     updated_at: new Date(),
+    // user_id: "1",
   },
   {
     name: "The four Project",
@@ -33,20 +37,23 @@ const fakeProjects = [
     private: true,
     created_at: new Date(),
     updated_at: new Date(),
+    // user_id: "2",
   },
   {
     name: "The five Project",
     category: "JavaScript",
-    private: true,
+    private: false,
     created_at: new Date(),
     updated_at: new Date(),
+    // user_id: "1",
   },
   {
     name: "The six Project",
     category: "JavaScript",
-    private: true,
+    private: false,
     created_at: new Date(),
     updated_at: new Date(),
+    // user_id: "4",
   },
 ];
 
