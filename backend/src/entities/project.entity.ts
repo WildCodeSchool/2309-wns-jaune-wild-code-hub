@@ -15,7 +15,7 @@ import { Field, Float, ID, InputType, ObjectType } from "type-graphql";
 import { User } from "./user.entity";
 import { UsersProjectsAccesses } from "./userProjectAccesses.entity";
 import { File } from "./file.entity";
-
+ 
 @ObjectType()
 @Entity()
 export class Project {

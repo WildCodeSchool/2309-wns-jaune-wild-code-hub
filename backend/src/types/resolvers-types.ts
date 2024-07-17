@@ -17,6 +17,21 @@ export type Scalars = {
   DateTimeISO: { input: any; output: any; }
 };
 
+export type CreateFileInput = {
+  content?: InputMaybe<Scalars['String']['input']>;
+  extension: Scalars['String']['input'];
+  language: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+  project_id: Scalars['Float']['input'];
+  type: Scalars['String']['input'];
+};
+
+export type CreateProjectInput = {
+  category: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+  private: Scalars['Boolean']['input'];
+};
+
 export type CreateUserInput = {
   ban: Scalars['Boolean']['input'];
   email: Scalars['String']['input'];
@@ -26,6 +41,24 @@ export type CreateUserInput = {
   pseudo: Scalars['String']['input'];
   role?: InputMaybe<Scalars['String']['input']>;
   run_counter: Scalars['Float']['input'];
+};
+
+export type CreateUserProjectAccessesInput = {
+  project_id: Scalars['Float']['input'];
+  role?: InputMaybe<Scalars['String']['input']>;
+  user_id: Scalars['Float']['input'];
+};
+
+export type File = {
+  __typename?: 'File';
+  content: Scalars['String']['output'];
+  created_at: Scalars['DateTimeISO']['output'];
+  extension: Scalars['String']['output'];
+  id: Scalars['ID']['output'];
+  language: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+  type: Scalars['String']['output'];
+  update_at: Scalars['DateTimeISO']['output'];
 };
 
 export type InputLogin = {
@@ -42,9 +75,62 @@ export type Message = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  addAccessProject: Message;
+  addLikeProject: Message;
+  createFile: File;
+  createProject: Project;
+  deleteAccessProject: Message;
+  deleteFile: Message;
+  deleteLikeProject: Message;
+  deleteProject: Message;
   deleteUser: Message;
   register: User;
+  updateFile: Message;
+  updateProject: Message;
   updateUser: Message;
+};
+
+
+export type MutationAddAccessProjectArgs = {
+  data: CreateUserProjectAccessesInput;
+};
+
+
+export type MutationAddLikeProjectArgs = {
+  projectId: Scalars['Float']['input'];
+  userId: Scalars['Float']['input'];
+};
+
+
+export type MutationCreateFileArgs = {
+  data: CreateFileInput;
+};
+
+
+export type MutationCreateProjectArgs = {
+  data: CreateProjectInput;
+};
+
+
+export type MutationDeleteAccessProjectArgs = {
+  projectId: Scalars['Float']['input'];
+  userId: Scalars['Float']['input'];
+};
+
+
+export type MutationDeleteFileArgs = {
+  id: Scalars['Float']['input'];
+};
+
+
+export type MutationDeleteLikeProjectArgs = {
+  projectId: Scalars['Float']['input'];
+  userId: Scalars['Float']['input'];
+};
+
+
+export type MutationDeleteProjectArgs = {
+  id: Scalars['Float']['input'];
 };
 
 
@@ -58,6 +144,16 @@ export type MutationRegisterArgs = {
 };
 
 
+export type MutationUpdateFileArgs = {
+  data: UpdateFileInput;
+};
+
+
+export type MutationUpdateProjectArgs = {
+  data: UpdateProjectInput;
+};
+
+
 export type MutationUpdateUserArgs = {
   data: UpdateUserInput;
 };
@@ -66,6 +162,7 @@ export type Project = {
   __typename?: 'Project';
   category: Scalars['String']['output'];
   created_at: Scalars['DateTimeISO']['output'];
+  files: Array<File>;
   id: Scalars['ID']['output'];
   name: Scalars['String']['output'];
   private: Scalars['Boolean']['output'];
@@ -74,14 +171,44 @@ export type Project = {
 
 export type Query = {
   __typename?: 'Query';
-  ListProjects: Array<Project>;
+  countLikesPerProject: Scalars['Int']['output'];
+  findFileById: Array<File>;
+  findProjectById: Project;
+  findProjectByName: Project;
   findUserByEmail: User;
   findUserById: User;
   findUserByPseudo: User;
+  listAccesProject: Array<Project>;
+  listFilesByProject: Array<File>;
+  listLikeProject: Array<Project>;
+  listProjects: Array<Project>;
+  listProjectsByCategory: Array<Project>;
+  listPublicProjects: Array<Project>;
   listUsers: Array<User>;
   listUsersByRole: Array<User>;
+  listUsersLikesPerProject: Array<User>;
   login: Message;
   logout: Message;
+};
+
+
+export type QueryCountLikesPerProjectArgs = {
+  projectId: Scalars['Float']['input'];
+};
+
+
+export type QueryFindFileByIdArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type QueryFindProjectByIdArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type QueryFindProjectByNameArgs = {
+  name: Scalars['String']['input'];
 };
 
 
@@ -100,13 +227,54 @@ export type QueryFindUserByPseudoArgs = {
 };
 
 
+export type QueryListAccesProjectArgs = {
+  userId: Scalars['Float']['input'];
+};
+
+
+export type QueryListFilesByProjectArgs = {
+  project_id: Scalars['String']['input'];
+};
+
+
+export type QueryListLikeProjectArgs = {
+  userId: Scalars['Float']['input'];
+};
+
+
+export type QueryListProjectsByCategoryArgs = {
+  category: Scalars['String']['input'];
+};
+
+
 export type QueryListUsersByRoleArgs = {
   role: Scalars['String']['input'];
 };
 
 
+export type QueryListUsersLikesPerProjectArgs = {
+  projectId: Scalars['Float']['input'];
+};
+
+
 export type QueryLoginArgs = {
   infos: InputLogin;
+};
+
+export type UpdateFileInput = {
+  content?: InputMaybe<Scalars['String']['input']>;
+  extension: Scalars['String']['input'];
+  id: Scalars['Float']['input'];
+  language: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+  type: Scalars['String']['input'];
+};
+
+export type UpdateProjectInput = {
+  category?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['ID']['input'];
+  name?: InputMaybe<Scalars['String']['input']>;
+  private?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 export type UpdateUserInput = {
@@ -210,16 +378,23 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = ResolversObject<{
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
+  CreateFileInput: CreateFileInput;
+  CreateProjectInput: CreateProjectInput;
   CreateUserInput: CreateUserInput;
+  CreateUserProjectAccessesInput: CreateUserProjectAccessesInput;
   DateTimeISO: ResolverTypeWrapper<Scalars['DateTimeISO']['output']>;
+  File: ResolverTypeWrapper<File>;
   Float: ResolverTypeWrapper<Scalars['Float']['output']>;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   InputLogin: InputLogin;
+  Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   Message: ResolverTypeWrapper<Message>;
   Mutation: ResolverTypeWrapper<{}>;
   Project: ResolverTypeWrapper<Project>;
   Query: ResolverTypeWrapper<{}>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
+  UpdateFileInput: UpdateFileInput;
+  UpdateProjectInput: UpdateProjectInput;
   UpdateUserInput: UpdateUserInput;
   User: ResolverTypeWrapper<User>;
 }>;
@@ -227,23 +402,46 @@ export type ResolversTypes = ResolversObject<{
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = ResolversObject<{
   Boolean: Scalars['Boolean']['output'];
+  CreateFileInput: CreateFileInput;
+  CreateProjectInput: CreateProjectInput;
   CreateUserInput: CreateUserInput;
+  CreateUserProjectAccessesInput: CreateUserProjectAccessesInput;
   DateTimeISO: Scalars['DateTimeISO']['output'];
+  File: File;
   Float: Scalars['Float']['output'];
   ID: Scalars['ID']['output'];
   InputLogin: InputLogin;
+  Int: Scalars['Int']['output'];
   Message: Message;
   Mutation: {};
   Project: Project;
   Query: {};
   String: Scalars['String']['output'];
+  UpdateFileInput: UpdateFileInput;
+  UpdateProjectInput: UpdateProjectInput;
   UpdateUserInput: UpdateUserInput;
   User: User;
 }>;
 
+export type OneOfDirectiveArgs = { };
+
+export type OneOfDirectiveResolver<Result, Parent, ContextType = any, Args = OneOfDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
+
 export interface DateTimeIsoScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['DateTimeISO'], any> {
   name: 'DateTimeISO';
 }
+
+export type FileResolvers<ContextType = any, ParentType extends ResolversParentTypes['File'] = ResolversParentTypes['File']> = ResolversObject<{
+  content?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  created_at?: Resolver<ResolversTypes['DateTimeISO'], ParentType, ContextType>;
+  extension?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  language?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  type?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  update_at?: Resolver<ResolversTypes['DateTimeISO'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
 
 export type MessageResolvers<ContextType = any, ParentType extends ResolversParentTypes['Message'] = ResolversParentTypes['Message']> = ResolversObject<{
   message?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -252,14 +450,25 @@ export type MessageResolvers<ContextType = any, ParentType extends ResolversPare
 }>;
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
+  addAccessProject?: Resolver<ResolversTypes['Message'], ParentType, ContextType, RequireFields<MutationAddAccessProjectArgs, 'data'>>;
+  addLikeProject?: Resolver<ResolversTypes['Message'], ParentType, ContextType, RequireFields<MutationAddLikeProjectArgs, 'projectId' | 'userId'>>;
+  createFile?: Resolver<ResolversTypes['File'], ParentType, ContextType, RequireFields<MutationCreateFileArgs, 'data'>>;
+  createProject?: Resolver<ResolversTypes['Project'], ParentType, ContextType, RequireFields<MutationCreateProjectArgs, 'data'>>;
+  deleteAccessProject?: Resolver<ResolversTypes['Message'], ParentType, ContextType, RequireFields<MutationDeleteAccessProjectArgs, 'projectId' | 'userId'>>;
+  deleteFile?: Resolver<ResolversTypes['Message'], ParentType, ContextType, RequireFields<MutationDeleteFileArgs, 'id'>>;
+  deleteLikeProject?: Resolver<ResolversTypes['Message'], ParentType, ContextType, RequireFields<MutationDeleteLikeProjectArgs, 'projectId' | 'userId'>>;
+  deleteProject?: Resolver<ResolversTypes['Message'], ParentType, ContextType, RequireFields<MutationDeleteProjectArgs, 'id'>>;
   deleteUser?: Resolver<ResolversTypes['Message'], ParentType, ContextType, RequireFields<MutationDeleteUserArgs, 'id'>>;
   register?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationRegisterArgs, 'data'>>;
+  updateFile?: Resolver<ResolversTypes['Message'], ParentType, ContextType, RequireFields<MutationUpdateFileArgs, 'data'>>;
+  updateProject?: Resolver<ResolversTypes['Message'], ParentType, ContextType, RequireFields<MutationUpdateProjectArgs, 'data'>>;
   updateUser?: Resolver<ResolversTypes['Message'], ParentType, ContextType, RequireFields<MutationUpdateUserArgs, 'data'>>;
 }>;
 
 export type ProjectResolvers<ContextType = any, ParentType extends ResolversParentTypes['Project'] = ResolversParentTypes['Project']> = ResolversObject<{
   category?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   created_at?: Resolver<ResolversTypes['DateTimeISO'], ParentType, ContextType>;
+  files?: Resolver<Array<ResolversTypes['File']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   private?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
@@ -268,12 +477,22 @@ export type ProjectResolvers<ContextType = any, ParentType extends ResolversPare
 }>;
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
-  ListProjects?: Resolver<Array<ResolversTypes['Project']>, ParentType, ContextType>;
+  countLikesPerProject?: Resolver<ResolversTypes['Int'], ParentType, ContextType, RequireFields<QueryCountLikesPerProjectArgs, 'projectId'>>;
+  findFileById?: Resolver<Array<ResolversTypes['File']>, ParentType, ContextType, RequireFields<QueryFindFileByIdArgs, 'id'>>;
+  findProjectById?: Resolver<ResolversTypes['Project'], ParentType, ContextType, RequireFields<QueryFindProjectByIdArgs, 'id'>>;
+  findProjectByName?: Resolver<ResolversTypes['Project'], ParentType, ContextType, RequireFields<QueryFindProjectByNameArgs, 'name'>>;
   findUserByEmail?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<QueryFindUserByEmailArgs, 'email'>>;
   findUserById?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<QueryFindUserByIdArgs, 'id'>>;
   findUserByPseudo?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<QueryFindUserByPseudoArgs, 'pseudo'>>;
+  listAccesProject?: Resolver<Array<ResolversTypes['Project']>, ParentType, ContextType, RequireFields<QueryListAccesProjectArgs, 'userId'>>;
+  listFilesByProject?: Resolver<Array<ResolversTypes['File']>, ParentType, ContextType, RequireFields<QueryListFilesByProjectArgs, 'project_id'>>;
+  listLikeProject?: Resolver<Array<ResolversTypes['Project']>, ParentType, ContextType, RequireFields<QueryListLikeProjectArgs, 'userId'>>;
+  listProjects?: Resolver<Array<ResolversTypes['Project']>, ParentType, ContextType>;
+  listProjectsByCategory?: Resolver<Array<ResolversTypes['Project']>, ParentType, ContextType, RequireFields<QueryListProjectsByCategoryArgs, 'category'>>;
+  listPublicProjects?: Resolver<Array<ResolversTypes['Project']>, ParentType, ContextType>;
   listUsers?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>;
   listUsersByRole?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryListUsersByRoleArgs, 'role'>>;
+  listUsersLikesPerProject?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryListUsersLikesPerProjectArgs, 'projectId'>>;
   login?: Resolver<ResolversTypes['Message'], ParentType, ContextType, RequireFields<QueryLoginArgs, 'infos'>>;
   logout?: Resolver<ResolversTypes['Message'], ParentType, ContextType>;
 }>;
@@ -296,6 +515,7 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
 
 export type Resolvers<ContextType = any> = ResolversObject<{
   DateTimeISO?: GraphQLScalarType;
+  File?: FileResolvers<ContextType>;
   Message?: MessageResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Project?: ProjectResolvers<ContextType>;
@@ -303,3 +523,6 @@ export type Resolvers<ContextType = any> = ResolversObject<{
   User?: UserResolvers<ContextType>;
 }>;
 
+export type DirectiveResolvers<ContextType = any> = ResolversObject<{
+  oneOf?: OneOfDirectiveResolver<any, any, ContextType>;
+}>;
