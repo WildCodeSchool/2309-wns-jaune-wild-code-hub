@@ -8,7 +8,7 @@ import {
 import { validate } from "class-validator";
 import { UsersProjectsAccesses } from "../entities/userProjectAccesses.entity";
 import { File, CreateFileInput } from "../entities/file.entity";
-
+import FilesService from "./files.service";
 export default class ProjectsService {
   db: Repository<Project>;
   fileDb: Repository<File>;
@@ -77,22 +77,33 @@ export default class ProjectsService {
   // }
 
   async create(data: CreateProjectInput) {
+    console.log("DEBUG Service - Received data: ", data); 
     const newProject = this.db.create(data);
+    console.log("DEBUG Service - New Project Entity: ", newProject); 
     const savedProject = await this.db.save(newProject);
+    console.log("DEBUG Service - Saved Project: ", savedProject); 
 
-    const files = await this.createDefaultFiles(savedProject.id);
+    console.log("avant files")
 
-    savedProject.files = files;
+    
+    // const files = await this.createDefaultFiles(savedProject.id);
+    // await this.createDefaultFiles(savedProject.id);
+    // console.log("files create", files)
+    // savedProject.files = files;
 
-    const projectWithFiles = await this.db.findOne({
-      where: { id: savedProject.id },
-      relations: ["files"],
-    });
+    // const projectWithFiles = await this.db.findOne({
+    //   where: { id: savedProject.id },
+    //   relations: ["files"],
+    // });
+    // console.log("DEBUG Service - Project with Files: ", projectWithFiles);
 
-    return projectWithFiles;
+    // console.log("projectWithFiles", projectWithFiles)
+
+    return savedProject;
   }
 
   async createDefaultFiles(projectId: number) {
+    console.log("tototto", projectId) 
     const defaultFiles = [
       { name: "index", type: "file", language: "html", extension: "html", content: "", project: {id : projectId } },
       { name: "style", type: "file", language: "css", extension: "css", content: "", project: {id : projectId } },
@@ -102,11 +113,18 @@ export default class ProjectsService {
     const files: File[] = [];
 
     for (const fileData of defaultFiles) {
-      const newFile = this.fileDb.create(fileData);
-      const savedFile = await this.fileDb.save(newFile);
+      // const newFile = this.fileDb.create(fileData);
+      // console.log("new File", newFile)
+      // //Stop ici les log dans les
+      // const savedFile = await this.fileDb.save(newFile);
+      const savedFile = await new FilesService().create({
+        ...fileData,
+        project_id : projectId
+      })
+      console.log("saved File", savedFile)
       files.push(savedFile);
     }
-
+    // console.log("Mes files", files)
     return files;
   }
 

@@ -65,9 +65,11 @@ export class ProjectResolver {
   @Mutation(() => Project)
   async createProject(@Arg("data") data: CreateProjectInput) {
     const project = await new ProjectsService().findByName(data.name);
+    console.log("DEBUG Resolver : ", data)
     if (project) throw new Error("This name of project is already in use!");
     const newProject = await new ProjectsService().create(data);
-    console.log("newProject", newProject)
+    console.log("DEBUG Resolver - New Project: ", newProject); // Ajout du log
+
     return newProject;
   }
 

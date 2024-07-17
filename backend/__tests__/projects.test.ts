@@ -6,6 +6,7 @@ import datasource from "../src/lib/db_test"; //on importe la datasource initial 
 import { Project } from "../src/entities/project.entity";
 import { Message } from "../src/entities/user.entity";
 import assert from "assert";
+import { FileResolver } from "../src/resolvers/file.resolver";
 
 let server: ApolloServer;
 
@@ -62,14 +63,32 @@ export const LIST_PROJECTS_BY_CATEGORY = `#graphql
 
 export const CREATE_PROJECT = `#graphql
   mutation Projects ($data: CreateProjectInput!) {
-    createProject(data: $data) {            
-      id
-      name
-      category
-      private
-      created_at
-      update_at            
-    }
+    # createProject(data: $data) {            
+    #   id
+    #   name
+    #   category
+    #   private
+    #   created_at
+    #   update_at            
+    # }
+    createProject(data: $data) {
+    id
+    name
+    private
+    update_at
+    # files {
+    #   created_at
+    #   extension
+    #   id
+    #   language
+    #   name
+    #   type
+    #   update_at
+    #   content
+    # }
+    created_at
+    category
+  }
   }
 `;
 
@@ -130,7 +149,7 @@ export const DELETE_PROJECT = `#graphql
 
 beforeAll(async () => {
   const baseSchema = await buildSchema({
-    resolvers: [ProjectResolver],
+    resolvers: [ProjectResolver, FileResolver],
     authChecker: () => true,
     
   });
@@ -174,11 +193,27 @@ describe("Test for a new project", () => {
         }
       }   
     })
-
     assert(response.body.kind === "single");
+    if (response.body.singleResult.errors) {
+      console.error('Errors:', response.body.singleResult.errors);
+    }
     const id = response.body.singleResult.data?.createProject?.id;     
     expect(id).not.toBeNull(); 
     expect(response.body.singleResult.data?.createProject?.name).toEqual("Project1");
+  });
+
+  it("Find 1 projects", async () => {
+    const response = await server.executeOperation<ResponseDataListProject>({
+      query: LIST_PROJECTS,      
+    });
+
+    assert(response.body.kind === "single");
+    console.log("find 1 projects", response.body.singleResult.data?.listProjects)
+    // Avec la listes des files
+    //    console.log find 1 projects [ [Object: null prototype] { id: '1', name: 'Project1' } ]
+    // Sans la liste des files
+    //    console.log find 1 projects [ [Object: null prototype] { id: '1', name: 'Project1' } ]
+    expect(response.body.singleResult.data?.listProjects).toHaveLength(1);   
   });
 
   it("Update project", async () => { 

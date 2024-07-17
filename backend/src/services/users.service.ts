@@ -177,7 +177,7 @@ export default class UsersService {
     const userProjectAccessesRepository = datasource.getRepository(UsersProjectsAccesses);
     const userAccesses = await userProjectAccessesRepository.find({
       where: { user_id: userId },
-      relations: ['project.usersProjectsAccesses']
+      relations: ['project.usersProjectsAccesses', 'project.files']
     });
 
     const projects = userAccesses.map(access => access.project);
