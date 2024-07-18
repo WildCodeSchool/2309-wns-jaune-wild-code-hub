@@ -34,6 +34,25 @@ export default class ProjectsService {
     return project;
   }
 
+  async ListByUserWithRole(userId: number) {
+    const userProjectAccessesRepository = datasource.getRepository(
+      UsersProjectsAccesses
+    );
+    const userAccesses = await userProjectAccessesRepository.find({
+      where: { user_id: userId },
+      relations: ["project.usersProjectsAccesses"],
+    });
+
+    return userAccesses.map((access) => {
+      const project = access.project;
+      const role = access.role;
+      return {
+        ...project,
+        role,
+      };
+    });
+  }
+
   async findByName(name: string) {
     // const project = await this.db.findOne({
     //   where: { name },

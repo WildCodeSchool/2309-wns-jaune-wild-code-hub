@@ -6,7 +6,7 @@ import { SignJWT } from "jose";
 import { MyContext } from "..";
 import Cookies from "cookies";
 import { Project } from "../entities/project.entity";
-import { CreateUserProjectAccessesInput } from "../entities/userProjectAccesses.entity";
+import { CreateUserProjectAccessesInput, UsersProjectsAccesses } from "../entities/userProjectAccesses.entity";
 
 @Resolver()
 export class UserResolver {
@@ -204,7 +204,7 @@ export class UserResolver {
   }
 
   @Authorized()
-  @Query(() => [Project])
+  @Query(() => [User])
   async listAccesProject (@Arg("userId") userId: number) {
     const listAccesProject = await new UsersService().findUsersByAccessesProject(userId);
     return listAccesProject;

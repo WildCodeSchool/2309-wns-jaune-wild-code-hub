@@ -9,6 +9,7 @@ import {
   CreateUserProjectAccessesInput,
   UpdateUserProjectAccessesInput
 } from "../entities/userProjectAccesses.entity";
+import { access } from "fs";
 
 export default class UsersService {
   db: Repository<User>;
@@ -180,7 +181,8 @@ export default class UsersService {
       relations: ['project.usersProjectsAccesses', 'project.files']
     });
 
-    const projects = userAccesses.map(access => access.project);
+    const projects = userAccesses.map(access => {access.project, access.role});
+    console.log(userAccesses)
     return projects;
   }
 

@@ -1,12 +1,21 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Box, Flex, Text } from "@chakra-ui/react";
+import { Box, Flex, Text, Spacer, Button } from "@chakra-ui/react";
+import FileEditor from "../../components/Editor/FileEditor";
+import FileInfo from "../../components/Editor/FileInfo";
+import BashOutput from "../../components/Editor/BashOutput";
+import { NextPageWithLayout } from "../_app";
 import components from "@/styles/theme/components";
-
-import FileEditor from "../components/Editor/FileEditor";
-import FilesList from "../components/Editor/FilesList";
-import AddFileForm from "../components/Editor/AddFileForm";
-import FileInfo from "../components/Editor/FileInfo";
-import BashOutput from "../components/Editor/BashOutput";
+import FilesList from "../../components/Editor/FilesList";
+import AddFileForm from "../../components/Editor/AddFileForm";
+import SidebarLayout from "@/components/SidebarLayout";
+import { useRouter } from "next/router";
+import { useMutation, useQuery } from "@apollo/client";
+import { PROJECT_BY_ID } from "@/requetes/queries/project.queries";
+import { UPDATE_MULTIPLE_FILES } from "@/requetes/mutations/file.mutations";
+import {
+    UpdateMultipleFilesMutation,
+    UpdateMultipleFilesMutationVariables
+  } from "@/types/graphql";
 
 interface File {
     id: number;
@@ -16,81 +25,26 @@ interface File {
     language: string;
 }
 
-const Editor: React.FC = () => {
+const Editor: NextPageWithLayout = () => {
+    
+    const router = useRouter();
+    const projectById = useQuery(PROJECT_BY_ID, { variables : { findProjectByIdId : router.query.id }});
     const [code, setCode] = useState<string>("");
     const [file, setFile] = useState<File | null>(null);
     const [openFiles, setOpenFiles] = useState<File[]>([]);
     const [consoleLogs, setConsoleLogs] = useState<any[]>([]);
     const iframeRef = useRef<HTMLIFrameElement>(null);
 
-    const [data, setData] = useState<File[]>([
-        {
-            id: 1,
-            name: "file 1",
-            extension: "html",
-            content: `
-<div id="app">
-    <p class="blue">Hello, world!</p>
-</div>
-            `,
-            language: "html",
-        },
-        {
-            id: 2,
-            name: "file 2",
-            extension: "css",
-            content: `#app { background: red; }`,
-            language: "css",
-        },
-        {
-            id: 3,
-            name: "file 3",
-            extension: "js",
-            content: `document.getElementById('app').innerText = "Hello, JavaScript!";
-            console.log("toto"); console.log({ a: 1, b: 2 }); console.log([1, 2, 3]);
-            console.log("toto", [1, 2, 3]); console.log({ a: 1, b: 2 }, [1, 2, 3]);
-            console.log("tototttttttt")
-            console.log('arg1',[1,2,30], "arg2" ,{1:"toto",2:"ttt",3:"dddd"})`,
-            language: "javascript",
-        },
-        {
-            id: 4,
-            name: "file 4",
-            extension: "css",
-            content: `.blue { color: blue; }`,
-            language: "css",
-        },
-        {
-            id: 5,
-            name: "file 5",
-            extension: "css",
-            content: `.blue { color: blue; }`,
-            language: "css",
-        },
-        {
-            id: 6,
-            name: "file 6",
-            extension: "css",
-            content: `.blue { color: blue; }`,
-            language: "css",
-        },
-        {
-            id: 7,
-            name: "file 7",
-            extension: "css",
-            content: `.blue { color: blue; }`,
-            language: "css",
-        },
-    ]);
+    const [data, setData] = useState<File[]>([]);
 
     const getCombinedCode = (): string => {
-        const htmlFiles = data.filter((file) => file.extension === "html");
-        const cssFiles = data.filter((file) => file.extension === "css");
-        const jsFiles = data.filter((file) => file.extension === "js");
+        const htmlFiles = data?.filter((file) => file.extension === "html");
+        const cssFiles = data?.filter((file) => file.extension === "css");
+        const jsFiles = data?.filter((file) => file.extension === "js");
 
-        const htmlCode = htmlFiles.map((file) => file.content).join("\n");
-        const cssCode = cssFiles.map((file) => file.content).join("\n");
-        const jsCode = jsFiles.map((file) => file.content).join("\n");
+        const htmlCode = htmlFiles?.map((file) => file.content).join("\n");
+        const cssCode = cssFiles?.map((file) => file.content).join("\n");
+        const jsCode = jsFiles?.map((file) => file.content).join("\n");
 
         return `
           <html>
@@ -114,6 +68,32 @@ const Editor: React.FC = () => {
           </html>
         `;
     };
+    
+    const [updateMultipleFiles] = useMutation<
+        UpdateMultipleFilesMutation,
+        UpdateMultipleFilesMutationVariables
+    >(UPDATE_MULTIPLE_FILES, {
+        onCompleted: (data) => {
+            console.log("ok", data)
+        },
+        onError(error) {
+        console.log("error", error.message);
+        }
+    });
+    const updateFilesListBDD = async () => {
+        const newData = data.map((item : any) => {
+            const { __typename, id,  ...rest } = item;
+            return { ...rest, id : +id }; 
+        });
+        if (data) {
+        updateMultipleFiles({
+            variables: { 
+                data: newData
+            },
+        });
+
+        }
+    }
 
     const updateIframe = (): void => {
         const iframe = iframeRef.current;
@@ -155,6 +135,23 @@ const Editor: React.FC = () => {
     }, [data]);
 
     useEffect(() => {
+        console.log("projectById?.error?.message", projectById?.data)
+        if (projectById?.error?.message === "Access denied! You need to be authenticated to perform this action!") {
+            router.push('/auth/login')
+        } else if (projectById?.error?.message === 'Please note, the project does not exist') {
+            router.push("/");
+        } else if (projectById?.error?.message === 'Failed to fetch') {
+            router.push("/auth/login");
+        } else {
+            setOpenFiles(projectById?.data?.findProjectById?.files);
+            setFile(projectById?.data?.findProjectById.files[0]);
+            setData(projectById?.data?.findProjectById.files);
+        }
+
+    }, [projectById, router?.query?.id, router])
+
+
+    useEffect(() => {
         if (file) {
             setCode(file.content);
             setOpenFiles((prevOpenFiles) => {
@@ -173,22 +170,23 @@ const Editor: React.FC = () => {
         );
     };
 
-    const handleAddFile = (fileName: string): void => {
-        const extension = fileName.split('.').pop() || '';
-        const name = fileName.replace(`.${extension}`, '');
-        const language = extension === "js" ? "javascript" : extension;
+    //V1 create File
+    // const handleAddFile = (fileName: string): void => {
+    //     const extension = fileName.split('.').pop() || '';
+    //     const name = fileName.replace(`.${extension}`, '');
+    //     const language = extension === "js" ? "javascript" : extension;
 
-        const newFile: File = {
-            id: data.length + 1,
-            name,
-            extension,
-            content: "",
-            language,
-        };
+    //     const newFile: File = {
+    //         id: data.length + 1,
+    //         name,
+    //         extension,
+    //         content: "",
+    //         language,
+    //     };
 
-        setData((prevData) => [...prevData, newFile]);
-        setFile(newFile);
-    };
+    //     setData((prevData) => [...prevData, newFile]);
+    //     setFile(newFile);
+    // };
 
     const handleFileClose = (fileId: number): void => {
         setOpenFiles((prevOpenFiles) => {
@@ -211,12 +209,14 @@ const Editor: React.FC = () => {
         >
 
                 <div>
-                    <FilesList data={data} setFile={setFile} />
+                    {/* <FilesList data={data} setFile={setFile} /> */}
                     {/* <AddFileForm addFile={handleAddFile} /> */}
                 </div>
             <Box width="40%">
             <Flex>
-                    {openFiles.map((openFile) => (
+                    {
+                    openFiles &&
+                    openFiles.map((openFile) => (
                         <FileInfo
                             key={openFile.id}
                             fileName={`${openFile.name}.${openFile.extension}`}
@@ -224,7 +224,13 @@ const Editor: React.FC = () => {
                             isSelected={openFile.id === file?.id}
                             onClick={() => setFile(openFile)}
                         />
-                    ))}
+                    ))
+                    }
+                    {/* <button>Save</button> */}
+                    <Spacer />
+                    <Button type="button" variant="secondary" onClick={updateFilesListBDD}>
+                        Save
+                    </Button>
             </Flex>
             {file ? (
                     <FileEditor
@@ -257,5 +263,10 @@ const Editor: React.FC = () => {
         </Box>
     );
 };
+
+// V1 Add list info 
+// Editor.getLayout = function getLayout(page) {
+//     return <SidebarLayout>{page}</SidebarLayout>;
+//   };
 
 export default Editor;

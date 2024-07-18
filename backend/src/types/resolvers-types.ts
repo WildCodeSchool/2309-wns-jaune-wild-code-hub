@@ -86,6 +86,7 @@ export type Mutation = {
   deleteUser: Message;
   register: User;
   updateFile: Message;
+  updateMultipleFiles: Array<Message>;
   updateProject: Message;
   updateUser: Message;
 };
@@ -149,6 +150,11 @@ export type MutationUpdateFileArgs = {
 };
 
 
+export type MutationUpdateMultipleFilesArgs = {
+  data: Array<UpdateFileInput>;
+};
+
+
 export type MutationUpdateProjectArgs = {
   data: UpdateProjectInput;
 };
@@ -178,11 +184,12 @@ export type Query = {
   findUserByEmail: User;
   findUserById: User;
   findUserByPseudo: User;
-  listAccesProject: Array<Project>;
+  listAccesProject: Array<User>;
   listFilesByProject: Array<File>;
   listLikeProject: Array<Project>;
   listProjects: Array<Project>;
   listProjectsByCategory: Array<Project>;
+  listProjectsByUserWithRole: Array<UserAccessProjectOutput>;
   listPublicProjects: Array<Project>;
   listUsers: Array<User>;
   listUsersByRole: Array<User>;
@@ -247,6 +254,11 @@ export type QueryListProjectsByCategoryArgs = {
 };
 
 
+export type QueryListProjectsByUserWithRoleArgs = {
+  id: Scalars['String']['input'];
+};
+
+
 export type QueryListUsersByRoleArgs = {
   role: Scalars['String']['input'];
 };
@@ -303,6 +315,12 @@ export type User = {
   role: Scalars['String']['output'];
   run_counter: Scalars['Float']['output'];
   update_at: Scalars['DateTimeISO']['output'];
+};
+
+export type UserAccessProjectOutput = {
+  __typename?: 'UserAccessProjectOutput';
+  project?: Maybe<Project>;
+  role: Scalars['String']['output'];
 };
 
 export type WithIndex<TObject> = TObject & Record<string, any>;
@@ -397,6 +415,7 @@ export type ResolversTypes = ResolversObject<{
   UpdateProjectInput: UpdateProjectInput;
   UpdateUserInput: UpdateUserInput;
   User: ResolverTypeWrapper<User>;
+  UserAccessProjectOutput: ResolverTypeWrapper<UserAccessProjectOutput>;
 }>;
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -421,6 +440,7 @@ export type ResolversParentTypes = ResolversObject<{
   UpdateProjectInput: UpdateProjectInput;
   UpdateUserInput: UpdateUserInput;
   User: User;
+  UserAccessProjectOutput: UserAccessProjectOutput;
 }>;
 
 export type OneOfDirectiveArgs = { };
@@ -461,6 +481,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   deleteUser?: Resolver<ResolversTypes['Message'], ParentType, ContextType, RequireFields<MutationDeleteUserArgs, 'id'>>;
   register?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationRegisterArgs, 'data'>>;
   updateFile?: Resolver<ResolversTypes['Message'], ParentType, ContextType, RequireFields<MutationUpdateFileArgs, 'data'>>;
+  updateMultipleFiles?: Resolver<Array<ResolversTypes['Message']>, ParentType, ContextType, RequireFields<MutationUpdateMultipleFilesArgs, 'data'>>;
   updateProject?: Resolver<ResolversTypes['Message'], ParentType, ContextType, RequireFields<MutationUpdateProjectArgs, 'data'>>;
   updateUser?: Resolver<ResolversTypes['Message'], ParentType, ContextType, RequireFields<MutationUpdateUserArgs, 'data'>>;
 }>;
@@ -484,11 +505,12 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   findUserByEmail?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<QueryFindUserByEmailArgs, 'email'>>;
   findUserById?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<QueryFindUserByIdArgs, 'id'>>;
   findUserByPseudo?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<QueryFindUserByPseudoArgs, 'pseudo'>>;
-  listAccesProject?: Resolver<Array<ResolversTypes['Project']>, ParentType, ContextType, RequireFields<QueryListAccesProjectArgs, 'userId'>>;
+  listAccesProject?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryListAccesProjectArgs, 'userId'>>;
   listFilesByProject?: Resolver<Array<ResolversTypes['File']>, ParentType, ContextType, RequireFields<QueryListFilesByProjectArgs, 'project_id'>>;
   listLikeProject?: Resolver<Array<ResolversTypes['Project']>, ParentType, ContextType, RequireFields<QueryListLikeProjectArgs, 'userId'>>;
   listProjects?: Resolver<Array<ResolversTypes['Project']>, ParentType, ContextType>;
   listProjectsByCategory?: Resolver<Array<ResolversTypes['Project']>, ParentType, ContextType, RequireFields<QueryListProjectsByCategoryArgs, 'category'>>;
+  listProjectsByUserWithRole?: Resolver<Array<ResolversTypes['UserAccessProjectOutput']>, ParentType, ContextType, RequireFields<QueryListProjectsByUserWithRoleArgs, 'id'>>;
   listPublicProjects?: Resolver<Array<ResolversTypes['Project']>, ParentType, ContextType>;
   listUsers?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>;
   listUsersByRole?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryListUsersByRoleArgs, 'role'>>;
@@ -513,6 +535,12 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
+export type UserAccessProjectOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['UserAccessProjectOutput'] = ResolversParentTypes['UserAccessProjectOutput']> = ResolversObject<{
+  project?: Resolver<Maybe<ResolversTypes['Project']>, ParentType, ContextType>;
+  role?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
 export type Resolvers<ContextType = any> = ResolversObject<{
   DateTimeISO?: GraphQLScalarType;
   File?: FileResolvers<ContextType>;
@@ -521,6 +549,7 @@ export type Resolvers<ContextType = any> = ResolversObject<{
   Project?: ProjectResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
+  UserAccessProjectOutput?: UserAccessProjectOutputResolvers<ContextType>;
 }>;
 
 export type DirectiveResolvers<ContextType = any> = ResolversObject<{

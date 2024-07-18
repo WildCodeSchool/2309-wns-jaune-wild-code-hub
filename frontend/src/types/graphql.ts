@@ -19,8 +19,8 @@ export type Scalars = {
 };
 
 export type CreateFileInput = {
-  category?: InputMaybe<Scalars['String']['input']>;
   content?: InputMaybe<Scalars['String']['input']>;
+  extension: Scalars['String']['input'];
   language: Scalars['String']['input'];
   name: Scalars['String']['input'];
   project_id: Scalars['Float']['input'];
@@ -52,9 +52,9 @@ export type CreateUserProjectAccessesInput = {
 
 export type File = {
   __typename?: 'File';
-  category: Scalars['String']['output'];
   content: Scalars['String']['output'];
   created_at: Scalars['DateTimeISO']['output'];
+  extension: Scalars['String']['output'];
   id: Scalars['ID']['output'];
   language: Scalars['String']['output'];
   name: Scalars['String']['output'];
@@ -87,6 +87,7 @@ export type Mutation = {
   deleteUser: Message;
   register: User;
   updateFile: Message;
+  updateMultipleFiles: Array<Message>;
   updateProject: Message;
   updateUser: Message;
 };
@@ -150,6 +151,11 @@ export type MutationUpdateFileArgs = {
 };
 
 
+export type MutationUpdateMultipleFilesArgs = {
+  data: Array<UpdateFileInput>;
+};
+
+
 export type MutationUpdateProjectArgs = {
   data: UpdateProjectInput;
 };
@@ -163,6 +169,7 @@ export type Project = {
   __typename?: 'Project';
   category: Scalars['String']['output'];
   created_at: Scalars['DateTimeISO']['output'];
+  files: Array<File>;
   id: Scalars['ID']['output'];
   name: Scalars['String']['output'];
   private: Scalars['Boolean']['output'];
@@ -178,12 +185,12 @@ export type Query = {
   findUserByEmail: User;
   findUserById: User;
   findUserByPseudo: User;
-  listAccesProject: Array<Project>;
+  listAccesProject: Array<User>;
   listFilesByProject: Array<File>;
   listLikeProject: Array<Project>;
   listProjects: Array<Project>;
   listProjectsByCategory: Array<Project>;
-  listProjectsByUser: Array<Project>;
+  listProjectsByUserWithRole: Array<UserAccessProjectOutput>;
   listPublicProjects: Array<Project>;
   listUsers: Array<User>;
   listUsersByRole: Array<User>;
@@ -248,7 +255,7 @@ export type QueryListProjectsByCategoryArgs = {
 };
 
 
-export type QueryListProjectsByUserArgs = {
+export type QueryListProjectsByUserWithRoleArgs = {
   id: Scalars['String']['input'];
 };
 
@@ -269,6 +276,7 @@ export type QueryLoginArgs = {
 
 export type UpdateFileInput = {
   content?: InputMaybe<Scalars['String']['input']>;
+  extension: Scalars['String']['input'];
   id: Scalars['Float']['input'];
   language: Scalars['String']['input'];
   name: Scalars['String']['input'];
@@ -310,12 +318,25 @@ export type User = {
   update_at: Scalars['DateTimeISO']['output'];
 };
 
+export type UserAccessProjectOutput = {
+  __typename?: 'UserAccessProjectOutput';
+  project?: Maybe<Project>;
+  role: Scalars['String']['output'];
+};
+
 export type RegisterMutationVariables = Exact<{
   data: CreateUserInput;
 }>;
 
 
 export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'User', pseudo: string, run_counter: number, role: string, password: string, lastname: string, firstname: string, email: string, ban: boolean } };
+
+export type UpdateMultipleFilesMutationVariables = Exact<{
+  data: Array<UpdateFileInput> | UpdateFileInput;
+}>;
+
+
+export type UpdateMultipleFilesMutation = { __typename?: 'Mutation', updateMultipleFiles: Array<{ __typename?: 'Message', success: boolean, message: string }> };
 
 export type LoginQueryVariables = Exact<{
   infos: InputLogin;
@@ -329,12 +350,19 @@ export type LogoutQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type LogoutQuery = { __typename?: 'Query', logout: { __typename?: 'Message', success: boolean, message: string } };
 
-export type ListProjectsByUserQueryVariables = Exact<{
-  listProjectsByUserId: Scalars['String']['input'];
+export type ListFilesByProjectQueryVariables = Exact<{
+  projectId: Scalars['String']['input'];
 }>;
 
 
-export type ListProjectsByUserQuery = { __typename?: 'Query', listProjectsByUser: Array<{ __typename?: 'Project', category: string, created_at: any, id: string, name: string, private: boolean, update_at: any }> };
+export type ListFilesByProjectQuery = { __typename?: 'Query', listFilesByProject: Array<{ __typename?: 'File', extension: string, language: string, name: string, type: string, id: string, content: string }> };
+
+export type FindProjectByIdQueryVariables = Exact<{
+  findProjectByIdId: Scalars['String']['input'];
+}>;
+
+
+export type FindProjectByIdQuery = { __typename?: 'Query', findProjectById: { __typename?: 'Project', id: string, name: string, private: boolean, update_at: any, created_at: any, category: string, files: Array<{ __typename?: 'File', language: string, extension: string, name: string, type: string, id: string, content: string }> } };
 
 export type ListProjectsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -382,6 +410,40 @@ export function useRegisterMutation(baseOptions?: Apollo.MutationHookOptions<Reg
 export type RegisterMutationHookResult = ReturnType<typeof useRegisterMutation>;
 export type RegisterMutationResult = Apollo.MutationResult<RegisterMutation>;
 export type RegisterMutationOptions = Apollo.BaseMutationOptions<RegisterMutation, RegisterMutationVariables>;
+export const UpdateMultipleFilesDocument = gql`
+    mutation updateMultipleFiles($data: [UpdateFileInput!]!) {
+  updateMultipleFiles(data: $data) {
+    success
+    message
+  }
+}
+    `;
+export type UpdateMultipleFilesMutationFn = Apollo.MutationFunction<UpdateMultipleFilesMutation, UpdateMultipleFilesMutationVariables>;
+
+/**
+ * __useUpdateMultipleFilesMutation__
+ *
+ * To run a mutation, you first call `useUpdateMultipleFilesMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateMultipleFilesMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateMultipleFilesMutation, { data, loading, error }] = useUpdateMultipleFilesMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useUpdateMultipleFilesMutation(baseOptions?: Apollo.MutationHookOptions<UpdateMultipleFilesMutation, UpdateMultipleFilesMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateMultipleFilesMutation, UpdateMultipleFilesMutationVariables>(UpdateMultipleFilesDocument, options);
+      }
+export type UpdateMultipleFilesMutationHookResult = ReturnType<typeof useUpdateMultipleFilesMutation>;
+export type UpdateMultipleFilesMutationResult = Apollo.MutationResult<UpdateMultipleFilesMutation>;
+export type UpdateMultipleFilesMutationOptions = Apollo.BaseMutationOptions<UpdateMultipleFilesMutation, UpdateMultipleFilesMutationVariables>;
 export const LoginDocument = gql`
     query Login($infos: InputLogin!) {
   login(infos: $infos) {
@@ -463,51 +525,104 @@ export type LogoutQueryHookResult = ReturnType<typeof useLogoutQuery>;
 export type LogoutLazyQueryHookResult = ReturnType<typeof useLogoutLazyQuery>;
 export type LogoutSuspenseQueryHookResult = ReturnType<typeof useLogoutSuspenseQuery>;
 export type LogoutQueryResult = Apollo.QueryResult<LogoutQuery, LogoutQueryVariables>;
-export const ListProjectsByUserDocument = gql`
-    query ListProjectsByUser($listProjectsByUserId: String!) {
-  listProjectsByUser(id: $listProjectsByUserId) {
-    category
-    created_at
-    id
+export const ListFilesByProjectDocument = gql`
+    query ListFilesByProject($projectId: String!) {
+  listFilesByProject(project_id: $projectId) {
+    extension
+    language
     name
-    private
-    update_at
+    type
+    id
+    content
   }
 }
     `;
 
 /**
- * __useListProjectsByUserQuery__
+ * __useListFilesByProjectQuery__
  *
- * To run a query within a React component, call `useListProjectsByUserQuery` and pass it any options that fit your needs.
- * When your component renders, `useListProjectsByUserQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useListFilesByProjectQuery` and pass it any options that fit your needs.
+ * When your component renders, `useListFilesByProjectQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useListProjectsByUserQuery({
+ * const { data, loading, error } = useListFilesByProjectQuery({
  *   variables: {
- *      listProjectsByUserId: // value for 'listProjectsByUserId'
+ *      projectId: // value for 'projectId'
  *   },
  * });
  */
-export function useListProjectsByUserQuery(baseOptions: Apollo.QueryHookOptions<ListProjectsByUserQuery, ListProjectsByUserQueryVariables>) {
+export function useListFilesByProjectQuery(baseOptions: Apollo.QueryHookOptions<ListFilesByProjectQuery, ListFilesByProjectQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<ListProjectsByUserQuery, ListProjectsByUserQueryVariables>(ListProjectsByUserDocument, options);
+        return Apollo.useQuery<ListFilesByProjectQuery, ListFilesByProjectQueryVariables>(ListFilesByProjectDocument, options);
       }
-export function useListProjectsByUserLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ListProjectsByUserQuery, ListProjectsByUserQueryVariables>) {
+export function useListFilesByProjectLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ListFilesByProjectQuery, ListFilesByProjectQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<ListProjectsByUserQuery, ListProjectsByUserQueryVariables>(ListProjectsByUserDocument, options);
+          return Apollo.useLazyQuery<ListFilesByProjectQuery, ListFilesByProjectQueryVariables>(ListFilesByProjectDocument, options);
         }
-export function useListProjectsByUserSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<ListProjectsByUserQuery, ListProjectsByUserQueryVariables>) {
+export function useListFilesByProjectSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<ListFilesByProjectQuery, ListFilesByProjectQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<ListProjectsByUserQuery, ListProjectsByUserQueryVariables>(ListProjectsByUserDocument, options);
+          return Apollo.useSuspenseQuery<ListFilesByProjectQuery, ListFilesByProjectQueryVariables>(ListFilesByProjectDocument, options);
         }
-export type ListProjectsByUserQueryHookResult = ReturnType<typeof useListProjectsByUserQuery>;
-export type ListProjectsByUserLazyQueryHookResult = ReturnType<typeof useListProjectsByUserLazyQuery>;
-export type ListProjectsByUserSuspenseQueryHookResult = ReturnType<typeof useListProjectsByUserSuspenseQuery>;
-export type ListProjectsByUserQueryResult = Apollo.QueryResult<ListProjectsByUserQuery, ListProjectsByUserQueryVariables>;
+export type ListFilesByProjectQueryHookResult = ReturnType<typeof useListFilesByProjectQuery>;
+export type ListFilesByProjectLazyQueryHookResult = ReturnType<typeof useListFilesByProjectLazyQuery>;
+export type ListFilesByProjectSuspenseQueryHookResult = ReturnType<typeof useListFilesByProjectSuspenseQuery>;
+export type ListFilesByProjectQueryResult = Apollo.QueryResult<ListFilesByProjectQuery, ListFilesByProjectQueryVariables>;
+export const FindProjectByIdDocument = gql`
+    query findProjectById($findProjectByIdId: String!) {
+  findProjectById(id: $findProjectByIdId) {
+    id
+    name
+    private
+    update_at
+    created_at
+    category
+    files {
+      language
+      extension
+      name
+      type
+      id
+      content
+    }
+  }
+}
+    `;
+
+/**
+ * __useFindProjectByIdQuery__
+ *
+ * To run a query within a React component, call `useFindProjectByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFindProjectByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFindProjectByIdQuery({
+ *   variables: {
+ *      findProjectByIdId: // value for 'findProjectByIdId'
+ *   },
+ * });
+ */
+export function useFindProjectByIdQuery(baseOptions: Apollo.QueryHookOptions<FindProjectByIdQuery, FindProjectByIdQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<FindProjectByIdQuery, FindProjectByIdQueryVariables>(FindProjectByIdDocument, options);
+      }
+export function useFindProjectByIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FindProjectByIdQuery, FindProjectByIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<FindProjectByIdQuery, FindProjectByIdQueryVariables>(FindProjectByIdDocument, options);
+        }
+export function useFindProjectByIdSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<FindProjectByIdQuery, FindProjectByIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<FindProjectByIdQuery, FindProjectByIdQueryVariables>(FindProjectByIdDocument, options);
+        }
+export type FindProjectByIdQueryHookResult = ReturnType<typeof useFindProjectByIdQuery>;
+export type FindProjectByIdLazyQueryHookResult = ReturnType<typeof useFindProjectByIdLazyQuery>;
+export type FindProjectByIdSuspenseQueryHookResult = ReturnType<typeof useFindProjectByIdSuspenseQuery>;
+export type FindProjectByIdQueryResult = Apollo.QueryResult<FindProjectByIdQuery, FindProjectByIdQueryVariables>;
 export const ListProjectsDocument = gql`
     query ListProjects {
   listProjects {

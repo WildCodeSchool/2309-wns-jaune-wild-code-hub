@@ -6,6 +6,7 @@ import {
   UpdateFileInput,
 } from "../entities/file.entity";
 import { validate } from "class-validator";
+import { Message } from "../entities/user.entity";
 
 export default class FilesService {
   db: Repository<File>;
@@ -48,6 +49,24 @@ export default class FilesService {
       throw new Error("Error format data");
     }
     return await this.db.save(fileToSave);
+  }
+
+  async updateMultiple(data: UpdateFileInput[]) {
+    const messages: Message[] = [];
+    for (const fileData of data) {
+      const { id, ...otherData } = fileData;
+      const updateFile = await this.update(id, otherData);
+      const m = new Message();
+      if (updateFile) {
+        m.message = `File with name ${otherData.name}.${otherData.extension} updated!`;
+        m.success = true;
+      } else {
+        m.message = `Unable to update file with ID ${id}!`;
+        m.success = false;
+      }
+      messages.push(m);
+    }
+    return messages;
   }
   
   async delete(id: number) {

@@ -12,6 +12,7 @@ import React from "react";
 
 import MeSidebar from "./MeSidebarContent";
 import { usePathname } from "next/navigation";
+import FilesList from "./Editor/FilesList";
 
 type Props = {
   isOpen: boolean;
@@ -68,7 +69,7 @@ const Sidebar = ({ isOpen, setIsOpen }: Props) => {
           enter: { duration: 0.5 },
         }}
       >
-        {pathname.startsWith("/me") && <MeSidebar />}
+        {pathname?.startsWith("/me") && <MeSidebar />}
       </SlideFade>
       <SlideFade in={isOpen} offsetX="-16rem">
         <LinkBox

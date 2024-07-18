@@ -10,6 +10,8 @@ interface FileInfoProps {
 }
 
 const FileInfo: React.FC<FileInfoProps> = ({ fileName, onClose, isSelected, onClick }) => {
+  
+  {/* V1 close file */}
   const handleCloseClick = (event: React.MouseEvent) => {
     event.stopPropagation();
       onClose();
@@ -29,14 +31,15 @@ const FileInfo: React.FC<FileInfoProps> = ({ fileName, onClose, isSelected, onCl
         onClick={onClick}
     >
       <p style={{ marginLeft:"3px", marginRight: "5px" }}>{fileName}</p>
-      <CloseIcon 
+      {/* V1 close file */}
+      {/* <CloseIcon 
         ml="9px"
         mr="9px"
         width="10px"
         mt="3px"
         cursor="pointer"
         onClick={handleCloseClick}
-        />
+        /> */}
     </Box>
   );
 };

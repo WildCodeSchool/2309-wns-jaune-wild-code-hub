@@ -15,7 +15,7 @@ import {
 import ProjectsService from "../services/projects.service";
 import { Message, User } from "../entities/user.entity";
 import { File } from "../entities/file.entity";
-
+import { UserAccessProjectOutput } from "../entities/userProjectAccesses.entity";
 
 @Resolver()
 export class ProjectResolver {
@@ -25,6 +25,14 @@ export class ProjectResolver {
     return projects;
   }
 
+  @Authorized()
+  @Query(() => [UserAccessProjectOutput])
+  async listProjectsByUserWithRole(@Arg("id") id: string) {
+    const projects = await new ProjectsService().ListByUserWithRole(+id);
+    return projects;
+  }
+
+  @Authorized()
   @Query(() => Project)
   async findProjectById(@Arg("id") id: string) {
     if (isNaN(+id)) throw new Error("Specify a correct id");

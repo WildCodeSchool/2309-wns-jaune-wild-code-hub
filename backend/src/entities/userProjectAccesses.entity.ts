@@ -1,9 +1,10 @@
 import { Entity, Column, CreateDateColumn, UpdateDateColumn, ManyToOne, JoinColumn, PrimaryColumn } from 'typeorm';
 import { User } from './user.entity';
 import { Project } from './project.entity';
-import { Field, ID, InputType } from "type-graphql";
+import { Field, ID, InputType, ObjectType } from "type-graphql";
 
 export enum UserRole {
+  OWNER = "OWNER",
   EDITOR = "EDITOR",
   VIEWER = "VIEWER",
 }
@@ -61,4 +62,13 @@ export class UpdateUserProjectAccessesInput {
 
   @Field({ nullable: true })
   role: UserRole;
+}
+
+@ObjectType()
+export class UserAccessProjectOutput {
+  @Field({ nullable: false })
+  role: UserRole;
+
+  @Field(() => Project, { nullable: true })
+  project: Project;
 }
