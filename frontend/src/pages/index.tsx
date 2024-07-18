@@ -162,7 +162,16 @@ export default function Home() {
               fontSize="46px"
               fontWeight={"bold"}
             >
-              SOME VIDEO MATRIX STYLE
+              <iframe
+                width="640"
+                height="590"
+                src="https://www.youtube.com/embed/ujFvOaJy6DI"
+                title="Binary"
+                frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                referrerpolicy="strict-origin-when-cross-origin"
+                allowfullscreen
+              ></iframe>
             </Flex>
           </Flex>
 

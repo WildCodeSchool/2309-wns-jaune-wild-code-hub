@@ -28,6 +28,8 @@ const Footer = () => {
         bg={"transparent"}
         display="flex"
         flexDirection={"row"}
+        // alignItems={"center"}
+        // justifyContent={"center"}
         w={"100%"}
         p={"0"}
       >
