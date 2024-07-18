@@ -33,7 +33,7 @@ const Footer = () => {
         w={"100%"}
         p={"0"}
       >
-        <CardBody w={"100%"}>
+        <CardBody w={"20"}>
           <Text fontSize={24} color={"text"}>
             Wild Code Hub
           </Text>

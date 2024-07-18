@@ -1,5 +1,6 @@
 import HomeCard from "@/components/HomeCard";
 import Footer from "@/components/Footer";
+import VideoPlayer from "@/components/VideoPlayer";
 import { Box, Button, Flex, Heading, Stack, Text } from "@chakra-ui/react";
 
 const cardsInfos = [
@@ -152,8 +153,8 @@ export default function Home() {
               </Button>
             </Flex>
             <Flex
-              w={"50%"}
-              h={"100%"}
+              w={"640"}
+              h={"590"}
               py={"5rem"}
               backgroundColor={"grey"}
               justify={"center"}
@@ -162,16 +163,7 @@ export default function Home() {
               fontSize="46px"
               fontWeight={"bold"}
             >
-              <iframe
-                width="640"
-                height="590"
-                src="https://www.youtube.com/embed/ujFvOaJy6DI"
-                title="Binary"
-                frameborder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                referrerpolicy="strict-origin-when-cross-origin"
-                allowfullscreen
-              ></iframe>
+              <VideoPlayer />
             </Flex>
           </Flex>
 
