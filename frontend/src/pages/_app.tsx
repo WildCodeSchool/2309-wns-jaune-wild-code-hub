@@ -7,6 +7,8 @@ import { API_URL } from "@/config";
 
 import { ReactElement, ReactNode } from "react";
 import { NextPage } from "next";
+import ToastProvider from '../components/ToastCustom/ToastProvider';
+
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
   getLayout?: (page: ReactElement) => ReactNode;
 };
@@ -37,6 +39,7 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
     <ApolloProvider client={client}>
       <ChakraProvider theme={theme}>
         <Navbar />
+        <ToastProvider />
         {getLayout(<Component {...pageProps} />)}
       </ChakraProvider>
     </ApolloProvider>

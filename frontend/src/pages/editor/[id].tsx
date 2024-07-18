@@ -16,6 +16,7 @@ import {
     UpdateMultipleFilesMutation,
     UpdateMultipleFilesMutationVariables
   } from "@/types/graphql";
+import CustomToast from '@/components/ToastCustom/CustomToast';
 
 interface File {
     id: number;
@@ -34,6 +35,7 @@ const Editor: NextPageWithLayout = () => {
     const [openFiles, setOpenFiles] = useState<File[]>([]);
     const [consoleLogs, setConsoleLogs] = useState<any[]>([]);
     const iframeRef = useRef<HTMLIFrameElement>(null);
+    const { showAlert } = CustomToast();
 
     const [data, setData] = useState<File[]>([]);
 
@@ -75,6 +77,10 @@ const Editor: NextPageWithLayout = () => {
     >(UPDATE_MULTIPLE_FILES, {
         onCompleted: (data) => {
             console.log("ok", data)
+            showAlert('success', 'This is a success message!');
+            showAlert('info', 'This is a success message!');
+            showAlert('error', 'This is a success message!');
+            showAlert('warn', 'This is a success message!');
         },
         onError(error) {
         console.log("error", error.message);
