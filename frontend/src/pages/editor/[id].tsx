@@ -77,18 +77,19 @@ const Editor: NextPageWithLayout = () => {
     >(UPDATE_MULTIPLE_FILES, {
         onCompleted: (data) => {
             data.updateMultipleFiles.forEach((message) => {
-                if (message.success) {
+                if (message.success) 
                     showAlert('success', `${message.message}`);
-                } else {
+                else 
                     showAlert('error', `${message.message}`);
-                }
+                
             })
         },
         onError(error) {
+            console.log("error", error)
             showAlert('error', 'We are sorry, there seems to be an error with the server. Please try again later.');
         }
     });
-    
+
     const updateFilesListBDD = async () => {
         const newData = data.map((item : any) => {
             const { __typename, id,  ...rest } = item;
@@ -144,12 +145,15 @@ const Editor: NextPageWithLayout = () => {
     }, [data]);
 
     useEffect(() => {
-        console.log("projectById?.error?.message", projectById?.data)
+
         if (projectById?.error?.message === "Access denied! You need to be authenticated to perform this action!") {
+            showAlert('error', projectById?.error?.message);
             router.push('/auth/login')
         } else if (projectById?.error?.message === 'Please note, the project does not exist') {
+            showAlert('error', projectById?.error?.message);
             router.push("/");
         } else if (projectById?.error?.message === 'Failed to fetch') {
+            showAlert('error', projectById?.error?.message);
             router.push("/auth/login");
         } else {
             setOpenFiles(projectById?.data?.findProjectById?.files);

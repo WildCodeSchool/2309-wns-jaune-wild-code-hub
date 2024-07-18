@@ -15,20 +15,12 @@ import {
 import ProjectsService from "../services/projects.service";
 import { Message, User } from "../entities/user.entity";
 import { File } from "../entities/file.entity";
-import { UserAccessProjectOutput } from "../entities/userProjectAccesses.entity";
 
 @Resolver()
 export class ProjectResolver {
   @Query(() => [Project])
   async listProjects() {
     const projects = await new ProjectsService().list();
-    return projects;
-  }
-
-  @Authorized()
-  @Query(() => [UserAccessProjectOutput])
-  async listProjectsByUserWithRole(@Arg("id") id: string) {
-    const projects = await new ProjectsService().ListByUserWithRole(+id);
     return projects;
   }
 

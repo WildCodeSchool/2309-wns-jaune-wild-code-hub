@@ -63,12 +63,3 @@ export class UpdateUserProjectAccessesInput {
   @Field({ nullable: true })
   role: UserRole;
 }
-
-@ObjectType()
-export class UserAccessProjectOutput {
-  @Field({ nullable: false })
-  role: UserRole;
-
-  @Field(() => Project, { nullable: true })
-  project: Project;
-}

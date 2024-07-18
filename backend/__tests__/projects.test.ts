@@ -7,7 +7,8 @@ import { Project } from "../src/entities/project.entity";
 import { Message } from "../src/entities/user.entity";
 import assert from "assert";
 import { FileResolver } from "../src/resolvers/file.resolver";
-
+import { EntityTarget, Repository } from "typeorm";
+import {File} from "../src/entities/file.entity"
 let server: ApolloServer;
 
 //------------------------------------ REQUETE APOLLO ---------------------------------------//
@@ -158,12 +159,24 @@ beforeAll(async () => {
     schema: baseSchema,
   });
 
-  jest
-    .spyOn(datasourceInitial, "getRepository")
-    .mockReturnValue(datasource.getRepository(Project));
-
+  jest.spyOn(datasourceInitial, 'getRepository').mockImplementation(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (entity: EntityTarget<any>): Repository<any> => {
+        if (entity === File) {
+            return datasource.getRepository(File)
+        } else if (entity === Project) {
+            return datasource.getRepository(Project)
+        } else {
+            throw new Error(`Unexpected entity: ${entity}`)
+        }
+    }
+)
   await datasource.initialize(); //initialisation de la datasource
   // await datasource.getRepository(User).clear(); //vidage de la table et non drop de la base de donnée complète
+  const entityMetadatas = datasource.entityMetadatas;
+  const entities = entityMetadatas.map(metadata => metadata.name);
+
+  console.log("Entities in the Data Source:", entities);
 });
 
 afterAll(async () => {
@@ -177,12 +190,12 @@ describe("Test for a new project", () => {
     const response = await server.executeOperation<ResponseDataListProject>({
       query: LIST_PROJECTS,      
     });
-
+    
     assert(response.body.kind === "single");
     expect(response.body.singleResult.data?.listProjects).toHaveLength(0);   
   });
 
-  it("Create project", async () => { 
+  it.only("Create project", async () => { 
     const response = await server.executeOperation<ResponseDataCreate>({
       query: CREATE_PROJECT,   
       variables: {

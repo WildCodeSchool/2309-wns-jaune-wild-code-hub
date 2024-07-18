@@ -34,25 +34,6 @@ export default class ProjectsService {
     return project;
   }
 
-  async ListByUserWithRole(userId: number) {
-    const userProjectAccessesRepository = datasource.getRepository(
-      UsersProjectsAccesses
-    );
-    const userAccesses = await userProjectAccessesRepository.find({
-      where: { user_id: userId },
-      relations: ["project.usersProjectsAccesses"],
-    });
-
-    return userAccesses.map((access) => {
-      const project = access.project;
-      const role = access.role;
-      return {
-        ...project,
-        role,
-      };
-    });
-  }
-
   async findByName(name: string) {
     // const project = await this.db.findOne({
     //   where: { name },
@@ -105,10 +86,10 @@ export default class ProjectsService {
     console.log("avant files")
 
     
-    // const files = await this.createDefaultFiles(savedProject.id);
+    const files = await this.createDefaultFiles(savedProject.id);
     // await this.createDefaultFiles(savedProject.id);
     // console.log("files create", files)
-    // savedProject.files = files;
+    savedProject.files = files;
 
     // const projectWithFiles = await this.db.findOne({
     //   where: { id: savedProject.id },
