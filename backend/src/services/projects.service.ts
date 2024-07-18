@@ -18,15 +18,11 @@ export default class ProjectsService {
   }
 
   async list() {
-    // return this.db.find();
     const projects = await this.db.find({ relations: ["files"] });
     return projects;
   }
 
   async findById(id: number) {
-    // const project = await this.db.findOne({
-    //   where: { id },
-    // });
     const project = await this.db.findOne({
       where: { id },
       relations: ["files"],
@@ -35,9 +31,6 @@ export default class ProjectsService {
   }
 
   async findByName(name: string) {
-    // const project = await this.db.findOne({
-    //   where: { name },
-    // });
     const project = await this.db.findOne({
       where: { name },
       relations: ["files"],
@@ -46,10 +39,6 @@ export default class ProjectsService {
   }
 
   async listByCategory(category: string) {
-    // const projects = await this.db.find();
-    // return projects.filter(
-    //   (project) => project.category.toLowerCase() === category.toLowerCase()
-    // );
     const projects = await this.db.find({
       where: { category: Like(`%${category}%`) },
       relations: ["files"],
@@ -77,33 +66,17 @@ export default class ProjectsService {
   // }
 
   async create(data: CreateProjectInput) {
-    console.log("DEBUG Service - Received data: ", data); 
+
     const newProject = this.db.create(data);
-    console.log("DEBUG Service - New Project Entity: ", newProject); 
     const savedProject = await this.db.save(newProject);
-    console.log("DEBUG Service - Saved Project: ", savedProject); 
 
-    console.log("avant files")
-
-    
     const files = await this.createDefaultFiles(savedProject.id);
-    // await this.createDefaultFiles(savedProject.id);
-    // console.log("files create", files)
     savedProject.files = files;
-
-    // const projectWithFiles = await this.db.findOne({
-    //   where: { id: savedProject.id },
-    //   relations: ["files"],
-    // });
-    // console.log("DEBUG Service - Project with Files: ", projectWithFiles);
-
-    // console.log("projectWithFiles", projectWithFiles)
 
     return savedProject;
   }
 
   async createDefaultFiles(projectId: number) {
-    console.log("tototto", projectId) 
     const defaultFiles = [
       { name: "index", type: "file", language: "html", extension: "html", content: "", project: {id : projectId } },
       { name: "style", type: "file", language: "css", extension: "css", content: "", project: {id : projectId } },
@@ -113,18 +86,12 @@ export default class ProjectsService {
     const files: File[] = [];
 
     for (const fileData of defaultFiles) {
-      // const newFile = this.fileDb.create(fileData);
-      // console.log("new File", newFile)
-      // //Stop ici les log dans les
-      // const savedFile = await this.fileDb.save(newFile);
       const savedFile = await new FilesService().create({
         ...fileData,
         project_id : projectId
       })
-      console.log("saved File", savedFile)
       files.push(savedFile);
     }
-    // console.log("Mes files", files)
     return files;
   }
 
