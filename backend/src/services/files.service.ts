@@ -61,7 +61,7 @@ export default class FilesService {
         m.message = `File with name ${otherData.name}.${otherData.extension} updated!`;
         m.success = true;
       } else {
-        m.message = `Unable to update file with ID ${id}!`;
+        m.message = `Unable to update file with name ${otherData.name}.${otherData.extension}!`;
         m.success = false;
       }
       messages.push(m);

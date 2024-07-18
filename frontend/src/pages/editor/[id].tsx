@@ -76,16 +76,19 @@ const Editor: NextPageWithLayout = () => {
         UpdateMultipleFilesMutationVariables
     >(UPDATE_MULTIPLE_FILES, {
         onCompleted: (data) => {
-            console.log("ok", data)
-            showAlert('success', 'This is a success message!');
-            showAlert('info', 'This is a success message!');
-            showAlert('error', 'This is a success message!');
-            showAlert('warn', 'This is a success message!');
+            data.updateMultipleFiles.forEach((message) => {
+                if (message.success) {
+                    showAlert('success', `${message.message}`);
+                } else {
+                    showAlert('error', `${message.message}`);
+                }
+            })
         },
         onError(error) {
-        console.log("error", error.message);
+            showAlert('error', 'We are sorry, there seems to be an error with the server. Please try again later.');
         }
     });
+    
     const updateFilesListBDD = async () => {
         const newData = data.map((item : any) => {
             const { __typename, id,  ...rest } = item;
