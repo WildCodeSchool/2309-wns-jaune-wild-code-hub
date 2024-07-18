@@ -1,5 +1,7 @@
 import "@testing-library/jest-dom";
+
 import { fireEvent, render, screen } from "@testing-library/react";
+
 import AppearLogout from "../src/components/AppearLogout";
 
 describe.only("AppearLogout", () => {
@@ -7,12 +9,11 @@ describe.only("AppearLogout", () => {
     render(<AppearLogout />);
     expect(screen.getAllByRole("button")).toBeInTheDocument();
 
-    describe("When user clicks logout button", () => {
-      it("render disparear", () => {
-        render(<AppearLogout />);
-        fireEvent.click(screen.getByRole("button"));
-        expect(screen.getByDisplayValue).toBeInTheDocument;
-      });
+    it.only("the button disappears", () => {
+      render(<AppearLogout />);
+      const button = screen.getByRole("button");
+      fireEvent.click(button);
+      expect(button).not.toBeVisible;
     });
   });
 });

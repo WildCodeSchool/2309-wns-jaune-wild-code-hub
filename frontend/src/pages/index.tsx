@@ -6,22 +6,22 @@ const cardsInfos = [
   {
     title: "Faster than local",
     imageSrc: "bunnyIcon.svg",
-    text: "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Inventore in incidunt cupiditate placeat ipsam a facere libero deserunt iste eius. Ipsam dolorum, maxime et error odio nobis eveniet temporibus modi",
+    text: "Our platform is designed to make coding faster and more efficient than ever before. Say goodbye to sluggish local setups and hello to instant coding gratification. Start coding faster, smarter, and more seamlessly with us today!",
   },
   {
-    title: "Faster than local",
-    imageSrc: "bunnyIcon.svg",
-    text: "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Inventore in incidunt cupiditate placeat ipsam a facere libero deserunt iste eius. Ipsam dolorum, maxime et error odio nobis eveniet temporibus modi",
+    title: "Works on all machine",
+    imageSrc: "monitor-smartphone.svg",
+    text: "Lexperience seamless coding on any device our platform works flawlessly across all machines, providing you with the flexibility to code anytime, anywhere. Say goodbye to compatibility issues and hello to effortless coding, no matter what device you're using",
   },
   {
-    title: "Faster than local",
-    imageSrc: "bunnyIcon.svg",
-    text: "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Inventore in incidunt cupiditate placeat ipsam a facere libero deserunt iste eius. Ipsam dolorum, maxime et error odio nobis eveniet temporibus modi",
+    title: "Collaborative 24/7",
+    imageSrc: "users-round.svg",
+    text: "Our platform empowers developers to work together in real-time, around the clock, from anywhere in the world. Whether you're coding solo or collaborating with a global team, our intuitive interface and robust features ensure a smooth and efficient coding experience, 24 hours a day, 7 days a week. ",
   },
   {
-    title: "Faster than local",
-    imageSrc: "bunnyIcon.svg",
-    text: "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Inventore in incidunt cupiditate placeat ipsam a facere libero deserunt iste eius. Ipsam dolorum, maxime et error odio nobis eveniet temporibus modi",
+    title: "Reliable and secure",
+    imageSrc: "lock-keyhole.svg",
+    text: "Welcome to our online code editor, where reliability and security are our top priorities. With robust features and stringent security measures in place, you can code with confidence, knowing that your work is protected and your experience is seamless. Join us today and experience coding like never before",
   },
 ];
 
