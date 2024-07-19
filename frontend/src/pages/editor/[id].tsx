@@ -43,6 +43,8 @@ const Editor: NextPageWithLayout = () => {
 
     const [data, setData] = useState<File[]>([]);
 
+    const expectedOrigin = process.env.NEXT_PUBLIC_URL_ORIGIN;
+
 
     const getCombinedCode = (): string => {
         const htmlFiles = data?.filter((file) => file.extension === "html");
@@ -51,7 +53,7 @@ const Editor: NextPageWithLayout = () => {
 
         const htmlCode = DOMPurify.sanitize(htmlFiles?.map((file) => file.content).join("\n"));
         const cssCode = DOMPurify.sanitize(cssFiles?.map((file) => file.content).join("\n"));
-        const jsCode = jsFiles?.map((file) => file.content).join("\n");
+        const jsCode = jsFiles?.map((file) => DOMPurify.sanitize(file.content)).join("\n");
 
         return `
             <html>
@@ -95,6 +97,7 @@ const Editor: NextPageWithLayout = () => {
     });
 
     const updateFilesListBDD = async () => {
+        if (window.location.origin !== expectedOrigin) return;
         const newData = data.map((item: any) => {
             const { __typename, id, ...rest } = item;
             return { ...rest, id: +id };
@@ -110,6 +113,7 @@ const Editor: NextPageWithLayout = () => {
     }
 
     const updateIframe = (): void => {
+        if (window.location.origin !== expectedOrigin) return;
         const iframe = iframeRef.current;
         if (iframe) {
             const document = iframe.contentDocument;
@@ -121,18 +125,8 @@ const Editor: NextPageWithLayout = () => {
         }
     };
 
-    const allowedOrigins = [
-        // "http://localhost:3000",
-        "http://localhost:3001",
-        "https://wildcodehub.0923-jaune-4.wns.wilders.dev",
-        "https://dev.wildcodehub.0923-jaune-4.wns.wilders.dev",
-        "https://wildcodehub.alexandre-renard.dev",
-        "https://dev.wildcodehub.alexandre-renard.dev"
-    ];
-
     useEffect(() => {
         const handleConsoleLog = (event: MessageEvent) => {
-            const expectedOrigin = process.env.NEXT_PUBLIC_URL_ORIGIN;
             if (event.origin !== expectedOrigin) return;
             if (event.data.type === 'console-log') {
                 setConsoleLogs((prevLogs) => {
@@ -216,10 +210,12 @@ const Editor: NextPageWithLayout = () => {
     };
 
     const shareModalOpen = async () => {
+        if (window.location.origin !== expectedOrigin) return;
         setIsShareModalOpen(true);
     };
 
     const settingProject = async () => {
+        if (window.location.origin !== expectedOrigin) return;
         setIsSettingsModalOpen(true);
     };
 
