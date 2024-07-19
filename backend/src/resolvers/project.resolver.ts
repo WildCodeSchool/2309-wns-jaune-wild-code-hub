@@ -1,21 +1,15 @@
+import { Arg, Authorized, Int, Mutation, Query, Resolver } from "type-graphql";
 import {
-  Arg,
-  Int,
-  Float,
-  Mutation,
-  Query,
-  Resolver,
-  Authorized,
-} from "type-graphql";
-import {
-  Project,
   CreateProjectInput,
+  Project,
   UpdateProjectInput,
 } from "../entities/project.entity";
-import ProjectsService from "../services/projects.service";
 import { Message, User } from "../entities/user.entity";
-import { File } from "../entities/file.entity";
-
+import {
+  UserAccessProjectOutput,
+  UserRole,
+} from "../entities/userProjectAccesses.entity";
+import ProjectsService from "../services/projects.service";
 
 @Resolver()
 export class ProjectResolver {
@@ -53,7 +47,7 @@ export class ProjectResolver {
     const projects = await new ProjectsService().listByCategory(category);
     return projects;
   }
-  
+
   // @Authorized()
   // @Query(() => [Project])
   // async listProjectsByUser(@Arg("id") id: string) {
@@ -61,14 +55,26 @@ export class ProjectResolver {
   //   return projects;
   // }
 
+  
+  @Authorized()
+  @Query(() => [UserAccessProjectOutput])
+  async listProjectsByUserWithRole(
+    @Arg("id") id: string,
+    @Arg("userRole", () => [String], { nullable: true }) userRole?: UserRole[]
+  ) {
+    const projects = await new ProjectsService().ListByUserWithRole(
+      +id,
+      userRole
+    );
+    return projects;
+  }
+
   @Authorized()
   @Mutation(() => Project)
   async createProject(@Arg("data") data: CreateProjectInput) {
     const project = await new ProjectsService().findByName(data.name);
-    console.log("DEBUG Resolver : ", data)
     if (project) throw new Error("This name of project is already in use!");
     const newProject = await new ProjectsService().create(data);
-    console.log("DEBUG Resolver - New Project: ", newProject); // Ajout du log
 
     return newProject;
   }

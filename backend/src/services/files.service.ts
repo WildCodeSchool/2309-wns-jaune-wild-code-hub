@@ -27,7 +27,7 @@ export default class FilesService {
     return file;
   }
   async create(data: CreateFileInput) {
-    const newFile = await this.db.create({
+    const newFile = this.db.create({
       ...data,
       project: { id: data.project_id },
     });
