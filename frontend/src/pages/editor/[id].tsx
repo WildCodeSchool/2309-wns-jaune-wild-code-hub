@@ -299,15 +299,14 @@ const Editor: NextPageWithLayout = () => {
             <GenericModal
                 isOpen={isShareModalOpen}
                 onClose={() => setIsShareModalOpen(false)}
-                modalHeader="Share Project"
             >
                 <Text color="white">Text</Text>
+
             </GenericModal>
 
             <GenericModal
                 isOpen={isSettingsModalOpen}
                 onClose={() => setIsSettingsModalOpen(false)}
-                modalHeader="Project Settings"
             >
                 <Text color="white">Settings</Text>
             </GenericModal>
