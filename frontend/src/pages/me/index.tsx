@@ -7,7 +7,7 @@ import {
   User,
 } from "@/types/graphql";
 import { useQuery } from "@apollo/client";
-import { Flex, Grid, GridItem, Heading } from "@chakra-ui/react";
+import { Button, Flex, Grid, GridItem, Heading } from "@chakra-ui/react";
 import Cookies from "js-cookie";
 import { PropsWithChildren, useState } from "react";
 import { NextPageWithLayout } from "../_app";
@@ -21,9 +21,11 @@ export const ProfilePageContainer = ({ children }: PropsWithChildren) => {
   return (
     <Flex
       alignItems={"center"}
+      justifyContent={"space-between"}
       width={"100%"}
       direction={"column"}
-      paddingInline={"2rem"}
+      padding={"3rem 5rem 3rem 5rem"}
+      style={{ containerName: "profile-page" }}
     >
       {children}
     </Flex>
@@ -40,7 +42,7 @@ const Workspace: NextPageWithLayout = () => {
     skip: !userId,
     variables: { userId: userId || "" },
   });
-
+  console.log("data", data?.listProjectsByUserWithRole);
   // useEffect(() => {
   //   const id = Cookies.get("id") ?? "";
   //   if (id) {
@@ -48,13 +50,14 @@ const Workspace: NextPageWithLayout = () => {
   // }, [Cookies.get("id")]);
   return (
     <ProfilePageContainer>
-      <Heading marginBottom={"3rem"}>Welcome to your Workspace</Heading>
+      <Heading fontSize={"3cqw"}>Welcome to your Workspace</Heading>
       <Grid
         width="100%"
-        justifyContent={"center"}
         alignItems={"center"}
-        templateColumns="repeat(auto-fit, minmax(200px,1fr))"
+        templateColumns="repeat(auto-fit, minmax(150px,1fr))"
         gap={6}
+        overflow={"auto"}
+        height={"50cqh"}
       >
         {data &&
           data.listProjectsByUserWithRole.map((item, id) => {
@@ -63,24 +66,14 @@ const Workspace: NextPageWithLayout = () => {
                 key={item.project.id + id}
                 display={"flex"}
                 justifyContent={"center"}
-              >
-                <ProjectCard item={item}></ProjectCard>
-              </GridItem>
-            );
-          })}
-        {data &&
-          data.listProjectsByUserWithRole.map((item, id) => {
-            return (
-              <GridItem
-                key={item.project.id + id}
-                display={"flex"}
-                justifyContent={"center"}
+                height={"23cqh"}
               >
                 <ProjectCard item={item}></ProjectCard>
               </GridItem>
             );
           })}
       </Grid>
+      <Button variant={"secondary"}>Create a project</Button>
     </ProfilePageContainer>
   );
 };
