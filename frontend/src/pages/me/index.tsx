@@ -1,48 +1,87 @@
 import ProjectCard from "@/components/ProjectCard";
 import SidebarLayout from "@/components/SidebarLayout";
-import { PROJECTS, PROJECTS_BY_USER } from "@/requetes/queries/user.queries";
+import { PROJECTS__WITH_ROLE_BY_USER } from "@/requetes/queries/project.queries";
 import {
-  ListProjectsByUserQuery,
-  ListProjectsByUserQueryVariables,
-  QueryListProjectsByUserArgs,
+  ListProjectsByUserWithRoleQuery,
+  ListProjectsByUserWithRoleQueryVariables,
   User,
 } from "@/types/graphql";
-import { useLazyQuery, useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import { Flex, Grid, GridItem, Heading } from "@chakra-ui/react";
 import Cookies from "js-cookie";
-import React, { useEffect, useState } from "react";
+import { PropsWithChildren, useState } from "react";
 import { NextPageWithLayout } from "../_app";
 
+// TODO Add search bar
+// TODO Add filter
+// TODO Add "Create Project" Button
+// TODO Add pagination
+
+export const ProfilePageContainer = ({ children }: PropsWithChildren) => {
+  return (
+    <Flex
+      alignItems={"center"}
+      width={"100%"}
+      direction={"column"}
+      paddingInline={"2rem"}
+    >
+      {children}
+    </Flex>
+  );
+};
 const Workspace: NextPageWithLayout = () => {
   const [user, setUser] = useState<User>();
+  const userId = Cookies.get("id");
 
-  // TODO Use cookies to get user id and then load projects
-  const { error, data } = useQuery<
-    ListProjectsByUserQuery,
-    ListProjectsByUserQueryVariables
-  >(PROJECTS_BY_USER, { variables: { listProjectsByUserId: "1" } });
+  const { error, loading, data } = useQuery<
+    ListProjectsByUserWithRoleQuery,
+    ListProjectsByUserWithRoleQueryVariables
+  >(PROJECTS__WITH_ROLE_BY_USER, {
+    skip: !userId,
+    variables: { userId: userId || "" },
+  });
 
-  console.log("projects", data);
   // useEffect(() => {
   //   const id = Cookies.get("id") ?? "";
   //   if (id) {
   //   }
   // }, [Cookies.get("id")]);
   return (
-    <Flex alignItems={"center"} width={"100%"} direction={"column"} pr={"5rem"}>
+    <ProfilePageContainer>
       <Heading marginBottom={"3rem"}>Welcome to your Workspace</Heading>
-      <Grid templateColumns="repeat(3, 1fr)" gap={6}>
+      <Grid
+        width="100%"
+        justifyContent={"center"}
+        alignItems={"center"}
+        templateColumns="repeat(auto-fit, minmax(200px,1fr))"
+        gap={6}
+      >
         {data &&
-          data.listProjectsByUser.map((project, id) => {
-            console.log("project", project);
+          data.listProjectsByUserWithRole.map((item, id) => {
             return (
-              <GridItem key={project.id + id}>
-                <ProjectCard project={project}></ProjectCard>
+              <GridItem
+                key={item.project.id + id}
+                display={"flex"}
+                justifyContent={"center"}
+              >
+                <ProjectCard item={item}></ProjectCard>
+              </GridItem>
+            );
+          })}
+        {data &&
+          data.listProjectsByUserWithRole.map((item, id) => {
+            return (
+              <GridItem
+                key={item.project.id + id}
+                display={"flex"}
+                justifyContent={"center"}
+              >
+                <ProjectCard item={item}></ProjectCard>
               </GridItem>
             );
           })}
       </Grid>
-    </Flex>
+    </ProfilePageContainer>
   );
 };
 Workspace.getLayout = function getLayout(page) {
