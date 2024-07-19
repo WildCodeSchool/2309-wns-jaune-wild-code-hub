@@ -17,12 +17,14 @@ import LogoutButton from "./LogoutButton";
 import { LOGOUT } from "@/requetes/queries/auth.queries";
 import { useLazyQuery } from "@apollo/client";
 import { useParams, usePathname, useRouter } from "next/navigation";
+import useUser from "@/hooks/useUser";
 
 const Navbar = () => {
   const router = useRouter();
   const params = useParams();
   const pathname = usePathname();
-
+  const { email } = useUser();
+  console.log(email);
   console.log("pathname", pathname);
   console.log("params", params);
   return (
@@ -39,23 +41,25 @@ const Navbar = () => {
         {"< Wild Code Hub />"}
       </Button>
       <Searchbar />
-
-      <Box gap={"2rem"}>
-        {pathname != "/auth/login" && (
-          <Button variant="ghost" onClick={() => router.push("/auth/login")}>
-            Log in
-          </Button>
-        )}
-        {pathname != "/auth/register" && (
-          <Button
-            variant="primary"
-            onClick={() => router.push("/auth/register")}
-          >
-            Sign In
-          </Button>
-        )}
-      </Box>
-      <AppearLogoutButton />
+      {!email ? (
+        <Box gap={"2rem"}>
+          {pathname != "/auth/login" && (
+            <Button variant="ghost" onClick={() => router.push("/auth/login")}>
+              Log in
+            </Button>
+          )}
+          {pathname != "/auth/register" && (
+            <Button
+              variant="primary"
+              onClick={() => router.push("/auth/register")}
+            >
+              Sign In
+            </Button>
+          )}
+        </Box>
+      ) : (
+        <LogoutButton />
+      )}
       <AuthPage />
     </Flex>
   );
