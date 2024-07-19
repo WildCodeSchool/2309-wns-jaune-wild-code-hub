@@ -26,16 +26,6 @@ export class ProjectResolver {
     return projects;
   }
 
-  // @Authorized()
-  // @Query(() => Project)
-  // async findProjectById(@Arg("id") id: string) {
-  //   if (isNaN(+id)) throw new Error("Specify a correct id");
-  //   const projectById = await new ProjectsService().findById(+id);
-  //   if (!projectById)
-  //     throw new Error("Please note, the project does not exist");
-  //   return projectById;
-  // }
-
   @Query(() => Project)
   async findProjectById(
     @Arg("id") id: string,
@@ -58,7 +48,7 @@ export class ProjectResolver {
     const checkUserAccessesProject = userAccessesProject.filter((user) => user.user_id === context.user?.id);
 
     if (checkUserAccessesProject.length === 0)
-      throw new Error("You do not have permission to access this project")
+      throw new Error("You do not have permission to access this project!")
 
     return projectById
   }

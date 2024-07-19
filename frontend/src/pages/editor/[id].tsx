@@ -151,6 +151,9 @@ const Editor: NextPageWithLayout = () => {
         } else if (projectById?.error?.message === 'Please note, the project does not exist') {
             showAlert('error', projectById?.error?.message);
             router.push("/");
+        } else if (projectById?.error?.message === 'You do not have permission to access this project!') {
+            showAlert('error', projectById?.error?.message);
+            router.push("/");
         } else if (projectById?.error?.message === 'Failed to fetch') {
             showAlert('error', projectById?.error?.message);
             router.push("/auth/login");
