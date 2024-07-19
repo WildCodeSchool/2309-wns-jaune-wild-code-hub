@@ -47,3 +47,16 @@ export const COUNT_LIKE_PER_PROJECT = gql`
     countLikesPerProject(projectId: $projectId)
   }
 `;
+
+export const LIKED_PROJECTS = gql`
+  query ListLikeProject($userId: String!) {
+    listLikeProject(userId: $userId) {
+      update_at
+      private
+      name
+      id
+      created_at
+      category
+    }
+  }
+`;

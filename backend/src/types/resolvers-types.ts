@@ -239,7 +239,7 @@ export type QueryListFilesByProjectArgs = {
 
 
 export type QueryListLikeProjectArgs = {
-  userId: Scalars['Float']['input'];
+  userId: Scalars['String']['input'];
 };
 
 
@@ -255,6 +255,7 @@ export type QueryListProjectsByUserArgs = {
 
 export type QueryListProjectsByUserWithRoleArgs = {
   id: Scalars['String']['input'];
+  userRole?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
 

@@ -161,8 +161,8 @@ export class UserResolver {
 
   // @Authorized()
   @Query(() => [Project])
-  async listLikeProject(@Arg("userId") userId: number) {
-    const projects = await new UsersService().listLikedProjects(userId);
+  async listLikeProject(@Arg("userId") userId: string) {
+    const projects = await new UsersService().listLikedProjects(+userId);
     if (projects.length === 0) {
       throw new Error("You have no plans !");
     }

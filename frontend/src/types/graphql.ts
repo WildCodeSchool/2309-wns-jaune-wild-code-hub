@@ -240,7 +240,7 @@ export type QueryListFilesByProjectArgs = {
 
 
 export type QueryListLikeProjectArgs = {
-  userId: Scalars['Float']['input'];
+  userId: Scalars['String']['input'];
 };
 
 
@@ -368,6 +368,13 @@ export type CountLikesPerProjectQueryVariables = Exact<{
 
 
 export type CountLikesPerProjectQuery = { __typename?: 'Query', countLikesPerProject: number };
+
+export type ListLikeProjectQueryVariables = Exact<{
+  userId: Scalars['String']['input'];
+}>;
+
+
+export type ListLikeProjectQuery = { __typename?: 'Query', listLikeProject: Array<{ __typename?: 'Project', update_at: any, private: boolean, name: string, id: string, created_at: any, category: string }> };
 
 export type FindUserByIdQueryVariables = Exact<{
   findUserByIdId: Scalars['String']['input'];
@@ -674,6 +681,51 @@ export type CountLikesPerProjectQueryHookResult = ReturnType<typeof useCountLike
 export type CountLikesPerProjectLazyQueryHookResult = ReturnType<typeof useCountLikesPerProjectLazyQuery>;
 export type CountLikesPerProjectSuspenseQueryHookResult = ReturnType<typeof useCountLikesPerProjectSuspenseQuery>;
 export type CountLikesPerProjectQueryResult = Apollo.QueryResult<CountLikesPerProjectQuery, CountLikesPerProjectQueryVariables>;
+export const ListLikeProjectDocument = gql`
+    query ListLikeProject($userId: String!) {
+  listLikeProject(userId: $userId) {
+    update_at
+    private
+    name
+    id
+    created_at
+    category
+  }
+}
+    `;
+
+/**
+ * __useListLikeProjectQuery__
+ *
+ * To run a query within a React component, call `useListLikeProjectQuery` and pass it any options that fit your needs.
+ * When your component renders, `useListLikeProjectQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useListLikeProjectQuery({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *   },
+ * });
+ */
+export function useListLikeProjectQuery(baseOptions: Apollo.QueryHookOptions<ListLikeProjectQuery, ListLikeProjectQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ListLikeProjectQuery, ListLikeProjectQueryVariables>(ListLikeProjectDocument, options);
+      }
+export function useListLikeProjectLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ListLikeProjectQuery, ListLikeProjectQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ListLikeProjectQuery, ListLikeProjectQueryVariables>(ListLikeProjectDocument, options);
+        }
+export function useListLikeProjectSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<ListLikeProjectQuery, ListLikeProjectQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<ListLikeProjectQuery, ListLikeProjectQueryVariables>(ListLikeProjectDocument, options);
+        }
+export type ListLikeProjectQueryHookResult = ReturnType<typeof useListLikeProjectQuery>;
+export type ListLikeProjectLazyQueryHookResult = ReturnType<typeof useListLikeProjectLazyQuery>;
+export type ListLikeProjectSuspenseQueryHookResult = ReturnType<typeof useListLikeProjectSuspenseQuery>;
+export type ListLikeProjectQueryResult = Apollo.QueryResult<ListLikeProjectQuery, ListLikeProjectQueryVariables>;
 export const FindUserByIdDocument = gql`
     query FindUserById($findUserByIdId: String!) {
   findUserById(id: $findUserByIdId) {

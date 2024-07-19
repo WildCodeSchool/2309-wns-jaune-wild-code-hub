@@ -39,7 +39,7 @@ const MeSidebar = () => {
             <CustomLink href="/me">My Workspace</CustomLink>
             <CustomLink href="/me/projects">My projects</CustomLink>
             <CustomLink href="/me/shared">Shared with me</CustomLink>
-            <CustomLink href="/me/favorites">Favorites</CustomLink>
+            <CustomLink href="/me/liked">Liked</CustomLink>
           </Flex>
         </Flex>
       )}

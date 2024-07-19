@@ -1,5 +1,5 @@
 import ProjectCard from "@/components/ProjectCard";
-import SidebarLayout from "@/components/SidebarLayout";
+import SidebarLayout from "@/components/Sidebar/SidebarLayout";
 import { PROJECTS__WITH_ROLE_BY_USER } from "@/requetes/queries/project.queries";
 import {
   ListProjectsByUserWithRoleQuery,
@@ -7,7 +7,14 @@ import {
   User,
 } from "@/types/graphql";
 import { useQuery } from "@apollo/client";
-import { Button, Flex, Grid, GridItem, Heading } from "@chakra-ui/react";
+import {
+  Button,
+  Flex,
+  Grid,
+  GridItem,
+  Heading,
+  Spinner,
+} from "@chakra-ui/react";
 import Cookies from "js-cookie";
 import { PropsWithChildren, useState } from "react";
 import { NextPageWithLayout } from "../_app";
@@ -31,6 +38,35 @@ export const ProfilePageContainer = ({ children }: PropsWithChildren) => {
     </Flex>
   );
 };
+
+export const CustomGrid = ({ data }: any) => {
+  console.log("data", data);
+  return (
+    <Grid
+      width="100%"
+      alignItems={"center"}
+      templateColumns="repeat(auto-fit, minmax(150px,1fr))"
+      gap={6}
+      overflow={"auto"}
+      height={"50cqh"}
+    >
+      {data.length > 0 &&
+        data.map((item, id) => {
+          return (
+            <GridItem
+              key={item.project.id + id}
+              display={"flex"}
+              justifyContent={"center"}
+              height={"23cqh"}
+            >
+              <ProjectCard item={item}></ProjectCard>
+            </GridItem>
+          );
+        })}
+    </Grid>
+  );
+};
+
 const Workspace: NextPageWithLayout = () => {
   const [user, setUser] = useState<User>();
   const userId = Cookies.get("id");
@@ -42,7 +78,7 @@ const Workspace: NextPageWithLayout = () => {
     skip: !userId,
     variables: { userId: userId || "" },
   });
-  console.log("data", data?.listProjectsByUserWithRole);
+
   // useEffect(() => {
   //   const id = Cookies.get("id") ?? "";
   //   if (id) {
@@ -51,28 +87,22 @@ const Workspace: NextPageWithLayout = () => {
   return (
     <ProfilePageContainer>
       <Heading fontSize={"3cqw"}>Welcome to your Workspace</Heading>
-      <Grid
-        width="100%"
-        alignItems={"center"}
-        templateColumns="repeat(auto-fit, minmax(150px,1fr))"
-        gap={6}
-        overflow={"auto"}
-        height={"50cqh"}
-      >
-        {data &&
-          data.listProjectsByUserWithRole.map((item, id) => {
-            return (
-              <GridItem
-                key={item.project.id + id}
-                display={"flex"}
-                justifyContent={"center"}
-                height={"23cqh"}
-              >
-                <ProjectCard item={item}></ProjectCard>
-              </GridItem>
-            );
-          })}
-      </Grid>
+      {loading ? (
+        <Spinner
+          thickness="5px"
+          speed="0.65s"
+          emptyColor="gray.200"
+          color="accent"
+          size="xl"
+        />
+      ) : error ? (
+        <>An error occured</>
+      ) : data?.listProjectsByUserWithRole.length ? (
+        <CustomGrid data={data} />
+      ) : (
+        <>There is no projects in your workspace !</>
+      )}
+
       <Button variant={"secondary"}>Create a project</Button>
     </ProfilePageContainer>
   );

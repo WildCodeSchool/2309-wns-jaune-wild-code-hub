@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { NextPageWithLayout } from "../_app";
-import SidebarLayout from "@/components/SidebarLayout";
+import SidebarLayout from "@/components/Sidebar/SidebarLayout";
 import {
   Box,
   Button,

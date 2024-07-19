@@ -1,4 +1,4 @@
-import SidebarLayout from "@/components/SidebarLayout";
+import SidebarLayout from "@/components/Sidebar/SidebarLayout";
 import React, { useState } from "react";
 import { NextPageWithLayout } from "../_app";
 import {

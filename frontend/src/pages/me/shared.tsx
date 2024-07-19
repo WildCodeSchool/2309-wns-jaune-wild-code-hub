@@ -1,4 +1,4 @@
-import SidebarLayout from "@/components/SidebarLayout";
+import SidebarLayout from "@/components/Sidebar/SidebarLayout";
 import { PROJECTS__WITH_ROLE_BY_USER } from "@/requetes/queries/project.queries";
 import {
   ListProjectsByUserWithRoleQueryResult,
@@ -9,6 +9,8 @@ import { useQuery } from "@apollo/client";
 import Cookies from "js-cookie";
 import { useState } from "react";
 import { NextPageWithLayout } from "../_app";
+import { CustomGrid, ProfilePageContainer } from ".";
+import { Button, Heading } from "@chakra-ui/react";
 
 const SharedWithMe: NextPageWithLayout = () => {
   const [user, setUser] = useState<User>();
@@ -22,7 +24,13 @@ const SharedWithMe: NextPageWithLayout = () => {
     variables: { userId: userId || "", userRole: ["EDITOR", "VIEWER"] },
   });
   console.log("data", data);
-  return <div>Shared With Me</div>;
+  return (
+    <ProfilePageContainer>
+      <Heading>Shared Projects</Heading>
+      <CustomGrid data={data}></CustomGrid>
+      <Button variant={"secondary"}>Create a project</Button>
+    </ProfilePageContainer>
+  );
 };
 SharedWithMe.getLayout = function getLayout(page) {
   return <SidebarLayout>{page}</SidebarLayout>;
