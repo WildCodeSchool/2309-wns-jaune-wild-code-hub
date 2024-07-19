@@ -12,15 +12,16 @@ import {
   CardBody,
   Text,
   Divider,
-  Box,
   AbsoluteCenter,
   Button,
+  BoxProps,
+  Box,
 } from "@chakra-ui/react";
 import Image from "next/image";
 import Link from "next/link";
 import components from "@/styles/theme/components";
 
-const Footer = () => {
+const Footer1 = () => {
   return (
     <Container bg={"transparent"}>
       <Card
@@ -34,7 +35,7 @@ const Footer = () => {
         p={"0"}
       >
         <CardBody w={"20"}>
-          <Text fontSize={24} color={"text"}>
+          <Text fontSize={24} color={"text"} p={"10"} m={"10"}>
             Wild Code Hub
           </Text>
           <Text fontSize={16} color={"textSecondary"}>
@@ -129,4 +130,4 @@ const Footer = () => {
   );
 };
 
-export default Footer;
+export default Footer1;

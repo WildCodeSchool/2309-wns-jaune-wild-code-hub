@@ -1,7 +1,8 @@
 import HomeCard from "@/components/HomeCard";
-import Footer from "@/components/Footer";
+import Footer from "@/components/Footer1";
 import VideoPlayer from "@/components/VideoPlayer";
 import { Box, Button, Flex, Heading, Stack, Text } from "@chakra-ui/react";
+import React from "react";
 
 const cardsInfos = [
   {
@@ -167,7 +168,7 @@ export default function Home() {
             </Flex>
           </Flex>
 
-          <Flex bg={"background2"} w={"100%"} h={"10rem"}>
+          <Flex bg={"background2"} w={"100%"}>
             <Footer />
           </Flex>
         </Flex>
