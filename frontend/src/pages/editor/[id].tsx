@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Box, Flex, Text, Spacer, Button } from "@chakra-ui/react";
+import { Box, Flex, Text, Spacer, Button, Input } from "@chakra-ui/react";
 import FileEditor from "../../components/Editor/FileEditor";
 import FileInfo from "../../components/Editor/FileInfo";
 import BashOutput from "../../components/Editor/BashOutput";
@@ -17,6 +17,9 @@ import {
     UpdateMultipleFilesMutationVariables
   } from "@/types/graphql";
 import CustomToast from '@/components/ToastCustom/CustomToast';
+import { SettingsIcon } from "@chakra-ui/icons";
+import GenericModal from "@/components/GenericModal";
+
 
 interface File {
     id: number;
@@ -34,6 +37,8 @@ const Editor: NextPageWithLayout = () => {
     const [file, setFile] = useState<File | null>(null);
     const [openFiles, setOpenFiles] = useState<File[]>([]);
     const [consoleLogs, setConsoleLogs] = useState<any[]>([]);
+    const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+    const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
     const iframeRef = useRef<HTMLIFrameElement>(null);
     const { showAlert } = CustomToast();
 
@@ -217,6 +222,14 @@ const Editor: NextPageWithLayout = () => {
         });
     };
 
+    const shareModalOpen = async () => {
+        setIsShareModalOpen(true);
+    };
+
+    const settingProject = async () => {
+        setIsSettingsModalOpen(true);
+    };
+
     return (
         <Box
             display="flex"
@@ -268,13 +281,37 @@ const Editor: NextPageWithLayout = () => {
                 </Box>
             </Box>
             <Box width="40%">
-                <Text bg="background2" width="3rem" pl="5px" pb="0.2rem">View</Text>
+                <Flex>
+                    <Text bg="background2" width="3rem" pl="5px" pb="0.2rem">View</Text>
+                    <Spacer />
+                    <Button type="button" variant="secondary" onClick={shareModalOpen}>
+                        Share
+                    </Button>
+                    <SettingsIcon boxSize={9} cursor="pointer" onClick={settingProject}/>
+                </Flex>
                 <iframe
                     ref={iframeRef}
                     title="Preview"
                     style={{ width: "100%", height: "100%", border: "1px solid black", backgroundColor: "#151515" }}
                 ></iframe>
             </Box>
+
+            <GenericModal
+                isOpen={isShareModalOpen}
+                onClose={() => setIsShareModalOpen(false)}
+                modalHeader="Share Project"
+            >
+                <Text color="white">Text</Text>
+            </GenericModal>
+
+            <GenericModal
+                isOpen={isSettingsModalOpen}
+                onClose={() => setIsSettingsModalOpen(false)}
+                modalHeader="Project Settings"
+            >
+                <Text color="white">Settings</Text>
+            </GenericModal>
+
         </Box>
     );
 };
