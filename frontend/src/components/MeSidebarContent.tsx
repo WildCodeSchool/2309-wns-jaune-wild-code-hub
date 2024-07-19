@@ -1,11 +1,14 @@
 import { Avatar, Flex, Link, PropsOf, SlideFade, Text } from "@chakra-ui/react";
-import React, { PropsWithChildren, useState } from "react";
+import React, { PropsWithChildren, useEffect, useState } from "react";
+import Cookies from "js-cookie";
 import NextLink from "next/link";
 import { usePathname } from "next/navigation";
+
 type LinkProps = PropsWithChildren & PropsOf<typeof Link>;
 
 const CustomLink = ({ children, ...props }: LinkProps) => {
   const pathname = usePathname();
+
   return (
     <Link
       as={NextLink}
@@ -19,22 +22,28 @@ const CustomLink = ({ children, ...props }: LinkProps) => {
   );
 };
 const MeSidebar = () => {
-  const [user, setUser] = useState({ pseudo: "test" });
-  // TODO Query User Information
+  const [user, setUser] = useState<Record<string, string> | null>(null);
+  const pseudo = Cookies.get("pseudo");
+  useEffect(() => {
+    pseudo && setUser({ pseudo });
+  }, [pseudo]);
   return (
-    <Flex id="top-nav" pt={"4rem"} direction={"column"} gap={12}>
-      <Flex id="user" gap={4} alignItems={"center"}>
-        <Avatar name={user.pseudo} />
-        <Text>{user.pseudo}</Text>
-      </Flex>
-      <Flex id="nav" direction={"column"} gap={4}>
-        <CustomLink href="/me">My Workspace</CustomLink>
-        <CustomLink href="/me/profile">My Profile</CustomLink>
-        <CustomLink href="/me/projects">My projects</CustomLink>
-        <CustomLink href="/me/shared">Shared with me</CustomLink>
-        <CustomLink href="/me/favorites">Favorites</CustomLink>
-      </Flex>
-    </Flex>
+    <>
+      {user && (
+        <Flex id="top-nav" pt={"4rem"} direction={"column"} gap={12}>
+          <Flex id="user" gap={4} alignItems={"center"}>
+            <Avatar name={user.pseudo} />
+            <Text>{user.pseudo}</Text>
+          </Flex>
+          <Flex id="nav" direction={"column"} gap={4}>
+            <CustomLink href="/me">My Workspace</CustomLink>
+            <CustomLink href="/me/projects">My projects</CustomLink>
+            <CustomLink href="/me/shared">Shared with me</CustomLink>
+            <CustomLink href="/me/favorites">Favorites</CustomLink>
+          </Flex>
+        </Flex>
+      )}
+    </>
   );
 };
 
