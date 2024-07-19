@@ -11,10 +11,8 @@ import { File, CreateFileInput } from "../entities/file.entity";
 import FilesService from "./files.service";
 export default class ProjectsService {
   db: Repository<Project>;
-  fileDb: Repository<File>;
   constructor() {
     this.db = datasource.getRepository(Project);
-    this.fileDb = datasource.getRepository(File);
   }
 
   async list() {
@@ -56,43 +54,16 @@ export default class ProjectsService {
     return project;
   }
 
-  // async listByUserId(id: number) {
-  //   const projects = await this.db.find({
-  //     where: {
-  //       user: { id },
-  //     },
-  //   });
-  //   return projects;
-  // }
 
   async create(data: CreateProjectInput) {
 
     const newProject = this.db.create(data);
     const savedProject = await this.db.save(newProject);
 
-    const files = await this.createDefaultFiles(savedProject.id);
+    const files = await new FilesService().createDefaultFiles(savedProject.id);
     savedProject.files = files;
 
     return savedProject;
-  }
-
-  async createDefaultFiles(projectId: number) {
-    const defaultFiles = [
-      { name: "index", type: "file", language: "html", extension: "html", content: "", project: {id : projectId } },
-      { name: "style", type: "file", language: "css", extension: "css", content: "", project: {id : projectId } },
-      { name: "index", type: "file", language: "javascript", extension: "js", content: "", project: {id : projectId } },
-    ];
-
-    const files: File[] = [];
-
-    for (const fileData of defaultFiles) {
-      const savedFile = await new FilesService().create({
-        ...fileData,
-        project_id : projectId
-      })
-      files.push(savedFile);
-    }
-    return files;
   }
 
   async update(id: number, data: Omit<UpdateProjectInput, "id">) {

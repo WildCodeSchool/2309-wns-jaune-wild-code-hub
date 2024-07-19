@@ -9,7 +9,6 @@ import {
   CreateUserProjectAccessesInput,
   UpdateUserProjectAccessesInput
 } from "../entities/userProjectAccesses.entity";
-import { access } from "fs";
 
 export default class UsersService {
   db: Repository<User>;
