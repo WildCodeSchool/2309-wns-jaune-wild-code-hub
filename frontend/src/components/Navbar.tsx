@@ -9,7 +9,6 @@ import BurgerMenu from "./BurgerMenu";
 const Navbar = () => {
   const router = useRouter();
   const pathname = usePathname();
-
   const [user, setUser] = useState<string | undefined>(undefined);
   const pseudo = Cookies.get("pseudo");
   useEffect(() => {
@@ -63,6 +62,7 @@ const Navbar = () => {
       )}
     </Flex>
     ) : (
+
       <Flex
         justify={"space-between"}
         position={"fixed"}
