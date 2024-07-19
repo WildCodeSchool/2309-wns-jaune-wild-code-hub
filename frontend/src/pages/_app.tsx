@@ -1,10 +1,16 @@
 import theme from "../styles/theme/index";
 
 import { ChakraProvider } from "@chakra-ui/react";
-import { ApolloClient, InMemoryCache, ApolloProvider, HttpLink } from "@apollo/client";
+import {
+  ApolloClient,
+  InMemoryCache,
+  ApolloProvider,
+  HttpLink,
+} from "@apollo/client";
 import type { AppProps } from "next/app";
 import Navbar from "@/components/Navbar";
 import { API_URL } from "@/config";
+import AuthProvider from "@/contextes/AuthContext";
 
 export default function App({ Component, pageProps }: AppProps) {
   const client = new ApolloClient({
@@ -26,10 +32,12 @@ export default function App({ Component, pageProps }: AppProps) {
 
   return (
     <ApolloProvider client={client}>
-      <ChakraProvider theme={theme}>
-        <Navbar></Navbar>
-        <Component {...pageProps} />
-      </ChakraProvider>
+      <AuthProvider>
+        <ChakraProvider theme={theme}>
+          <Navbar></Navbar>
+          <Component {...pageProps} />
+        </ChakraProvider>
+      </AuthProvider>
     </ApolloProvider>
   );
 }
