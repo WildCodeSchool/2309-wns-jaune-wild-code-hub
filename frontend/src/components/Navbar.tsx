@@ -9,9 +9,9 @@ import {
 } from "@chakra-ui/react";
 import React from "react";
 import Searchbar from "./Searchbar";
-import Logout from "./LogoutButton";
-//import AppearLoginButton from "./AppearLogin";
+//import Logout from "./LogoutButton";
 import AppearLogoutButton from "./AppearLogout";
+import AuthPage from "./AppearLogin";
 import { FiLogOut } from "react-icons/fi";
 import LogoutButton from "./LogoutButton";
 import { LOGOUT } from "@/requetes/queries/auth.queries";
@@ -56,6 +56,7 @@ const Navbar = () => {
         )}
       </Box>
       <AppearLogoutButton />
+      <AuthPage />
     </Flex>
   );
 };
