@@ -1,10 +1,11 @@
-import global from "./global"
+import global from "./global";
 
 const styles = {
   global,
   fonts: {
     main: "Source Sans 3,sans-serif",
   },
+
   // Can be defined later
   // Keep the comments for now to remember the syntax
   // fontSizes: {

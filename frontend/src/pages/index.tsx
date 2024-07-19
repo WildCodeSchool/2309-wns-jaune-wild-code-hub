@@ -167,17 +167,17 @@ export default function Home() {
             </Flex>
           </Flex>
 
-          <Flex bg={"background2"} w={"100%"} h={"10rem"}></Flex>
+          <Flex bg={"background2"} w={"100%"} h={"10rem"}>
+            <Footer />
+          </Flex>
         </Flex>
       </Flex>
-      <Flex
+      {/* <Flex
         w={"100%"}
         direction={"column"}
         bgColor={"background"}
         fontSize={"30px"}
-      >
-        <Footer />
-      </Flex>
+      ></Flex> */}
     </>
   );
 }
