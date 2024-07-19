@@ -50,6 +50,11 @@ export type CreateUserProjectAccessesInput = {
   user_id: Scalars['Float']['input'];
 };
 
+export type DeleteUserProjectAccessesInput = {
+  project_id: Scalars['Float']['input'];
+  user_id: Scalars['Float']['input'];
+};
+
 export type File = {
   __typename?: 'File';
   content: Scalars['String']['output'];
@@ -115,8 +120,7 @@ export type MutationCreateProjectArgs = {
 
 
 export type MutationDeleteAccessProjectArgs = {
-  projectId: Scalars['Float']['input'];
-  userId: Scalars['Float']['input'];
+  data: DeleteUserProjectAccessesInput;
 };
 
 
@@ -190,7 +194,6 @@ export type Query = {
   listLikeProject: Array<Project>;
   listProjects: Array<Project>;
   listProjectsByCategory: Array<Project>;
-  listProjectsByUserWithRole: Array<UserAccessProjectOutput>;
   listPublicProjects: Array<Project>;
   listUsers: Array<User>;
   listUsersByRole: Array<User>;
@@ -255,11 +258,6 @@ export type QueryListProjectsByCategoryArgs = {
 };
 
 
-export type QueryListProjectsByUserWithRoleArgs = {
-  id: Scalars['String']['input'];
-};
-
-
 export type QueryListUsersByRoleArgs = {
   role: Scalars['String']['input'];
 };
@@ -316,12 +314,6 @@ export type User = {
   role: Scalars['String']['output'];
   run_counter: Scalars['Float']['output'];
   update_at: Scalars['DateTimeISO']['output'];
-};
-
-export type UserAccessProjectOutput = {
-  __typename?: 'UserAccessProjectOutput';
-  project?: Maybe<Project>;
-  role: Scalars['String']['output'];
 };
 
 export type RegisterMutationVariables = Exact<{
