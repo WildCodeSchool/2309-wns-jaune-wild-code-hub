@@ -184,6 +184,7 @@ export type Query = {
   listProjects: Array<Project>;
   listProjectsByCategory: Array<Project>;
   listProjectsByUser: Array<Project>;
+  listProjectsByUserWithRole: Array<UserAccessProjectOutput>;
   listPublicProjects: Array<Project>;
   listUsers: Array<User>;
   listUsersByRole: Array<User>;
@@ -253,6 +254,12 @@ export type QueryListProjectsByUserArgs = {
 };
 
 
+export type QueryListProjectsByUserWithRoleArgs = {
+  id: Scalars['String']['input'];
+  userRole?: InputMaybe<Array<Scalars['String']['input']>>;
+};
+
+
 export type QueryListUsersByRoleArgs = {
   role: Scalars['String']['input'];
 };
@@ -310,6 +317,12 @@ export type User = {
   update_at: Scalars['DateTimeISO']['output'];
 };
 
+export type UserAccessProjectOutput = {
+  __typename?: 'UserAccessProjectOutput';
+  project: Project;
+  role: Scalars['String']['output'];
+};
+
 export type RegisterMutationVariables = Exact<{
   data: CreateUserInput;
 }>;
@@ -340,6 +353,28 @@ export type ListProjectsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type ListProjectsQuery = { __typename?: 'Query', listProjects: Array<{ __typename?: 'Project', update_at: any, private: boolean, name: string, id: string, created_at: any, category: string }> };
+
+export type ListProjectsByUserWithRoleQueryVariables = Exact<{
+  userId: Scalars['String']['input'];
+  userRole?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
+}>;
+
+
+export type ListProjectsByUserWithRoleQuery = { __typename?: 'Query', listProjectsByUserWithRole: Array<{ __typename?: 'UserAccessProjectOutput', role: string, project: { __typename?: 'Project', update_at: any, private: boolean, name: string, id: string, created_at: any, category: string } }> };
+
+export type CountLikesPerProjectQueryVariables = Exact<{
+  projectId: Scalars['Float']['input'];
+}>;
+
+
+export type CountLikesPerProjectQuery = { __typename?: 'Query', countLikesPerProject: number };
+
+export type FindUserByIdQueryVariables = Exact<{
+  findUserByIdId: Scalars['String']['input'];
+}>;
+
+
+export type FindUserByIdQuery = { __typename?: 'Query', findUserById: { __typename?: 'User', created_at: any, email: string, firstname: string, lastname: string, pseudo: string, run_counter: number } };
 
 
 export const RegisterDocument = gql`
@@ -552,3 +587,135 @@ export type ListProjectsQueryHookResult = ReturnType<typeof useListProjectsQuery
 export type ListProjectsLazyQueryHookResult = ReturnType<typeof useListProjectsLazyQuery>;
 export type ListProjectsSuspenseQueryHookResult = ReturnType<typeof useListProjectsSuspenseQuery>;
 export type ListProjectsQueryResult = Apollo.QueryResult<ListProjectsQuery, ListProjectsQueryVariables>;
+export const ListProjectsByUserWithRoleDocument = gql`
+    query ListProjectsByUserWithRole($userId: String!, $userRole: [String!]) {
+  listProjectsByUserWithRole(id: $userId, userRole: $userRole) {
+    project {
+      update_at
+      private
+      name
+      id
+      created_at
+      category
+    }
+    role
+  }
+}
+    `;
+
+/**
+ * __useListProjectsByUserWithRoleQuery__
+ *
+ * To run a query within a React component, call `useListProjectsByUserWithRoleQuery` and pass it any options that fit your needs.
+ * When your component renders, `useListProjectsByUserWithRoleQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useListProjectsByUserWithRoleQuery({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *      userRole: // value for 'userRole'
+ *   },
+ * });
+ */
+export function useListProjectsByUserWithRoleQuery(baseOptions: Apollo.QueryHookOptions<ListProjectsByUserWithRoleQuery, ListProjectsByUserWithRoleQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ListProjectsByUserWithRoleQuery, ListProjectsByUserWithRoleQueryVariables>(ListProjectsByUserWithRoleDocument, options);
+      }
+export function useListProjectsByUserWithRoleLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ListProjectsByUserWithRoleQuery, ListProjectsByUserWithRoleQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ListProjectsByUserWithRoleQuery, ListProjectsByUserWithRoleQueryVariables>(ListProjectsByUserWithRoleDocument, options);
+        }
+export function useListProjectsByUserWithRoleSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<ListProjectsByUserWithRoleQuery, ListProjectsByUserWithRoleQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<ListProjectsByUserWithRoleQuery, ListProjectsByUserWithRoleQueryVariables>(ListProjectsByUserWithRoleDocument, options);
+        }
+export type ListProjectsByUserWithRoleQueryHookResult = ReturnType<typeof useListProjectsByUserWithRoleQuery>;
+export type ListProjectsByUserWithRoleLazyQueryHookResult = ReturnType<typeof useListProjectsByUserWithRoleLazyQuery>;
+export type ListProjectsByUserWithRoleSuspenseQueryHookResult = ReturnType<typeof useListProjectsByUserWithRoleSuspenseQuery>;
+export type ListProjectsByUserWithRoleQueryResult = Apollo.QueryResult<ListProjectsByUserWithRoleQuery, ListProjectsByUserWithRoleQueryVariables>;
+export const CountLikesPerProjectDocument = gql`
+    query CountLikesPerProject($projectId: Float!) {
+  countLikesPerProject(projectId: $projectId)
+}
+    `;
+
+/**
+ * __useCountLikesPerProjectQuery__
+ *
+ * To run a query within a React component, call `useCountLikesPerProjectQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCountLikesPerProjectQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCountLikesPerProjectQuery({
+ *   variables: {
+ *      projectId: // value for 'projectId'
+ *   },
+ * });
+ */
+export function useCountLikesPerProjectQuery(baseOptions: Apollo.QueryHookOptions<CountLikesPerProjectQuery, CountLikesPerProjectQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<CountLikesPerProjectQuery, CountLikesPerProjectQueryVariables>(CountLikesPerProjectDocument, options);
+      }
+export function useCountLikesPerProjectLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CountLikesPerProjectQuery, CountLikesPerProjectQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<CountLikesPerProjectQuery, CountLikesPerProjectQueryVariables>(CountLikesPerProjectDocument, options);
+        }
+export function useCountLikesPerProjectSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<CountLikesPerProjectQuery, CountLikesPerProjectQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<CountLikesPerProjectQuery, CountLikesPerProjectQueryVariables>(CountLikesPerProjectDocument, options);
+        }
+export type CountLikesPerProjectQueryHookResult = ReturnType<typeof useCountLikesPerProjectQuery>;
+export type CountLikesPerProjectLazyQueryHookResult = ReturnType<typeof useCountLikesPerProjectLazyQuery>;
+export type CountLikesPerProjectSuspenseQueryHookResult = ReturnType<typeof useCountLikesPerProjectSuspenseQuery>;
+export type CountLikesPerProjectQueryResult = Apollo.QueryResult<CountLikesPerProjectQuery, CountLikesPerProjectQueryVariables>;
+export const FindUserByIdDocument = gql`
+    query FindUserById($findUserByIdId: String!) {
+  findUserById(id: $findUserByIdId) {
+    created_at
+    email
+    firstname
+    lastname
+    pseudo
+    run_counter
+  }
+}
+    `;
+
+/**
+ * __useFindUserByIdQuery__
+ *
+ * To run a query within a React component, call `useFindUserByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFindUserByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFindUserByIdQuery({
+ *   variables: {
+ *      findUserByIdId: // value for 'findUserByIdId'
+ *   },
+ * });
+ */
+export function useFindUserByIdQuery(baseOptions: Apollo.QueryHookOptions<FindUserByIdQuery, FindUserByIdQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<FindUserByIdQuery, FindUserByIdQueryVariables>(FindUserByIdDocument, options);
+      }
+export function useFindUserByIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FindUserByIdQuery, FindUserByIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<FindUserByIdQuery, FindUserByIdQueryVariables>(FindUserByIdDocument, options);
+        }
+export function useFindUserByIdSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<FindUserByIdQuery, FindUserByIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<FindUserByIdQuery, FindUserByIdQueryVariables>(FindUserByIdDocument, options);
+        }
+export type FindUserByIdQueryHookResult = ReturnType<typeof useFindUserByIdQuery>;
+export type FindUserByIdLazyQueryHookResult = ReturnType<typeof useFindUserByIdLazyQuery>;
+export type FindUserByIdSuspenseQueryHookResult = ReturnType<typeof useFindUserByIdSuspenseQuery>;
+export type FindUserByIdQueryResult = Apollo.QueryResult<FindUserByIdQuery, FindUserByIdQueryVariables>;

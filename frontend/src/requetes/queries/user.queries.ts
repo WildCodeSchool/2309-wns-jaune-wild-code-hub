@@ -1,27 +1,16 @@
 import { gql } from "@apollo/client";
 
-export const PROJECTS_BY_USER = gql`
-  query ListProjectsByUser($listProjectsByUserId: String!) {
-    listProjectsByUser(id: $listProjectsByUserId) {
-      category
-      created_at
-      id
-      name
-      private
-      update_at
-    }
-  }
-`;
 
-export const PROJECTS = gql`
-  query ListProjects {
-    listProjects {
-      update_at
-      private
-      name
-      id
+
+export const FIND_USER_BY_ID = gql`
+  query FindUserById($findUserByIdId: String!) {
+    findUserById(id: $findUserByIdId) {
       created_at
-      category
+      email
+      firstname
+      lastname
+      pseudo
+      run_counter
     }
   }
 `;
