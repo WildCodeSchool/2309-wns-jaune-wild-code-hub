@@ -81,7 +81,6 @@ const Editor: NextPageWithLayout = () => {
                     showAlert('success', `${message.message}`);
                 else 
                     showAlert('error', `${message.message}`);
-                
             })
         },
         onError(error) {

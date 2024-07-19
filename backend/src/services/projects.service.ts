@@ -23,7 +23,7 @@ export default class ProjectsService {
   async findById(id: number) {
     const project = await this.db.findOne({
       where: { id },
-      relations: ["files"],
+      relations: ["files", "usersProjectsAccesses"],
     });
     return project;
   }

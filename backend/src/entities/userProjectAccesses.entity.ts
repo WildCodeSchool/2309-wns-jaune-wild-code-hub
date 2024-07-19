@@ -53,6 +53,15 @@ export class CreateUserProjectAccessesInput {
 }
 
 @InputType()
+export class DeleteUserProjectAccessesInput {
+  @Field()
+  user_id: number;
+
+  @Field()
+  project_id: number;
+}
+
+@InputType()
 export class UpdateUserProjectAccessesInput {
   @Field()
   user_id: number;

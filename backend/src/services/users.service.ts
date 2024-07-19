@@ -157,46 +157,4 @@ export default class UsersService {
 
     return user.likedProjects;
   }
-
-  async findByAccessesProject (userId: number, projectId: number) {
-    const userProjectAccessesRepository = datasource.getRepository(UsersProjectsAccesses);
-    const users = await userProjectAccessesRepository.find({
-      where: { user_id : userId },
-    });
-
-    if (users.length === 0) {
-      throw new Error("User not found!");
-    }
-
-    const filterUserAndProject = users.find(user => user.project_id === projectId);
-
-    return filterUserAndProject;
-  }
-
-  async findUsersByAccessesProject (userId: number) {
-    const userProjectAccessesRepository = datasource.getRepository(UsersProjectsAccesses);
-    const userAccesses = await userProjectAccessesRepository.find({
-      where: { user_id: userId },
-      relations: ['project.usersProjectsAccesses', 'project.files']
-    });
-
-    const projects = userAccesses.map(access => {access.project, access.role});
-    console.log(userAccesses)
-    return projects;
-  }
-
-  async createAccessesProject (data : CreateUserProjectAccessesInput) {
-    const userProjectAccessesRepository = datasource.getRepository(UsersProjectsAccesses);
-    const newUserAccessesProject = userProjectAccessesRepository.create({ ...data });
-    return await userProjectAccessesRepository.save(newUserAccessesProject);
-  }
-
-  async deleteAccessesProject (userId: number, projectId: number) {
-    const userProjectAccessesRepository = datasource.getRepository(UsersProjectsAccesses);
-    const userToDeleteAccessesProject = await this.findByAccessesProject(userId, projectId);
-    if (!userToDeleteAccessesProject) {
-      throw new Error("This user does not have access to this projec!");
-    }
-    return await userProjectAccessesRepository.remove(userToDeleteAccessesProject);
-  }
 }
