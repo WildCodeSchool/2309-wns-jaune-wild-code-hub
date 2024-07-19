@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Box, Flex, Text, Spacer, Button, Input } from "@chakra-ui/react";
+import { Box, Flex, Text, Spacer, Button } from "@chakra-ui/react";
 import FileEditor from "../../components/Editor/FileEditor";
 import FileInfo from "../../components/Editor/FileInfo";
 import BashOutput from "../../components/Editor/BashOutput";
@@ -15,11 +15,11 @@ import { UPDATE_MULTIPLE_FILES } from "@/requetes/mutations/file.mutations";
 import {
     UpdateMultipleFilesMutation,
     UpdateMultipleFilesMutationVariables
-  } from "@/types/graphql";
+} from "@/types/graphql";
 import CustomToast from '@/components/ToastCustom/CustomToast';
 import { SettingsIcon } from "@chakra-ui/icons";
 import GenericModal from "@/components/GenericModal";
-
+import DOMPurify from 'dompurify';
 
 interface File {
     id: number;
@@ -30,9 +30,8 @@ interface File {
 }
 
 const Editor: NextPageWithLayout = () => {
-    
     const router = useRouter();
-    const projectById = useQuery(PROJECT_BY_ID, { variables : { findProjectByIdId : router.query.id }});
+    const projectById = useQuery(PROJECT_BY_ID, { variables: { findProjectByIdId: router.query.id } });
     const [code, setCode] = useState<string>("");
     const [file, setFile] = useState<File | null>(null);
     const [openFiles, setOpenFiles] = useState<File[]>([]);
@@ -44,47 +43,48 @@ const Editor: NextPageWithLayout = () => {
 
     const [data, setData] = useState<File[]>([]);
 
+
     const getCombinedCode = (): string => {
         const htmlFiles = data?.filter((file) => file.extension === "html");
         const cssFiles = data?.filter((file) => file.extension === "css");
         const jsFiles = data?.filter((file) => file.extension === "js");
 
-        const htmlCode = htmlFiles?.map((file) => file.content).join("\n");
-        const cssCode = cssFiles?.map((file) => file.content).join("\n");
+        const htmlCode = DOMPurify.sanitize(htmlFiles?.map((file) => file.content).join("\n"));
+        const cssCode = DOMPurify.sanitize(cssFiles?.map((file) => file.content).join("\n"));
         const jsCode = jsFiles?.map((file) => file.content).join("\n");
 
         return `
-          <html>
-            <head>
-              <style>${cssCode}</style>
-            </head>
-            <body>
-              ${htmlCode}
-              <script>
-                (function() {
-                  const originalLog = console.log;
-                  console.log = function(...args) {
-                    const logMessage = args.map(arg => typeof arg === 'string' ? arg : JSON.stringify(arg)).join(' ');
-                    originalLog.apply(console, args);
-                    window.parent.postMessage({ type: 'console-log', message: logMessage, rawArgs: args }, '*');
-                  };
-                  ${jsCode}
-                })();
-              </script>
-            </body>
-          </html>
+            <html>
+                <head>
+                    <style>${cssCode}</style>
+                </head>
+                <body>
+                    ${htmlCode}
+                    <script>
+                        (function() {
+                            const originalLog = console.log;
+                            console.log = function(...args) {
+                                const logMessage = args.map(arg => typeof arg === 'string' ? arg : JSON.stringify(arg)).join(' ');
+                                originalLog.apply(console, args);
+                                window.parent.postMessage({ type: 'console-log', message: logMessage, rawArgs: args }, '*');
+                            };
+                            ${jsCode}
+                        })();
+                    </script>
+                </body>
+            </html>
         `;
     };
-    
+
     const [updateMultipleFiles] = useMutation<
         UpdateMultipleFilesMutation,
         UpdateMultipleFilesMutationVariables
     >(UPDATE_MULTIPLE_FILES, {
         onCompleted: (data) => {
             data.updateMultipleFiles.forEach((message) => {
-                if (message.success) 
+                if (message.success)
                     showAlert('success', `${message.message}`);
-                else 
+                else
                     showAlert('error', `${message.message}`);
             })
         },
@@ -95,16 +95,16 @@ const Editor: NextPageWithLayout = () => {
     });
 
     const updateFilesListBDD = async () => {
-        const newData = data.map((item : any) => {
-            const { __typename, id,  ...rest } = item;
-            return { ...rest, id : +id }; 
+        const newData = data.map((item: any) => {
+            const { __typename, id, ...rest } = item;
+            return { ...rest, id: +id };
         });
         if (data) {
-        updateMultipleFiles({
-            variables: { 
-                data: newData
-            },
-        });
+            updateMultipleFiles({
+                variables: {
+                    data: newData
+                },
+            });
 
         }
     }
@@ -121,14 +121,25 @@ const Editor: NextPageWithLayout = () => {
         }
     };
 
+    const allowedOrigins = [
+        // "http://localhost:3000",
+        "http://localhost:3001",
+        "https://wildcodehub.0923-jaune-4.wns.wilders.dev",
+        "https://dev.wildcodehub.0923-jaune-4.wns.wilders.dev",
+        "https://wildcodehub.alexandre-renard.dev",
+        "https://dev.wildcodehub.alexandre-renard.dev"
+    ];
+
     useEffect(() => {
         const handleConsoleLog = (event: MessageEvent) => {
+            const expectedOrigin = process.env.NEXT_PUBLIC_URL_ORIGIN;
+            if (event.origin !== expectedOrigin) return;
             if (event.data.type === 'console-log') {
                 setConsoleLogs((prevLogs) => {
                     const newLogs = [...prevLogs];
                     const logMessage = event.data.message;
                     const existingLogIndex = newLogs.findIndex(log => log.message === logMessage);
-                    
+
                     if (existingLogIndex === -1) {
                         newLogs.push({ message: logMessage, rawArgs: event.data.rawArgs });
                     }
@@ -190,24 +201,6 @@ const Editor: NextPageWithLayout = () => {
         );
     };
 
-    //V1 create File
-    // const handleAddFile = (fileName: string): void => {
-    //     const extension = fileName.split('.').pop() || '';
-    //     const name = fileName.replace(`.${extension}`, '');
-    //     const language = extension === "js" ? "javascript" : extension;
-
-    //     const newFile: File = {
-    //         id: data.length + 1,
-    //         name,
-    //         extension,
-    //         content: "",
-    //         language,
-    //     };
-
-    //     setData((prevData) => [...prevData, newFile]);
-    //     setFile(newFile);
-    // };
-
     const handleFileClose = (fileId: number): void => {
         setOpenFiles((prevOpenFiles) => {
             const newOpenFiles = prevOpenFiles.filter((f) => f.id !== fileId);
@@ -236,31 +229,30 @@ const Editor: NextPageWithLayout = () => {
             pt="5rem"
         >
 
-                <div>
-                    {/* <FilesList data={data} setFile={setFile} /> */}
-                    {/* <AddFileForm addFile={handleAddFile} /> */}
-                </div>
+            <div>
+                {/* <FilesList data={data} setFile={setFile} /> */}
+                {/* <AddFileForm addFile={handleAddFile} /> */}
+            </div>
             <Box width="40%">
-            <Flex>
+                <Flex>
                     {
-                    openFiles &&
-                    openFiles.map((openFile) => (
-                        <FileInfo
-                            key={openFile.id}
-                            fileName={`${openFile.name}.${openFile.extension}`}
-                            onClose={() => handleFileClose(openFile.id)}
-                            isSelected={openFile.id === file?.id}
-                            onClick={() => setFile(openFile)}
-                        />
-                    ))
+                        openFiles &&
+                        openFiles.map((openFile) => (
+                            <FileInfo
+                                key={openFile.id}
+                                fileName={`${openFile.name}.${openFile.extension}`}
+                                onClose={() => handleFileClose(openFile.id)}
+                                isSelected={openFile.id === file?.id}
+                                onClick={() => setFile(openFile)}
+                            />
+                        ))
                     }
-                    {/* <button>Save</button> */}
                     <Spacer />
                     <Button type="button" variant="secondary" onClick={updateFilesListBDD}>
                         Save
                     </Button>
-            </Flex>
-            {file ? (
+                </Flex>
+                {file ? (
                     <FileEditor
                         code={code}
                         setCode={handleCodeChange}
@@ -287,7 +279,7 @@ const Editor: NextPageWithLayout = () => {
                     <Button type="button" variant="secondary" onClick={shareModalOpen}>
                         Share
                     </Button>
-                    <SettingsIcon boxSize={9} cursor="pointer" onClick={settingProject}/>
+                    <SettingsIcon boxSize={9} cursor="pointer" onClick={settingProject} />
                 </Flex>
                 <iframe
                     ref={iframeRef}
