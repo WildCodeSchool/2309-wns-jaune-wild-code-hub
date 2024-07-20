@@ -23,7 +23,7 @@ const CustomToast = () => {
       if (toast[type]) {
         toast[type](message, options);
       } else {
-        toast.error(`ERROR: Le type d'alerte "${type}" n'existe pas !`, options);
+        toast.error(`ERROR: Alert type "${type}" does not exist!`, options);
       }
       setAlerts((prevAlerts) => prevAlerts.slice(1));
     }

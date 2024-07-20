@@ -20,14 +20,9 @@ import CustomToast from '@/components/ToastCustom/CustomToast';
 import { SettingsIcon } from "@chakra-ui/icons";
 import GenericModal from "@/components/GenericModal";
 import DOMPurify from 'dompurify';
+import { File } from "@/types/editor";
+import { Project } from "@/types/graphql";
 
-interface File {
-    id: number;
-    name: string;
-    extension: string;
-    content: string;
-    language: string;
-}
 
 const Editor: NextPageWithLayout = () => {
     const router = useRouter();
@@ -35,6 +30,7 @@ const Editor: NextPageWithLayout = () => {
     const [code, setCode] = useState<string>("");
     const [file, setFile] = useState<File | null>(null);
     const [openFiles, setOpenFiles] = useState<File[]>([]);
+    const [project, setProject] = useState<Project | null >(null);
     const [consoleLogs, setConsoleLogs] = useState<any[]>([]);
     const [isShareModalOpen, setIsShareModalOpen] = useState(false);
     const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
@@ -98,6 +94,10 @@ const Editor: NextPageWithLayout = () => {
 
     const updateFilesListBDD = async () => {
         if (window.location.origin !== expectedOrigin) return;
+        if(!project) {
+            showAlert("error", "Please wait while the project loads!");
+            return;
+        }
         const newData = data.map((item: any) => {
             const { __typename, id, ...rest } = item;
             return { ...rest, id: +id };
@@ -171,6 +171,7 @@ const Editor: NextPageWithLayout = () => {
             setOpenFiles(projectById?.data?.findProjectById?.files);
             setFile(projectById?.data?.findProjectById.files[0]);
             setData(projectById?.data?.findProjectById.files);
+            setProject(projectById?.data?.findProjectById);
         }
 
     }, [projectById, router?.query?.id, router])
@@ -211,11 +212,19 @@ const Editor: NextPageWithLayout = () => {
 
     const shareModalOpen = async () => {
         if (window.location.origin !== expectedOrigin) return;
+        if(!project) {
+            showAlert("error", "Please wait while the project loads!");
+            return;
+        }
         setIsShareModalOpen(true);
     };
 
     const settingProject = async () => {
         if (window.location.origin !== expectedOrigin) return;
+        if(!project) {
+            showAlert("error", "Please wait while the project loads!");
+            return;
+        }
         setIsSettingsModalOpen(true);
     };
 

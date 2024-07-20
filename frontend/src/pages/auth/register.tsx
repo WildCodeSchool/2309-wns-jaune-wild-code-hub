@@ -26,11 +26,12 @@ import {
     passwordRegex,
     checkRegex,
 } from "@/regex";
+import CustomToast from '@/components/ToastCustom/CustomToast';
 
 const Register = () => {
 
     const router = useRouter();
-
+    const { showAlert } = CustomToast();
     
     const [showPassword, setShowPassword] = useState(false);
     const [formData, setFormData] = useState({
@@ -53,7 +54,7 @@ const Register = () => {
         RegisterMutationVariables
     >(REGISTER, {
         onCompleted: (data) => {
-            console.log(data)
+            showAlert("success", "Your account has been created successfully")
             router.push("/auth/login");
         },
         onError(error) {
