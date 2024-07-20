@@ -92,7 +92,7 @@ const Editor: NextPageWithLayout = () => {
         }
     });
 
-    const updateFilesListBDD = async () => {
+    const updateFilesListBDD: () => void = async () => {
         if (window.location.origin !== expectedOrigin) return;
         if(!project) {
             showAlert("error", "Please wait while the project loads!");
@@ -112,7 +112,7 @@ const Editor: NextPageWithLayout = () => {
         }
     }
 
-    const updateIframe = (): void => {
+    const updateIframe: () => void = (): void => {
         if (window.location.origin !== expectedOrigin) return;
         const iframe = iframeRef.current;
         if (iframe) {
@@ -126,7 +126,7 @@ const Editor: NextPageWithLayout = () => {
     };
 
     useEffect(() => {
-        const handleConsoleLog = (event: MessageEvent) => {
+        const handleConsoleLog = (event: MessageEvent): any[] | undefined => {
             if (event.origin !== expectedOrigin) return;
             if (event.data.type === 'console-log') {
                 setConsoleLogs((prevLogs) => {
@@ -210,7 +210,7 @@ const Editor: NextPageWithLayout = () => {
         });
     };
 
-    const shareModalOpen = async () => {
+    const shareModalOpen: () => void = async () => {
         if (window.location.origin !== expectedOrigin) return;
         if(!project) {
             showAlert("error", "Please wait while the project loads!");
@@ -219,7 +219,7 @@ const Editor: NextPageWithLayout = () => {
         setIsShareModalOpen(true);
     };
 
-    const settingProject = async () => {
+    const settingProject: () => void = async () => {
         if (window.location.origin !== expectedOrigin) return;
         if(!project) {
             showAlert("error", "Please wait while the project loads!");
