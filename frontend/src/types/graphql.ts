@@ -175,6 +175,7 @@ export type Query = {
   findFileById: Array<File>;
   findProjectById: Project;
   findProjectByName: Project;
+  findProjectOwner: User;
   findUserByEmail: User;
   findUserById: User;
   findUserByPseudo: User;
@@ -211,6 +212,11 @@ export type QueryFindProjectByIdArgs = {
 
 export type QueryFindProjectByNameArgs = {
   name: Scalars['String']['input'];
+};
+
+
+export type QueryFindProjectOwnerArgs = {
+  projectId: Scalars['String']['input'];
 };
 
 
@@ -382,6 +388,13 @@ export type FindUserByIdQueryVariables = Exact<{
 
 
 export type FindUserByIdQuery = { __typename?: 'Query', findUserById: { __typename?: 'User', created_at: any, email: string, firstname: string, lastname: string, pseudo: string, run_counter: number } };
+
+export type FindProjectOwnerQueryVariables = Exact<{
+  projectId: Scalars['String']['input'];
+}>;
+
+
+export type FindProjectOwnerQuery = { __typename?: 'Query', findProjectOwner: { __typename?: 'User', pseudo: string } };
 
 
 export const RegisterDocument = gql`
@@ -771,3 +784,43 @@ export type FindUserByIdQueryHookResult = ReturnType<typeof useFindUserByIdQuery
 export type FindUserByIdLazyQueryHookResult = ReturnType<typeof useFindUserByIdLazyQuery>;
 export type FindUserByIdSuspenseQueryHookResult = ReturnType<typeof useFindUserByIdSuspenseQuery>;
 export type FindUserByIdQueryResult = Apollo.QueryResult<FindUserByIdQuery, FindUserByIdQueryVariables>;
+export const FindProjectOwnerDocument = gql`
+    query FindProjectOwner($projectId: String!) {
+  findProjectOwner(projectId: $projectId) {
+    pseudo
+  }
+}
+    `;
+
+/**
+ * __useFindProjectOwnerQuery__
+ *
+ * To run a query within a React component, call `useFindProjectOwnerQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFindProjectOwnerQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFindProjectOwnerQuery({
+ *   variables: {
+ *      projectId: // value for 'projectId'
+ *   },
+ * });
+ */
+export function useFindProjectOwnerQuery(baseOptions: Apollo.QueryHookOptions<FindProjectOwnerQuery, FindProjectOwnerQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<FindProjectOwnerQuery, FindProjectOwnerQueryVariables>(FindProjectOwnerDocument, options);
+      }
+export function useFindProjectOwnerLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FindProjectOwnerQuery, FindProjectOwnerQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<FindProjectOwnerQuery, FindProjectOwnerQueryVariables>(FindProjectOwnerDocument, options);
+        }
+export function useFindProjectOwnerSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<FindProjectOwnerQuery, FindProjectOwnerQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<FindProjectOwnerQuery, FindProjectOwnerQueryVariables>(FindProjectOwnerDocument, options);
+        }
+export type FindProjectOwnerQueryHookResult = ReturnType<typeof useFindProjectOwnerQuery>;
+export type FindProjectOwnerLazyQueryHookResult = ReturnType<typeof useFindProjectOwnerLazyQuery>;
+export type FindProjectOwnerSuspenseQueryHookResult = ReturnType<typeof useFindProjectOwnerSuspenseQuery>;
+export type FindProjectOwnerQueryResult = Apollo.QueryResult<FindProjectOwnerQuery, FindProjectOwnerQueryVariables>;
