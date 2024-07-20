@@ -1,11 +1,10 @@
-import { COUNT_LIKE_PER_PROJECT } from "@/requetes/queries/project.queries";
 import {
-  CountLikesPerProjectQuery,
-  CountLikesPerProjectQueryVariables,
+  Project,
+  useCountLikesPerProjectQuery,
+  useFindProjectOwnerQuery,
 } from "@/types/graphql";
 import NextLink from "next/link";
 
-import { useQuery } from "@apollo/client";
 import {
   Button,
   ButtonGroup,
@@ -18,23 +17,30 @@ import {
   LinkBox,
   LinkOverlay,
   Stack,
+  Text,
 } from "@chakra-ui/react";
 
 import CommentIcon from "./Icons/CommentIcon";
 import HeartIcon from "./Icons/HeartIcon";
 import ShareIcon from "./Icons/ShareIcon";
 
-const ProjectCard = ({ item }: any) => {
-  const { project, role } = item;
+type Props = {
+  project: Project;
+};
 
-  const { data } = useQuery<
-    CountLikesPerProjectQuery,
-    CountLikesPerProjectQueryVariables
-  >(COUNT_LIKE_PER_PROJECT, {
-    variables: {
-      projectId: +project.id,
-    },
-  });
+const ProjectCard = ({ project }: Props) => {
+  const { data: { countLikesPerProject: likeCount } = {} } =
+    useCountLikesPerProjectQuery({
+      variables: {
+        projectId: +project.id,
+      },
+    });
+  const { data: { findProjectOwner: projectOwner } = {} } =
+    useFindProjectOwnerQuery({
+      variables: {
+        projectId: project.id,
+      },
+    });
 
   return (
     <LinkBox maxWidth={"200px"} width={"100%"} height={"100%"}>
@@ -54,9 +60,10 @@ const ProjectCard = ({ item }: any) => {
           justifyContent={"center"}
           display={"flex"}
           flexDirection={"column"}
-          p={"0.5rem"}
+          p={"0"}
+          pt={"0.5rem"}
         >
-          <Stack spacing="3">
+          <Stack alignItems={"center"} gap={0}>
             <Heading
               size="md"
               textShadow={"0px 2px 5px grey"}
@@ -70,11 +77,15 @@ const ProjectCard = ({ item }: any) => {
                 {project.name}
               </LinkOverlay>
             </Heading>
-            {/* <Text>{"The description of your projects"}</Text> */}
+            <Text color={"textSecondary"}>{projectOwner?.pseudo}</Text>
           </Stack>
         </CardBody>
 
-        <CardFooter justifyContent={"center"} color="lightGrey" p={"0.5rem"}>
+        <CardFooter
+          justifyContent={"center"}
+          color="lightGrey"
+          p={"0 0.5rem 0.5rem 0.5rem"}
+        >
           <ButtonGroup>
             <Button
               variant="ghost"
@@ -82,7 +93,7 @@ const ProjectCard = ({ item }: any) => {
               color="lightGrey"
               p={0}
             >
-              {data?.countLikesPerProject}
+              {likeCount}
             </Button>
 
             <Button
