@@ -1,10 +1,11 @@
 "use-client";
 import SidebarLayout from "@/components/Sidebar/SidebarLayout";
 import { Project, useListLikeProjectLazyQuery } from "@/types/graphql";
-import { Button, Heading, Spinner } from "@chakra-ui/react";
+import { Button, Heading } from "@chakra-ui/react";
 import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
 
+import Loader from "@/components/Loader";
 import { ProfilePageContainer } from "@/components/ProfilePageContainer";
 import { ProjectsGrid } from "@/components/ProjectsGrid";
 import { NextPageWithLayout } from "../_app";
@@ -30,13 +31,7 @@ const LikedProjects: NextPageWithLayout = () => {
     <ProfilePageContainer>
       <Heading fontSize={"3cqw"}>Welcome to your Workspace</Heading>
       {loading ? (
-        <Spinner
-          thickness="5px"
-          speed="0.65s"
-          emptyColor="gray.200"
-          color="accent"
-          size="xl"
-        />
+        <Loader />
       ) : error ? (
         <>An error occured</>
       ) : projects.length > 0 ? (

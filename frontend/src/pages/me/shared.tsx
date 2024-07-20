@@ -3,13 +3,14 @@ import {
   Project,
   useListProjectsByUserWithRoleLazyQuery,
 } from "@/types/graphql";
-import { Button, Heading, Spinner } from "@chakra-ui/react";
+import { Button, Heading } from "@chakra-ui/react";
 import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
 
-import { NextPageWithLayout } from "../_app";
-import { ProjectsGrid } from "@/components/ProjectsGrid";
+import Loader from "@/components/Loader";
 import { ProfilePageContainer } from "@/components/ProfilePageContainer";
+import { ProjectsGrid } from "@/components/ProjectsGrid";
+import { NextPageWithLayout } from "../_app";
 
 const SharedWithMe: NextPageWithLayout = () => {
   const [projects, setProjects] = useState<Project[]>([]);
@@ -37,13 +38,7 @@ const SharedWithMe: NextPageWithLayout = () => {
     <ProfilePageContainer>
       <Heading>Shared Projects</Heading>
       {loading ? (
-        <Spinner
-          thickness="5px"
-          speed="0.65s"
-          emptyColor="gray.200"
-          color="accent"
-          size="xl"
-        />
+        <Loader />
       ) : error ? (
         <>An error occured</>
       ) : projects.length > 0 ? (
