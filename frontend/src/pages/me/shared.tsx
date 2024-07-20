@@ -1,33 +1,56 @@
 import SidebarLayout from "@/components/Sidebar/SidebarLayout";
-import { PROJECTS__WITH_ROLE_BY_USER } from "@/requetes/queries/project.queries";
 import {
-  ListProjectsByUserWithRoleQueryResult,
-  ListProjectsByUserWithRoleQueryVariables,
-  User,
+  Project,
+  useListProjectsByUserWithRoleLazyQuery,
 } from "@/types/graphql";
-import { useQuery } from "@apollo/client";
+import { Button, Heading, Spinner } from "@chakra-ui/react";
 import Cookies from "js-cookie";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
 import { NextPageWithLayout } from "../_app";
-import { CustomGrid, ProfilePageContainer } from ".";
-import { Button, Heading } from "@chakra-ui/react";
+import { ProjectsGrid } from "@/components/ProjectsGrid";
+import { ProfilePageContainer } from "@/components/ProfilePageContainer";
 
 const SharedWithMe: NextPageWithLayout = () => {
-  const [user, setUser] = useState<User>();
+  const [projects, setProjects] = useState<Project[]>([]);
+
   const userId = Cookies.get("id");
 
-  const { error, loading, data } = useQuery<
-    ListProjectsByUserWithRoleQueryResult,
-    ListProjectsByUserWithRoleQueryVariables
-  >(PROJECTS__WITH_ROLE_BY_USER, {
-    skip: !userId,
-    variables: { userId: userId || "", userRole: ["EDITOR", "VIEWER"] },
-  });
-  console.log("data", data);
+  const [getProjects, { error, loading, data }] =
+    useListProjectsByUserWithRoleLazyQuery();
+
+  useEffect(() => {
+    if (userId) {
+      getProjects({
+        variables: {
+          userId,
+          userRole: ["EDITOR", "VIEWER"],
+        },
+      });
+      data?.listProjectsByUserWithRole &&
+        setProjects(
+          data?.listProjectsByUserWithRole.map((item) => item.project)
+        );
+    }
+  }, [userId, getProjects, data]);
   return (
     <ProfilePageContainer>
       <Heading>Shared Projects</Heading>
-      <CustomGrid data={data}></CustomGrid>
+      {loading ? (
+        <Spinner
+          thickness="5px"
+          speed="0.65s"
+          emptyColor="gray.200"
+          color="accent"
+          size="xl"
+        />
+      ) : error ? (
+        <>An error occured</>
+      ) : projects.length > 0 ? (
+        <ProjectsGrid projects={projects} />
+      ) : (
+        <>You don&apos;t have any project shared by another user !</>
+      )}
       <Button variant={"secondary"}>Create a project</Button>
     </ProfilePageContainer>
   );

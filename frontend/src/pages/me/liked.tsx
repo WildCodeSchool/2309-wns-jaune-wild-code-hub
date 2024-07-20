@@ -1,31 +1,34 @@
 "use-client";
 import SidebarLayout from "@/components/Sidebar/SidebarLayout";
-import React from "react";
-import { NextPageWithLayout } from "../_app";
-import { CustomGrid, ProfilePageContainer } from ".";
+import { Project, useListLikeProjectLazyQuery } from "@/types/graphql";
 import { Button, Heading, Spinner } from "@chakra-ui/react";
-import {
-  ListLikeProjectQuery,
-  ListLikeProjectQueryVariables,
-  useListLikeProjectQuery,
-} from "@/types/graphql";
 import Cookies from "js-cookie";
-import { useQuery } from "@apollo/client";
-import { LIKED_PROJECTS } from "@/requetes/queries/project.queries";
+import { useEffect, useState } from "react";
 
-const LikedPRojects: NextPageWithLayout = () => {
+import { ProfilePageContainer } from "@/components/ProfilePageContainer";
+import { ProjectsGrid } from "@/components/ProjectsGrid";
+import { NextPageWithLayout } from "../_app";
+
+const LikedProjects: NextPageWithLayout = () => {
+  const [projects, setProjects] = useState<Project[]>([]);
+
   const userId = Cookies.get("id");
-  const { loading, error, data } = useQuery<
-    ListLikeProjectQuery,
-    ListLikeProjectQueryVariables
-  >(LIKED_PROJECTS, {
-    skip: !userId,
-    variables: { userId: userId || "" },
-  });
-  console.log("data", data);
+
+  const [getProjects, { error, loading, data }] = useListLikeProjectLazyQuery();
+
+  useEffect(() => {
+    if (userId) {
+      getProjects({
+        variables: {
+          userId,
+        },
+      });
+      data?.listLikeProject && setProjects(data?.listLikeProject);
+    }
+  }, [userId, getProjects, data]);
   return (
     <ProfilePageContainer>
-      <Heading>Liked Projects</Heading>
+      <Heading fontSize={"3cqw"}>Welcome to your Workspace</Heading>
       {loading ? (
         <Spinner
           thickness="5px"
@@ -36,16 +39,17 @@ const LikedPRojects: NextPageWithLayout = () => {
         />
       ) : error ? (
         <>An error occured</>
-      ) : data?.listLikeProject.length ? (
-        <CustomGrid data={data.listLikeProject} />
+      ) : projects.length > 0 ? (
+        <ProjectsGrid projects={projects} />
       ) : (
         <>There is no projects in your workspace !</>
       )}
-      <Button variant={"secondary"}>Discover more projects</Button>
+
+      <Button variant={"secondary"}>Create a project</Button>
     </ProfilePageContainer>
   );
 };
-LikedPRojects.getLayout = function getLayout(page) {
+LikedProjects.getLayout = function getLayout(page) {
   return <SidebarLayout>{page}</SidebarLayout>;
 };
-export default LikedPRojects;
+export default LikedProjects;

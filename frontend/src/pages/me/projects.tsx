@@ -1,45 +1,59 @@
 import SidebarLayout from "@/components/Sidebar/SidebarLayout";
-import React, { useState } from "react";
-import { NextPageWithLayout } from "../_app";
 import {
-  ListProjectsByUserWithRoleQuery,
-  ListProjectsByUserWithRoleQueryResult,
-  ListProjectsByUserWithRoleQueryVariables,
-  User,
+  Project,
+  useListProjectsByUserWithRoleLazyQuery,
 } from "@/types/graphql";
+import { Button, Heading, Spinner } from "@chakra-ui/react";
 import Cookies from "js-cookie";
-import { useQuery } from "@apollo/client";
-import { PROJECTS__WITH_ROLE_BY_USER } from "@/requetes/queries/project.queries";
-import { Button, Flex, Heading } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
+
+import { NextPageWithLayout } from "../_app";
+import { ProjectsGrid } from "@/components/ProjectsGrid";
+import { ProfilePageContainer } from "@/components/ProfilePageContainer";
 
 const Projects: NextPageWithLayout = () => {
-  const [user, setUser] = useState<User>();
+  const [projects, setProjects] = useState<Project[]>([]);
+
   const userId = Cookies.get("id");
 
-  const { error, loading, data } = useQuery<
-    ListProjectsByUserWithRoleQuery,
-    ListProjectsByUserWithRoleQueryVariables
-  >(PROJECTS__WITH_ROLE_BY_USER, {
-    skip: !userId,
-    variables: { userId: userId || "", userRole: ["OWNER"] },
-  });
-  console.log("data", data);
+  const [getProjects, { error, loading, data }] =
+    useListProjectsByUserWithRoleLazyQuery();
+
+  useEffect(() => {
+    if (userId) {
+      getProjects({
+        variables: {
+          userId,
+          userRole: ["OWNER"],
+        },
+        onCompleted(data) {
+          setProjects(
+            data.listProjectsByUserWithRole.map((item) => item.project)
+          );
+        },
+      });
+    }
+  }, [userId, getProjects, data]);
   return (
-    <Flex
-      flexDirection={"column"}
-      gap={"3rem"}
-      width={"100%"}
-      justifyContent={"space-around"}
-      alignItems={"center"}
-    >
+    <ProfilePageContainer>
       <Heading>My Projects</Heading>
-      {data && data.listProjectsByUserWithRole.length > 0 ? (
-        <></>
+      {loading ? (
+        <Spinner
+          thickness="5px"
+          speed="0.65s"
+          emptyColor="gray.200"
+          color="accent"
+          size="xl"
+        />
+      ) : error ? (
+        <>An error occured</>
+      ) : projects.length > 0 ? (
+        <ProjectsGrid projects={projects} />
       ) : (
-        <>It seems like you dont have any project yet</>
+        <>You don&apos;t have any project ! You can create one now</>
       )}
       <Button variant={"secondary"}>Create a new project</Button>
-    </Flex>
+    </ProfilePageContainer>
   );
 };
 Projects.getLayout = function getLayout(page) {
