@@ -6,6 +6,7 @@ import {
     ModalCloseButton,
     ModalBody,
     ModalHeader,
+    Text,
 } from '@chakra-ui/react';
 import components from "@/styles/theme/components";
 
@@ -13,15 +14,17 @@ interface GenericModalProps {
     isOpen: boolean;
     onClose: () => void;
     children: ReactNode;
+    title ?: string
 }
 
-const GenericModal: React.FC<GenericModalProps> = ({ isOpen, onClose, children }) => {
+const GenericModal: React.FC<GenericModalProps> = ({ isOpen, onClose, children, title }) => {
     return (
         <Modal isOpen={isOpen} onClose={onClose}>
             <ModalOverlay />
             <ModalContent bg="black" {...components.ModalBody.bordered}>
                 <ModalCloseButton color="text" fontWeight="bold" />
-                <ModalBody bg="black" {...components.ModalBody.bordered}>
+                <Text fontSize='3xl' color="white" as='b' textAlign="center" mt={5}>{title}</Text>
+                <ModalBody bg="black" {...components.ModalBody.bordered} display="flex" justifyContent="center" alignItems="center" mt={5} mb={5}>
                     {children}
                 </ModalBody>
             </ModalContent>
