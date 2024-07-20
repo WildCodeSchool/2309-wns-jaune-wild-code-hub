@@ -7,39 +7,32 @@ import { NextPageWithLayout } from "../_app";
 import components from "@/styles/theme/components";
 import FilesList from "../../components/Editor/FilesList";
 import AddFileForm from "../../components/Editor/AddFileForm";
-import SidebarLayout from "@/components/SidebarLayout";
 import { useRouter } from "next/router";
-import { useMutation, useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import { PROJECT_BY_ID } from "@/requetes/queries/project.queries";
-import { UPDATE_MULTIPLE_FILES } from "@/requetes/mutations/file.mutations";
-import {
-    UpdateMultipleFilesMutation,
-    UpdateMultipleFilesMutationVariables
-} from "@/types/graphql";
+import { Project } from "@/types/graphql";
 import CustomToast from '@/components/ToastCustom/CustomToast';
-import { SettingsIcon } from "@chakra-ui/icons";
-import GenericModal from "@/components/GenericModal";
 import DOMPurify from 'dompurify';
 import { File } from "@/types/editor";
-import { Project } from "@/types/graphql";
-
+import ShareEditor from "@/components/Editor/ShareEditor";
+import SettingEditor from "@/components/Editor/SettingEditor";
+import UpdateListFilesEditor from "@/components/Editor/UpdateListFilesEditor";
 
 const Editor: NextPageWithLayout = () => {
+
+    const expectedOrigin = process.env.NEXT_PUBLIC_URL_ORIGIN;
+
     const router = useRouter();
+    const { showAlert } = CustomToast();
+
     const projectById = useQuery(PROJECT_BY_ID, { variables: { findProjectByIdId: router.query.id } });
     const [code, setCode] = useState<string>("");
     const [file, setFile] = useState<File | null>(null);
     const [openFiles, setOpenFiles] = useState<File[]>([]);
     const [project, setProject] = useState<Project | null >(null);
     const [consoleLogs, setConsoleLogs] = useState<any[]>([]);
-    const [isShareModalOpen, setIsShareModalOpen] = useState(false);
-    const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
     const iframeRef = useRef<HTMLIFrameElement>(null);
-    const { showAlert } = CustomToast();
-
     const [data, setData] = useState<File[]>([]);
-
-    const expectedOrigin = process.env.NEXT_PUBLIC_URL_ORIGIN;
 
 
     const getCombinedCode = (): string => {
@@ -73,44 +66,6 @@ const Editor: NextPageWithLayout = () => {
             </html>
         `;
     };
-
-    const [updateMultipleFiles] = useMutation<
-        UpdateMultipleFilesMutation,
-        UpdateMultipleFilesMutationVariables
-    >(UPDATE_MULTIPLE_FILES, {
-        onCompleted: (data) => {
-            data.updateMultipleFiles.forEach((message) => {
-                if (message.success)
-                    showAlert('success', `${message.message}`);
-                else
-                    showAlert('error', `${message.message}`);
-            })
-        },
-        onError(error) {
-            console.log("error", error)
-            showAlert('error', 'We are sorry, there seems to be an error with the server. Please try again later.');
-        }
-    });
-
-    const updateFilesListBDD: () => void = async () => {
-        if (window.location.origin !== expectedOrigin) return;
-        if(!project) {
-            showAlert("error", "Please wait while the project loads!");
-            return;
-        }
-        const newData = data.map((item: any) => {
-            const { __typename, id, ...rest } = item;
-            return { ...rest, id: +id };
-        });
-        if (data) {
-            updateMultipleFiles({
-                variables: {
-                    data: newData
-                },
-            });
-
-        }
-    }
 
     const updateIframe: () => void = (): void => {
         if (window.location.origin !== expectedOrigin) return;
@@ -154,7 +109,6 @@ const Editor: NextPageWithLayout = () => {
     }, [data]);
 
     useEffect(() => {
-
         if (projectById?.error?.message === "Access denied! You need to be authenticated to perform this action!") {
             showAlert('error', projectById?.error?.message);
             router.push('/auth/login')
@@ -173,7 +127,6 @@ const Editor: NextPageWithLayout = () => {
             setData(projectById?.data?.findProjectById.files);
             setProject(projectById?.data?.findProjectById);
         }
-
     }, [projectById, router?.query?.id, router])
 
 
@@ -210,24 +163,6 @@ const Editor: NextPageWithLayout = () => {
         });
     };
 
-    const shareModalOpen: () => void = async () => {
-        if (window.location.origin !== expectedOrigin) return;
-        if(!project) {
-            showAlert("error", "Please wait while the project loads!");
-            return;
-        }
-        setIsShareModalOpen(true);
-    };
-
-    const settingProject: () => void = async () => {
-        if (window.location.origin !== expectedOrigin) return;
-        if(!project) {
-            showAlert("error", "Please wait while the project loads!");
-            return;
-        }
-        setIsSettingsModalOpen(true);
-    };
-
     return (
         <Box
             display="flex"
@@ -253,9 +188,7 @@ const Editor: NextPageWithLayout = () => {
                         ))
                     }
                     <Spacer />
-                    <Button type="button" variant="secondary" onClick={updateFilesListBDD}>
-                        Save
-                    </Button>
+                    <UpdateListFilesEditor data={data} project={project} expectedOrigin={expectedOrigin} />
                 </Flex>
                 {file ? (
                     <FileEditor
@@ -281,10 +214,8 @@ const Editor: NextPageWithLayout = () => {
                 <Flex>
                     <Text bg="background2" width="3rem" pl="5px" pb="0.2rem">View</Text>
                     <Spacer />
-                    <Button type="button" variant="secondary" onClick={shareModalOpen}>
-                        Share
-                    </Button>
-                    <SettingsIcon boxSize={9} cursor="pointer" onClick={settingProject} />
+                    <ShareEditor project={project} expectedOrigin={expectedOrigin} />
+                    <SettingEditor project={project} expectedOrigin={expectedOrigin} />
                 </Flex>
                 <iframe
                     ref={iframeRef}
@@ -292,22 +223,6 @@ const Editor: NextPageWithLayout = () => {
                     style={{ width: "100%", height: "100%", border: "1px solid black", backgroundColor: "#151515" }}
                 ></iframe>
             </Box>
-
-            <GenericModal
-                isOpen={isShareModalOpen}
-                onClose={() => setIsShareModalOpen(false)}
-            >
-                <Text color="white">Text</Text>
-
-            </GenericModal>
-
-            <GenericModal
-                isOpen={isSettingsModalOpen}
-                onClose={() => setIsSettingsModalOpen(false)}
-            >
-                <Text color="white">Settings</Text>
-            </GenericModal>
-
         </Box>
     );
 };

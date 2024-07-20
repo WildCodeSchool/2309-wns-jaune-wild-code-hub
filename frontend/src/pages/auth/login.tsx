@@ -63,7 +63,6 @@ const Login = () => {
     const handleSubmit = (newErrors: any, newData: any) => {
         if (Object.keys(newErrors).length === 0) {
             let data = newData as InputLogin;
-            console.log(data)
             const pseudoConnect = { infos: { pseudo: data.pseudo, password: data.password } };
             const emailConnect = { infos: { email: data.email, password: data.password } } ; 
             login({
@@ -72,9 +71,9 @@ const Login = () => {
         }
     }
 
-    const handleSubmitVerify = async (e: React.FormEvent<HTMLFormElement>)  => {
+    const handleSubmitVerify = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        const newErrors = {
+        const newErrors: { password: string; emailOrPseudo: string } = {
             password: '',
             emailOrPseudo: '', 
         };
