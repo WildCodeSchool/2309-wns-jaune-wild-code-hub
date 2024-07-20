@@ -24,7 +24,7 @@ const GenericModal: React.FC<GenericModalProps> = ({ isOpen, onClose, children, 
             <ModalContent bg="black" {...components.ModalBody.bordered}>
                 <ModalCloseButton color="text" fontWeight="bold" />
                 <Text fontSize='3xl' color="white" as='b' textAlign="center" mt={5}>{title}</Text>
-                <ModalBody bg="black" {...components.ModalBody.bordered} display="flex" justifyContent="center" alignItems="center" mt={5} mb={5}>
+                <ModalBody bg="black" {...components.ModalBody.bordered} mt={5} mb={5}>
                     {children}
                 </ModalBody>
             </ModalContent>

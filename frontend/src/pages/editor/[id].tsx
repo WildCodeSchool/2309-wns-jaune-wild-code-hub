@@ -14,7 +14,7 @@ import { Project } from "@/types/graphql";
 import CustomToast from '@/components/ToastCustom/CustomToast';
 import DOMPurify from 'dompurify';
 import { File } from "@/types/editor";
-import ShareEditor from "@/components/Editor/ShareEditor";
+import ShareEditor from "@/components/Editor/ShareEditor/ShareEditor";
 import SettingEditor from "@/components/Editor/SettingEditor";
 import UpdateListFilesEditor from "@/components/Editor/UpdateListFilesEditor";
 
