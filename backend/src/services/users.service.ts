@@ -11,6 +11,7 @@ import datasource from "../lib/db";
 import { Project } from "../entities/project.entity";
 import {
   CreateUserProjectAccessesInput,
+  UserRole,
   UsersProjectsAccesses,
 } from "../entities/userProjectAccesses.entity";
 
@@ -224,5 +225,18 @@ export default class UsersService {
     return await userProjectAccessesRepository.remove(
       userToDeleteAccessesProject
     );
+  }
+
+  async findOwner(projectId: number) {
+    const owner = await this.db.findOne({
+      where: {
+        usersProjectsAccesses: {
+          project_id: projectId,
+          role: "OWNER" as UserRole,
+        },
+      },
+      relations: ["usersProjectsAccesses"],
+    });
+    return owner;
   }
 }

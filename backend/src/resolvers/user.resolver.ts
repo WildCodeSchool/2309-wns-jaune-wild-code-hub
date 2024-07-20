@@ -225,6 +225,12 @@ export class UserResolver {
     return listAccesProject;
   }
 
+  @Query(() => User)
+  async findProjectOwner(@Arg("projectId") projectId: string) {
+    const projectOwner = await new UsersService().findOwner(+projectId);
+    return projectOwner;
+  }
+
   @Authorized()
   @Mutation(() => Message)
   async addAccessProject(@Arg("data") data: CreateUserProjectAccessesInput) {
