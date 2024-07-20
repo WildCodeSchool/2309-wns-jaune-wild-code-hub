@@ -1,14 +1,12 @@
-import React, { useEffect, useState } from "react";
-import { NextPageWithLayout } from "../_app";
 import SidebarLayout from "@/components/Sidebar/SidebarLayout";
+import { FIND_USER_BY_ID } from "@/requetes/queries/user.queries";
+import { FindUserByIdQuery, FindUserByIdQueryVariables } from "@/types/graphql";
+import { useQuery } from "@apollo/client";
 import {
-  Box,
   Button,
   ButtonGroup,
   Flex,
   FormControl,
-  FormErrorMessage,
-  FormHelperText,
   FormLabel,
   Heading,
   Input,
@@ -17,15 +15,8 @@ import {
   Text,
 } from "@chakra-ui/react";
 import Cookies from "js-cookie";
-import { useQuery } from "@apollo/client";
-import {
-  FindUserByIdQuery,
-  FindUserByIdQueryResult,
-  FindUserByIdQueryVariables,
-  QueryFindUserByIdArgs,
-} from "@/types/graphql";
-import { FIND_USER_BY_ID } from "@/requetes/queries/user.queries";
-import Image from "next/image";
+import { useEffect, useState } from "react";
+import { NextPageWithLayout } from "../_app";
 
 const Settings: NextPageWithLayout = () => {
   const userId = Cookies.get("id");
@@ -113,6 +104,7 @@ const Settings: NextPageWithLayout = () => {
               backgroundColor={"white"}
               color={"textSecondary"}
               type="email"
+              autoComplete="off"
               value={formData.pseudo}
               onChange={handleInputChange}
             />
@@ -189,6 +181,7 @@ const Settings: NextPageWithLayout = () => {
                     bg="white"
                     type={showPassword ? "text" : "password"}
                     name="confirm-password"
+                    autoComplete="new-password"
                     value={formData.confirmPassword}
                     onChange={handleInputChange}
                   />
