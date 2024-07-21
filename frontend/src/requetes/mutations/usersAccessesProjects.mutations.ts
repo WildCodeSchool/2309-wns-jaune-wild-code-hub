@@ -8,3 +8,12 @@ export const UPDATE_USERS_ACCESSES_PROJECTS = gql`
     }
   }
 `;
+
+export const DELETE_USERS_ACCESSES_PROJECTS = gql`
+  mutation DeleteAccessProject($data: DeleteUserProjectAccessesInput!) {
+    deleteAccessProject(data: $data) {
+      success
+      message
+    }
+  }
+`;

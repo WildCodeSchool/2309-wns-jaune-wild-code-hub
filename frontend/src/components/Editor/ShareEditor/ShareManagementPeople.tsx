@@ -13,11 +13,13 @@ import { CloseIcon } from "@chakra-ui/icons";
 import {
   UpdateAccessProjectMutation,
   UpdateAccessProjectMutationVariables,
-  Project, 
+  DeleteAccessProjectMutation,
+  DeleteAccessProjectMutationVariables,
 } from "@/types/graphql";
 import { useMutation } from "@apollo/client";
 import { 
-  UPDATE_USERS_ACCESSES_PROJECTS
+  UPDATE_USERS_ACCESSES_PROJECTS,
+  DELETE_USERS_ACCESSES_PROJECTS,
 } from "@/requetes/mutations/usersAccessesProjects.mutations";
 import { useRouter } from "next/router";
 
@@ -38,32 +40,66 @@ const ShareManagementPeople: React.FC<ShareManagementPeopleProps> = ({ users, se
 
   const router = useRouter();
 
+  const [deleteAccessProject] = useMutation<
+  DeleteAccessProjectMutation,
+  DeleteAccessProjectMutationVariables
+>(DELETE_USERS_ACCESSES_PROJECTS, {
+  onCompleted: (data, context) => {
+    if (data.deleteAccessProject.success) {
+      const mutationContext = context?.context as MutationContext;
+      const updatedUsers = (users ?? []).filter(user => user.user_id !== mutationContext.id);
+      setUsers(updatedUsers);
+      showAlert("success", `Changed role to ${mutationContext.role} for user with pseudo: ${mutationContext.pseudo}`);
+    } else {
+      showAlert("error", data.deleteAccessProject.message);
+    }
+  },
+  onError(error) {
+    console.log("error", error)
+    showAlert('error', 'We are sorry, there seems to be an error with the server. Please try again later.');
+  }
+});
+
   const [updateAccessProject] = useMutation<
     UpdateAccessProjectMutation,
     UpdateAccessProjectMutationVariables
   >(UPDATE_USERS_ACCESSES_PROJECTS, {
     onCompleted: (data, context) => {
-      const mutationContext = context?.context as MutationContext;
-      const updatedUsers = (users ?? []).map(user => 
-        user.user_id === mutationContext.id ? { ...user, role: mutationContext.role } : user
-      );
-
-      setUsers(updatedUsers);
-      showAlert("success", `Changed role to ${mutationContext.role} for user with pseudo: ${mutationContext.pseudo}`);
+      if (data.updateAccessProject.success) {
+        const mutationContext = context?.context as MutationContext;
+        const updatedUsers = (users ?? []).map(user => 
+          user.user_id === mutationContext.id ? { ...user, role: mutationContext.role } : user
+        );
+        setUsers(updatedUsers);
+        showAlert("success", `Changed role to ${mutationContext.role} for user with pseudo: ${mutationContext.pseudo}`);
+      } else {
+        showAlert("error", data.updateAccessProject.message);
+      }
     },
     onError(error) {
-        console.log("error", error)
-        showAlert('error', 'We are sorry, there seems to be an error with the server. Please try again later.');
+      console.log("error", error)
+      showAlert('error', 'We are sorry, there seems to be an error with the server. Please try again later.');
     }
   });
 
-
-  const handleDelete = (id: number) => {
-    showAlert("info", `Deleted user with id: ${id}`);
+  const handleDelete = (id: number, pseudo : string | undefined) => {
+    if (!users || !router.query.id) return;
+    deleteAccessProject({
+      variables: {
+        data: {
+          user_id: id,
+          project_id: +router.query.id,
+        }
+      },
+      context: {
+        id: id,
+        pseudo: pseudo
+      }
+    });
   };
 
 
-  const handleRoleChange = (id: number, role: string, pseudo: string) => {
+  const handleRoleChange = (id: number, role: string, pseudo: string | undefined) => {
     if (!users || !router.query.id) return;
     updateAccessProject({
       variables: {
@@ -111,7 +147,7 @@ const ShareManagementPeople: React.FC<ShareManagementPeopleProps> = ({ users, se
                     <option value="EDITOR">Editor</option>
                     <option value="VIEWER">Viewer</option>
                   </Select>
-                <CloseIcon />
+                <CloseIcon onClick={() => handleDelete(user.user_id, user.user?.pseudo)} cursor={"pointer"} />
               </ListItem>
           )})}
         </List>

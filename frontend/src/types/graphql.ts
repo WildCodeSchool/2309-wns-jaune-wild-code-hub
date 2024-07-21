@@ -366,6 +366,13 @@ export type UpdateAccessProjectMutationVariables = Exact<{
 
 export type UpdateAccessProjectMutation = { __typename?: 'Mutation', updateAccessProject: { __typename?: 'Message', success: boolean, message: string } };
 
+export type DeleteAccessProjectMutationVariables = Exact<{
+  data: DeleteUserProjectAccessesInput;
+}>;
+
+
+export type DeleteAccessProjectMutation = { __typename?: 'Mutation', deleteAccessProject: { __typename?: 'Message', success: boolean, message: string } };
+
 export type LoginQueryVariables = Exact<{
   infos: InputLogin;
 }>;
@@ -513,6 +520,40 @@ export function useUpdateAccessProjectMutation(baseOptions?: Apollo.MutationHook
 export type UpdateAccessProjectMutationHookResult = ReturnType<typeof useUpdateAccessProjectMutation>;
 export type UpdateAccessProjectMutationResult = Apollo.MutationResult<UpdateAccessProjectMutation>;
 export type UpdateAccessProjectMutationOptions = Apollo.BaseMutationOptions<UpdateAccessProjectMutation, UpdateAccessProjectMutationVariables>;
+export const DeleteAccessProjectDocument = gql`
+    mutation DeleteAccessProject($data: DeleteUserProjectAccessesInput!) {
+  deleteAccessProject(data: $data) {
+    success
+    message
+  }
+}
+    `;
+export type DeleteAccessProjectMutationFn = Apollo.MutationFunction<DeleteAccessProjectMutation, DeleteAccessProjectMutationVariables>;
+
+/**
+ * __useDeleteAccessProjectMutation__
+ *
+ * To run a mutation, you first call `useDeleteAccessProjectMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteAccessProjectMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteAccessProjectMutation, { data, loading, error }] = useDeleteAccessProjectMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useDeleteAccessProjectMutation(baseOptions?: Apollo.MutationHookOptions<DeleteAccessProjectMutation, DeleteAccessProjectMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteAccessProjectMutation, DeleteAccessProjectMutationVariables>(DeleteAccessProjectDocument, options);
+      }
+export type DeleteAccessProjectMutationHookResult = ReturnType<typeof useDeleteAccessProjectMutation>;
+export type DeleteAccessProjectMutationResult = Apollo.MutationResult<DeleteAccessProjectMutation>;
+export type DeleteAccessProjectMutationOptions = Apollo.BaseMutationOptions<DeleteAccessProjectMutation, DeleteAccessProjectMutationVariables>;
 export const LoginDocument = gql`
     query Login($infos: InputLogin!) {
   login(infos: $infos) {
