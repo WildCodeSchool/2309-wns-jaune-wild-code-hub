@@ -98,7 +98,6 @@ const ShareManagementPeople: React.FC<ShareManagementPeopleProps> = ({ users, se
     });
   };
 
-
   const handleRoleChange = (id: number, role: string, pseudo: string | undefined) => {
     if (!users || !router.query.id) return;
     updateAccessProject({
@@ -117,7 +116,6 @@ const ShareManagementPeople: React.FC<ShareManagementPeopleProps> = ({ users, se
     });
   };
 
-  // Responsive font size for pseudo
   const pseudoFontSize = useBreakpointValue({ base: "12px", sm: "14px", md: "16px", lg: "18px" });
 
   return (
