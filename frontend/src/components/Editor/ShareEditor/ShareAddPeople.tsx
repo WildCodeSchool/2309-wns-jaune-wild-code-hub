@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { User } from "@/types/graphql";
+import { FindAllInfoUserAccessesProject } from "@/types/graphql";
 import { 
   Button,
   Text,
@@ -10,7 +10,7 @@ import {
 import CustomToast from '@/components/ToastCustom/CustomToast';
 
 interface ShareAddPeopleProps {
-    users : User | null;
+    users : FindAllInfoUserAccessesProject[] | null;
 }
 
 const ShareAddPeople: React.FC<ShareAddPeopleProps> = ({ users }) => {

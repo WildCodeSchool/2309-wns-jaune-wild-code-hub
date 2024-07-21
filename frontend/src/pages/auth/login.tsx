@@ -33,6 +33,8 @@ const Login = () => {
             if (data.login.success) {
                 showAlert("success", data.login.message)
                 router.push("/");
+            } else {
+                showAlert("error", data.login.message)
             }
         },
         onError: (error) => {

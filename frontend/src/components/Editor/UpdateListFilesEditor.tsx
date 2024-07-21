@@ -49,12 +49,11 @@ const UpdateListFilesEditor: React.FC<UpdateListFilesEditorProps> = ({ data, pro
         return { ...rest, id: +id };
     });
     if (data) {
-        updateMultipleFiles({
-            variables: {
-                data: newData
-            },
-        });
-
+      updateMultipleFiles({
+        variables: {
+          data: newData
+        },
+      });
     }
   }
 

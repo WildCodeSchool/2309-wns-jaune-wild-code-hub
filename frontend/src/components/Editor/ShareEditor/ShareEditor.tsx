@@ -1,5 +1,8 @@
-import React, { useState } from "react";
-import { Project, User } from "@/types/graphql";
+import React, { useState, useEffect } from "react";
+import { 
+  Project,
+  FindAllInfoUserAccessesProject
+} from "@/types/graphql";
 import GenericModal from "@/components/GenericModal";
 import { 
   Button,
@@ -14,6 +17,9 @@ import CustomToast from '@/components/ToastCustom/CustomToast';
 import ShareURL from "./ShareURL";
 import ShareAddPeople from "./ShareAddPeople";
 import ShareManagementPeople from "./ShareManagementPeople";
+import { LIST_USERS_ACCESSES_PROJECT } from "@/requetes/queries/usersAccessesProjects.queries";
+import { useRouter } from "next/router";
+import { useQuery } from "@apollo/client";
 
 interface ShareEditorProps {
   project: Project | null;
@@ -24,7 +30,11 @@ const ShareEditor: React.FC<ShareEditorProps> = ({ project, expectedOrigin }) =>
 
   const { showAlert } = CustomToast();
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
-  const [users, setUser] = useState<User | null >(null);
+  const [users, setUsers] = useState<FindAllInfoUserAccessesProject[] | null >(null);
+
+  const router = useRouter();
+
+  const userData = useQuery(LIST_USERS_ACCESSES_PROJECT, { variables: { projectId: router.query.id ? +router.query.id : null } });
   
   const shareModalOpen: () => void = async () => {
     if (window.location.origin !== expectedOrigin) return;
@@ -35,6 +45,11 @@ const ShareEditor: React.FC<ShareEditorProps> = ({ project, expectedOrigin }) =>
 
     setIsShareModalOpen(true);
   };
+
+  useEffect(() => {
+    setUsers(userData?.data?.listUsersAccessesProject)
+    console.log(userData)
+  }, [userData])
 
   return (
     <>
@@ -69,7 +84,7 @@ const ShareEditor: React.FC<ShareEditorProps> = ({ project, expectedOrigin }) =>
             </TabPanel>
             <TabPanel>
               <ShareAddPeople users={users}/>
-              <ShareManagementPeople users={users}/>
+              <ShareManagementPeople users={users} setUsers={setUsers} />
             </TabPanel>
           </TabPanels>
           </Box>

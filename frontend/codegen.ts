@@ -17,6 +17,6 @@ const config: CodegenConfig = {
     },
   },
   // debug : true,
-  // verbose : true
+  verbose : true
 };
 export default config;

@@ -1,6 +1,6 @@
 const ModalBody ={
     bordered: {
-        borderRadius: "12%", 
+        borderRadius: "8%", 
     },
 };
 

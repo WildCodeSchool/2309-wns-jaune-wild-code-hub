@@ -67,6 +67,17 @@ export type File = {
   update_at: Scalars['DateTimeISO']['output'];
 };
 
+export type FindAllInfoUserAccessesProject = {
+  __typename?: 'FindAllInfoUserAccessesProject';
+  created_at: Scalars['DateTimeISO']['output'];
+  project?: Maybe<Project>;
+  project_id: Scalars['Float']['output'];
+  role: Scalars['String']['output'];
+  updated_at: Scalars['DateTimeISO']['output'];
+  user?: Maybe<User>;
+  user_id: Scalars['Float']['output'];
+};
+
 export type InputLogin = {
   email?: InputMaybe<Scalars['String']['input']>;
   password: Scalars['String']['input'];
@@ -91,6 +102,7 @@ export type Mutation = {
   deleteProject: Message;
   deleteUser: Message;
   register: User;
+  updateAccessProject: Message;
   updateFile: Message;
   updateMultipleFiles: Array<Message>;
   updateProject: Message;
@@ -150,6 +162,11 @@ export type MutationRegisterArgs = {
 };
 
 
+export type MutationUpdateAccessProjectArgs = {
+  data: UpdateUserProjectAccessesInput;
+};
+
+
 export type MutationUpdateFileArgs = {
   data: UpdateFileInput;
 };
@@ -189,13 +206,14 @@ export type Query = {
   findUserByEmail: User;
   findUserById: User;
   findUserByPseudo: User;
-  listAccesProject: Array<User>;
   listFilesByProject: Array<File>;
   listLikeProject: Array<Project>;
   listProjects: Array<Project>;
+  listProjectsAccessesUser: Array<FindAllInfoUserAccessesProject>;
   listProjectsByCategory: Array<Project>;
   listPublicProjects: Array<Project>;
   listUsers: Array<User>;
+  listUsersAccessesProject: Array<FindAllInfoUserAccessesProject>;
   listUsersByRole: Array<User>;
   listUsersLikesPerProject: Array<User>;
   login: Message;
@@ -238,11 +256,6 @@ export type QueryFindUserByPseudoArgs = {
 };
 
 
-export type QueryListAccesProjectArgs = {
-  userId: Scalars['Float']['input'];
-};
-
-
 export type QueryListFilesByProjectArgs = {
   project_id: Scalars['String']['input'];
 };
@@ -253,8 +266,18 @@ export type QueryListLikeProjectArgs = {
 };
 
 
+export type QueryListProjectsAccessesUserArgs = {
+  user_id: Scalars['Float']['input'];
+};
+
+
 export type QueryListProjectsByCategoryArgs = {
   category: Scalars['String']['input'];
+};
+
+
+export type QueryListUsersAccessesProjectArgs = {
+  project_id: Scalars['Float']['input'];
 };
 
 
@@ -300,6 +323,12 @@ export type UpdateUserInput = {
   run_counter?: InputMaybe<Scalars['Float']['input']>;
 };
 
+export type UpdateUserProjectAccessesInput = {
+  project_id: Scalars['Float']['input'];
+  role?: InputMaybe<Scalars['String']['input']>;
+  user_id: Scalars['Float']['input'];
+};
+
 export type User = {
   __typename?: 'User';
   ban: Scalars['Boolean']['output'];
@@ -329,6 +358,13 @@ export type UpdateMultipleFilesMutationVariables = Exact<{
 
 
 export type UpdateMultipleFilesMutation = { __typename?: 'Mutation', updateMultipleFiles: Array<{ __typename?: 'Message', success: boolean, message: string }> };
+
+export type UpdateAccessProjectMutationVariables = Exact<{
+  data: UpdateUserProjectAccessesInput;
+}>;
+
+
+export type UpdateAccessProjectMutation = { __typename?: 'Mutation', updateAccessProject: { __typename?: 'Message', success: boolean, message: string } };
 
 export type LoginQueryVariables = Exact<{
   infos: InputLogin;
@@ -360,6 +396,13 @@ export type ListProjectsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type ListProjectsQuery = { __typename?: 'Query', listProjects: Array<{ __typename?: 'Project', update_at: any, private: boolean, name: string, id: string, created_at: any, category: string }> };
+
+export type ListUsersAccessesProjectQueryVariables = Exact<{
+  projectId: Scalars['Float']['input'];
+}>;
+
+
+export type ListUsersAccessesProjectQuery = { __typename?: 'Query', listUsersAccessesProject: Array<{ __typename?: 'FindAllInfoUserAccessesProject', user_id: number, project_id: number, updated_at: any, role: string, created_at: any, user?: { __typename?: 'User', role: string, pseudo: string, id: string, created_at: any, update_at: any } | null, project?: { __typename?: 'Project', category: string, id: string, name: string, private: boolean, created_at: any, update_at: any } | null }> };
 
 
 export const RegisterDocument = gql`
@@ -436,6 +479,40 @@ export function useUpdateMultipleFilesMutation(baseOptions?: Apollo.MutationHook
 export type UpdateMultipleFilesMutationHookResult = ReturnType<typeof useUpdateMultipleFilesMutation>;
 export type UpdateMultipleFilesMutationResult = Apollo.MutationResult<UpdateMultipleFilesMutation>;
 export type UpdateMultipleFilesMutationOptions = Apollo.BaseMutationOptions<UpdateMultipleFilesMutation, UpdateMultipleFilesMutationVariables>;
+export const UpdateAccessProjectDocument = gql`
+    mutation UpdateAccessProject($data: UpdateUserProjectAccessesInput!) {
+  updateAccessProject(data: $data) {
+    success
+    message
+  }
+}
+    `;
+export type UpdateAccessProjectMutationFn = Apollo.MutationFunction<UpdateAccessProjectMutation, UpdateAccessProjectMutationVariables>;
+
+/**
+ * __useUpdateAccessProjectMutation__
+ *
+ * To run a mutation, you first call `useUpdateAccessProjectMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateAccessProjectMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateAccessProjectMutation, { data, loading, error }] = useUpdateAccessProjectMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useUpdateAccessProjectMutation(baseOptions?: Apollo.MutationHookOptions<UpdateAccessProjectMutation, UpdateAccessProjectMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateAccessProjectMutation, UpdateAccessProjectMutationVariables>(UpdateAccessProjectDocument, options);
+      }
+export type UpdateAccessProjectMutationHookResult = ReturnType<typeof useUpdateAccessProjectMutation>;
+export type UpdateAccessProjectMutationResult = Apollo.MutationResult<UpdateAccessProjectMutation>;
+export type UpdateAccessProjectMutationOptions = Apollo.BaseMutationOptions<UpdateAccessProjectMutation, UpdateAccessProjectMutationVariables>;
 export const LoginDocument = gql`
     query Login($infos: InputLogin!) {
   login(infos: $infos) {
@@ -659,3 +736,62 @@ export type ListProjectsQueryHookResult = ReturnType<typeof useListProjectsQuery
 export type ListProjectsLazyQueryHookResult = ReturnType<typeof useListProjectsLazyQuery>;
 export type ListProjectsSuspenseQueryHookResult = ReturnType<typeof useListProjectsSuspenseQuery>;
 export type ListProjectsQueryResult = Apollo.QueryResult<ListProjectsQuery, ListProjectsQueryVariables>;
+export const ListUsersAccessesProjectDocument = gql`
+    query ListUsersAccessesProject($projectId: Float!) {
+  listUsersAccessesProject(project_id: $projectId) {
+    user {
+      role
+      pseudo
+      id
+      created_at
+      update_at
+    }
+    project {
+      category
+      id
+      name
+      private
+      created_at
+      update_at
+    }
+    user_id
+    project_id
+    updated_at
+    role
+    created_at
+  }
+}
+    `;
+
+/**
+ * __useListUsersAccessesProjectQuery__
+ *
+ * To run a query within a React component, call `useListUsersAccessesProjectQuery` and pass it any options that fit your needs.
+ * When your component renders, `useListUsersAccessesProjectQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useListUsersAccessesProjectQuery({
+ *   variables: {
+ *      projectId: // value for 'projectId'
+ *   },
+ * });
+ */
+export function useListUsersAccessesProjectQuery(baseOptions: Apollo.QueryHookOptions<ListUsersAccessesProjectQuery, ListUsersAccessesProjectQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ListUsersAccessesProjectQuery, ListUsersAccessesProjectQueryVariables>(ListUsersAccessesProjectDocument, options);
+      }
+export function useListUsersAccessesProjectLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ListUsersAccessesProjectQuery, ListUsersAccessesProjectQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ListUsersAccessesProjectQuery, ListUsersAccessesProjectQueryVariables>(ListUsersAccessesProjectDocument, options);
+        }
+export function useListUsersAccessesProjectSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<ListUsersAccessesProjectQuery, ListUsersAccessesProjectQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<ListUsersAccessesProjectQuery, ListUsersAccessesProjectQueryVariables>(ListUsersAccessesProjectDocument, options);
+        }
+export type ListUsersAccessesProjectQueryHookResult = ReturnType<typeof useListUsersAccessesProjectQuery>;
+export type ListUsersAccessesProjectLazyQueryHookResult = ReturnType<typeof useListUsersAccessesProjectLazyQuery>;
+export type ListUsersAccessesProjectSuspenseQueryHookResult = ReturnType<typeof useListUsersAccessesProjectSuspenseQuery>;
+export type ListUsersAccessesProjectQueryResult = Apollo.QueryResult<ListUsersAccessesProjectQuery, ListUsersAccessesProjectQueryVariables>;

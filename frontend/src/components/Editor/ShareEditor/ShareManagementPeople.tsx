@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { User } from "@/types/graphql";
+import React, { useState } from "react";
+import { FindAllInfoUserAccessesProject } from "@/types/graphql";
 import { 
   Text,
   Box,
@@ -10,32 +10,75 @@ import {
 } from "@chakra-ui/react";
 import CustomToast from '@/components/ToastCustom/CustomToast';
 import { CloseIcon } from "@chakra-ui/icons";
+import {
+  UpdateAccessProjectMutation,
+  UpdateAccessProjectMutationVariables,
+  Project, 
+} from "@/types/graphql";
+import { useMutation } from "@apollo/client";
+import { 
+  UPDATE_USERS_ACCESSES_PROJECTS
+} from "@/requetes/mutations/usersAccessesProjects.mutations";
+import { useRouter } from "next/router";
 
 interface ShareManagementPeopleProps {
-    users : User | null;
+  users : FindAllInfoUserAccessesProject[] | null;
+  setUsers: React.Dispatch<React.SetStateAction<FindAllInfoUserAccessesProject[] | null>>;
 }
 
-const ShareManagementPeople: React.FC<ShareManagementPeopleProps> = ({ users }) => {
+interface MutationContext {
+  id: number;
+  role: string;
+  pseudo: string;
+}
+
+const ShareManagementPeople: React.FC<ShareManagementPeopleProps> = ({ users, setUsers }) => {
 
   const { showAlert } = CustomToast();
 
-  // Sample data for the list of people to delete
-  const peopleToDelete = [
-    { id: 1, name: "JohnDocscse", email : 'alex@gmail.com' },
-    { id: 2, name: "JanecscsSmith", email : 'alex@gmail.com'},
-    { id: 3, name: "EmilysccscsJohnson", email : 'alex@gmail.com'},
-  ];
+  const router = useRouter();
 
-  // Function to handle deletion
+  const [updateAccessProject] = useMutation<
+    UpdateAccessProjectMutation,
+    UpdateAccessProjectMutationVariables
+  >(UPDATE_USERS_ACCESSES_PROJECTS, {
+    onCompleted: (data, context) => {
+      const mutationContext = context?.context as MutationContext;
+      const updatedUsers = (users ?? []).map(user => 
+        user.user_id === mutationContext.id ? { ...user, role: mutationContext.role } : user
+      );
+
+      setUsers(updatedUsers);
+      showAlert("success", `Changed role to ${mutationContext.role} for user with pseudo: ${mutationContext.pseudo}`);
+    },
+    onError(error) {
+        console.log("error", error)
+        showAlert('error', 'We are sorry, there seems to be an error with the server. Please try again later.');
+    }
+  });
+
+
   const handleDelete = (id: number) => {
-    // Replace this with actual delete logic
     showAlert("info", `Deleted user with id: ${id}`);
   };
 
-  // Function to handle role change
-  const handleRoleChange = (id: number, role: string) => {
-    // Replace this with actual role change logic
-    showAlert("info", `Changed role to ${role} for user with id: ${id}`);
+
+  const handleRoleChange = (id: number, role: string, pseudo: string) => {
+    if (!users || !router.query.id) return;
+    updateAccessProject({
+      variables: {
+        data: {
+          user_id: id,
+          role: role,
+          project_id: +router.query.id,
+        }
+      },
+      context: {
+        id: id,
+        role: role,
+        pseudo: pseudo
+      }
+    });
   };
 
   // Responsive font size for pseudo
@@ -46,29 +89,31 @@ const ShareManagementPeople: React.FC<ShareManagementPeopleProps> = ({ users }) 
       <Text color="white" mb={2} fontSize="18px" >Management People :</Text>
       <Box mt={5}>
         <List spacing={3}>
-          {peopleToDelete.map(person => (
-            <ListItem 
-              key={person.id} 
-              display="flex" 
-              alignItems="center" 
-              justifyContent="space-between" 
-            >
-              <Box display="flex" alignItems="center" flex="1">
-                <Text color="white" mr={3} fontSize={pseudoFontSize}>{person.name}</Text>
-              </Box>
-              <Select 
-                  placeholder="Role"
-                  size="sm"
-                  width="auto"
-                  mr={3}
-                  onChange={(e) => handleRoleChange(person.id, e.target.value)}
-                >
-                  <option value="editor">Editor</option>
-                  <option value="view">View</option>
-                </Select>
-              <CloseIcon />
-            </ListItem>
-          ))}
+          {users?.map(user => {
+            if (user.role === "OWNER") return; 
+            return (
+              <ListItem 
+                key={user.user_id} 
+                display="flex" 
+                alignItems="center" 
+                justifyContent="space-between" 
+              >
+                <Box display="flex" alignItems="center" flex="1">
+                  <Text color="white" mr={3} fontSize={pseudoFontSize}>{user.user?.pseudo}</Text>
+                </Box>
+                <Select
+                    size="sm"
+                    width="auto"
+                    mr={3}
+                    value={user.role}
+                    onChange={(e) => handleRoleChange(user.user_id, e.target.value, user.user?.pseudo)}
+                  >
+                    <option value="EDITOR">Editor</option>
+                    <option value="VIEWER">Viewer</option>
+                  </Select>
+                <CloseIcon />
+              </ListItem>
+          )})}
         </List>
       </Box>
     </Box>
