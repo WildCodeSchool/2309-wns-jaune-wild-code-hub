@@ -1,16 +1,28 @@
 import { Arg, Ctx,  Mutation, Resolver, Authorized, Query } from "type-graphql";
 import UserProjectAccessesService from "../services/userProjectAccesses.service.";
-import { User, Message } from "../entities/user.entity";
+import { Message } from "../entities/user.entity";
 import { MyContext } from "..";
-import { CreateUserProjectAccessesInput, DeleteUserProjectAccessesInput } from "../entities/userProjectAccesses.entity";
+import { 
+  CreateUserProjectAccessesInput,
+  DeleteUserProjectAccessesInput,
+  UpdateUserProjectAccessesInput,
+  FindAllInfoUserAccessesProject,
+} from "../entities/userProjectAccesses.entity";
 
 @Resolver()
 export class UserProjectAccessesResolver {
 
   @Authorized()
-  @Query(() => [User])
-  async listAccesProject (@Arg("userId") userId: number) {
-    const listAccesProject = await new UserProjectAccessesService().findUsersByAccessesProject(userId);
+  @Query(() => [FindAllInfoUserAccessesProject])
+  async listUsersAccessesProject (@Arg("project_id") project_id: number) {
+    const listAccesProject = await new UserProjectAccessesService().findUsersByAccessesProject(project_id);
+    return listAccesProject;
+  }
+
+  @Authorized()
+  @Query(() => [FindAllInfoUserAccessesProject])
+  async listProjectsAccessesUser (@Arg("user_id") user_id: number) {
+    const listAccesProject = await new UserProjectAccessesService().findProjectsByAccessesUser(user_id);
     return listAccesProject;
   }
 
@@ -76,6 +88,39 @@ export class UserProjectAccessesResolver {
       m.success = true;
     } else {
       m.message = "Unable to delete user project!";
+      m.success = false;
+    }
+
+    return m;
+  }
+
+  @Authorized()
+  @Mutation(() => Message)
+  async updateAccessProject (@Arg("data") data: UpdateUserProjectAccessesInput, @Ctx() context: MyContext) {
+
+    if (context.user == null)
+      throw new Error("Access denied! You need to be authenticated to perform this action!");
+
+    const checkUserOwner = await new UserProjectAccessesService().findByAccessesProject(context.user.id, data.project_id);
+    
+    if (!checkUserOwner)
+      throw new Error("You do not have access to this project!");
+
+    if (checkUserOwner.role !== "OWNER")
+      throw new Error("You must be owner to give other users access to this project");
+
+    if(data.role.toLocaleUpperCase() === "OWNER")
+      throw new Error("You do not have the right to add a second owner to the project");
+
+    const updateUserAccessesProject = await new UserProjectAccessesService().updateAccessesProject(data);
+    
+    const m = new Message();
+
+    if (updateUserAccessesProject) {
+      m.message = "Update user project!";
+      m.success = true;
+    } else {
+      m.message = "Unable to update user project!";
       m.success = false;
     }
 

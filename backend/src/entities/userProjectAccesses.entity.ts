@@ -49,7 +49,6 @@ export class CreateUserProjectAccessesInput {
 
   @Field({ nullable: true })
   role: UserRole;
-
 }
 
 @InputType()
@@ -71,4 +70,28 @@ export class UpdateUserProjectAccessesInput {
 
   @Field({ nullable: true })
   role: UserRole;
+}
+
+@ObjectType()
+export class FindAllInfoUserAccessesProject {
+  @Field({ nullable: false })
+  user_id: number;
+
+  @Field({ nullable: false })
+  project_id: number;
+
+  @Field({ nullable: false })
+  role: UserRole;
+
+  @Field({ nullable: false })
+  created_at: Date;
+
+  @Field({ nullable: false })
+  updated_at:Date;
+
+  @Field(() => User, { nullable: true })
+  user: User;
+
+  @Field(() => Project, { nullable: true })
+  project: Project;
 }

@@ -15,7 +15,6 @@ import {
 } from "../entities/project.entity";
 import ProjectsService from "../services/projects.service";
 import { Message, User } from "../entities/user.entity";
-import { File } from "../entities/file.entity";
 import { MyContext } from "../index"; 
 
 @Resolver()
@@ -31,13 +30,14 @@ export class ProjectResolver {
     @Arg("id") id: string,
     @Ctx() context: MyContext
   ): Promise<Project | undefined> {
-    if (isNaN(+id)) throw new Error("Specify a correct id");
 
+    if (isNaN(+id)) throw new Error("Specify a correct id");
+    
     const projectById = await new ProjectsService().findById(+id);
     
     if (!projectById) 
       throw new Error("Please note, the project does not exist") 
-    
+
     if (!projectById.private) 
       return projectById;
     
@@ -49,6 +49,7 @@ export class ProjectResolver {
 
     if (checkUserAccessesProject.length === 0)
       throw new Error("You do not have permission to access this project!")
+
 
     return projectById
   }
@@ -128,7 +129,6 @@ export class ProjectResolver {
     return count;
   }
 
-  // @Authorized()
   @Query(() => [User])
   async listUsersLikesPerProject(@Arg("projectId") projectId: number) {
     const projects = await new ProjectsService().listLikedUsers(projectId);

@@ -3,7 +3,9 @@ import datasource from "../lib/db";
 import {
   UsersProjectsAccesses,
   CreateUserProjectAccessesInput,
+  UpdateUserProjectAccessesInput,
 } from "../entities/userProjectAccesses.entity";
+import { validate } from "class-validator";
 
 export default class UserProjectAccessesService {
   db: Repository<UsersProjectsAccesses>;
@@ -26,14 +28,20 @@ export default class UserProjectAccessesService {
     return filterUserAndProject;
   }
 
-  async findUsersByAccessesProject (userId: number) {
-    const userAccesses = await this.db.find({
-      where: { user_id: userId },
-      relations: ['project.usersProjectsAccesses', 'project.files']
+  async findUsersByAccessesProject (project_id: number) {
+    const userAccessesProject = await this.db.find({
+      where: { project_id: project_id },
+      relations: ['project.usersProjectsAccesses', "project.files", "user.usersProjectsAccesses"]
     });
+    return userAccessesProject;
+  }
 
-    const projects = userAccesses.map(access => {access.project, access.role});
-    return projects;
+  async findProjectsByAccessesUser (user_id: number) {
+    const userAccessesProject = await this.db.find({
+      where: { user_id: user_id },
+      relations: ['project.usersProjectsAccesses', "project.files", "user.usersProjectsAccesses"]
+    });
+    return userAccessesProject;
   }
 
   async createAccessesProject (data : CreateUserProjectAccessesInput) {
@@ -47,5 +55,21 @@ export default class UserProjectAccessesService {
       throw new Error("This user does not have access to this projec!");
     }
     return await this.db.remove(userToDeleteAccessesProject);
+  }
+
+  async updateAccessesProject (data: UpdateUserProjectAccessesInput) {
+    const userToDeleteAccessesProject = await this.findByAccessesProject(data.user_id, data.project_id);
+    if (!userToDeleteAccessesProject) {
+      throw new Error("This user does not have access to this projec!");
+    }
+    const userToDeleteAccessesProjectToSave = this.db.merge(userToDeleteAccessesProject, {
+      ...data,
+    });
+    const errors = await validate(userToDeleteAccessesProjectToSave);
+    if (errors.length !== 0) {
+      throw new Error("Error format data");
+    }
+
+    return await this.db.save(userToDeleteAccessesProjectToSave);
   }
 }

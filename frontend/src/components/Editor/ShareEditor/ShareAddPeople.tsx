@@ -22,10 +22,8 @@ const ShareAddPeople: React.FC<ShareAddPeopleProps> = ({ users }) => {
 
   const hundleClick = () => {
 
-    if (pseudo.length === 0 || role.length === 0) {
-      showAlert("error", "Please complete all fields in the form!")
-      return;
-    }
+    if (pseudo.length === 0 || role.length === 0)
+      return showAlert("error", "Please complete all fields in the form!");
 
     showAlert("success", "yo")
   }

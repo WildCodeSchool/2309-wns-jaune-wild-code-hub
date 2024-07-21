@@ -77,7 +77,7 @@ export class UserResolver {
       let cookies = new Cookies(ctx.req, ctx.res);
       cookies.set("token", token, { httpOnly: true });
 
-      m.message = "Welcome !";
+      m.message = "You are connected!";
       m.success = true;
     } else {
       m.message = "Check your login information !";
