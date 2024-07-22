@@ -11,6 +11,7 @@ import {
 } from "../entities/userProjectAccesses.entity";
 import datasource from "../lib/db";
 import FilesService from "./files.service";
+import { File } from "../entities/file.entity";
 
 export default class ProjectsService {
   db: Repository<Project>;
@@ -112,10 +113,10 @@ export default class ProjectsService {
     const newProject = this.db.create(data);
     const savedProject = await this.db.save(newProject);
 
-    // const files = await this.createDefaultFiles(savedProject.id);
+    const files = await this.createDefaultFiles(savedProject.id);
     // await this.createDefaultFiles(savedProject.id);
     // console.log("files create", files)
-    // savedProject.files = files;
+    savedProject.files = files;
 
     // const projectWithFiles = await this.db.findOne({
     //   where: { id: savedProject.id },
@@ -156,20 +157,14 @@ export default class ProjectsService {
         project: { id: projectId },
       },
     ];
-
     const files: File[] = [];
-
     for (const fileData of defaultFiles) {
-      // const newFile = this.fileDb.create(fileData);
-      // console.log("new File", newFile)
-      // //Stop ici les log dans les
-      // const savedFile = await this.fileDb.save(newFile);
       const savedFile = await new FilesService().create({
         ...fileData,
         project_id: projectId,
       });
-      console.log("saved File", savedFile);
-      // files.push(savedFile);
+      console.log("savedFile", savedFile);
+      files.push(savedFile);
     }
     return files;
   }
