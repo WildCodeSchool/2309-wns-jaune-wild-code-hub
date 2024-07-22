@@ -14,6 +14,8 @@ import { useState } from "react";
 import { PasswordInput } from "@/components/Inputs/PasswordInput";
 import { TextInput } from "@/components/Inputs/TextInput";
 
+//TODO Add direct input validation (as user is typing)
+
 const Register = () => {
   const router = useRouter();
   const [formData, setFormData] = useState({
