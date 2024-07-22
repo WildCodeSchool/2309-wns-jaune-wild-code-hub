@@ -14,12 +14,12 @@ export const PROJECTS = gql`
   }
 `;
 
-export const LIST_USERS_BY_PSEUDO = gql`
-  query ListUsersByPseudo($pseudo: String!)  {
-    listUsersByPseudo(pseudo: $pseudo) {
-      pseudo
-      id
-      email
-    }
-  }
-`;
+// export const LIST_USERS_BY_PSEUDO = gql`
+//   query ListUsersByPseudo($pseudo: String!)  {
+//     listUsersByPseudo(pseudo: $pseudo) {
+//       pseudo
+//       id
+//       email
+//     }
+//   }
+// `;

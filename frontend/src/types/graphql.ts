@@ -92,7 +92,7 @@ export type Message = {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  addAccessProject: UserAccessesProjectResponse;
+  addAccessProject: Message;
   addLikeProject: Message;
   createFile: File;
   createProject: Project;
@@ -214,7 +214,6 @@ export type Query = {
   listPublicProjects: Array<Project>;
   listUsers: Array<User>;
   listUsersAccessesProject: Array<FindAllInfoUserAccessesProject>;
-  listUsersByPseudo: Array<User>;
   listUsersByRole: Array<User>;
   listUsersLikesPerProject: Array<User>;
   login: Message;
@@ -282,11 +281,6 @@ export type QueryListUsersAccessesProjectArgs = {
 };
 
 
-export type QueryListUsersByPseudoArgs = {
-  pseudo: Scalars['String']['input'];
-};
-
-
 export type QueryListUsersByRoleArgs = {
   role: Scalars['String']['input'];
 };
@@ -351,12 +345,6 @@ export type User = {
   update_at: Scalars['DateTimeISO']['output'];
 };
 
-export type UserAccessesProjectResponse = {
-  __typename?: 'UserAccessesProjectResponse';
-  listUsersAccessesProjectData?: Maybe<Array<FindAllInfoUserAccessesProject>>;
-  message?: Maybe<Message>;
-};
-
 export type RegisterMutationVariables = Exact<{
   data: CreateUserInput;
 }>;
@@ -390,7 +378,7 @@ export type AddAccessProjectMutationVariables = Exact<{
 }>;
 
 
-export type AddAccessProjectMutation = { __typename?: 'Mutation', addAccessProject: { __typename?: 'UserAccessesProjectResponse', listUsersAccessesProjectData?: Array<{ __typename?: 'FindAllInfoUserAccessesProject', role: string, project_id: number, user_id: number, created_at: any, updated_at: any, user?: { __typename?: 'User', pseudo: string, email: string, firstname: string, lastname: string, id: string, password: string, role: string, ban: boolean, run_counter: number, last_login: any, created_at: any, update_at: any } | null, project?: { __typename?: 'Project', id: string, name: string, private: boolean, created_at: any, category: string, update_at: any, files: Array<{ __typename?: 'File', id: string, name: string, type: string, language: string, extension: string, content: string, update_at: any, created_at: any }> } | null }> | null, message?: { __typename?: 'Message', success: boolean, message: string } | null } };
+export type AddAccessProjectMutation = { __typename?: 'Mutation', addAccessProject: { __typename?: 'Message', success: boolean, message: string } };
 
 export type LoginQueryVariables = Exact<{
   infos: InputLogin;
@@ -422,13 +410,6 @@ export type ListProjectsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type ListProjectsQuery = { __typename?: 'Query', listProjects: Array<{ __typename?: 'Project', update_at: any, private: boolean, name: string, id: string, created_at: any, category: string }> };
-
-export type ListUsersByPseudoQueryVariables = Exact<{
-  pseudo: Scalars['String']['input'];
-}>;
-
-
-export type ListUsersByPseudoQuery = { __typename?: 'Query', listUsersByPseudo: Array<{ __typename?: 'User', pseudo: string, id: string, email: string }> };
 
 export type ListUsersAccessesProjectQueryVariables = Exact<{
   projectId: Scalars['Float']['input'];
@@ -583,49 +564,8 @@ export type DeleteAccessProjectMutationOptions = Apollo.BaseMutationOptions<Dele
 export const AddAccessProjectDocument = gql`
     mutation AddAccessProject($data: CreateUserProjectAccessesInput!) {
   addAccessProject(data: $data) {
-    listUsersAccessesProjectData {
-      role
-      project_id
-      user_id
-      created_at
-      updated_at
-      user {
-        pseudo
-        email
-        firstname
-        lastname
-        id
-        password
-        role
-        ban
-        run_counter
-        last_login
-        created_at
-        update_at
-      }
-      project {
-        id
-        name
-        private
-        created_at
-        category
-        update_at
-        files {
-          id
-          name
-          type
-          language
-          extension
-          content
-          update_at
-          created_at
-        }
-      }
-    }
-    message {
-      success
-      message
-    }
+    success
+    message
   }
 }
     `;
@@ -878,48 +818,6 @@ export type ListProjectsQueryHookResult = ReturnType<typeof useListProjectsQuery
 export type ListProjectsLazyQueryHookResult = ReturnType<typeof useListProjectsLazyQuery>;
 export type ListProjectsSuspenseQueryHookResult = ReturnType<typeof useListProjectsSuspenseQuery>;
 export type ListProjectsQueryResult = Apollo.QueryResult<ListProjectsQuery, ListProjectsQueryVariables>;
-export const ListUsersByPseudoDocument = gql`
-    query ListUsersByPseudo($pseudo: String!) {
-  listUsersByPseudo(pseudo: $pseudo) {
-    pseudo
-    id
-    email
-  }
-}
-    `;
-
-/**
- * __useListUsersByPseudoQuery__
- *
- * To run a query within a React component, call `useListUsersByPseudoQuery` and pass it any options that fit your needs.
- * When your component renders, `useListUsersByPseudoQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useListUsersByPseudoQuery({
- *   variables: {
- *      pseudo: // value for 'pseudo'
- *   },
- * });
- */
-export function useListUsersByPseudoQuery(baseOptions: Apollo.QueryHookOptions<ListUsersByPseudoQuery, ListUsersByPseudoQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<ListUsersByPseudoQuery, ListUsersByPseudoQueryVariables>(ListUsersByPseudoDocument, options);
-      }
-export function useListUsersByPseudoLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ListUsersByPseudoQuery, ListUsersByPseudoQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<ListUsersByPseudoQuery, ListUsersByPseudoQueryVariables>(ListUsersByPseudoDocument, options);
-        }
-export function useListUsersByPseudoSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<ListUsersByPseudoQuery, ListUsersByPseudoQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<ListUsersByPseudoQuery, ListUsersByPseudoQueryVariables>(ListUsersByPseudoDocument, options);
-        }
-export type ListUsersByPseudoQueryHookResult = ReturnType<typeof useListUsersByPseudoQuery>;
-export type ListUsersByPseudoLazyQueryHookResult = ReturnType<typeof useListUsersByPseudoLazyQuery>;
-export type ListUsersByPseudoSuspenseQueryHookResult = ReturnType<typeof useListUsersByPseudoSuspenseQuery>;
-export type ListUsersByPseudoQueryResult = Apollo.QueryResult<ListUsersByPseudoQuery, ListUsersByPseudoQueryVariables>;
 export const ListUsersAccessesProjectDocument = gql`
     query ListUsersAccessesProject($projectId: Float!) {
   listUsersAccessesProject(project_id: $projectId) {
