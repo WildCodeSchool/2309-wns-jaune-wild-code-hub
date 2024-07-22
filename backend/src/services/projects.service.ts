@@ -169,9 +169,8 @@ export default class ProjectsService {
         project_id: projectId,
       });
       console.log("saved File", savedFile);
-      files.push(savedFile);
+      // files.push(savedFile);
     }
-    // console.log("Mes files", files)
     return files;
   }
 
