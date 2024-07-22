@@ -5,6 +5,8 @@ import {
   Container,
   VStack,
   useColorModeValue,
+  Center,
+  Stack,
 } from "@chakra-ui/react";
 import {
   ExternalFooterLink,
@@ -13,6 +15,7 @@ import {
 } from "./Link";
 import React from "react";
 import FooterMailto from "./FooterMailto";
+import { GithubIcon } from "./icons/GithubIcon";
 import Image from "next/image";
 
 const footerData = [
@@ -95,11 +98,18 @@ const Footer = () => {
           ))}
           <FooterMailto />
         </Flex>
-        <Flex alignItems="center" alignContent={"center"}>
-          <Text color="gray.500" fontSize="0.875rem" pl="0.5rem">
-            &copy; 2024 Wild Code Hub. All rights reserved.
-          </Text>
-        </Flex>
+
+        <Center>
+          <Stack direction={["column", "row"]} spacing="24px">
+            <Text color="gray.500" fontSize="0.875rem" pl="0.5rem">
+              &copy; 2024 Wild Code Hub. All rights reserved.
+            </Text>
+
+            <Link href="https://github.com/WildCodeSchool/2309-wns-jaune-wild-code-hub">
+              <GithubIcon size={20} />
+            </Link>
+          </Stack>
+        </Center>
       </VStack>
     </Container>
   );
