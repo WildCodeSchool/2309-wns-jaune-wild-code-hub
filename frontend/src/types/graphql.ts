@@ -387,7 +387,7 @@ export type FindUserByIdQueryVariables = Exact<{
 }>;
 
 
-export type FindUserByIdQuery = { __typename?: 'Query', findUserById: { __typename?: 'User', created_at: any, email: string, firstname: string, lastname: string, pseudo: string, run_counter: number } };
+export type FindUserByIdQuery = { __typename?: 'Query', findUserById: { __typename?: 'User', id: string, created_at: any, email: string, firstname: string, lastname: string, pseudo: string, run_counter: number } };
 
 export type FindProjectOwnerQueryVariables = Exact<{
   projectId: Scalars['String']['input'];
@@ -395,6 +395,20 @@ export type FindProjectOwnerQueryVariables = Exact<{
 
 
 export type FindProjectOwnerQuery = { __typename?: 'Query', findProjectOwner: { __typename?: 'User', pseudo: string } };
+
+export type UpdateUserMutationVariables = Exact<{
+  data: UpdateUserInput;
+}>;
+
+
+export type UpdateUserMutation = { __typename?: 'Mutation', updateUser: { __typename?: 'Message', success: boolean, message: string } };
+
+export type DeleteUserMutationVariables = Exact<{
+  deleteUserId: Scalars['Float']['input'];
+}>;
+
+
+export type DeleteUserMutation = { __typename?: 'Mutation', deleteUser: { __typename?: 'Message', message: string, success: boolean } };
 
 
 export const RegisterDocument = gql`
@@ -742,6 +756,7 @@ export type ListLikeProjectQueryResult = Apollo.QueryResult<ListLikeProjectQuery
 export const FindUserByIdDocument = gql`
     query FindUserById($findUserByIdId: String!) {
   findUserById(id: $findUserByIdId) {
+    id
     created_at
     email
     firstname
@@ -824,3 +839,71 @@ export type FindProjectOwnerQueryHookResult = ReturnType<typeof useFindProjectOw
 export type FindProjectOwnerLazyQueryHookResult = ReturnType<typeof useFindProjectOwnerLazyQuery>;
 export type FindProjectOwnerSuspenseQueryHookResult = ReturnType<typeof useFindProjectOwnerSuspenseQuery>;
 export type FindProjectOwnerQueryResult = Apollo.QueryResult<FindProjectOwnerQuery, FindProjectOwnerQueryVariables>;
+export const UpdateUserDocument = gql`
+    mutation UpdateUser($data: UpdateUserInput!) {
+  updateUser(data: $data) {
+    success
+    message
+  }
+}
+    `;
+export type UpdateUserMutationFn = Apollo.MutationFunction<UpdateUserMutation, UpdateUserMutationVariables>;
+
+/**
+ * __useUpdateUserMutation__
+ *
+ * To run a mutation, you first call `useUpdateUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateUserMutation, { data, loading, error }] = useUpdateUserMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useUpdateUserMutation(baseOptions?: Apollo.MutationHookOptions<UpdateUserMutation, UpdateUserMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateUserMutation, UpdateUserMutationVariables>(UpdateUserDocument, options);
+      }
+export type UpdateUserMutationHookResult = ReturnType<typeof useUpdateUserMutation>;
+export type UpdateUserMutationResult = Apollo.MutationResult<UpdateUserMutation>;
+export type UpdateUserMutationOptions = Apollo.BaseMutationOptions<UpdateUserMutation, UpdateUserMutationVariables>;
+export const DeleteUserDocument = gql`
+    mutation DeleteUser($deleteUserId: Float!) {
+  deleteUser(id: $deleteUserId) {
+    message
+    success
+  }
+}
+    `;
+export type DeleteUserMutationFn = Apollo.MutationFunction<DeleteUserMutation, DeleteUserMutationVariables>;
+
+/**
+ * __useDeleteUserMutation__
+ *
+ * To run a mutation, you first call `useDeleteUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteUserMutation, { data, loading, error }] = useDeleteUserMutation({
+ *   variables: {
+ *      deleteUserId: // value for 'deleteUserId'
+ *   },
+ * });
+ */
+export function useDeleteUserMutation(baseOptions?: Apollo.MutationHookOptions<DeleteUserMutation, DeleteUserMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteUserMutation, DeleteUserMutationVariables>(DeleteUserDocument, options);
+      }
+export type DeleteUserMutationHookResult = ReturnType<typeof useDeleteUserMutation>;
+export type DeleteUserMutationResult = Apollo.MutationResult<DeleteUserMutation>;
+export type DeleteUserMutationOptions = Apollo.BaseMutationOptions<DeleteUserMutation, DeleteUserMutationVariables>;
