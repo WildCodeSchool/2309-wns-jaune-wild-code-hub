@@ -68,7 +68,7 @@ const Sidebar = ({ isOpen, setIsOpen }: Props) => {
           enter: { duration: 0.5 },
         }}
       >
-        {pathname.startsWith("/me") && <MeSidebar />}
+        {pathname?.startsWith("/me") && <MeSidebar />}
       </SlideFade>
       <SlideFade in={isOpen} offsetX="-16rem">
         <LinkBox

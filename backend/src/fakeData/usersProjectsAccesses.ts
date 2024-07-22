@@ -4,7 +4,7 @@ const fakeUsersProjectsAccesses = [
   {
     user_id: 1,
     project_id: 1,
-    role: "EDITOR" as UserRole,
+    role: "OWNER" as UserRole,
     created_at: new Date(),
     updated_at: new Date(),
   },

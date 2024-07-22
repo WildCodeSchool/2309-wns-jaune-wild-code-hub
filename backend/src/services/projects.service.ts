@@ -1,14 +1,18 @@
-import { In, Like, Repository, SelectQueryBuilder } from "typeorm";
-import datasource from "../lib/db";
+import { validate } from "class-validator";
+import { In, Like, Repository } from "typeorm";
 import {
-  Project,
   CreateProjectInput,
+  Project,
   UpdateProjectInput,
 } from "../entities/project.entity";
-import { validate } from "class-validator";
-import { UsersProjectsAccesses } from "../entities/userProjectAccesses.entity";
-import { File, CreateFileInput } from "../entities/file.entity";
+import {
+  UserRole,
+  UsersProjectsAccesses,
+} from "../entities/userProjectAccesses.entity";
+import datasource from "../lib/db";
 import FilesService from "./files.service";
+import { File } from "../entities/file.entity";
+
 export default class ProjectsService {
   db: Repository<Project>;
   fileDb: Repository<File>;
@@ -76,20 +80,43 @@ export default class ProjectsService {
   //   return projects;
   // }
 
+  async listByUserId(id: number) {
+    const projects = await this.db.find({
+      where: {
+        usersProjectsAccesses: {
+          user_id: id,
+        },
+      },
+      relations: ["usersProjectsAccesses"],
+    });
+    return projects;
+  }
+  async ListByUserWithRole(userId: number, userRole?: UserRole[]) {
+    const userProjectAccessesRepository = datasource.getRepository(
+      UsersProjectsAccesses
+    );
+    const whereConditions = userRole
+      ? {
+          role: In(userRole),
+          user_id: userId,
+        }
+      : { user_id: userId };
+    const userAccesses = await userProjectAccessesRepository.find({
+      where: whereConditions,
+      relations: ["project.usersProjectsAccesses"],
+    });
+
+    return userAccesses;
+  }
+
   async create(data: CreateProjectInput) {
-    console.log("DEBUG Service - Received data: ", data); 
     const newProject = this.db.create(data);
-    console.log("DEBUG Service - New Project Entity: ", newProject); 
     const savedProject = await this.db.save(newProject);
-    console.log("DEBUG Service - Saved Project: ", savedProject); 
 
-    console.log("avant files")
-
-    
-    // const files = await this.createDefaultFiles(savedProject.id);
+    const files = await this.createDefaultFiles(savedProject.id);
     // await this.createDefaultFiles(savedProject.id);
     // console.log("files create", files)
-    // savedProject.files = files;
+    savedProject.files = files;
 
     // const projectWithFiles = await this.db.findOne({
     //   where: { id: savedProject.id },
@@ -103,28 +130,42 @@ export default class ProjectsService {
   }
 
   async createDefaultFiles(projectId: number) {
-    console.log("tototto", projectId) 
+    console.log("tototto", projectId);
     const defaultFiles = [
-      { name: "index", type: "file", language: "html", extension: "html", content: "", project: {id : projectId } },
-      { name: "style", type: "file", language: "css", extension: "css", content: "", project: {id : projectId } },
-      { name: "index", type: "file", language: "javascript", extension: "js", content: "", project: {id : projectId } },
+      {
+        name: "index",
+        type: "file",
+        language: "html",
+        extension: "html",
+        content: "",
+        project: { id: projectId },
+      },
+      {
+        name: "style",
+        type: "file",
+        language: "css",
+        extension: "css",
+        content: "",
+        project: { id: projectId },
+      },
+      {
+        name: "index",
+        type: "file",
+        language: "javascript",
+        extension: "js",
+        content: "",
+        project: { id: projectId },
+      },
     ];
-
     const files: File[] = [];
-
     for (const fileData of defaultFiles) {
-      // const newFile = this.fileDb.create(fileData);
-      // console.log("new File", newFile)
-      // //Stop ici les log dans les
-      // const savedFile = await this.fileDb.save(newFile);
       const savedFile = await new FilesService().create({
         ...fileData,
-        project_id : projectId
-      })
-      console.log("saved File", savedFile)
+        project_id: projectId,
+      });
+      console.log("savedFile", savedFile);
       files.push(savedFile);
     }
-    // console.log("Mes files", files)
     return files;
   }
 
