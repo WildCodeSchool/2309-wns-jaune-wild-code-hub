@@ -18,6 +18,7 @@ import UserService from "./services/users.service";
 import { customAuthChecker } from "./lib/authChecker";
 import { ProjectResolver } from "./resolvers/project.resolver";
 import { FileResolver } from "./resolvers/file.resolver";
+import { UserProjectAccessesResolver } from "./resolvers/userProjectAccesses.resolver";
 
 export interface MyContext {
   req: express.Request;
@@ -33,7 +34,7 @@ const httpServer = http.createServer(app);
 
 async function main() {
   const schema = await buildSchema({
-    resolvers: [UserResolver, ProjectResolver, FileResolver],
+    resolvers: [UserResolver, ProjectResolver, FileResolver, UserProjectAccessesResolver],
     validate: false,
     authChecker: customAuthChecker,
   });

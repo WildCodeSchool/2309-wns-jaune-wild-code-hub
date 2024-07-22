@@ -1,48 +1,55 @@
-import ProjectCard from "@/components/ProjectCard";
-import SidebarLayout from "@/components/SidebarLayout";
-import { PROJECTS, PROJECTS_BY_USER } from "@/requetes/queries/user.queries";
+import Loader from "@/components/Loader";
+import { ProfilePageContainer } from "@/components/ProfilePageContainer";
+import { ProjectsGrid } from "@/components/ProjectsGrid";
+import SidebarLayout from "@/components/Sidebar/SidebarLayout";
 import {
-  ListProjectsByUserQuery,
-  ListProjectsByUserQueryVariables,
-  QueryListProjectsByUserArgs,
-  User,
+  Project,
+  useListProjectsByUserWithRoleLazyQuery,
 } from "@/types/graphql";
-import { useLazyQuery, useQuery } from "@apollo/client";
-import { Flex, Grid, GridItem, Heading } from "@chakra-ui/react";
+import { Button, Heading } from "@chakra-ui/react";
 import Cookies from "js-cookie";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { NextPageWithLayout } from "../_app";
 
+
+// TODO Add pagination
+
 const Workspace: NextPageWithLayout = () => {
-  const [user, setUser] = useState<User>();
+  const [projects, setProjects] = useState<Project[]>([]);
 
-  // TODO Use cookies to get user id and then load projects
-  const { error, data } = useQuery<
-    ListProjectsByUserQuery,
-    ListProjectsByUserQueryVariables
-  >(PROJECTS_BY_USER, { variables: { listProjectsByUserId: "1" } });
+  const userId = Cookies.get("id");
 
-  console.log("projects", data);
-  // useEffect(() => {
-  //   const id = Cookies.get("id") ?? "";
-  //   if (id) {
-  //   }
-  // }, [Cookies.get("id")]);
+  const [getProjects, { error, loading, data }] =
+    useListProjectsByUserWithRoleLazyQuery();
+  useEffect(() => {
+    if (userId) {
+      getProjects({
+        variables: {
+          userId,
+        },
+        onCompleted(data) {
+          setProjects(
+            data.listProjectsByUserWithRole.map((item) => item.project)
+          );
+        },
+      });
+    }
+  }, [userId, getProjects, data]);
   return (
-    <Flex alignItems={"center"} width={"100%"} direction={"column"} pr={"5rem"}>
-      <Heading marginBottom={"3rem"}>Welcome to your Workspace</Heading>
-      <Grid templateColumns="repeat(3, 1fr)" gap={6}>
-        {data &&
-          data.listProjectsByUser.map((project, id) => {
-            console.log("project", project);
-            return (
-              <GridItem key={project.id + id}>
-                <ProjectCard project={project}></ProjectCard>
-              </GridItem>
-            );
-          })}
-      </Grid>
-    </Flex>
+    <ProfilePageContainer>
+      <Heading fontSize={"3cqw"}>Welcome to your Workspace</Heading>
+      {loading ? (
+        <Loader />
+      ) : error ? (
+        <>An error occured</>
+      ) : projects.length > 0 ? (
+        <ProjectsGrid projects={projects} />
+      ) : (
+        <>There is no projects in your workspace !</>
+      )}
+
+      <Button variant={"secondary"}>Create a project</Button>
+    </ProfilePageContainer>
   );
 };
 Workspace.getLayout = function getLayout(page) {

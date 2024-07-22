@@ -6,16 +6,20 @@ import {
   Query,
   Resolver,
   Authorized,
+  Ctx,
 } from "type-graphql";
 import {
-  Project,
   CreateProjectInput,
+  Project,
   UpdateProjectInput,
 } from "../entities/project.entity";
-import ProjectsService from "../services/projects.service";
 import { Message, User } from "../entities/user.entity";
-import { File } from "../entities/file.entity";
-
+import { MyContext } from "../index"; 
+import {
+  UserAccessProjectOutput,
+  UserRole,
+} from "../entities/userProjectAccesses.entity";
+import ProjectsService from "../services/projects.service";
 
 @Resolver()
 export class ProjectResolver {
@@ -26,12 +30,32 @@ export class ProjectResolver {
   }
 
   @Query(() => Project)
-  async findProjectById(@Arg("id") id: string) {
+  async findProjectById(
+    @Arg("id") id: string,
+    @Ctx() context: MyContext
+  ): Promise<Project | undefined> {
+
     if (isNaN(+id)) throw new Error("Specify a correct id");
+    
     const projectById = await new ProjectsService().findById(+id);
-    if (!projectById)
-      throw new Error("Please note, the project does not exist");
-    return projectById;
+    
+    if (!projectById) 
+      throw new Error("Please note, the project does not exist") 
+
+    if (!projectById.private) 
+      return projectById;
+    
+    if (projectById.private && context.user == null) 
+      throw new Error("Access denied! You need to be authenticated to perform this action!")
+
+    const userAccessesProject = projectById.usersProjectsAccesses;
+    const checkUserAccessesProject = userAccessesProject.filter((user) => user.user_id === context.user?.id);
+
+    if (checkUserAccessesProject.length === 0)
+      throw new Error("You do not have permission to access this project!")
+
+
+    return projectById
   }
 
   @Query(() => Project)
@@ -53,7 +77,27 @@ export class ProjectResolver {
     const projects = await new ProjectsService().listByCategory(category);
     return projects;
   }
+
+  @Authorized()
+  @Query(() => [Project])
+  async listProjectsByUser(@Arg("id") id: string) {
+    const projects = await new ProjectsService().listByUserId(+id);
+    return projects;
+  }
+
   
+  @Authorized()
+  @Query(() => [UserAccessProjectOutput])
+  async listProjectsByUserWithRole(
+    @Arg("id") id: string,
+    @Arg("userRole", () => [String], { nullable: true }) userRole?: UserRole[]
+  ) {
+    const projects = await new ProjectsService().ListByUserWithRole(
+      +id,
+      userRole
+    );
+    return projects;
+  }
   // @Authorized()
   // @Query(() => [Project])
   // async listProjectsByUser(@Arg("id") id: string) {
@@ -61,14 +105,26 @@ export class ProjectResolver {
   //   return projects;
   // }
 
+  
+  // @Authorized()
+  // @Query(() => [UserAccessProjectOutput])
+  // async listProjectsByUserWithRole(
+  //   @Arg("id") id: string,
+  //   @Arg("userRole", () => [String], { nullable: true }) userRole?: UserRole[]
+  // ) {
+  //   const projects = await new ProjectsService().ListByUserWithRole(
+  //     +id,
+  //     userRole
+  //   );
+  //   return projects;
+  // }
+
   @Authorized()
   @Mutation(() => Project)
   async createProject(@Arg("data") data: CreateProjectInput) {
     const project = await new ProjectsService().findByName(data.name);
-    console.log("DEBUG Resolver : ", data)
     if (project) throw new Error("This name of project is already in use!");
     const newProject = await new ProjectsService().create(data);
-    console.log("DEBUG Resolver - New Project: ", newProject); // Ajout du log
 
     return newProject;
   }
@@ -111,7 +167,6 @@ export class ProjectResolver {
     return count;
   }
 
-  // @Authorized()
   @Query(() => [User])
   async listUsersLikesPerProject(@Arg("projectId") projectId: number) {
     const projects = await new ProjectsService().listLikedUsers(projectId);

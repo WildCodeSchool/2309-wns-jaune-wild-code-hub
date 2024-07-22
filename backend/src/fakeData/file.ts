@@ -1,7 +1,7 @@
 const fakeFile = [
     {
         project: { id: 1},
-        name: "file 1",
+        name: "index",
         extension: "html",
         type: "file",
         content: `
@@ -13,7 +13,7 @@ const fakeFile = [
     },
     {
         project: { id: 1},
-        name: "file 2",
+        name: "style",
         extension: "css",
         type: "file",
         content: `#app { background: red; }`,
@@ -21,7 +21,7 @@ const fakeFile = [
     },
     {
         project: { id: 1},
-        name: "file 3",
+        name: "index",
         extension: "js",
         type: "file",
         content: `document.getElementById('app').innerText = "Hello, JavaScript!";
