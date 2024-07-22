@@ -4,17 +4,22 @@ import React, { useEffect, useMemo, useState } from "react";
 import Searchbar from "./Searchbar";
 import Cookies from "js-cookie";
 import { useParams, usePathname, useRouter } from "next/navigation";
+import BurgerMenu from "./BurgerMenu";
 
 const Navbar = () => {
   const router = useRouter();
   const pathname = usePathname();
+
   const [user, setUser] = useState<string | undefined>(undefined);
   const pseudo = Cookies.get("pseudo");
   useEffect(() => {
     setUser(pseudo);
   }, [pseudo]);
 
+
   return (
+    <>
+      {isDesktop ? (
     <Flex
       justify={"space-between"}
       position={"fixed"}
@@ -57,6 +62,23 @@ const Navbar = () => {
         </Box>
       )}
     </Flex>
+    ) : (
+      <Flex
+        justify={"space-between"}
+        position={"fixed"}
+        w={"100%"}
+        p={"1rem"}
+        bgColor={"background"}
+        zIndex={2}
+        alignItems={"center"}
+      >
+        <Button variant={"link"} onClick={() => router.push("/")}>
+          {"< Wild Code Hub />"}
+        </Button>
+        <BurgerMenu />
+      </Flex>
+    )}
+  </>
   );
 };
 

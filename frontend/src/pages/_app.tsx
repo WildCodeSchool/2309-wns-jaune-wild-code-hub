@@ -4,11 +4,10 @@ import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
 import type { AppProps } from "next/app";
 import Navbar from "@/components/Navbar";
 import { API_URL } from "@/config";
-
 import { ReactElement, ReactNode } from "react";
 import { NextPage } from "next";
+import Footer from "@/components/Footer";
 import ToastProvider from '../components/ToastCustom/ToastProvider';
-
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
   getLayout?: (page: ReactElement) => ReactNode;
 };
@@ -41,6 +40,7 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
         <Navbar />
         <ToastProvider />
         {getLayout(<Component {...pageProps} />)}
+        <Footer />
       </ChakraProvider>
     </ApolloProvider>
   );
