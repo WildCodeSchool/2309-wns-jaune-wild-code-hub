@@ -23,7 +23,6 @@ import { TextInput } from "@/components/Inputs/TextInput";
 //TODO Add direct input validation (as user is typing)
 
 const Register = () => {
-
     const router = useRouter();
     const { showAlert } = CustomToast();
     
@@ -47,8 +46,8 @@ const Register = () => {
       RegisterMutationVariables
     >(REGISTER, {
       onCompleted: (data) => {
-        showAlert("success", "Your account has been created successfully")
-        router.push("/auth/login");
+      showAlert("success", "Your account has been created successfully")
+      router.push("/auth/login");
     },
     onError(error) {
       console.log(error.message);

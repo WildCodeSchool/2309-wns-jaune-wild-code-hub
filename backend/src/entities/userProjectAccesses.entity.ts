@@ -12,9 +12,9 @@ import { Project } from "./project.entity";
 import { Field, ID, InputType, ObjectType } from "type-graphql";
 
 export enum UserRole {
-  OWNER = "OWNER",
   EDITOR = "EDITOR",
   VIEWER = "VIEWER",
+  OWNER = "OWNER",
 }
 
 @Entity()
