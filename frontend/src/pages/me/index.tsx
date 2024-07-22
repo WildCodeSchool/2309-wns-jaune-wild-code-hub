@@ -11,11 +11,10 @@ import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
 import { NextPageWithLayout } from "../_app";
 
-
 // TODO Add pagination
 
 const Workspace: NextPageWithLayout = () => {
-  const [projects, setProjects] = useState<Project[]>([]);
+  const [projects, setProjects] = useState<Omit<Project, "files">[]>([]);
 
   const userId = Cookies.get("id");
 
