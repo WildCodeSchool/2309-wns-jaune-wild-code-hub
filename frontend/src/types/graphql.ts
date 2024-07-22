@@ -18,6 +18,21 @@ export type Scalars = {
   DateTimeISO: { input: any; output: any; }
 };
 
+export type CreateFileInput = {
+  content?: InputMaybe<Scalars['String']['input']>;
+  extension: Scalars['String']['input'];
+  language: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+  project_id: Scalars['Float']['input'];
+  type: Scalars['String']['input'];
+};
+
+export type CreateProjectInput = {
+  category: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+  private: Scalars['Boolean']['input'];
+};
+
 export type CreateUserInput = {
   ban: Scalars['Boolean']['input'];
   email: Scalars['String']['input'];
@@ -27,6 +42,40 @@ export type CreateUserInput = {
   pseudo: Scalars['String']['input'];
   role?: InputMaybe<Scalars['String']['input']>;
   run_counter: Scalars['Float']['input'];
+};
+
+export type CreateUserProjectAccessesInput = {
+  project_id: Scalars['Float']['input'];
+  role?: InputMaybe<Scalars['String']['input']>;
+  user_id: Scalars['Float']['input'];
+};
+
+export type DeleteUserProjectAccessesInput = {
+  project_id: Scalars['Float']['input'];
+  user_id: Scalars['Float']['input'];
+};
+
+export type File = {
+  __typename?: 'File';
+  content: Scalars['String']['output'];
+  created_at: Scalars['DateTimeISO']['output'];
+  extension: Scalars['String']['output'];
+  id: Scalars['ID']['output'];
+  language: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+  type: Scalars['String']['output'];
+  update_at: Scalars['DateTimeISO']['output'];
+};
+
+export type FindAllInfoUserAccessesProject = {
+  __typename?: 'FindAllInfoUserAccessesProject';
+  created_at: Scalars['DateTimeISO']['output'];
+  project?: Maybe<Project>;
+  project_id: Scalars['Float']['output'];
+  role: Scalars['String']['output'];
+  updated_at: Scalars['DateTimeISO']['output'];
+  user?: Maybe<User>;
+  user_id: Scalars['Float']['output'];
 };
 
 export type InputLogin = {
@@ -43,9 +92,63 @@ export type Message = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  addAccessProject: Message;
+  addLikeProject: Message;
+  createFile: File;
+  createProject: Project;
+  deleteAccessProject: Message;
+  deleteFile: Message;
+  deleteLikeProject: Message;
+  deleteProject: Message;
   deleteUser: Message;
   register: User;
+  updateAccessProject: Message;
+  updateFile: Message;
+  updateMultipleFiles: Array<Message>;
+  updateProject: Message;
   updateUser: Message;
+};
+
+
+export type MutationAddAccessProjectArgs = {
+  data: CreateUserProjectAccessesInput;
+};
+
+
+export type MutationAddLikeProjectArgs = {
+  projectId: Scalars['Float']['input'];
+  userId: Scalars['Float']['input'];
+};
+
+
+export type MutationCreateFileArgs = {
+  data: CreateFileInput;
+};
+
+
+export type MutationCreateProjectArgs = {
+  data: CreateProjectInput;
+};
+
+
+export type MutationDeleteAccessProjectArgs = {
+  data: DeleteUserProjectAccessesInput;
+};
+
+
+export type MutationDeleteFileArgs = {
+  id: Scalars['Float']['input'];
+};
+
+
+export type MutationDeleteLikeProjectArgs = {
+  projectId: Scalars['Float']['input'];
+  userId: Scalars['Float']['input'];
+};
+
+
+export type MutationDeleteProjectArgs = {
+  id: Scalars['Float']['input'];
 };
 
 
@@ -59,6 +162,26 @@ export type MutationRegisterArgs = {
 };
 
 
+export type MutationUpdateAccessProjectArgs = {
+  data: UpdateUserProjectAccessesInput;
+};
+
+
+export type MutationUpdateFileArgs = {
+  data: UpdateFileInput;
+};
+
+
+export type MutationUpdateMultipleFilesArgs = {
+  data: Array<UpdateFileInput>;
+};
+
+
+export type MutationUpdateProjectArgs = {
+  data: UpdateProjectInput;
+};
+
+
 export type MutationUpdateUserArgs = {
   data: UpdateUserInput;
 };
@@ -67,6 +190,7 @@ export type Project = {
   __typename?: 'Project';
   category: Scalars['String']['output'];
   created_at: Scalars['DateTimeISO']['output'];
+  files: Array<File>;
   id: Scalars['ID']['output'];
   name: Scalars['String']['output'];
   private: Scalars['Boolean']['output'];
@@ -75,14 +199,54 @@ export type Project = {
 
 export type Query = {
   __typename?: 'Query';
-  ListProjects: Array<Project>;
+  countLikesPerProject: Scalars['Int']['output'];
+  findFileById: Array<File>;
+  findProjectById: Project;
+  findProjectByName: Project;
+  findProjectOwner: User;
   findUserByEmail: User;
   findUserById: User;
   findUserByPseudo: User;
+  listAccesProject: Array<Project>;
+  listFilesByProject: Array<File>;
+  listLikeProject: Array<Project>;
+  listProjects: Array<Project>;
+  listProjectsAccessesUser: Array<FindAllInfoUserAccessesProject>;
+  listProjectsByCategory: Array<Project>;
+  listProjectsByUser: Array<Project>;
+  listProjectsByUserWithRole: Array<UserAccessProjectOutput>;
+  listPublicProjects: Array<Project>;
   listUsers: Array<User>;
+  listUsersAccessesProject: Array<FindAllInfoUserAccessesProject>;
   listUsersByRole: Array<User>;
+  listUsersLikesPerProject: Array<User>;
   login: Message;
   logout: Message;
+};
+
+
+export type QueryCountLikesPerProjectArgs = {
+  projectId: Scalars['Float']['input'];
+};
+
+
+export type QueryFindFileByIdArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type QueryFindProjectByIdArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type QueryFindProjectByNameArgs = {
+  name: Scalars['String']['input'];
+};
+
+
+export type QueryFindProjectOwnerArgs = {
+  projectId: Scalars['String']['input'];
 };
 
 
@@ -101,13 +265,75 @@ export type QueryFindUserByPseudoArgs = {
 };
 
 
+export type QueryListAccesProjectArgs = {
+  userId: Scalars['Float']['input'];
+};
+
+
+export type QueryListFilesByProjectArgs = {
+  project_id: Scalars['String']['input'];
+};
+
+
+export type QueryListLikeProjectArgs = {
+  userId: Scalars['String']['input'];
+};
+
+
+export type QueryListProjectsAccessesUserArgs = {
+  user_id: Scalars['Float']['input'];
+};
+
+
+export type QueryListProjectsByCategoryArgs = {
+  category: Scalars['String']['input'];
+};
+
+
+export type QueryListProjectsByUserArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type QueryListProjectsByUserWithRoleArgs = {
+  id: Scalars['String']['input'];
+  userRole?: InputMaybe<Array<Scalars['String']['input']>>;
+};
+
+
+export type QueryListUsersAccessesProjectArgs = {
+  project_id: Scalars['Float']['input'];
+};
+
+
 export type QueryListUsersByRoleArgs = {
   role: Scalars['String']['input'];
 };
 
 
+export type QueryListUsersLikesPerProjectArgs = {
+  projectId: Scalars['Float']['input'];
+};
+
+
 export type QueryLoginArgs = {
   infos: InputLogin;
+};
+
+export type UpdateFileInput = {
+  content?: InputMaybe<Scalars['String']['input']>;
+  extension: Scalars['String']['input'];
+  id: Scalars['Float']['input'];
+  language: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+  type: Scalars['String']['input'];
+};
+
+export type UpdateProjectInput = {
+  category?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['ID']['input'];
+  name?: InputMaybe<Scalars['String']['input']>;
+  private?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 export type UpdateUserInput = {
@@ -120,6 +346,12 @@ export type UpdateUserInput = {
   pseudo?: InputMaybe<Scalars['String']['input']>;
   role?: InputMaybe<Scalars['String']['input']>;
   run_counter?: InputMaybe<Scalars['Float']['input']>;
+};
+
+export type UpdateUserProjectAccessesInput = {
+  project_id: Scalars['Float']['input'];
+  role?: InputMaybe<Scalars['String']['input']>;
+  user_id: Scalars['Float']['input'];
 };
 
 export type User = {
@@ -136,6 +368,12 @@ export type User = {
   role: Scalars['String']['output'];
   run_counter: Scalars['Float']['output'];
   update_at: Scalars['DateTimeISO']['output'];
+};
+
+export type UserAccessProjectOutput = {
+  __typename?: 'UserAccessProjectOutput';
+  project: Project;
+  role: Scalars['String']['output'];
 };
 
 export type RegisterMutationVariables = Exact<{
