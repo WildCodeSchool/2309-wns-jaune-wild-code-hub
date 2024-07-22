@@ -41,9 +41,12 @@ const UpdateListFilesEditor: React.FC<UpdateListFilesEditorProps> = ({ data, pro
   });
 
   const updateFilesListBDD: () => void = async () => {
+
     if (window.location.origin !== expectedOrigin) return;
+
     if(!project || listUserAuthorisationSave == null) 
       return showAlert("error", "Please wait while the project loads!");
+    
     const getCookieIdUser = Cookies.get("id");
     if (getCookieIdUser) {      
       const checkAuthorisationSave = listUserAuthorisationSave?.find((user : FindAllInfoUserAccessesProject) => user.user_id === +getCookieIdUser);
