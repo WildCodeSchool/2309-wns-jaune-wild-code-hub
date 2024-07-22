@@ -1,7 +1,13 @@
 /* eslint-disable @next/next/no-img-element */
-import { checkRegex, emailRegex, passwordRegex, pseudoRegex } from "@/regex";
 import { REGISTER } from "@/requetes/mutations/auth.mutations";
 import components from "@/styles/theme/components";
+import { 
+    emailRegex,
+    pseudoRegex,
+    passwordRegex,
+    checkRegex,
+} from "@/regex";
+import CustomToast from '@/components/ToastCustom/CustomToast';
 import {
   CreateUserInput,
   RegisterMutation,
@@ -17,28 +23,30 @@ import { TextInput } from "@/components/Inputs/TextInput";
 //TODO Add direct input validation (as user is typing)
 
 const Register = () => {
-  const router = useRouter();
-  const [formData, setFormData] = useState({
-    lastname: "",
-    firstname: "",
-    pseudo: "",
-    email: "",
-    password: "",
-  });
-  const [errors, setErrors] = useState({
-    lastname: "",
-    firstname: "",
-    pseudo: "",
-    email: "",
-    password: "",
-  });
-
-  const [register, { error }] = useMutation<
-    RegisterMutation,
-    RegisterMutationVariables
-  >(REGISTER, {
-    onCompleted: (data) => {
-      console.log(data);
+    const router = useRouter();
+    const { showAlert } = CustomToast();
+    
+    const [formData, setFormData] = useState({
+        lastname: '',
+        firstname: '',
+        pseudo: '',
+        email: '',
+        password: ''
+    });
+    const [errors, setErrors] = useState({
+        lastname: '',
+        firstname: '',
+        pseudo: '',
+        email: '',
+        password: ''
+    });
+    
+    const [register, { error }] = useMutation<
+      RegisterMutation,
+      RegisterMutationVariables
+    >(REGISTER, {
+      onCompleted: (data) => {
+      showAlert("success", "Your account has been created successfully")
       router.push("/auth/login");
     },
     onError(error) {

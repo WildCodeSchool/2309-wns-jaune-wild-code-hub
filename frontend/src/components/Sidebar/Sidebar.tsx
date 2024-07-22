@@ -12,6 +12,7 @@ import React from "react";
 
 import MeSidebar from "./MeSidebarContent";
 import { usePathname } from "next/navigation";
+import FilesList from "./Editor/FilesList";
 
 type Props = {
   isOpen: boolean;

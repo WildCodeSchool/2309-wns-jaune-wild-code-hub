@@ -64,6 +64,15 @@ export class CreateUserProjectAccessesInput {
 }
 
 @InputType()
+export class DeleteUserProjectAccessesInput {
+  @Field()
+  user_id: number;
+
+  @Field()
+  project_id: number;
+}
+
+@InputType()
 export class UpdateUserProjectAccessesInput {
   @Field()
   user_id: number;
@@ -73,6 +82,38 @@ export class UpdateUserProjectAccessesInput {
 
   @Field({ nullable: true })
   role: UserRole;
+}
+
+@ObjectType()
+export class FindAllInfoUserAccessesProject {
+  @Field({ nullable: false })
+  user_id: number;
+
+  @Field({ nullable: false })
+  project_id: number;
+
+  @Field({ nullable: false })
+  role: UserRole;
+
+  @Field({ nullable: false })
+  created_at: Date;
+
+  @Field({ nullable: false })
+  updated_at:Date;
+
+  @Field(() => User, { nullable: true })
+  user: User;
+
+  @Field(() => Project, { nullable: true })
+  project: Project;
+}
+
+
+@ObjectType()
+export class UserAccessProjectResponse {
+  @Field({ nullable: false })
+  role: UserRole;
+
 }
 
 @ObjectType()

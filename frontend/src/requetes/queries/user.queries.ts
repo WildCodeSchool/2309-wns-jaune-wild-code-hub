@@ -39,3 +39,31 @@ export const DELETE_USER = gql`
     }
   }
 `;
+
+// export const UPDATE_USER = gql`
+//   mutation UpdateUser($data: UpdateUserInput!) {
+//     updateUser(data: $data) {
+//       success
+//       message
+//     }
+//   }
+// `;
+
+// export const DELETE_USER = gql`
+//   mutation DeleteUser($deleteUserId: Float!) {
+//     deleteUser(id: $deleteUserId) {
+//       message
+//       success
+//     }
+//   }
+// `;
+
+// export const LIST_USERS_BY_PSEUDO = gql`
+//   query ListUsersByPseudo($pseudo: String!)  {
+//     listUsersByPseudo(pseudo: $pseudo) {
+//       pseudo
+//       id
+//       email
+//     }
+//   }
+// `;

@@ -3,19 +3,17 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   Column,
-  ManyToOne,
   JoinTable,
   ManyToMany,
   UpdateDateColumn,
   OneToMany,
-  JoinColumn,
 } from "typeorm";
 import { Length, Min } from "class-validator";
 import { Field, Float, ID, InputType, ObjectType } from "type-graphql";
 import { User } from "./user.entity";
 import { UsersProjectsAccesses } from "./userProjectAccesses.entity";
 import { File } from "./file.entity";
-
+ 
 @ObjectType()
 @Entity()
 export class Project {
@@ -71,9 +69,6 @@ export class Project {
   @OneToMany(() => File, (file) => file.project, { cascade: true, onDelete: "CASCADE" })
   @Field(() => [File]) 
   files: File[];
-  // @ManyToOne(() => User, (user) => user.projects)
-  // @JoinColumn({ name: "user_id" })
-  // user: User;
 }
 
 @InputType()

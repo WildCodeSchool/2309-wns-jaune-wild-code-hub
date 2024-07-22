@@ -15,33 +15,24 @@ import { File } from "../entities/file.entity";
 
 export default class ProjectsService {
   db: Repository<Project>;
-  fileDb: Repository<File>;
   constructor() {
     this.db = datasource.getRepository(Project);
-    this.fileDb = datasource.getRepository(File);
   }
 
   async list() {
-    // return this.db.find();
     const projects = await this.db.find({ relations: ["files"] });
     return projects;
   }
 
   async findById(id: number) {
-    // const project = await this.db.findOne({
-    //   where: { id },
-    // });
     const project = await this.db.findOne({
       where: { id },
-      relations: ["files"],
+      relations: ["files", "usersProjectsAccesses"],
     });
     return project;
   }
 
   async findByName(name: string) {
-    // const project = await this.db.findOne({
-    //   where: { name },
-    // });
     const project = await this.db.findOne({
       where: { name },
       relations: ["files"],
@@ -50,10 +41,6 @@ export default class ProjectsService {
   }
 
   async listByCategory(category: string) {
-    // const projects = await this.db.find();
-    // return projects.filter(
-    //   (project) => project.category.toLowerCase() === category.toLowerCase()
-    // );
     const projects = await this.db.find({
       where: { category: Like(`%${category}%`) },
       relations: ["files"],
@@ -71,14 +58,6 @@ export default class ProjectsService {
     return project;
   }
 
-  // async listByUserId(id: number) {
-  //   const projects = await this.db.find({
-  //     where: {
-  //       user: { id },
-  //     },
-  //   });
-  //   return projects;
-  // }
 
   async listByUserId(id: number) {
     const projects = await this.db.find({
@@ -110,23 +89,15 @@ export default class ProjectsService {
   }
 
   async create(data: CreateProjectInput) {
+
     const newProject = this.db.create(data);
     const savedProject = await this.db.save(newProject);
 
-    const files = await this.createDefaultFiles(savedProject.id);
-    // await this.createDefaultFiles(savedProject.id);
-    // console.log("files create", files)
+    const files = await new FilesService().createDefaultFiles(savedProject.id);
     savedProject.files = files;
 
-    // const projectWithFiles = await this.db.findOne({
-    //   where: { id: savedProject.id },
-    //   relations: ["files"],
-    // });
-    // console.log("DEBUG Service - Project with Files: ", projectWithFiles);
-
-    // console.log("projectWithFiles", projectWithFiles)
-
     return savedProject;
+
   }
 
   async createDefaultFiles(projectId: number) {

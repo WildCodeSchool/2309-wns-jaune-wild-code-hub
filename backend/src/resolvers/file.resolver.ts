@@ -40,6 +40,7 @@ export class FileResolver {
     return newFile;
   }
 
+
   @Authorized()
   @Mutation(() => Message)
   async updateFile(@Arg("data") data: UpdateFileInput) {
@@ -54,6 +55,13 @@ export class FileResolver {
       m.success = false;
     }
     return m;
+  }
+
+  @Authorized()
+  @Mutation(() => [Message])
+  async updateMultipleFiles(@Arg("data", () => [UpdateFileInput]) data: UpdateFileInput[]) {
+    const messages = await new FilesService().updateMultiple(data);
+    return messages;
   }
 
   @Authorized()

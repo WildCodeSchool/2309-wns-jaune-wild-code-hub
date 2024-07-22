@@ -95,35 +95,35 @@ const DELETE_PROJECT = `#graphql
 // Define Types
 type ResponseDataListProject = {
   listProjects: Project[];
-};
+}
 
 type ResponseDataListProjectByCategory = {
   listProjectsByCategory: Project[];
-};
+}
 
 type ResponseDataFindProjectById = {
   findProjectById: Project;
-};
+}
 
 type ResponseDataFindProjectByName = {
   findProjectByName: Project;
-};
+}
 
 type ResponseDataCreate = {
   createProject: Project;
-};
+}
 
 type ResponseDataUpdate = {
   updateProject: Message;
-};
+}
 
 type ResponseDataDelete = {
   deleteProject: Message;
-};
+}
 
 type ResponseDataListProjectPublic = {
   listPublicProjects: Project[];
-};
+}
 
 let server: ApolloServer;
 
@@ -137,9 +137,8 @@ beforeAll(async () => {
     schema: baseSchema,
   });
 
-  jest
-    .spyOn(datasourceInitial, "getRepository")
-    .mockImplementation((entity: EntityTarget<any>): Repository<any> => {
+  jest.spyOn(datasourceInitial, 'getRepository').mockImplementation(
+    (entity: EntityTarget<any>): Repository<any> => {
       if (entity === File) {
         return datasource.getRepository(File);
       } else if (entity === Project) {
@@ -147,11 +146,12 @@ beforeAll(async () => {
       } else {
         throw new Error(`Unexpected entity: ${entity}`);
       }
-    });
+    }
+  );
 
   await datasource.initialize();
   const entityMetadatas = datasource.entityMetadatas;
-  const entities = entityMetadatas.map((metadata) => metadata.name);
+  const entities = entityMetadatas.map(metadata => metadata.name);
   console.log("Entities in the Data Source:", entities);
 });
 
@@ -183,14 +183,12 @@ describe("Test for a new project", () => {
 
     assert(response.body.kind === "single");
     if (response.body.singleResult.errors) {
-      console.error("Errors:", response.body.singleResult.errors);
+      console.error('Errors:', response.body.singleResult.errors);
     }
 
     const id = response.body.singleResult.data?.createProject?.id;
     expect(id).not.toBeNull();
-    expect(response.body.singleResult.data?.createProject?.name).toEqual(
-      "Project1"
-    );
+    expect(response.body.singleResult.data?.createProject?.name).toEqual("Project1");
   });
 
   it("Find 1 project", async () => {
@@ -216,9 +214,7 @@ describe("Test for a new project", () => {
     });
 
     assert(response.body.kind === "single");
-    expect(response.body.singleResult.data?.updateProject?.success).toEqual(
-      true
-    );
+    expect(response.body.singleResult.data?.updateProject?.success).toEqual(true);
   });
 
   it("Find projects after update", async () => {
@@ -231,56 +227,45 @@ describe("Test for a new project", () => {
   });
 
   it("Find list projects by category", async () => {
-    const response =
-      await server.executeOperation<ResponseDataListProjectByCategory>({
-        query: LIST_PROJECTS_BY_CATEGORY,
-        variables: {
-          category: "Javascript",
-        },
-      });
+    const response = await server.executeOperation<ResponseDataListProjectByCategory>({
+      query: LIST_PROJECTS_BY_CATEGORY,
+      variables: {
+        category: "Javascript",
+      },
+    });
 
     assert(response.body.kind === "single");
-    expect(
-      response.body.singleResult.data?.listProjectsByCategory
-    ).toHaveLength(1);
+    expect(response.body.singleResult.data?.listProjectsByCategory).toHaveLength(1);
   });
 
   it("Find project by ID", async () => {
-    const response = await server.executeOperation<ResponseDataFindProjectById>(
-      {
-        query: FIND_PROJECT_BY_ID,
-        variables: {
-          id: "1",
-        },
-      }
-    );
+    const response = await server.executeOperation<ResponseDataFindProjectById>({
+      query: FIND_PROJECT_BY_ID,
+      variables: {
+        id: "1",
+      },
+    });
 
     assert(response.body.kind === "single");
-    expect(response.body.singleResult.data?.findProjectById?.name).toEqual(
-      "Project2"
-    );
+    expect(response.body.singleResult.data?.findProjectById?.name).toEqual("Project2");
   });
 
   it("Find project by Name", async () => {
-    const response =
-      await server.executeOperation<ResponseDataFindProjectByName>({
-        query: FIND_PROJECT_BY_NAME,
-        variables: {
-          name: "Project2",
-        },
-      });
+    const response = await server.executeOperation<ResponseDataFindProjectByName>({
+      query: FIND_PROJECT_BY_NAME,
+      variables: {
+        name: "Project2",
+      },
+    });
 
     assert(response.body.kind === "single");
-    expect(response.body.singleResult.data?.findProjectByName?.name).toEqual(
-      "Project2"
-    );
+    expect(response.body.singleResult.data?.findProjectByName?.name).toEqual("Project2");
   });
 
   it("Find public projects", async () => {
-    const response =
-      await server.executeOperation<ResponseDataListProjectPublic>({
-        query: LIST_PROJECTS_PUBLIC,
-      });
+    const response = await server.executeOperation<ResponseDataListProjectPublic>({
+      query: LIST_PROJECTS_PUBLIC,
+    });
 
     assert(response.body.kind === "single");
     expect(response.body.singleResult.data?.listPublicProjects).toHaveLength(1);
@@ -295,8 +280,6 @@ describe("Test for a new project", () => {
     });
 
     assert(response.body.kind === "single");
-    expect(response.body.singleResult.data?.deleteProject?.success).toEqual(
-      true
-    );
+    expect(response.body.singleResult.data?.deleteProject?.success).toEqual(true);
   });
 });
