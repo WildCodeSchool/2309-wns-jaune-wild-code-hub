@@ -174,6 +174,7 @@ export type Query = {
   findFileById: Array<File>;
   findProjectById: Project;
   findProjectByName: Project;
+  findProjectOwner: User;
   findUserByEmail: User;
   findUserById: User;
   findUserByPseudo: User;
@@ -210,6 +211,11 @@ export type QueryFindProjectByIdArgs = {
 
 export type QueryFindProjectByNameArgs = {
   name: Scalars['String']['input'];
+};
+
+
+export type QueryFindProjectOwnerArgs = {
+  projectId: Scalars['String']['input'];
 };
 
 
@@ -495,6 +501,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   findFileById?: Resolver<Array<ResolversTypes['File']>, ParentType, ContextType, RequireFields<QueryFindFileByIdArgs, 'id'>>;
   findProjectById?: Resolver<ResolversTypes['Project'], ParentType, ContextType, RequireFields<QueryFindProjectByIdArgs, 'id'>>;
   findProjectByName?: Resolver<ResolversTypes['Project'], ParentType, ContextType, RequireFields<QueryFindProjectByNameArgs, 'name'>>;
+  findProjectOwner?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<QueryFindProjectOwnerArgs, 'projectId'>>;
   findUserByEmail?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<QueryFindUserByEmailArgs, 'email'>>;
   findUserById?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<QueryFindUserByIdArgs, 'id'>>;
   findUserByPseudo?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<QueryFindUserByPseudoArgs, 'pseudo'>>;
