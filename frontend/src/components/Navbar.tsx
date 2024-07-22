@@ -45,7 +45,7 @@ const Navbar = () => {
         )}
       </Box>
     </Flex>
-    ): (
+    ) : (
       <Flex
         justify={"space-between"}
         position={"fixed"}

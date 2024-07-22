@@ -7,6 +7,7 @@ import { API_URL } from "@/config";
 
 import { ReactElement, ReactNode } from "react";
 import { NextPage } from "next";
+import Footer from "@/components/Footer";
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
   getLayout?: (page: ReactElement) => ReactNode;
 };
@@ -38,6 +39,7 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
       <ChakraProvider theme={theme}>
         <Navbar />
         {getLayout(<Component {...pageProps} />)}
+        <Footer />
       </ChakraProvider>
     </ApolloProvider>
   );
