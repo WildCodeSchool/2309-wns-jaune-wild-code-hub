@@ -1,7 +1,6 @@
 import {
   Arg,
   Int,
-  Float,
   Mutation,
   Query,
   Resolver,
@@ -98,26 +97,6 @@ export class ProjectResolver {
     );
     return projects;
   }
-  // @Authorized()
-  // @Query(() => [Project])
-  // async listProjectsByUser(@Arg("id") id: string) {
-  //   const projects = await new ProjectsService().listByUserId(+id);
-  //   return projects;
-  // }
-
-  
-  // @Authorized()
-  // @Query(() => [UserAccessProjectOutput])
-  // async listProjectsByUserWithRole(
-  //   @Arg("id") id: string,
-  //   @Arg("userRole", () => [String], { nullable: true }) userRole?: UserRole[]
-  // ) {
-  //   const projects = await new ProjectsService().ListByUserWithRole(
-  //     +id,
-  //     userRole
-  //   );
-  //   return projects;
-  // }
 
   @Authorized()
   @Mutation(() => Project)
