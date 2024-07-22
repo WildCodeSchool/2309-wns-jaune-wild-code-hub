@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Box, Flex, Text, Spacer, Button } from "@chakra-ui/react";
+import { Box, Flex, Text, Spacer } from "@chakra-ui/react";
 import FileEditor from "../../components/Editor/FileEditor";
 import FileInfo from "../../components/Editor/FileInfo";
 import BashOutput from "../../components/Editor/BashOutput";
@@ -17,6 +17,9 @@ import { File } from "@/types/editor";
 import ShareEditor from "@/components/Editor/ShareEditor/ShareEditor";
 import SettingEditor from "@/components/Editor/SettingEditor";
 import UpdateListFilesEditor from "@/components/Editor/UpdateListFilesEditor";
+import { LIST_USERS_ACCESSES_PROJECT } from "@/requetes/queries/usersAccessesProjects.queries";
+import { FindAllInfoUserAccessesProject } from "@/types/graphql";
+import Cookies from "js-cookie";
 
 const Editor: NextPageWithLayout = () => {
 
@@ -26,6 +29,8 @@ const Editor: NextPageWithLayout = () => {
     const { showAlert } = CustomToast();
 
     const projectById = useQuery(PROJECT_BY_ID, { variables: { findProjectByIdId: router.query.id } });
+    const userData = useQuery(LIST_USERS_ACCESSES_PROJECT, { variables: { projectId: router.query.id ? +router.query.id : null } });
+
     const [code, setCode] = useState<string>("");
     const [file, setFile] = useState<File | null>(null);
     const [openFiles, setOpenFiles] = useState<File[]>([]);
@@ -33,7 +38,9 @@ const Editor: NextPageWithLayout = () => {
     const [consoleLogs, setConsoleLogs] = useState<any[]>([]);
     const iframeRef = useRef<HTMLIFrameElement>(null);
     const [data, setData] = useState<File[]>([]);
-
+    const [users, setUsers] = useState<FindAllInfoUserAccessesProject[] | null >(null);
+    const [checkOwner, setCheckOwner] = useState<boolean>(false);
+    const [listUserAuthorisationSave, setListUserAuthorisationSave] = useState<FindAllInfoUserAccessesProject[] | null>(null);
 
     const getCombinedCode = (): string => {
         const htmlFiles = data?.filter((file) => file.extension === "html");
@@ -127,7 +134,22 @@ const Editor: NextPageWithLayout = () => {
             setData(projectById?.data?.findProjectById.files);
             setProject(projectById?.data?.findProjectById);
         }
-    }, [projectById, router?.query?.id, router])
+    }, [projectById, router])
+
+    useEffect(() => {
+        if (userData?.data?.listUsersAccessesProject) {
+            setUsers(userData?.data?.listUsersAccessesProject)
+            const listUserData = userData?.data?.listUsersAccessesProject;
+            const checkOwnerProject = listUserData.find((user: FindAllInfoUserAccessesProject) => user.role === "OWNER");
+            const getCookieIdUser = Cookies.get("id");
+            const searchListUserEditor = listUserData.filter((user :FindAllInfoUserAccessesProject) => user.role === "EDITOR" || user.role === "OWNER");
+            setListUserAuthorisationSave(searchListUserEditor)
+            if (getCookieIdUser == checkOwnerProject?.user_id) 
+                setCheckOwner(true);
+            else
+                setCheckOwner(false);
+        }
+    }, [userData, router])
 
 
     useEffect(() => {
@@ -188,7 +210,7 @@ const Editor: NextPageWithLayout = () => {
                         ))
                     }
                     <Spacer />
-                    <UpdateListFilesEditor data={data} project={project} expectedOrigin={expectedOrigin} />
+                    <UpdateListFilesEditor data={data} project={project} expectedOrigin={expectedOrigin} listUserAuthorisationSave={listUserAuthorisationSave} />
                 </Flex>
                 {file ? (
                     <FileEditor
@@ -214,7 +236,7 @@ const Editor: NextPageWithLayout = () => {
                 <Flex>
                     <Text bg="background2" width="3rem" pl="5px" pb="0.2rem">View</Text>
                     <Spacer />
-                    <ShareEditor project={project} expectedOrigin={expectedOrigin} />
+                    <ShareEditor project={project} expectedOrigin={expectedOrigin} users={users} setUsers={setUsers} checkOwner={checkOwner} />
                     <SettingEditor project={project} expectedOrigin={expectedOrigin} />
                 </Flex>
                 <iframe

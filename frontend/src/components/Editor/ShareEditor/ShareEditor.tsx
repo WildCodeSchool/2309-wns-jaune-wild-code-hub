@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { 
   Project,
   FindAllInfoUserAccessesProject
@@ -17,25 +17,20 @@ import CustomToast from '@/components/ToastCustom/CustomToast';
 import ShareURL from "./ShareURL";
 import ShareAddPeople from "./ShareAddPeople";
 import ShareManagementPeople from "./ShareManagementPeople";
-import { LIST_USERS_ACCESSES_PROJECT } from "@/requetes/queries/usersAccessesProjects.queries";
-import { useRouter } from "next/router";
-import { useQuery } from "@apollo/client";
 
 interface ShareEditorProps {
   project: Project | null;
   expectedOrigin: string | undefined;
+  users : FindAllInfoUserAccessesProject[] | null;
+  setUsers: React.Dispatch<React.SetStateAction<FindAllInfoUserAccessesProject[] | null>>;
+  checkOwner : boolean;
 }
 
-const ShareEditor: React.FC<ShareEditorProps> = ({ project, expectedOrigin }) => {
+const ShareEditor: React.FC<ShareEditorProps> = ({ project, expectedOrigin, users, setUsers, checkOwner }) => {
 
   const { showAlert } = CustomToast();
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
-  const [users, setUsers] = useState<FindAllInfoUserAccessesProject[] | null >(null);
 
-  const router = useRouter();
-
-  const userData = useQuery(LIST_USERS_ACCESSES_PROJECT, { variables: { projectId: router.query.id ? +router.query.id : null } });
-  
   const shareModalOpen: () => void = async () => {
     if (window.location.origin !== expectedOrigin) return;
     if (!project) {
@@ -45,11 +40,6 @@ const ShareEditor: React.FC<ShareEditorProps> = ({ project, expectedOrigin }) =>
 
     setIsShareModalOpen(true);
   };
-
-  useEffect(() => {
-    setUsers(userData?.data?.listUsersAccessesProject)
-    console.log(userData)
-  }, [userData])
 
   return (
     <>
@@ -62,6 +52,10 @@ const ShareEditor: React.FC<ShareEditorProps> = ({ project, expectedOrigin }) =>
         onClose={() => setIsShareModalOpen(false)}
         title="Share project"
       >
+      {
+        !checkOwner ? 
+          <ShareURL project={project}/>
+        :
         <Tabs>
           <TabList mb={5} display="flex" justifyContent="center" alignItems="center">
             <Tab 
@@ -89,6 +83,7 @@ const ShareEditor: React.FC<ShareEditorProps> = ({ project, expectedOrigin }) =>
           </TabPanels>
           </Box>
         </Tabs>
+      }
       </GenericModal>
     </>
   );

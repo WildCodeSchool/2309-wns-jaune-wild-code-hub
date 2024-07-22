@@ -7,8 +7,7 @@ const Navbar = () => {
   const router = useRouter();
   const params = useParams();
   const pathname = usePathname();
-  console.log("pathname", pathname);
-  console.log("params", params);
+
   return (
     <Flex
       justify={"space-between"}

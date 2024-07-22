@@ -9,14 +9,16 @@ import {
 import { useMutation } from "@apollo/client";
 import { UPDATE_MULTIPLE_FILES } from "@/requetes/mutations/file.mutations";
 import { File } from "@/types/editor";
-
+import { FindAllInfoUserAccessesProject } from "@/types/graphql";
+import Cookies from "js-cookie";
 interface UpdateListFilesEditorProps {
   data: File[];
   project: Project | null;
   expectedOrigin : string | undefined;
+  listUserAuthorisationSave : FindAllInfoUserAccessesProject[] | null;
 }
 
-const UpdateListFilesEditor: React.FC<UpdateListFilesEditorProps> = ({ data, project, expectedOrigin }) => {
+const UpdateListFilesEditor: React.FC<UpdateListFilesEditorProps> = ({ data, project, expectedOrigin, listUserAuthorisationSave }) => {
   
   const { showAlert } = CustomToast();
 
@@ -26,10 +28,10 @@ const UpdateListFilesEditor: React.FC<UpdateListFilesEditorProps> = ({ data, pro
   >(UPDATE_MULTIPLE_FILES, {
     onCompleted: (data) => {
         data.updateMultipleFiles.forEach((message) => {
-            if (message.success)
-              showAlert('success', `${message.message}`);
-            else
-              showAlert('error', `${message.message}`);
+          if (message.success)
+            showAlert('success', `${message.message}`);
+          else
+            showAlert('error', `${message.message}`);
         })
     },
     onError(error) {
@@ -40,20 +42,26 @@ const UpdateListFilesEditor: React.FC<UpdateListFilesEditorProps> = ({ data, pro
 
   const updateFilesListBDD: () => void = async () => {
     if (window.location.origin !== expectedOrigin) return;
-    if(!project) {
-        showAlert("error", "Please wait while the project loads!");
-        return;
-    }
-    const newData = data.map((item: any) => {
-        const { __typename, id, ...rest } = item;
-        return { ...rest, id: +id };
-    });
-    if (data) {
-      updateMultipleFiles({
-        variables: {
-          data: newData
-        },
-      });
+    if(!project || listUserAuthorisationSave == null) 
+      return showAlert("error", "Please wait while the project loads!");
+    const getCookieIdUser = Cookies.get("id");
+    if (getCookieIdUser) {      
+      const checkAuthorisationSave = listUserAuthorisationSave?.find((user : FindAllInfoUserAccessesProject) => user.user_id === +getCookieIdUser);
+      if (checkAuthorisationSave) {
+        const newData = data.map((item: any) => {
+            const { __typename, id, ...rest } = item;
+            return { ...rest, id: +id };
+        });
+        if (data) {
+          updateMultipleFiles({
+            variables: {
+              data: newData
+            },
+          });
+        }
+      } else {
+        showAlert("error", "You are not authorized to save files!")
+      }
     }
   }
 
