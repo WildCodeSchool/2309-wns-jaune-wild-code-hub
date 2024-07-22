@@ -1,9 +1,8 @@
-# .github/workflows/staging-client.yml
 name: Compile and push client and server image for staging 
 
 # Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the master branch
+  # Triggers the workflow on push or pull request events but only for the dev branch
   pull_request:
     branches: ["dev"]
     types:
@@ -38,7 +37,7 @@ jobs:
       - uses: docker/setup-buildx-action@v2
         name: Set up Docker Buildx
 
-      # build an push the newly created image backend
+      # build and push the newly created image backend
       - uses: docker/build-push-action@v4
         name: Build and push backend
         with:
@@ -47,7 +46,7 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/dev-server-backend:latest
           
-      # build an push the newly created image frontend
+      # build and push the newly created image frontend
       - uses: docker/build-push-action@v4
         name: Build and push frontend
         with:
@@ -55,13 +54,25 @@ jobs:
           file: ./frontend/Dockerfile
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/dev-server-frontend:latest
-
+ # deployment:
+  #   needs: build
+  #   runs-on: ubuntu-latest
+  #     # send deploiement hook
+  #   steps:
+  #     - name: Invoke deployment hook
+  #       uses: distributhor/workflow-webhook@v3
+  #       with:
+  #         webhook_url: ${{ secrets.WEBHOOK_URL_DEV }}
   deployment:
     needs: build
     runs-on: ubuntu-latest
-      # send deploiement hook
     steps:
       - name: Invoke deployment hook
-        uses: distributhor/workflow-webhook@v3
-        with:
-          webhook_url: ${{ secrets.WEBHOOK_URL_DEV }}
+        env:
+          SECRET_KEY: ${{ secrets.WEBHOOK_SECRET }}
+        run: |
+          PAYLOAD='{}'
+          SIGNATURE=$(echo -n "$PAYLOAD" | openssl dgst -sha1 -hmac "$SECRET_KEY" | sed 's/^.* //')
+          SIGNATURE="sha1=$SIGNATURE"
+
+          curl -X POST -H "Content-Type: application/json" -H "X-Hub-Signature: $SIGNATURE" -d "$PAYLOAD" ${{ secrets.WEBHOOK_URL_DEV }}

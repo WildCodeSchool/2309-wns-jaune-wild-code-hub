@@ -31,22 +31,25 @@ services:
     env_file:
        - ./frontend/.env
   db-dev:
-    image: postgres:15
     profiles: ["dev", "production", "test"]
+    image: postgres:15
+    ports:
+      - 5432:5432
     restart: always
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -d wildcodehub -U root"]
+      test: ["CMD-SHELL", "pg_isready -d ${POSTGRES_DB} -U ${POSTGRES_USER}"]
       interval: 5s
       timeout: 5s
       retries: 10
     environment:
-      POSTGRES_USER: ${USERNAME_DB}
-      POSTGRES_PASSWORD: ${PASSWORD_DB}
-      POSTGRES_DB: ${DATABASE_DB}
-    ports:
-      - 5434:5432
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    env_file:
+      - ./.env
     volumes:
       - wildcodehub-data:/var/lib/postgresql/data
+      
   adminer:
     image: adminer
     profiles: ["dev", "production", "test"]

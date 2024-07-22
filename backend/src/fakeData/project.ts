@@ -16,7 +16,7 @@ const fakeProjects = [
   {
     name: "The tho Project",
     category: "JavaScript",
-    private: true,
+    private: false,
     created_at: new Date(),
     updated_at: new Date(),
   },
@@ -37,14 +37,14 @@ const fakeProjects = [
   {
     name: "The five Project",
     category: "JavaScript",
-    private: true,
+    private: false,
     created_at: new Date(),
     updated_at: new Date(),
   },
   {
     name: "The six Project",
     category: "JavaScript",
-    private: true,
+    private: false,
     created_at: new Date(),
     updated_at: new Date(),
   },

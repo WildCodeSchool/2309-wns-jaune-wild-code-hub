@@ -18,6 +18,8 @@ services:
     image: wildcodehub/dev-server-frontend:latest
     ports:
       - 3001:3000
+    env_file:
+      - ./.env
     environment:
       - WDS_SOCKET_HOST=127.0.0.1
       - CHOKIDAR_USEPOLLING=true
@@ -27,14 +29,12 @@ services:
     image: postgres:15
     restart: always
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -d wildcodehub -U root"]
+      test: ["CMD-SHELL", "pg_isready -d ${DATABASE_DB} -U ${USERNAME_DB}"]
       interval: 5s
       timeout: 5s
       retries: 10
-    environment:
-      POSTGRES_USER: ${USERNAME_DB}
-      POSTGRES_PASSWORD: ${PASSWORD_DB}
-      POSTGRES_DB: ${DATABASE_DB}
+    env_file:
+      - ./.env
     ports:
       - 5434:5432
     volumes:
