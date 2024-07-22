@@ -1,5 +1,5 @@
 "use client";
-import { Avatar, Box, Button, Flex, Icon, IconButton } from "@chakra-ui/react";
+import { Avatar, Box, Button, Flex, Icon, IconButton, useBreakpointValue } from "@chakra-ui/react";
 import React, { useEffect, useMemo, useState } from "react";
 import Searchbar from "./Searchbar";
 import Cookies from "js-cookie";
@@ -15,7 +15,7 @@ const Navbar = () => {
   useEffect(() => {
     setUser(pseudo);
   }, [pseudo]);
-
+  const isDesktop = useBreakpointValue({ base: false, md: true });
 
   return (
     <>

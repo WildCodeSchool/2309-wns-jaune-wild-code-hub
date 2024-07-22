@@ -12,7 +12,7 @@ import { HamburgerIcon, ChevronRightIcon, SettingsIcon, CloseIcon } from "@chakr
 import NextLink from "next/link";
 import Searchbar from "./Searchbar";
 import { usePathname, useRouter } from "next/navigation";
-import MeSidebar from "./MeSidebarContent";
+import MeSidebar from "./Sidebar/MeSidebarContent";
 
 
 const BurgerMenu = () => {
