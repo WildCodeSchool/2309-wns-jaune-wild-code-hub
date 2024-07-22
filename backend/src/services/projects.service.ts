@@ -1,14 +1,18 @@
-import { In, Like, Repository, SelectQueryBuilder } from "typeorm";
-import datasource from "../lib/db";
+import { validate } from "class-validator";
+import { In, Like, Repository } from "typeorm";
 import {
-  Project,
   CreateProjectInput,
+  Project,
   UpdateProjectInput,
 } from "../entities/project.entity";
-import { validate } from "class-validator";
-import { UsersProjectsAccesses } from "../entities/userProjectAccesses.entity";
-import { File, CreateFileInput } from "../entities/file.entity";
+import {
+  UserRole,
+  UsersProjectsAccesses,
+} from "../entities/userProjectAccesses.entity";
+import datasource from "../lib/db";
 import FilesService from "./files.service";
+import { File } from "../entities/file.entity";
+
 export default class ProjectsService {
   db: Repository<Project>;
   constructor() {
@@ -54,6 +58,35 @@ export default class ProjectsService {
     return project;
   }
 
+
+  async listByUserId(id: number) {
+    const projects = await this.db.find({
+      where: {
+        usersProjectsAccesses: {
+          user_id: id,
+        },
+      },
+      relations: ["usersProjectsAccesses"],
+    });
+    return projects;
+  }
+  async ListByUserWithRole(userId: number, userRole?: UserRole[]) {
+    const userProjectAccessesRepository = datasource.getRepository(
+      UsersProjectsAccesses
+    );
+    const whereConditions = userRole
+      ? {
+          role: In(userRole),
+          user_id: userId,
+        }
+      : { user_id: userId };
+    const userAccesses = await userProjectAccessesRepository.find({
+      where: whereConditions,
+      relations: ["project.usersProjectsAccesses"],
+    });
+
+    return userAccesses;
+  }
 
   async create(data: CreateProjectInput) {
 

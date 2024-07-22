@@ -202,14 +202,18 @@ export type Query = {
   findFileById: Array<File>;
   findProjectById: Project;
   findProjectByName: Project;
+  findProjectOwner: User;
   findUserByEmail: User;
   findUserById: User;
   findUserByPseudo: User;
+  listAccesProject: Array<Project>;
   listFilesByProject: Array<File>;
   listLikeProject: Array<Project>;
   listProjects: Array<Project>;
   listProjectsAccessesUser: Array<FindAllInfoUserAccessesProject>;
   listProjectsByCategory: Array<Project>;
+  listProjectsByUser: Array<Project>;
+  listProjectsByUserWithRole: Array<UserAccessProjectOutput>;
   listPublicProjects: Array<Project>;
   listUsers: Array<User>;
   listUsersAccessesProject: Array<FindAllInfoUserAccessesProject>;
@@ -240,6 +244,11 @@ export type QueryFindProjectByNameArgs = {
 };
 
 
+export type QueryFindProjectOwnerArgs = {
+  projectId: Scalars['String']['input'];
+};
+
+
 export type QueryFindUserByEmailArgs = {
   email: Scalars['String']['input'];
 };
@@ -255,13 +264,18 @@ export type QueryFindUserByPseudoArgs = {
 };
 
 
+export type QueryListAccesProjectArgs = {
+  userId: Scalars['Float']['input'];
+};
+
+
 export type QueryListFilesByProjectArgs = {
   project_id: Scalars['String']['input'];
 };
 
 
 export type QueryListLikeProjectArgs = {
-  userId: Scalars['Float']['input'];
+  userId: Scalars['String']['input'];
 };
 
 
@@ -272,6 +286,17 @@ export type QueryListProjectsAccessesUserArgs = {
 
 export type QueryListProjectsByCategoryArgs = {
   category: Scalars['String']['input'];
+};
+
+
+export type QueryListProjectsByUserArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type QueryListProjectsByUserWithRoleArgs = {
+  id: Scalars['String']['input'];
+  userRole?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
 
@@ -342,6 +367,12 @@ export type User = {
   role: Scalars['String']['output'];
   run_counter: Scalars['Float']['output'];
   update_at: Scalars['DateTimeISO']['output'];
+};
+
+export type UserAccessProjectOutput = {
+  __typename?: 'UserAccessProjectOutput';
+  project: Project;
+  role: Scalars['String']['output'];
 };
 
 export type WithIndex<TObject> = TObject & Record<string, any>;
@@ -439,6 +470,7 @@ export type ResolversTypes = ResolversObject<{
   UpdateUserInput: UpdateUserInput;
   UpdateUserProjectAccessesInput: UpdateUserProjectAccessesInput;
   User: ResolverTypeWrapper<User>;
+  UserAccessProjectOutput: ResolverTypeWrapper<UserAccessProjectOutput>;
 }>;
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -466,6 +498,7 @@ export type ResolversParentTypes = ResolversObject<{
   UpdateUserInput: UpdateUserInput;
   UpdateUserProjectAccessesInput: UpdateUserProjectAccessesInput;
   User: User;
+  UserAccessProjectOutput: UserAccessProjectOutput;
 }>;
 
 export type OneOfDirectiveArgs = { };
@@ -539,14 +572,18 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   findFileById?: Resolver<Array<ResolversTypes['File']>, ParentType, ContextType, RequireFields<QueryFindFileByIdArgs, 'id'>>;
   findProjectById?: Resolver<ResolversTypes['Project'], ParentType, ContextType, RequireFields<QueryFindProjectByIdArgs, 'id'>>;
   findProjectByName?: Resolver<ResolversTypes['Project'], ParentType, ContextType, RequireFields<QueryFindProjectByNameArgs, 'name'>>;
+  findProjectOwner?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<QueryFindProjectOwnerArgs, 'projectId'>>;
   findUserByEmail?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<QueryFindUserByEmailArgs, 'email'>>;
   findUserById?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<QueryFindUserByIdArgs, 'id'>>;
   findUserByPseudo?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<QueryFindUserByPseudoArgs, 'pseudo'>>;
+  listAccesProject?: Resolver<Array<ResolversTypes['Project']>, ParentType, ContextType, RequireFields<QueryListAccesProjectArgs, 'userId'>>;
   listFilesByProject?: Resolver<Array<ResolversTypes['File']>, ParentType, ContextType, RequireFields<QueryListFilesByProjectArgs, 'project_id'>>;
   listLikeProject?: Resolver<Array<ResolversTypes['Project']>, ParentType, ContextType, RequireFields<QueryListLikeProjectArgs, 'userId'>>;
   listProjects?: Resolver<Array<ResolversTypes['Project']>, ParentType, ContextType>;
   listProjectsAccessesUser?: Resolver<Array<ResolversTypes['FindAllInfoUserAccessesProject']>, ParentType, ContextType, RequireFields<QueryListProjectsAccessesUserArgs, 'user_id'>>;
   listProjectsByCategory?: Resolver<Array<ResolversTypes['Project']>, ParentType, ContextType, RequireFields<QueryListProjectsByCategoryArgs, 'category'>>;
+  listProjectsByUser?: Resolver<Array<ResolversTypes['Project']>, ParentType, ContextType, RequireFields<QueryListProjectsByUserArgs, 'id'>>;
+  listProjectsByUserWithRole?: Resolver<Array<ResolversTypes['UserAccessProjectOutput']>, ParentType, ContextType, RequireFields<QueryListProjectsByUserWithRoleArgs, 'id'>>;
   listPublicProjects?: Resolver<Array<ResolversTypes['Project']>, ParentType, ContextType>;
   listUsers?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>;
   listUsersAccessesProject?: Resolver<Array<ResolversTypes['FindAllInfoUserAccessesProject']>, ParentType, ContextType, RequireFields<QueryListUsersAccessesProjectArgs, 'project_id'>>;
@@ -572,6 +609,12 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
+export type UserAccessProjectOutputResolvers<ContextType = any, ParentType extends ResolversParentTypes['UserAccessProjectOutput'] = ResolversParentTypes['UserAccessProjectOutput']> = ResolversObject<{
+  project?: Resolver<ResolversTypes['Project'], ParentType, ContextType>;
+  role?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
 export type Resolvers<ContextType = any> = ResolversObject<{
   DateTimeISO?: GraphQLScalarType;
   File?: FileResolvers<ContextType>;
@@ -581,6 +624,7 @@ export type Resolvers<ContextType = any> = ResolversObject<{
   Project?: ProjectResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
+  UserAccessProjectOutput?: UserAccessProjectOutputResolvers<ContextType>;
 }>;
 
 export type DirectiveResolvers<ContextType = any> = ResolversObject<{

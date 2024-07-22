@@ -9,13 +9,17 @@ import {
   Ctx,
 } from "type-graphql";
 import {
-  Project,
   CreateProjectInput,
+  Project,
   UpdateProjectInput,
 } from "../entities/project.entity";
-import ProjectsService from "../services/projects.service";
 import { Message, User } from "../entities/user.entity";
 import { MyContext } from "../index"; 
+import {
+  UserAccessProjectOutput,
+  UserRole,
+} from "../entities/userProjectAccesses.entity";
+import ProjectsService from "../services/projects.service";
 
 @Resolver()
 export class ProjectResolver {
@@ -73,13 +77,27 @@ export class ProjectResolver {
     const projects = await new ProjectsService().listByCategory(category);
     return projects;
   }
+
+  @Authorized()
+  @Query(() => [Project])
+  async listProjectsByUser(@Arg("id") id: string) {
+    const projects = await new ProjectsService().listByUserId(+id);
+    return projects;
+  }
+
   
-  // @Authorized()
-  // @Query(() => [Project])
-  // async listProjectsByUser(@Arg("id") id: string) {
-  //   const projects = await new ProjectsService().listByUserId(+id);
-  //   return projects;
-  // }
+  @Authorized()
+  @Query(() => [UserAccessProjectOutput])
+  async listProjectsByUserWithRole(
+    @Arg("id") id: string,
+    @Arg("userRole", () => [String], { nullable: true }) userRole?: UserRole[]
+  ) {
+    const projects = await new ProjectsService().ListByUserWithRole(
+      +id,
+      userRole
+    );
+    return projects;
+  }
 
   @Authorized()
   @Mutation(() => Project)

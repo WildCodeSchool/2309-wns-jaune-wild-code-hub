@@ -77,7 +77,8 @@ const ShareEditor: React.FC<ShareEditorProps> = ({ project, expectedOrigin, user
               <ShareURL project={project}/>
             </TabPanel>
             <TabPanel>
-              <ShareAddPeople setUsers={setUsers} />
+              {/* <ShareAddPeople setUsers={setUsers} /> */}
+              <p>dsldssd</p>
               <ShareManagementPeople users={users} setUsers={setUsers} />
             </TabPanel>
           </TabPanels>
