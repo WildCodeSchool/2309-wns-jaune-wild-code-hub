@@ -85,6 +85,13 @@ const fakeUsersProjectsAccesses = [
     created_at: new Date(),
     updated_at: new Date(),
   },
+  {
+    user_id: 1,
+    project_id: 7,
+    role: "OWNER" as UserRole,
+    created_at: new Date(),
+    updated_at: new Date(),
+  },
 ];
 
 export default fakeUsersProjectsAccesses;
