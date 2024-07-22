@@ -25,7 +25,7 @@ import HeartIcon from "./Icons/HeartIcon";
 import ShareIcon from "./Icons/ShareIcon";
 
 type Props = {
-  project: Project;
+  project: Omit<Project, "files">;
 };
 
 const ProjectCard = ({ project }: Props) => {

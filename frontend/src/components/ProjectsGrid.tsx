@@ -3,7 +3,7 @@ import ProjectCard from "./ProjectCard";
 import { Project } from "@/types/graphql";
 
 type GridProps = {
-  projects: Project[];
+  projects: Omit<Project, "files">[];
 };
 
 export const ProjectsGrid = ({ projects }: GridProps) => {
