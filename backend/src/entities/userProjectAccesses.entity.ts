@@ -7,7 +7,7 @@ import {
   JoinColumn,
   PrimaryColumn,
 } from "typeorm";
-import { User } from "./user.entity";
+import { User, Message } from "./user.entity";
 import { Project } from "./project.entity";
 import { Field, ID, InputType, ObjectType } from "type-graphql";
 
@@ -108,11 +108,14 @@ export class FindAllInfoUserAccessesProject {
   project: Project;
 }
 
-
 @ObjectType()
 export class UserAccessProjectResponse {
-  @Field({ nullable: false })
-  role: UserRole;
+
+  @Field(() => [FindAllInfoUserAccessesProject], { nullable: false })
+  listUsersAccessesProjectData : [FindAllInfoUserAccessesProject];
+
+  @Field(() => Message, { nullable: true })
+  message: Message;
 
 }
 

@@ -1,5 +1,5 @@
 import { validate } from "class-validator";
-import { Repository } from "typeorm";
+import { ILike, Like, Repository } from "typeorm";
 import {
   CreateUserInput,
   ROLE,
@@ -30,6 +30,12 @@ export default class UsersService {
       where: {
         role: role,
       },
+    });
+  }
+
+  async listUsersByPseudo(pseudo: string) {
+    return this.db.find({
+      where: { pseudo: ILike(`%${pseudo}%`) },
     });
   }
 

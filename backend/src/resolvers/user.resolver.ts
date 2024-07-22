@@ -31,6 +31,12 @@ export class UserResolver {
     return users;
   }
 
+  @Query(() => [User])
+  async listUsersByPseudo(@Arg("pseudo") pseudo: string) {
+    const users = await new UsersService().listUsersByPseudo(pseudo);
+    return users;
+  }
+
   @Query(() => User)
   async findUserById(@Arg("id") id: string) {
     if (isNaN(+id)) throw new Error("Specify a correct id");

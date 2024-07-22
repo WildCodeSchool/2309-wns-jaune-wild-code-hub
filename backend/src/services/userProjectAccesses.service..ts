@@ -19,10 +19,6 @@ export default class UserProjectAccessesService {
       where: { user_id : userId },
     });
 
-    if (users.length === 0) {
-      throw new Error("User not found!");
-    }
-
     const filterUserAndProject = users.find(user => user.project_id === projectId);
 
     return filterUserAndProject;
