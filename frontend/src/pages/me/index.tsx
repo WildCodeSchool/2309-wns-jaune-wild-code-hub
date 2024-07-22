@@ -11,8 +11,6 @@ import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
 import { NextPageWithLayout } from "../_app";
 
-// TODO Add search bar
-// TODO Add filter
 
 // TODO Add pagination
 

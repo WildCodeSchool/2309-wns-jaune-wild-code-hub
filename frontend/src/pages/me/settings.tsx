@@ -236,9 +236,6 @@ const Settings: NextPageWithLayout = () => {
       )}
     </Flex>
   );
-  // TODO Add confirmation modal for submit an delete
-  //TODO Add logic for submit
-  //TODO Add logic for delete
 };
 Settings.getLayout = function getLayout(page) {
   return <SidebarLayout>{page}</SidebarLayout>;
