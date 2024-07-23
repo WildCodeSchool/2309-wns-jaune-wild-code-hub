@@ -226,8 +226,8 @@ const ShareManagementPeople: React.FC<ShareManagementPeopleProps> = ({ users, se
               <Button  type="button" variant="outline" onClick={closeModal}>
                 Cancel
               </Button>
-              <Button type="button" variant="secondary" onClick={confirmDelete}>
-                Confirm
+              <Button type="button" variant="primary" onClick={confirmDelete}>
+                {"Yes, l'm sure"}
               </Button>
             </ButtonGroup>
           </Box>
