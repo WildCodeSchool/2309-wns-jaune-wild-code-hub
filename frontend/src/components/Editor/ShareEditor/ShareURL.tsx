@@ -37,7 +37,7 @@ const ShareURL: React.FC<ShareURLProps> = ({ project }) => {
   return (
     <Box>
         <Text color="white" mb={2}>Link</Text>
-        <Input value={currentUrl} isReadOnly placeholder="url" />
+        <Input value={currentUrl} isReadOnly placeholder="url" bg="white" color="black" borderRadius={5} />
         <Box display="flex" justifyContent="center" mt={10}>
             <Button type="button" variant="secondary" onClick={copyToClipboard}>
             Copy

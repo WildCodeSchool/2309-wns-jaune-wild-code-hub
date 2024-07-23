@@ -52,10 +52,6 @@ const ShareEditor: React.FC<ShareEditorProps> = ({ project, expectedOrigin, user
         onClose={() => setIsShareModalOpen(false)}
         title="Share project"
       >
-      {
-        !checkOwner ? 
-          <ShareURL project={project}/>
-        :
         <Tabs>
           <TabList mb={5} display="flex" justifyContent="center" alignItems="center">
             <Tab 
@@ -64,26 +60,50 @@ const ShareEditor: React.FC<ShareEditorProps> = ({ project, expectedOrigin, user
             >
               Share URL
             </Tab>
-            <Tab 
-              _selected={{ color: "primary", borderBottom: "2px solid primary" }}
-              _focus={{ boxShadow: "none" }}
-            >
-              Management
-            </Tab>
+            { checkOwner ?
+              <Tab 
+                _selected={{ color: "primary", borderBottom: "2px solid primary" }}
+                _focus={{ boxShadow: "none" }}
+              >
+                Add people
+              </Tab>
+              :
+              <Tab 
+                _selected={{ color: "primary", borderBottom: "2px solid primary" }}
+                _focus={{ boxShadow: "none" }}
+              >
+                List people
+              </Tab>
+            }
+            { checkOwner &&
+              <Tab 
+                _selected={{ color: "primary", borderBottom: "2px solid primary" }}
+                _focus={{ boxShadow: "none" }}
+              >
+                Management
+              </Tab>
+            }
           </TabList>
           <Box>
           <TabPanels>
             <TabPanel>
               <ShareURL project={project}/>
             </TabPanel>
-            <TabPanel>
-              <ShareAddPeople setUsers={setUsers} />
-              <ShareManagementPeople users={users} setUsers={setUsers} />
-            </TabPanel>
+            { checkOwner ?
+              <TabPanel>
+                <ShareAddPeople setUsers={setUsers} />
+              </TabPanel>
+              :
+              "otootot"
+            }
+            { checkOwner &&
+              <TabPanel>
+                <ShareManagementPeople users={users} setUsers={setUsers} />
+              </TabPanel>
+            }
           </TabPanels>
           </Box>
         </Tabs>
-      }
       </GenericModal>
     </>
   );

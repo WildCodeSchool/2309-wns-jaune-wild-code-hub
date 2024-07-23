@@ -148,6 +148,7 @@ const SettingManagement: React.FC<SettingManagementProps> = ({ project, setProje
             mb={3}
             bg="white"
             color="black"
+            borderRadius={5}
           />
         </Box>
 
@@ -160,6 +161,7 @@ const SettingManagement: React.FC<SettingManagementProps> = ({ project, setProje
             mb={3}
             bg="white"
             color="black"
+            borderRadius={5}
           >
             <option value="public">Public</option>
             <option value="private">Private</option>
