@@ -110,9 +110,6 @@ export class User {
     (UsersProjectsAccesses) => UsersProjectsAccesses.user
   )
   usersProjectsAccesses: UsersProjectsAccesses[];
-
-  // @OneToMany(() => Project, (project) => project.user)
-  // projects: Project[];
 }
 
 @InputType()

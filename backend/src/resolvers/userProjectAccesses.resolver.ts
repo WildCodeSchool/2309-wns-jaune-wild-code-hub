@@ -7,6 +7,7 @@ import {
   DeleteUserProjectAccessesInput,
   UpdateUserProjectAccessesInput,
   FindAllInfoUserAccessesProject,
+  UserAccessProjectResponse,
 } from "../entities/userProjectAccesses.entity";
 
 @Resolver()
@@ -27,7 +28,7 @@ export class UserProjectAccessesResolver {
   }
 
   @Authorized()
-  @Mutation(() => Message)
+  @Mutation(() => UserAccessProjectResponse)
   async addAccessProject (@Arg("data") data: CreateUserProjectAccessesInput, @Ctx() context: MyContext) {
 
     if (context.user == null)
@@ -61,7 +62,9 @@ export class UserProjectAccessesResolver {
       m.success = false;
     }
 
-    return m;
+    const listUsersAccessesProjectData = await new UserProjectAccessesService().findUsersByAccessesProject(data.project_id);
+
+    return {message : m, listUsersAccessesProjectData : listUsersAccessesProjectData}; 
   }
 
   @Authorized()

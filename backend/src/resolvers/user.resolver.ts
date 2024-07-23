@@ -31,6 +31,12 @@ export class UserResolver {
     return users;
   }
 
+  @Query(() => [User])
+  async listUsersByPseudo(@Arg("pseudo") pseudo: string) {
+    const users = await new UsersService().listUsersByPseudo(pseudo);
+    return users;
+  }
+
   @Query(() => User)
   async findUserById(@Arg("id") id: string) {
     if (isNaN(+id)) throw new Error("Specify a correct id");
@@ -222,7 +228,6 @@ export class UserResolver {
   @Query(() => [Project])
   async listAccesProject(@Arg("userId") userId: number) {
     const listAccesProject = await new UserProjectAccessesService().findUsersByAccessesProject(userId);
-      // await new UsersService().findUsersByAccessesProject(userId);
     return listAccesProject;
   }
 
@@ -232,99 +237,3 @@ export class UserResolver {
     return projectOwner;
   }
 }
-
-  // @Authorized()
-  // @Mutation(() => Message)
-  // async addAccessProject(@Arg("data") data: CreateUserProjectAccessesInput) {
-  //   const user = await new UsersService().findByAccessesProject(
-  //     data.user_id,
-  //     data.project_id
-  //   );
-
-  //   if (user) {
-  //     throw new Error("This user already has access to this project!");
-  //   }
-
-  // @Authorized()
-  // @Mutation(() => Message)
-  // async addAccessProject(@Arg("data") data: CreateUserProjectAccessesInput) {
-  //   const user = await new UsersService().findByAccessesProject(
-  //     data.user_id,
-  //     data.project_id
-  //   );
-
-  //   if (user) {
-  //     throw new Error("This user already has access to this project!");
-  //   }
-
-  //   if (user) throw new Error("This name of project is already in use!");
-
-  //   const newUserAccessesProject =
-  //     await new UsersService().createAccessesProject(data);
-
-  //   const m = new Message();
-
-  //   if (newUserAccessesProject) {
-  //     m.message = "Add user project!";
-  //     m.success = true;
-  //   } else {
-  //     m.message = "Unable to add user project!";
-  //     m.success = false;
-  //   }
-
-  //   return m;
-  // }
-
-  // @Authorized()
-  // @Mutation(() => Message)
-  // async deleteAccessProject(
-  //   @Arg("userId") userId: number,
-  //   @Arg("projectId") projectId: number
-  // ) {
-  //   const deleteUserAccessesProject =
-  //     await new UsersService().deleteAccessesProject(userId, projectId);
-
-  //   const m = new Message();
-
-  //   if (user) throw new Error("This name of project is already in use!");
-
-  //   const newUserAccessesProject =
-  //     await new UsersService().createAccessesProject(data);
-
-  //   const m = new Message();
-
-  //   if (newUserAccessesProject) {
-  //     m.message = "Add user project!";
-  //     m.success = true;
-  //   } else {
-  //     m.message = "Unable to add user project!";
-  //     m.success = false;
-  //   }
-
-  //   return m;
-  // }
-
-  // @Authorized()
-  // @Mutation(() => Message)
-  // async deleteAccessProject(
-  //   @Arg("userId") userId: number,
-  //   @Arg("projectId") projectId: number
-  // ) {
-  //   const deleteUserAccessesProject =
-  //     await new UsersService().deleteAccessesProject(userId, projectId);
-
-  //   const m = new Message();
-
-  //   if (deleteUserAccessesProject) {
-  //     m.message = "Delete user project!";
-  //     m.success = true;
-  //   } else {
-  //     m.message = "Unable to delete user project!";
-  //     m.success = false;
-  //   }
-
-  //   return m;
-  // }
-  //   return m;
-  // }
-// }
