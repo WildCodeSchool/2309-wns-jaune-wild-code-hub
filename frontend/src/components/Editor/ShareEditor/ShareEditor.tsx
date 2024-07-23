@@ -17,6 +17,7 @@ import CustomToast from '@/components/ToastCustom/CustomToast';
 import ShareURL from "./ShareURL";
 import ShareAddPeople from "./ShareAddPeople";
 import ShareManagementPeople from "./ShareManagementPeople";
+import ShareListPeople from "./ShareListPeople";
 
 interface ShareEditorProps {
   project: Project | null;
@@ -94,7 +95,9 @@ const ShareEditor: React.FC<ShareEditorProps> = ({ project, expectedOrigin, user
                 <ShareAddPeople setUsers={setUsers} />
               </TabPanel>
               :
-              "otootot"
+              <TabPanel>
+                <ShareListPeople users={users} />
+              </TabPanel>
             }
             { checkOwner &&
               <TabPanel>
