@@ -145,7 +145,7 @@ const Editor: NextPageWithLayout = () => {
             const searchListUserEditor = listUserData.filter((user :FindAllInfoUserAccessesProject) => user.role === "EDITOR" || user.role === "OWNER");
             setListUserAuthorisationSave(searchListUserEditor)
             if (getCookieIdUser == checkOwnerProject?.user_id) 
-                setCheckOwner(true);
+                setCheckOwner(false);
             else
                 setCheckOwner(false);
         }
@@ -237,7 +237,7 @@ const Editor: NextPageWithLayout = () => {
                     <Text bg="background2" width="3rem" pl="5px" pb="0.2rem">View</Text>
                     <Spacer />
                     <ShareEditor project={project} expectedOrigin={expectedOrigin} users={users} setUsers={setUsers} checkOwner={checkOwner} />
-                    <SettingEditor project={project} expectedOrigin={expectedOrigin} setProject={setProject} />
+                    <SettingEditor project={project} expectedOrigin={expectedOrigin} setProject={setProject} checkOwner={checkOwner} users={users} />
                 </Flex>
                 <iframe
                     ref={iframeRef}
