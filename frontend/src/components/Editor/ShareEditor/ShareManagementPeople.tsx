@@ -8,6 +8,7 @@ import {
   ListItem,
   useBreakpointValue,
   Button,
+  ButtonGroup,
 } from "@chakra-ui/react";
 import CustomToast from '@/components/ToastCustom/CustomToast';
 import { CloseIcon } from "@chakra-ui/icons";
@@ -38,8 +39,36 @@ interface MutationContext {
 
 const ShareManagementPeople: React.FC<ShareManagementPeopleProps> = ({ users, setUsers }) => {
 
-  const { showAlert } = CustomToast();
-  const router = useRouter();
+    const { showAlert } = CustomToast();
+    const router = useRouter();
+  
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [userToDelete, setUserToDelete] = useState<{ id: number, pseudo: string | undefined } | null>(null);
+    const [currentPage, setCurrentPage] = useState<number>(1);
+    const userPerPage: number = 4;
+    const indexLast = currentPage * userPerPage;
+    const indexFirst = indexLast - userPerPage;
+
+    const pagination = () : FindAllInfoUserAccessesProject[] | undefined => {
+      const filterOwner = users?.filter((user: FindAllInfoUserAccessesProject) => user.role !== "OWNER");
+      return filterOwner?.slice(indexFirst, indexLast);
+    };
+
+    const next = (): void => {
+      if(!users) 
+        return showAlert("error", "Please complete all fields in the form!");
+      if (!(currentPage < Math.ceil(users?.length / userPerPage))) 
+        return showAlert("error", "You are on the last page!");
+      setCurrentPage(currentPage + 1);
+    };
+  
+    const previous = (): void => {
+      if(!users) 
+        return showAlert("error", "Please complete all fields in the form!");
+      if (!(currentPage > 1)) 
+        return showAlert("error", "You are on the first page!");
+      setCurrentPage(currentPage - 1);
+    };
 
   const [deleteAccessProject] = useMutation<
     DeleteAccessProjectMutation,
@@ -47,9 +76,18 @@ const ShareManagementPeople: React.FC<ShareManagementPeopleProps> = ({ users, se
   >(DELETE_USERS_ACCESSES_PROJECTS, {
     onCompleted: (data, context) => {
       if (data.deleteAccessProject.success) {
+
         const mutationContext = context?.context as MutationContext;
         const updatedUsers = (users ?? []).filter(user => user.user_id !== mutationContext.id);
+
         setUsers(updatedUsers);
+
+        const newTotalUsers = updatedUsers.filter((user: FindAllInfoUserAccessesProject) => user.role !== "OWNER").length;
+        
+        if (indexFirst >= newTotalUsers && currentPage > 1) {
+          setCurrentPage(currentPage - 1);
+        }
+
         showAlert("success", `Deleted user with pseudo: ${mutationContext.pseudo}`);
       } else {
         showAlert("error", data.deleteAccessProject.message);
@@ -82,9 +120,6 @@ const ShareManagementPeople: React.FC<ShareManagementPeopleProps> = ({ users, se
       showAlert('error', 'We are sorry, there seems to be an error with the server. Please try again later.');
     }
   });
-
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [userToDelete, setUserToDelete] = useState<{ id: number, pseudo: string | undefined } | null>(null);
 
   const openModal = (id: number, pseudo: string | undefined) => {
     setUserToDelete({ id, pseudo });
@@ -139,12 +174,10 @@ const ShareManagementPeople: React.FC<ShareManagementPeopleProps> = ({ users, se
   const pseudoFontSize = useBreakpointValue({ base: "12px", sm: "14px", md: "16px", lg: "18px" });
 
   return (
-    <Box mt={5}>
-      <Text color="white" mb={2} fontSize="18px">Management People :</Text>
-      <Box mt={5}>
+    <Box display="flex" flexDirection="column" alignItems="center" >
+      <Box  width="100%" maxWidth="250px">
         <List spacing={3}>
-          {users?.map(user => {
-            if (user.role === "OWNER") return null; 
+          {pagination()?.map(user => {
             return (
               <ListItem 
                 key={user.user_id} 
@@ -161,25 +194,43 @@ const ShareManagementPeople: React.FC<ShareManagementPeopleProps> = ({ users, se
                     mr={3}
                     value={user.role}
                     onChange={(e) => handleRoleChange(user.user_id, e.target.value, user.user?.pseudo)}
+                    bg="white"
+                    color="#000000"
+                    borderRadius={5}
                   >
-                    <option value="EDITOR">Editor</option>
-                    <option value="VIEWER">Viewer</option>
+                    <option value="EDITOR" style={{ color :"dark"}}>Editor</option>
+                    <option value="VIEWER" style={{ color :"dark"}}>Viewer</option>
                   </Select>
                 <CloseIcon onClick={() => openModal(user.user_id, user.user?.pseudo)} cursor={"pointer"} />
               </ListItem>
             );
           })}
         </List>
+        <ButtonGroup display="flex" alignItems="center" mt="10" ml="4" spacing={4}>
+          <Button type="button" variant="outline" onClick={previous} ml={1} >
+            {"< Prev"}
+          </Button>
+          <Button type="button" variant="secondary" onClick={next}>
+            {"Next >"}
+          </Button>
+        </ButtonGroup>
       </Box>
       <GenericModal isOpen={isModalOpen} onClose={closeModal} title="Confirm Deletion">
-        <Text color="white">Are you sure you want to remove access to {userToDelete?.pseudo}?</Text>
-        <Box mt={4} display="flex" justifyContent="center">
-          <Button type="button" variant="ghost" onClick={closeModal}>
-            Cancel
-          </Button>
-          <Button type="button" variant="secondary" onClick={confirmDelete}>
-            Confirm
-          </Button>
+        <Box display="flex" justifyContent="center" alignItems="center" height="100%">
+          <Box width="100%" maxWidth="250px" textAlign="center">
+            <Text color="white">
+              Are you sure you want to remove access to {userToDelete?.pseudo}?
+              This action could cause interruptions and complications for users who rely on it.
+            </Text>
+            <ButtonGroup spacing={5} mt={4} display="flex" justifyContent="center">
+              <Button  type="button" variant="outline" onClick={closeModal}>
+                Cancel
+              </Button>
+              <Button type="button" variant="primary" onClick={confirmDelete}>
+                {"Yes, l'm sure"}
+              </Button>
+            </ButtonGroup>
+          </Box>
         </Box>
       </GenericModal>
     </Box>

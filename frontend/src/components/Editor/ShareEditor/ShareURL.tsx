@@ -35,14 +35,16 @@ const ShareURL: React.FC<ShareURLProps> = ({ project }) => {
   };
 
   return (
-    <Box>
-        <Text color="white" mb={2}>Link</Text>
-        <Input value={currentUrl} isReadOnly placeholder="url" />
-        <Box display="flex" justifyContent="center" mt={10}>
-            <Button type="button" variant="secondary" onClick={copyToClipboard}>
-            Copy
-            </Button>
-        </Box>
+    <Box display="flex" justifyContent="center" alignItems="center">
+      <Box mt="5" width="100%" maxWidth="250px">
+          <Text color="white" mb={2}>Link</Text>
+          <Input value={currentUrl} isReadOnly placeholder="url" bg="white" color="black" borderRadius={5} />
+          <Box display="flex" justifyContent="center" mt={10}>
+              <Button type="button" variant="secondary" onClick={copyToClipboard}>
+              Copy
+              </Button>
+          </Box>
+      </Box>
     </Box>
   );
 };

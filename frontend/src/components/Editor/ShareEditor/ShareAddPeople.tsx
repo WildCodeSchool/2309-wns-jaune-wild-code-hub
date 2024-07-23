@@ -116,52 +116,51 @@ const ShareAddPeople: React.FC<ShareAddPeopleProps> = ({ setUsers }) => {
     control: (provided) => ({
       ...provided,
       minHeight: '15px',
-      maxWidth: '97%',
+      maxWidth: '100%',
       fontSize: '14px',
-      backgroundColor: 'black',
+      backgroundColor: 'white',
       borderColor: '#2D3748',
-      color: 'white',
-      borderRadius: 'md',
+      color: 'black',
+      borderRadius: '0.3rem',
       _hover: {
         borderColor: '#4A5568',
       },
     }),
     menu: (provided) => ({
       ...provided,
-      backgroundColor: '#1A202C',
-      color: 'white',
-      borderRadius: 'md',
+      backgroundColor: 'white',
+      color: 'black',
+      borderRadius: '0.3rem',
     }),
     option: (provided, state) => ({
       ...provided,
-      backgroundColor: state.isFocused ? '#a3c7fa' : '#1A202C',
-      color: 'white',
+      backgroundColor: state.isFocused ? '#a3c7fa' : 'white',
+      color: 'black',
       fontSize: '16px',
       _hover: {
-        backgroundColor: state.isFocused ? 'black' : 'white',
+        backgroundColor: state.isFocused ? 'white' : 'black',
       },
-      borderRadius: 'md',
+      borderRadius: '0.3rem',
     }),
     placeholder: (provided) => ({
       ...provided,
       fontSize: '14px',
-      color: 'white',
+      color: 'black',
     }),
     singleValue: (provided) => ({
       ...provided,
       borderRadius: 'md',
-      color: 'white',
+      color: 'black',
     }),
     input: (provided) => ({
       ...provided,
-      color: 'white',
+      color: 'black',
     }),
   };
 
   return (
-    <Box>
-      <Text color="white" fontSize="18px" mb={5}>Add People :</Text>
-      <Box mt={2}>
+    <Box display="flex" flexDirection="column" alignItems="center" >
+      <Box mt={2} width="100%" maxWidth="300px">
         <Text color="white" mb={2}>Pseudo</Text>
         <ReactSelect
           options={userOptions}
@@ -172,21 +171,23 @@ const ShareAddPeople: React.FC<ShareAddPeopleProps> = ({ setUsers }) => {
           styles={customStyles}
         />
       </Box>
-      <Box mt={2}>
+      <Box mt={3} width="100%" maxWidth="300px">
         <Text color="white" mb={2}>Role</Text>
         <Select
           size="sm"
-          width="auto"
-          mr={3}
+          width="100%"
           value={role}
           onChange={(e) => setRole(e.target.value)}
+          bg="white"
+          color="black"
+          borderRadius={5}
         >
           <option value="">Select role</option>
           <option value="EDITOR">Editor</option>
           <option value="VIEWER">Viewer</option>
         </Select>
       </Box>
-      <Box display="flex" justifyContent="center" mt={10}>
+      <Box display="flex" justifyContent="center" mt={10} width="100%" maxWidth="400px">
         <Button type="button" variant="secondary" onClick={handleClick}>
           Add
         </Button>
