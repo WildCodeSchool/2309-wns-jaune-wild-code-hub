@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { 
 UpdateProjectMutation,
 UpdateProjectMutationVariables,
+DeleteProjectMutation,
+DeleteProjectMutationVariables,
 Project,
 } from "@/types/graphql";
 import { 
@@ -13,7 +15,8 @@ Input
 } from "@chakra-ui/react";
 import CustomToast from '@/components/ToastCustom/CustomToast';
 import { 
-UPDATE_PROJECT
+UPDATE_PROJECT,
+DELETE_PROJECT,
 } from "@/requetes/mutations/project.mutations";
 import { useMutation } from "@apollo/client";
 import { useRouter } from "next/router";
@@ -50,7 +53,7 @@ const SettingManagement: React.FC<SettingManagementProps> = ({ project, setProje
             setIsSettingsModalOpen(false);
         } else {
             showAlert(
-                "success",
+                "error",
                 data?.updateProject?.message ? 
                 data?.updateProject?.message
                 :
@@ -69,12 +72,41 @@ const SettingManagement: React.FC<SettingManagementProps> = ({ project, setProje
     }
     });
 
-  const handleClick = () => {
+    const [deleteProject] = useMutation<
+    DeleteProjectMutation,
+    DeleteProjectMutationVariables
+    >(DELETE_PROJECT, {
+    onCompleted: (data) => {
+        if (data?.deleteProject?.success) {
+            
+            showAlert("success", data?.deleteProject?.message);
+            setIsSettingsModalOpen(false);
+            router.push('/me')
+        } else {
+            showAlert(
+                "error",
+                data?.deleteProject?.message ? 
+                data?.deleteProject?.message
+                :
+                "We are sorry, there seems to be an error with the server. Please try again later."
+            );
+        }
+    },
+    onError(error) {
+        showAlert(
+        'error',
+        error.message ?
+            error.message
+        :
+            "We are sorry, there seems to be an error with the server. Please try again later."
+        );
+    }
+    });
+
+  const handleClickUpdate = () => {
     if (!nameProject || !project || !router.query.id || typeof +router.query.id !== "number") {
       return showAlert("error", "Please complete all fields in the form!");
     }
-
-    console.log(project)
     
     updateProject({
       variables: {
@@ -84,6 +116,18 @@ const SettingManagement: React.FC<SettingManagementProps> = ({ project, setProje
             private : privateProject
         }
       },
+    });
+  };
+
+  const handleClickDelete = () => {
+    if (!nameProject || !project || !router.query.id || typeof +router.query.id !== "number") {
+      return showAlert("error", "Please complete all fields in the form!");
+    }
+
+    deleteProject({
+        variables: {
+            deleteProjectId : +project?.id
+        },
     });
   };
 
@@ -119,12 +163,12 @@ const SettingManagement: React.FC<SettingManagementProps> = ({ project, setProje
         </Box>
 
         <Box display="flex" justifyContent="center" mt={10}>
-          <Button type="button" variant="secondary" onClick={handleClick}>
+          <Button type="button" variant="secondary" onClick={handleClickUpdate}>
               Save Change
           </Button>
         </Box>
         <Box display="flex" justifyContent="center" mt={3}>
-          <Button type="button" variant="outline">
+          <Button type="button" variant="outline" onClick={handleClickDelete}>
               Delete Project
           </Button>
         </Box>
