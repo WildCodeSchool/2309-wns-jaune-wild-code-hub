@@ -154,7 +154,6 @@ const ShareManagementPeople: React.FC<ShareManagementPeopleProps> = ({ users, se
   const handleRoleChange = (id: number, role: string, pseudo: string | undefined) => {
     if (!users || !router.query.id || !pseudo || !role)
       return showAlert("error", "Please wait while the project loads!");
-
     updateAccessProject({
       variables: {
         data: {
