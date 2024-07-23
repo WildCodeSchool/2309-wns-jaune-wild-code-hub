@@ -416,6 +416,13 @@ export type DeleteProjectMutationVariables = Exact<{
 
 export type DeleteProjectMutation = { __typename?: 'Mutation', deleteProject: { __typename?: 'Message', success: boolean, message: string } };
 
+export type CreateProjectMutationVariables = Exact<{
+  data: CreateProjectInput;
+}>;
+
+
+export type CreateProjectMutation = { __typename?: 'Mutation', createProject: { __typename?: 'Project', category: string, name: string, id: string, private: boolean, created_at: any, update_at: any, files: Array<{ __typename?: 'File', id: string, name: string, language: string, type: string, extension: string, content: string, created_at: any, update_at: any }> } };
+
 export type UpdateAccessProjectMutationVariables = Exact<{
   data: UpdateUserProjectAccessesInput;
 }>;
@@ -682,6 +689,54 @@ export function useDeleteProjectMutation(baseOptions?: Apollo.MutationHookOption
 export type DeleteProjectMutationHookResult = ReturnType<typeof useDeleteProjectMutation>;
 export type DeleteProjectMutationResult = Apollo.MutationResult<DeleteProjectMutation>;
 export type DeleteProjectMutationOptions = Apollo.BaseMutationOptions<DeleteProjectMutation, DeleteProjectMutationVariables>;
+export const CreateProjectDocument = gql`
+    mutation createProject($data: CreateProjectInput!) {
+  createProject(data: $data) {
+    category
+    name
+    id
+    private
+    created_at
+    update_at
+    files {
+      id
+      name
+      language
+      type
+      extension
+      content
+      created_at
+      update_at
+    }
+  }
+}
+    `;
+export type CreateProjectMutationFn = Apollo.MutationFunction<CreateProjectMutation, CreateProjectMutationVariables>;
+
+/**
+ * __useCreateProjectMutation__
+ *
+ * To run a mutation, you first call `useCreateProjectMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateProjectMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createProjectMutation, { data, loading, error }] = useCreateProjectMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useCreateProjectMutation(baseOptions?: Apollo.MutationHookOptions<CreateProjectMutation, CreateProjectMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateProjectMutation, CreateProjectMutationVariables>(CreateProjectDocument, options);
+      }
+export type CreateProjectMutationHookResult = ReturnType<typeof useCreateProjectMutation>;
+export type CreateProjectMutationResult = Apollo.MutationResult<CreateProjectMutation>;
+export type CreateProjectMutationOptions = Apollo.BaseMutationOptions<CreateProjectMutation, CreateProjectMutationVariables>;
 export const UpdateAccessProjectDocument = gql`
     mutation UpdateAccessProject($data: UpdateUserProjectAccessesInput!) {
   updateAccessProject(data: $data) {
