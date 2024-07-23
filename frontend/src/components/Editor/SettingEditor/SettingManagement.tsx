@@ -137,7 +137,7 @@ const SettingManagement: React.FC<SettingManagementProps> = ({ project, setProje
       justifyContent="center" 
       alignItems="center" 
     >
-      <Box width="300px" borderRadius="md" boxShadow="lg">
+      <Box width="250px" borderRadius="md" boxShadow="lg">
         <Box mt={2}>
           <Text color="white" mb={2}>Name of the project</Text>
           <Input
@@ -146,6 +146,8 @@ const SettingManagement: React.FC<SettingManagementProps> = ({ project, setProje
             placeholder="Enter project name"
             size="sm"
             mb={3}
+            bg="white"
+            color="black"
           />
         </Box>
 
@@ -156,6 +158,8 @@ const SettingManagement: React.FC<SettingManagementProps> = ({ project, setProje
             value={privateProject ? "private" : "public"}
             onChange={(e) => setPrivateProject(e.target.value === "private")}
             mb={3}
+            bg="white"
+            color="black"
           >
             <option value="public">Public</option>
             <option value="private">Private</option>

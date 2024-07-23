@@ -141,7 +141,7 @@ const ShareManagementPeople: React.FC<ShareManagementPeopleProps> = ({ users, se
   return (
     <Box display="flex" flexDirection="column" alignItems="center" mt={5}>
       <Text color="white" mb={2} fontSize="18px">Management People :</Text>
-      <Box mt={5} width="100%" maxWidth="300px">
+      <Box mt={5} width="100%" maxWidth="250px">
         <List spacing={3}>
           {users?.map(user => {
             if (user.role === "OWNER") return null; 

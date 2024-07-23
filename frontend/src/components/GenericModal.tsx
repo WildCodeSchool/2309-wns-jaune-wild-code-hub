@@ -20,7 +20,7 @@ interface GenericModalProps {
 
 
 const GenericModal: React.FC<GenericModalProps> = ({ isOpen, onClose, children, title }) => {
-    const titleFontSize = useBreakpointValue({ base: "1xl", sm: "2xl" });
+    const titleFontSize = useBreakpointValue({ base: "2xl", sm: "3xl" });
     return (
         <Modal isOpen={isOpen} onClose={onClose} isCentered>
             <ModalOverlay />
