@@ -1,5 +1,5 @@
 import { Arg, Ctx,  Mutation, Resolver, Authorized, Query } from "type-graphql";
-import UserProjectAccessesService from "../services/userProjectAccesses.service.";
+import UserProjectAccessesService from "../services/userProjectAccesses.service";
 import { Message } from "../entities/user.entity";
 import { MyContext } from "..";
 import { 

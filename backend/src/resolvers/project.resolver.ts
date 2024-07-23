@@ -100,10 +100,12 @@ export class ProjectResolver {
 
   @Authorized()
   @Mutation(() => Project)
-  async createProject(@Arg("data") data: CreateProjectInput) {
+  async createProject(@Arg("data") data: CreateProjectInput, @Ctx() context: MyContext) {
+    if (!context.user)
+      throw new Error("Access denied! You need to be authenticated to perform this action!");
     const project = await new ProjectsService().findByName(data.name);
     if (project) throw new Error("This name of project is already in use!");
-    const newProject = await new ProjectsService().create(data);
+    const newProject = await new ProjectsService().create(data, context?.user?.id);
 
     return newProject;
   }

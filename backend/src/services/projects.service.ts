@@ -12,6 +12,7 @@ import {
 import datasource from "../lib/db";
 import FilesService from "./files.service";
 import { File } from "../entities/file.entity";
+import  UserProjectAccessesService from "./userProjectAccesses.service";
 
 export default class ProjectsService {
   db: Repository<Project>;
@@ -88,13 +89,24 @@ export default class ProjectsService {
     return userAccesses;
   }
 
-  async create(data: CreateProjectInput) {
+  async create(data: CreateProjectInput, userId : number) {
 
     const newProject = this.db.create(data);
     const savedProject = await this.db.save(newProject);
+    
+    if (!savedProject)
+      throw new Error("Unable to create this project, please try again later!");
 
     const files = await new FilesService().createDefaultFiles(savedProject.id);
     savedProject.files = files;
+
+    const dateUserProjectAcesses = {
+      user_id: userId,
+      project_id: savedProject.id,
+      role : "OWNER" as UserRole,
+    }
+
+    await new UserProjectAccessesService().createAccessesProject(dateUserProjectAcesses);
 
     return savedProject;
 

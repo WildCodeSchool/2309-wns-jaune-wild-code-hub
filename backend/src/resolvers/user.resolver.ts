@@ -14,7 +14,7 @@ import { MyContext } from "..";
 import Cookies from "cookies";
 import { Project } from "../entities/project.entity";
 import { CreateUserProjectAccessesInput, UsersProjectsAccesses } from "../entities/userProjectAccesses.entity";
-import UserProjectAccessesService from "../services/userProjectAccesses.service.";
+import UserProjectAccessesService from "../services/userProjectAccesses.service";
 @Resolver()
 export class UserResolver {
 
