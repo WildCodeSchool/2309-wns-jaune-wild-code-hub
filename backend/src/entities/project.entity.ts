@@ -71,6 +71,22 @@ export class Project {
   files: File[];
 }
 
+
+@ObjectType()
+export class PaginatedProjects {
+  @Field(() => [Project])
+  projects: Project[];
+
+  @Field()
+  total: number;
+
+  @Field()
+  offset: number;
+
+  @Field()
+  limit: number;
+}
+
 @InputType()
 export class CreateProjectInput {
   @Field()

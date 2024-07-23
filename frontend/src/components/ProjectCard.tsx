@@ -43,7 +43,7 @@ const ProjectCard = ({ project }: Props) => {
     });
 
   return (
-    <LinkBox maxWidth={"200px"} width={"100%"} height={"100%"}>
+    <LinkBox maxWidth={"205px"} width={"100%"} maxHeight={"220px"} height={"100%"} borderRadius={24}>
       <Card
         backgroundColor={"white"}
         height={"100%"}

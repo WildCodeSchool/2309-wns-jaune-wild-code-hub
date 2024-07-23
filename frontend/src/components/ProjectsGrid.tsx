@@ -9,9 +9,9 @@ type GridProps = {
 export const ProjectsGrid = ({ projects }: GridProps) => {
   return (
     <Grid
-      width="100%"
+      width="60%"
       alignItems={"center"}
-      templateColumns="repeat(auto-fit, minmax(150px,1fr))"
+      templateColumns="repeat(4, minmax(50px,1fr))"
       gap={6}
       overflow={"auto"}
       height={"50cqh"}
