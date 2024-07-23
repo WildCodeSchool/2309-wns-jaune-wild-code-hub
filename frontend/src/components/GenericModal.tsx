@@ -26,7 +26,7 @@ const GenericModal: React.FC<GenericModalProps> = ({ isOpen, onClose, children, 
             <ModalOverlay />
             <ModalContent bg="black" width='100vw' height='55vh' {...components.ModalBody.bordered}>
                 <ModalCloseButton color="text" fontWeight="bold" />
-                <Text fontSize={titleFontSize} color="white" as='b' textAlign="center" mt={5}>{title}</Text>
+                <Text fontSize={titleFontSize} color="white" as='b' textAlign="center" mt={10}>{title}</Text>
                 <ModalBody bg="black" {...components.ModalBody.bordered}>
                     {children}
                 </ModalBody>
