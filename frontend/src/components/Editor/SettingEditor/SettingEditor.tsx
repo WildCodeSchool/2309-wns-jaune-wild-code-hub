@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Project } from "@/types/graphql";
 import GenericModal from "@/components/GenericModal";
-import { Button, Text, Input } from "@chakra-ui/react";
 import CustomToast from '@/components/ToastCustom/CustomToast';
 import { SettingsIcon } from "@chakra-ui/icons";
 import SettingManagement from "./SettingManagement";

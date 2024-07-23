@@ -93,7 +93,7 @@ const SettingManagement: React.FC<SettingManagementProps> = ({ project, setProje
       justifyContent="center" 
       alignItems="center" 
     >
-      <Box width="250px"  borderRadius="md" boxShadow="lg">
+      <Box width="300px" borderRadius="md" boxShadow="lg">
         <Box mt={2}>
           <Text color="white" mb={2}>Name of the project</Text>
           <Input
