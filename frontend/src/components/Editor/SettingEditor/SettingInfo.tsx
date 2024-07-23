@@ -28,7 +28,7 @@ const SettingInfo: React.FC<SettingInfoProps> = ({ users, project}) => {
   }, [users, project])
 
   return (
-    <Box display="flex" justifyContent="center" alignItems="center" >
+    <Box mt={5} display="flex" justifyContent="center" alignItems="center" >
       <Box mt={4} width="250px" display="flex" flexDirection="column" alignItems="center">
         <Avatar name={pseudo} mb={4} />
         <Text color="white" mb={2} textAlign="center">By {pseudo}</Text>
