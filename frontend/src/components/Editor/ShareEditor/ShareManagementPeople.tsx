@@ -218,9 +218,12 @@ const ShareManagementPeople: React.FC<ShareManagementPeopleProps> = ({ users, se
       <GenericModal isOpen={isModalOpen} onClose={closeModal} title="Confirm Deletion">
         <Box display="flex" justifyContent="center" alignItems="center" height="100%">
           <Box width="100%" maxWidth="250px" textAlign="center">
-            <Text color="white">Are you sure you want to remove access to {userToDelete?.pseudo}?</Text>
+            <Text color="white">
+              Are you sure you want to remove access to {userToDelete?.pseudo}?
+              This action could cause interruptions and complications for users who rely on it.
+            </Text>
             <ButtonGroup spacing={5} mt={4} display="flex" justifyContent="center">
-              <Button type="button" variant="outline" onClick={closeModal}>
+              <Button  type="button" variant="outline" onClick={closeModal}>
                 Cancel
               </Button>
               <Button type="button" variant="secondary" onClick={confirmDelete}>
