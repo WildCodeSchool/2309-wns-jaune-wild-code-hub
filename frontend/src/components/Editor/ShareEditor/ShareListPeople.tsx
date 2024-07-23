@@ -68,6 +68,7 @@ const ShareListPeople: React.FC<ShareListPeopleProps> = ({ users }) => {
               >
                 <Box display="flex" alignItems="center" flex="1">
                   <Text color="white" mr={3} fontSize={pseudoFontSize}>{user.user?.pseudo}</Text>
+                  <Text>:</Text>
                 </Box>
                 <Text color="white" mr={3} fontSize={pseudoFontSize}>{user.role}</Text>
               </ListItem>

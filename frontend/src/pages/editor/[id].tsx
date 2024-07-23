@@ -145,7 +145,7 @@ const Editor: NextPageWithLayout = () => {
             const searchListUserEditor = listUserData.filter((user :FindAllInfoUserAccessesProject) => user.role === "EDITOR" || user.role === "OWNER");
             setListUserAuthorisationSave(searchListUserEditor)
             if (getCookieIdUser == checkOwnerProject?.user_id) 
-                setCheckOwner(true);
+                setCheckOwner(false);
             else
                 setCheckOwner(false);
         }
