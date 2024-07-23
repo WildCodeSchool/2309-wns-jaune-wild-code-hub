@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { 
 UpdateProjectMutation,
 UpdateProjectMutationVariables,
@@ -12,16 +12,9 @@ Select,
 Input 
 } from "@chakra-ui/react";
 import CustomToast from '@/components/ToastCustom/CustomToast';
-import ReactSelect, { StylesConfig, SingleValue } from 'react-select';
-import { LIST_USERS_BY_PSEUDO } from "@/requetes/queries/user.queries";
 import { 
 UPDATE_PROJECT
 } from "@/requetes/mutations/project.mutations";
-import { 
-  AddAccessProjectMutation,
-  AddAccessProjectMutationVariables
-} from "@/types/graphql";
-import { useLazyQuery } from "@apollo/client";
 import { useMutation } from "@apollo/client";
 import { useRouter } from "next/router";
 
