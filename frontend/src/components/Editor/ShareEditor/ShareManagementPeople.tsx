@@ -139,9 +139,9 @@ const ShareManagementPeople: React.FC<ShareManagementPeopleProps> = ({ users, se
   const pseudoFontSize = useBreakpointValue({ base: "12px", sm: "14px", md: "16px", lg: "18px" });
 
   return (
-    <Box mt={5}>
+    <Box display="flex" flexDirection="column" alignItems="center" mt={5}>
       <Text color="white" mb={2} fontSize="18px">Management People :</Text>
-      <Box mt={5}>
+      <Box mt={5} width="100%" maxWidth="300px">
         <List spacing={3}>
           {users?.map(user => {
             if (user.role === "OWNER") return null; 
@@ -174,7 +174,7 @@ const ShareManagementPeople: React.FC<ShareManagementPeopleProps> = ({ users, se
       <GenericModal isOpen={isModalOpen} onClose={closeModal} title="Confirm Deletion">
         <Text color="white">Are you sure you want to remove access to {userToDelete?.pseudo}?</Text>
         <Box mt={4} display="flex" justifyContent="center">
-          <Button type="button" variant="ghost" onClick={closeModal}>
+          <Button type="button" variant="outline" onClick={closeModal} ml={1} >
             Cancel
           </Button>
           <Button type="button" variant="secondary" onClick={confirmDelete}>

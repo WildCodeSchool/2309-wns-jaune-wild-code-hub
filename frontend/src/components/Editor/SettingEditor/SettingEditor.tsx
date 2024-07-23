@@ -4,13 +4,15 @@ import GenericModal from "@/components/GenericModal";
 import { Button, Text, Input } from "@chakra-ui/react";
 import CustomToast from '@/components/ToastCustom/CustomToast';
 import { SettingsIcon } from "@chakra-ui/icons";
+import SettingManagement from "./SettingManagement";
 
 interface SettingEditorProps {
   project: Project | null;
   expectedOrigin : string | undefined;
+  setProject: React.Dispatch<React.SetStateAction<Project | null>>;
 }
 
-const SettingEditor: React.FC<SettingEditorProps> = ({ project, expectedOrigin }) => {
+const SettingEditor: React.FC<SettingEditorProps> = ({ project, expectedOrigin, setProject }) => {
 
     const { showAlert } = CustomToast();
     const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
@@ -31,8 +33,9 @@ const SettingEditor: React.FC<SettingEditorProps> = ({ project, expectedOrigin }
           <GenericModal
                 isOpen={isSettingsModalOpen}
                 onClose={() => setIsSettingsModalOpen(false)}
+                title="Manage your project"
             >
-                <Text color="white">Settings</Text>
+                <SettingManagement project={project} setProject={setProject} setIsSettingsModalOpen={setIsSettingsModalOpen}/>
             </GenericModal>
         </>
     );

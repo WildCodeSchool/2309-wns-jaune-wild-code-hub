@@ -15,7 +15,7 @@ import CustomToast from '@/components/ToastCustom/CustomToast';
 import DOMPurify from 'dompurify';
 import { File } from "@/types/editor";
 import ShareEditor from "@/components/Editor/ShareEditor/ShareEditor";
-import SettingEditor from "@/components/Editor/SettingEditor";
+import SettingEditor from "@/components/Editor/SettingEditor/SettingEditor";
 import UpdateListFilesEditor from "@/components/Editor/UpdateListFilesEditor";
 import { LIST_USERS_ACCESSES_PROJECT } from "@/requetes/queries/usersAccessesProjects.queries";
 import { FindAllInfoUserAccessesProject } from "@/types/graphql";
@@ -237,7 +237,7 @@ const Editor: NextPageWithLayout = () => {
                     <Text bg="background2" width="3rem" pl="5px" pb="0.2rem">View</Text>
                     <Spacer />
                     <ShareEditor project={project} expectedOrigin={expectedOrigin} users={users} setUsers={setUsers} checkOwner={checkOwner} />
-                    <SettingEditor project={project} expectedOrigin={expectedOrigin} />
+                    <SettingEditor project={project} expectedOrigin={expectedOrigin} setProject={setProject} />
                 </Flex>
                 <iframe
                     ref={iframeRef}

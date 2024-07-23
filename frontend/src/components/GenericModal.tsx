@@ -19,7 +19,7 @@ interface GenericModalProps {
 
 const GenericModal: React.FC<GenericModalProps> = ({ isOpen, onClose, children, title }) => {
     return (
-        <Modal isOpen={isOpen} onClose={onClose}>
+        <Modal isOpen={isOpen} onClose={onClose} isCentered>
             <ModalOverlay />
             <ModalContent bg="black" {...components.ModalBody.bordered}>
                 <ModalCloseButton color="text" fontWeight="bold" />

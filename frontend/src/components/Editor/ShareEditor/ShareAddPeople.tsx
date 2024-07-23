@@ -116,7 +116,7 @@ const ShareAddPeople: React.FC<ShareAddPeopleProps> = ({ setUsers }) => {
     control: (provided) => ({
       ...provided,
       minHeight: '15px',
-      maxWidth: '97%',
+      maxWidth: '100%',
       fontSize: '14px',
       backgroundColor: 'black',
       borderColor: '#2D3748',
@@ -159,9 +159,9 @@ const ShareAddPeople: React.FC<ShareAddPeopleProps> = ({ setUsers }) => {
   };
 
   return (
-    <Box>
+    <Box display="flex" flexDirection="column" alignItems="center" >
       <Text color="white" fontSize="18px" mb={5}>Add People :</Text>
-      <Box mt={2}>
+      <Box mt={2} width="100%" maxWidth="300px">
         <Text color="white" mb={2}>Pseudo</Text>
         <ReactSelect
           options={userOptions}
@@ -172,12 +172,11 @@ const ShareAddPeople: React.FC<ShareAddPeopleProps> = ({ setUsers }) => {
           styles={customStyles}
         />
       </Box>
-      <Box mt={2}>
+      <Box mt={3} width="100%" maxWidth="300px">
         <Text color="white" mb={2}>Role</Text>
         <Select
           size="sm"
-          width="auto"
-          mr={3}
+          width="100%"
           value={role}
           onChange={(e) => setRole(e.target.value)}
         >
@@ -186,7 +185,7 @@ const ShareAddPeople: React.FC<ShareAddPeopleProps> = ({ setUsers }) => {
           <option value="VIEWER">Viewer</option>
         </Select>
       </Box>
-      <Box display="flex" justifyContent="center" mt={10}>
+      <Box display="flex" justifyContent="center" mt={10} width="100%" maxWidth="400px">
         <Button type="button" variant="secondary" onClick={handleClick}>
           Add
         </Button>
