@@ -18,6 +18,12 @@ export type Scalars = {
   DateTimeISO: { input: any; output: any; }
 };
 
+export type CreateProjectInput = {
+  category: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+  private: Scalars['Boolean']['input'];
+};
+
 export type CreateUserInput = {
   ban: Scalars['Boolean']['input'];
   email: Scalars['String']['input'];
@@ -27,6 +33,25 @@ export type CreateUserInput = {
   pseudo: Scalars['String']['input'];
   role?: InputMaybe<Scalars['String']['input']>;
   run_counter: Scalars['Float']['input'];
+};
+
+export type CreateUserProjectAccessesInput = {
+  project_id: Scalars['Float']['input'];
+  role?: InputMaybe<Scalars['String']['input']>;
+  user_id: Scalars['Float']['input'];
+};
+
+export type File = {
+  __typename?: 'File';
+  category: Scalars['String']['output'];
+  content: Scalars['String']['output'];
+  created_at: Scalars['DateTimeISO']['output'];
+  id: Scalars['ID']['output'];
+  language: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+  project_id: Scalars['String']['output'];
+  type: Scalars['String']['output'];
+  update_at: Scalars['DateTimeISO']['output'];
 };
 
 export type InputLogin = {
@@ -43,9 +68,49 @@ export type Message = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  addAccessProject: Message;
+  addLikeProject: Message;
+  createProject: Project;
+  deleteAccessProject: Message;
+  deleteLikeProject: Message;
+  deleteProject: Message;
   deleteUser: Message;
   register: User;
+  updateProject: Message;
   updateUser: Message;
+};
+
+
+export type MutationAddAccessProjectArgs = {
+  data: CreateUserProjectAccessesInput;
+};
+
+
+export type MutationAddLikeProjectArgs = {
+  projectId: Scalars['Float']['input'];
+  userId: Scalars['Float']['input'];
+};
+
+
+export type MutationCreateProjectArgs = {
+  data: CreateProjectInput;
+};
+
+
+export type MutationDeleteAccessProjectArgs = {
+  projectId: Scalars['Float']['input'];
+  userId: Scalars['Float']['input'];
+};
+
+
+export type MutationDeleteLikeProjectArgs = {
+  projectId: Scalars['Float']['input'];
+  userId: Scalars['Float']['input'];
+};
+
+
+export type MutationDeleteProjectArgs = {
+  id: Scalars['Float']['input'];
 };
 
 
@@ -56,6 +121,11 @@ export type MutationDeleteUserArgs = {
 
 export type MutationRegisterArgs = {
   data: CreateUserInput;
+};
+
+
+export type MutationUpdateProjectArgs = {
+  data: UpdateProjectInput;
 };
 
 
@@ -75,14 +145,38 @@ export type Project = {
 
 export type Query = {
   __typename?: 'Query';
-  ListProjects: Array<Project>;
+  countLikesPerProject: Scalars['Int']['output'];
+  findProjectById: Project;
+  findProjectByName: Project;
   findUserByEmail: User;
   findUserById: User;
   findUserByPseudo: User;
+  listAccesProject: Array<Project>;
+  listLikeProject: Array<Project>;
+  listProjects: Array<Project>;
+  listProjectsByCategory: Array<Project>;
+  listPublicProjects: Array<Project>;
   listUsers: Array<User>;
   listUsersByRole: Array<User>;
+  listUsersLikesPerProject: Array<User>;
   login: Message;
   logout: Message;
+  search: Array<File>;
+};
+
+
+export type QueryCountLikesPerProjectArgs = {
+  projectId: Scalars['Float']['input'];
+};
+
+
+export type QueryFindProjectByIdArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type QueryFindProjectByNameArgs = {
+  name: Scalars['String']['input'];
 };
 
 
@@ -101,13 +195,45 @@ export type QueryFindUserByPseudoArgs = {
 };
 
 
+export type QueryListAccesProjectArgs = {
+  userId: Scalars['Float']['input'];
+};
+
+
+export type QueryListLikeProjectArgs = {
+  userId: Scalars['Float']['input'];
+};
+
+
+export type QueryListProjectsByCategoryArgs = {
+  category: Scalars['String']['input'];
+};
+
+
 export type QueryListUsersByRoleArgs = {
   role: Scalars['String']['input'];
 };
 
 
+export type QueryListUsersLikesPerProjectArgs = {
+  projectId: Scalars['Float']['input'];
+};
+
+
 export type QueryLoginArgs = {
   infos: InputLogin;
+};
+
+
+export type QuerySearchArgs = {
+  term: Scalars['String']['input'];
+};
+
+export type UpdateProjectInput = {
+  category?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['ID']['input'];
+  name?: InputMaybe<Scalars['String']['input']>;
+  private?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 export type UpdateUserInput = {
@@ -145,17 +271,12 @@ export type RegisterMutationVariables = Exact<{
 
 export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'User', pseudo: string, run_counter: number, role: string, password: string, lastname: string, firstname: string, email: string, ban: boolean } };
 
-export type LoginQueryVariables = Exact<{
-  infos: InputLogin;
+export type SearchQueryQueryVariables = Exact<{
+  searchTerm: Scalars['String']['input'];
 }>;
 
 
-export type LoginQuery = { __typename?: 'Query', login: { __typename?: 'Message', success: boolean, message: string } };
-
-export type LogoutQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type LogoutQuery = { __typename?: 'Query', logout: { __typename?: 'Message', success: boolean, message: string } };
+export type SearchQueryQuery = { __typename?: 'Query', search: Array<{ __typename?: 'File', id: string, name: string, category: string, project_id: string }> };
 
 
 export const RegisterDocument = gql`
@@ -198,84 +319,46 @@ export function useRegisterMutation(baseOptions?: Apollo.MutationHookOptions<Reg
 export type RegisterMutationHookResult = ReturnType<typeof useRegisterMutation>;
 export type RegisterMutationResult = Apollo.MutationResult<RegisterMutation>;
 export type RegisterMutationOptions = Apollo.BaseMutationOptions<RegisterMutation, RegisterMutationVariables>;
-export const LoginDocument = gql`
-    query Login($infos: InputLogin!) {
-  login(infos: $infos) {
-    success
-    message
+export const SearchQueryDocument = gql`
+    query SearchQuery($searchTerm: String!) {
+  search(term: $searchTerm) {
+    id
+    name
+    category
+    project_id
   }
 }
     `;
 
 /**
- * __useLoginQuery__
+ * __useSearchQueryQuery__
  *
- * To run a query within a React component, call `useLoginQuery` and pass it any options that fit your needs.
- * When your component renders, `useLoginQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useSearchQueryQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSearchQueryQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useLoginQuery({
+ * const { data, loading, error } = useSearchQueryQuery({
  *   variables: {
- *      infos: // value for 'infos'
+ *      searchTerm: // value for 'searchTerm'
  *   },
  * });
  */
-export function useLoginQuery(baseOptions: Apollo.QueryHookOptions<LoginQuery, LoginQueryVariables>) {
+export function useSearchQueryQuery(baseOptions: Apollo.QueryHookOptions<SearchQueryQuery, SearchQueryQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<LoginQuery, LoginQueryVariables>(LoginDocument, options);
+        return Apollo.useQuery<SearchQueryQuery, SearchQueryQueryVariables>(SearchQueryDocument, options);
       }
-export function useLoginLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<LoginQuery, LoginQueryVariables>) {
+export function useSearchQueryLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SearchQueryQuery, SearchQueryQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<LoginQuery, LoginQueryVariables>(LoginDocument, options);
+          return Apollo.useLazyQuery<SearchQueryQuery, SearchQueryQueryVariables>(SearchQueryDocument, options);
         }
-export function useLoginSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<LoginQuery, LoginQueryVariables>) {
+export function useSearchQuerySuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<SearchQueryQuery, SearchQueryQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<LoginQuery, LoginQueryVariables>(LoginDocument, options);
+          return Apollo.useSuspenseQuery<SearchQueryQuery, SearchQueryQueryVariables>(SearchQueryDocument, options);
         }
-export type LoginQueryHookResult = ReturnType<typeof useLoginQuery>;
-export type LoginLazyQueryHookResult = ReturnType<typeof useLoginLazyQuery>;
-export type LoginSuspenseQueryHookResult = ReturnType<typeof useLoginSuspenseQuery>;
-export type LoginQueryResult = Apollo.QueryResult<LoginQuery, LoginQueryVariables>;
-export const LogoutDocument = gql`
-    query Logout {
-  logout {
-    success
-    message
-  }
-}
-    `;
-
-/**
- * __useLogoutQuery__
- *
- * To run a query within a React component, call `useLogoutQuery` and pass it any options that fit your needs.
- * When your component renders, `useLogoutQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useLogoutQuery({
- *   variables: {
- *   },
- * });
- */
-export function useLogoutQuery(baseOptions?: Apollo.QueryHookOptions<LogoutQuery, LogoutQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<LogoutQuery, LogoutQueryVariables>(LogoutDocument, options);
-      }
-export function useLogoutLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<LogoutQuery, LogoutQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<LogoutQuery, LogoutQueryVariables>(LogoutDocument, options);
-        }
-export function useLogoutSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<LogoutQuery, LogoutQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<LogoutQuery, LogoutQueryVariables>(LogoutDocument, options);
-        }
-export type LogoutQueryHookResult = ReturnType<typeof useLogoutQuery>;
-export type LogoutLazyQueryHookResult = ReturnType<typeof useLogoutLazyQuery>;
-export type LogoutSuspenseQueryHookResult = ReturnType<typeof useLogoutSuspenseQuery>;
-export type LogoutQueryResult = Apollo.QueryResult<LogoutQuery, LogoutQueryVariables>;
+export type SearchQueryQueryHookResult = ReturnType<typeof useSearchQueryQuery>;
+export type SearchQueryLazyQueryHookResult = ReturnType<typeof useSearchQueryLazyQuery>;
+export type SearchQuerySuspenseQueryHookResult = ReturnType<typeof useSearchQuerySuspenseQuery>;
+export type SearchQueryQueryResult = Apollo.QueryResult<SearchQueryQuery, SearchQueryQueryVariables>;
