@@ -10,6 +10,7 @@ import { Button, Heading } from "@chakra-ui/react";
 import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
 import { NextPageWithLayout } from "../_app";
+import CreateProject from "@/components/CreateProject";
 
 // TODO Add pagination
 
@@ -47,7 +48,7 @@ const Workspace: NextPageWithLayout = () => {
         <>There is no projects in your workspace !</>
       )}
 
-      <Button variant={"secondary"}>Create a project</Button>
+      <CreateProject />
     </ProfilePageContainer>
   );
 };

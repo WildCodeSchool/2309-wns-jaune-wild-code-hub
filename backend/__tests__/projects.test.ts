@@ -4,11 +4,29 @@ import { ProjectResolver } from "../src/resolvers/project.resolver";
 import { FileResolver } from "../src/resolvers/file.resolver";
 import { Project } from "../src/entities/project.entity";
 import { File } from "../src/entities/file.entity";
-import { Message } from "../src/entities/user.entity";
+import { Message, User } from "../src/entities/user.entity";
 import datasourceInitial from "../src/lib/db";
 import datasource from "../src/lib/db_test";
 import { EntityTarget, Repository } from "typeorm";
 import assert from "assert";
+import { UserProjectAccessesResolver } from "../src/resolvers/userProjectAccesses.resolver";
+import { UsersProjectsAccesses } from "../src/entities/userProjectAccesses.entity";
+import { UserResolver } from "../src/resolvers/user.resolver";
+
+export const CREATE_USER = `#graphql
+  mutation Users($data: CreateUserInput!) {
+    register(data: $data) {            
+      id
+      lastname
+      firstname
+      pseudo
+      email
+      password
+      ban
+      run_counter
+    }
+  }
+`;
 
 // Define GraphQL Queries and Mutations
 const LIST_PROJECTS = `#graphql
@@ -93,6 +111,11 @@ const DELETE_PROJECT = `#graphql
 `;
 
 // Define Types
+
+type ResponseDataCreateUser = {
+  register: User;
+}
+
 type ResponseDataListProject = {
   listProjects: Project[];
 }
@@ -129,7 +152,7 @@ let server: ApolloServer;
 
 beforeAll(async () => {
   const baseSchema = await buildSchema({
-    resolvers: [ProjectResolver, FileResolver],
+    resolvers: [ProjectResolver, FileResolver, UserProjectAccessesResolver, UserResolver],
     authChecker: () => true,
   });
 
@@ -143,6 +166,10 @@ beforeAll(async () => {
         return datasource.getRepository(File);
       } else if (entity === Project) {
         return datasource.getRepository(Project);
+      } else if (entity === UsersProjectsAccesses) {
+        return datasource.getRepository(UsersProjectsAccesses);
+      } else if (entity === User) {
+        return datasource.getRepository(User);
       } else {
         throw new Error(`Unexpected entity: ${entity}`);
       }
@@ -160,6 +187,30 @@ afterAll(async () => {
 });
 
 describe("Test for a new project", () => {
+  
+  it("Create user", async () => { 
+    const response = await server.executeOperation<ResponseDataCreateUser>({
+      query: CREATE_USER,   
+      variables: {
+        data:{
+          lastname :"Toto",
+          firstname : "Toto",
+          pseudo : "Toto",
+          email : "toto@gmail.com",
+          password: "toto",
+          ban : false,
+          role: "ADMIN",
+          run_counter : 1
+        }
+      }   
+    })
+
+    assert(response.body.kind === "single");
+    const id = response.body.singleResult.data?.register?.id;     
+    expect(id).not.toBeNull();   
+    expect(response.body.singleResult.data?.register?.firstname).toEqual("Toto");
+  });
+
   it("Find 0 projects", async () => {
     const response = await server.executeOperation<ResponseDataListProject>({
       query: LIST_PROJECTS,
@@ -179,13 +230,21 @@ describe("Test for a new project", () => {
           private: false,
         },
       },
-    });
-
+    }, 
+    {
+      contextValue : {
+        user : {
+          id : "1"
+        }
+      }
+    }
+  );
+    console.log(JSON.stringify(response.body))
     assert(response.body.kind === "single");
     if (response.body.singleResult.errors) {
       console.error('Errors:', response.body.singleResult.errors);
     }
-
+    console.log(JSON.stringify(response.body.singleResult.data?.createProject))
     const id = response.body.singleResult.data?.createProject?.id;
     expect(id).not.toBeNull();
     expect(response.body.singleResult.data?.createProject?.name).toEqual("Project1");
