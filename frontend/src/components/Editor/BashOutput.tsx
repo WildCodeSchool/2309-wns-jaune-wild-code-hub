@@ -16,7 +16,9 @@ interface BashOutputProps {
 
 const BashOutput: React.FC<BashOutputProps> = ({ logs }) => {
   const outputRef = useRef<HTMLDivElement>(null);
-  const [expandedState, setExpandedState] = useState<{ [logIndex: number]: { [argIndex: number]: boolean } }>({});
+  const [expandedState, setExpandedState] = useState<{
+    [logIndex: number]: { [argIndex: number]: boolean };
+  }>({});
 
   useEffect(() => {
     const scrollToBottom = () => {
@@ -29,12 +31,12 @@ const BashOutput: React.FC<BashOutputProps> = ({ logs }) => {
   }, [logs]);
 
   const toggleAccordion = (logIndex: number, argIndex: number) => {
-    setExpandedState(prevState => ({
+    setExpandedState((prevState) => ({
       ...prevState,
       [logIndex]: {
         ...prevState[logIndex],
-        [argIndex]: !prevState[logIndex]?.[argIndex]
-      }
+        [argIndex]: !prevState[logIndex]?.[argIndex],
+      },
     }));
   };
 
@@ -44,7 +46,9 @@ const BashOutput: React.FC<BashOutputProps> = ({ logs }) => {
     const processArgs = (args: any[]) => {
       return args.map((arg, argIndex) => {
         const content =
-          typeof arg === "object" ? JSON.stringify(arg, null, 2) : arg.toString();
+          typeof arg === "object"
+            ? JSON.stringify(arg, null, 2)
+            : arg.toString();
 
         if (typeof arg === "object") {
           return (
@@ -93,12 +97,33 @@ const BashOutput: React.FC<BashOutputProps> = ({ logs }) => {
   };
 
   return (
-    <Box p={4} bg="background2" color="white" height="36vh" overflowY="scroll" ref={outputRef}>
+    <Box
+      height={"calc(100% - 2.5rem)"}
+      width={"100%"}
+      bg={"background2"}
+      overflow={"auto"}
+    >
       {logs.map((log, logIndex) => (
         <Box key={logIndex} borderBottom="1px solid gray" py={1}>
           {renderLogMessage(log, logIndex)}
         </Box>
       ))}
+      <Text>Some content</Text>
+      <Text>Some content</Text>
+      <Text>Some content</Text>
+      <Text>Some content</Text>
+      <Text>Some content</Text>
+      <Text>Some content</Text> <Text>Some content</Text>
+      <Text>Some content</Text>
+      <Text>Some content</Text> <Text>Some content</Text>
+      <Text>Some content</Text>
+      <Text>Some content</Text> <Text>Some content</Text>
+      <Text>Some content</Text>
+      <Text>Some content</Text> <Text>Some content</Text>
+      <Text>Some content</Text>
+      <Text>Some content</Text> <Text>Some content</Text>
+      <Text>Some content</Text>
+      <Text>Some content</Text>
     </Box>
   );
 };
