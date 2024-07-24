@@ -475,14 +475,14 @@ export type ListFilesByProjectQueryVariables = Exact<{
 }>;
 
 
-export type ListFilesByProjectQuery = { __typename?: 'Query', listFilesByProject: Array<{ __typename?: 'File', extension: string, language: string, name: string, type: string, id: string, content: string }> };
+export type ListFilesByProjectQuery = { __typename?: 'Query', listFilesByProject: Array<{ __typename?: 'File', extension: string, language: string, name: string, type: string, id: string, content: string, created_at: any, update_at: any }> };
 
 export type FindProjectByIdQueryVariables = Exact<{
   findProjectByIdId: Scalars['String']['input'];
 }>;
 
 
-export type FindProjectByIdQuery = { __typename?: 'Query', findProjectById: { __typename?: 'Project', id: string, name: string, private: boolean, update_at: any, created_at: any, category: string, files: Array<{ __typename?: 'File', language: string, extension: string, name: string, type: string, id: string, content: string }> } };
+export type FindProjectByIdQuery = { __typename?: 'Query', findProjectById: { __typename?: 'Project', id: string, name: string, private: boolean, update_at: any, created_at: any, category: string, files: Array<{ __typename?: 'File', language: string, extension: string, name: string, type: string, id: string, content: string, created_at: any, update_at: any }> } };
 
 export type ListProjectsByUserQueryVariables = Exact<{
   listProjectsByUserId: Scalars['String']['input'];
@@ -996,6 +996,8 @@ export const ListFilesByProjectDocument = gql`
     type
     id
     content
+    created_at
+    update_at
   }
 }
     `;
@@ -1048,6 +1050,8 @@ export const FindProjectByIdDocument = gql`
       type
       id
       content
+      created_at
+      update_at
     }
   }
 }
