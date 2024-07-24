@@ -50,16 +50,34 @@ export default class ProjectsService {
     return projects;
   }
 
-  async listByPublic() {
-    const project = await this.db.find({
+  // async listByPublic() {
+  //   const project = await this.db.find({
+  //     where: {
+  //       private: false,
+  //     },
+  //     relations: ["files"],
+  //   });
+  //   return project;
+  // }
+
+
+  async listByPublic(offset: number = 0, limit: number = 8) {
+    const [projects, total] = await this.db.findAndCount({
       where: {
         private: false,
       },
       relations: ["files"],
+      skip: offset,
+      take: limit,
     });
-    return project;
+    
+    return {
+      projects,
+      total,
+      offset,
+      limit,
+    };
   }
-
 
   async listByUserId(id: number) {
     const projects = await this.db.find({

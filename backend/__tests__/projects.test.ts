@@ -2,7 +2,7 @@ import { buildSchema } from "type-graphql";
 import { ApolloServer } from "@apollo/server";
 import { ProjectResolver } from "../src/resolvers/project.resolver";
 import { FileResolver } from "../src/resolvers/file.resolver";
-import { Project } from "../src/entities/project.entity";
+import { Project, PaginatedProjects } from "../src/entities/project.entity";
 import { File } from "../src/entities/file.entity";
 import { Message, User } from "../src/entities/user.entity";
 import datasourceInitial from "../src/lib/db";
@@ -59,13 +59,20 @@ const FIND_PROJECT_BY_NAME = `#graphql
 `;
 
 const LIST_PROJECTS_PUBLIC = `#graphql
-  query Projects {
-    listPublicProjects {            
+  query Projects($limit: Int!, $offset: Int!) {
+    listPublicProjects (limit: $limit, offset: $offset){            
+      projects {
       id
       name
       category
       private
+      created_at
+      update_at
     }
+    total
+    offset
+    limit
+   }
   }
 `;
 
@@ -145,7 +152,7 @@ type ResponseDataDelete = {
 }
 
 type ResponseDataListProjectPublic = {
-  listPublicProjects: Project[];
+  listPublicProjects: PaginatedProjects;
 }
 
 let server: ApolloServer;
@@ -324,10 +331,15 @@ describe("Test for a new project", () => {
   it("Find public projects", async () => {
     const response = await server.executeOperation<ResponseDataListProjectPublic>({
       query: LIST_PROJECTS_PUBLIC,
+       variables: {
+        offset: 1,
+        limit :8,
+      },
     });
 
     assert(response.body.kind === "single");
-    expect(response.body.singleResult.data?.listPublicProjects).toHaveLength(1);
+    console.log('TOTOTOTO', response.body.singleResult.data?.listPublicProjects?.projects.length);
+    expect(response.body.singleResult.data?.listPublicProjects?.offset).toEqual(1);
   });
 
   it("Delete project", async () => {

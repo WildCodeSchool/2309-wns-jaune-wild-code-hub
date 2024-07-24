@@ -60,8 +60,20 @@ export default function Home() {
           world of coding!
         </Text>
         <Stack direction={{ base: "column", md: "row" }} marginTop={"4rem"} gap={"2rem"}>
-          <Button variant={"outline"}>See projects</Button>
-          <Button variant={"secondary"}>Start for free</Button>
+          <Button 
+            variant={"outline"}
+            onClick={() => {
+              setIsOpen(false);
+              router.push("/projects");
+            }}
+            >See projects</Button>
+          <Button 
+          variant={"secondary"}
+          onClick={() => {
+              setIsOpen(false);
+              router.push("/auth/register");
+            }}          
+          >Start for free</Button>
         </Stack>
       </Flex>
 
@@ -87,7 +99,13 @@ export default function Home() {
           faster than local setups and compatible with all machines. Collaborate seamlessly 
           in a reliable and secure environment
         </Text>
-        <Button variant="secondary">Discover</Button>
+        <Button 
+          variant="secondary"           
+          onClick={() => {
+            setIsOpen(false);
+            router.push("/projects");
+          }}
+          >Discover</Button>
       </Flex>
       <Flex
         direction={"column"}

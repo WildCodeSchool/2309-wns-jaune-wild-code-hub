@@ -186,6 +186,14 @@ export type MutationUpdateUserArgs = {
   data: UpdateUserInput;
 };
 
+export type PaginatedProjects = {
+  __typename?: 'PaginatedProjects';
+  limit: Scalars['Float']['output'];
+  offset: Scalars['Float']['output'];
+  projects: Array<Project>;
+  total: Scalars['Float']['output'];
+};
+
 export type Project = {
   __typename?: 'Project';
   category: Scalars['String']['output'];
@@ -215,7 +223,7 @@ export type Query = {
   listProjectsByCategory: Array<Project>;
   listProjectsByUser: Array<Project>;
   listProjectsByUserWithRole: Array<UserAccessProjectOutput>;
-  listPublicProjects: Array<Project>;
+  listPublicProjects: PaginatedProjects;
   listUsers: Array<User>;
   listUsersAccessesProject: Array<FindAllInfoUserAccessesProject>;
   listUsersByPseudo: Array<User>;
@@ -299,6 +307,12 @@ export type QueryListProjectsByUserArgs = {
 export type QueryListProjectsByUserWithRoleArgs = {
   id: Scalars['String']['input'];
   userRole?: InputMaybe<Array<Scalars['String']['input']>>;
+};
+
+
+export type QueryListPublicProjectsArgs = {
+  limit?: Scalars['Int']['input'];
+  offset?: Scalars['Int']['input'];
 };
 
 
@@ -503,6 +517,14 @@ export type ListLikeProjectQueryVariables = Exact<{
 
 
 export type ListLikeProjectQuery = { __typename?: 'Query', listLikeProject: Array<{ __typename?: 'Project', update_at: any, private: boolean, name: string, id: string, created_at: any, category: string }> };
+
+export type ListPublicProjectsQueryVariables = Exact<{
+  limit: Scalars['Int']['input'];
+  offset: Scalars['Int']['input'];
+}>;
+
+
+export type ListPublicProjectsQuery = { __typename?: 'Query', listPublicProjects: { __typename?: 'PaginatedProjects', total: number, offset: number, limit: number, projects: Array<{ __typename?: 'Project', id: string, name: string, category: string, private: boolean, created_at: any, update_at: any }> } };
 
 export type FindUserByIdQueryVariables = Exact<{
   findUserByIdId: Scalars['String']['input'];
@@ -1280,6 +1302,57 @@ export type ListLikeProjectQueryHookResult = ReturnType<typeof useListLikeProjec
 export type ListLikeProjectLazyQueryHookResult = ReturnType<typeof useListLikeProjectLazyQuery>;
 export type ListLikeProjectSuspenseQueryHookResult = ReturnType<typeof useListLikeProjectSuspenseQuery>;
 export type ListLikeProjectQueryResult = Apollo.QueryResult<ListLikeProjectQuery, ListLikeProjectQueryVariables>;
+export const ListPublicProjectsDocument = gql`
+    query ListPublicProjects($limit: Int!, $offset: Int!) {
+  listPublicProjects(limit: $limit, offset: $offset) {
+    projects {
+      id
+      name
+      category
+      private
+      created_at
+      update_at
+    }
+    total
+    offset
+    limit
+  }
+}
+    `;
+
+/**
+ * __useListPublicProjectsQuery__
+ *
+ * To run a query within a React component, call `useListPublicProjectsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useListPublicProjectsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useListPublicProjectsQuery({
+ *   variables: {
+ *      limit: // value for 'limit'
+ *      offset: // value for 'offset'
+ *   },
+ * });
+ */
+export function useListPublicProjectsQuery(baseOptions: Apollo.QueryHookOptions<ListPublicProjectsQuery, ListPublicProjectsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ListPublicProjectsQuery, ListPublicProjectsQueryVariables>(ListPublicProjectsDocument, options);
+      }
+export function useListPublicProjectsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ListPublicProjectsQuery, ListPublicProjectsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ListPublicProjectsQuery, ListPublicProjectsQueryVariables>(ListPublicProjectsDocument, options);
+        }
+export function useListPublicProjectsSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<ListPublicProjectsQuery, ListPublicProjectsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<ListPublicProjectsQuery, ListPublicProjectsQueryVariables>(ListPublicProjectsDocument, options);
+        }
+export type ListPublicProjectsQueryHookResult = ReturnType<typeof useListPublicProjectsQuery>;
+export type ListPublicProjectsLazyQueryHookResult = ReturnType<typeof useListPublicProjectsLazyQuery>;
+export type ListPublicProjectsSuspenseQueryHookResult = ReturnType<typeof useListPublicProjectsSuspenseQuery>;
+export type ListPublicProjectsQueryResult = Apollo.QueryResult<ListPublicProjectsQuery, ListPublicProjectsQueryVariables>;
 export const FindUserByIdDocument = gql`
     query FindUserById($findUserByIdId: String!) {
   findUserById(id: $findUserByIdId) {

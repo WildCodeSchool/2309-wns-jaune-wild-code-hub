@@ -10,7 +10,7 @@ import {
 import {
   CreateProjectInput,
   Project,
-  UpdateProjectInput,
+  UpdateProjectInput, PaginatedProjects,
 } from "../entities/project.entity";
 import { Message, User } from "../entities/user.entity";
 import { MyContext } from "../index"; 
@@ -65,11 +65,20 @@ export class ProjectResolver {
     return projectByName;
   }
 
-  @Query(() => [Project])
-  async listPublicProjects() {
-    const projects = await new ProjectsService().listByPublic();
+  // @Query(() => [Project])
+  // async listPublicProjects() {
+  //   const projects = await new ProjectsService().listByPublic();
+  //   return projects;
+  // }
+
+  @Query(() => PaginatedProjects)
+  async listPublicProjects(
+    @Arg('offset', () => Int, { defaultValue: 0 }) offset: number,
+    @Arg('limit', () => Int, { defaultValue: 8 }) limit: number
+  ): Promise<PaginatedProjects> {
+    const projects = await new ProjectsService().listByPublic(offset, limit);
     return projects;
-  }
+  }  
 
   @Query(() => [Project])
   async listProjectsByCategory(@Arg("category") category: string) {

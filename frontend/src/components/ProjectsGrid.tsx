@@ -9,12 +9,31 @@ type GridProps = {
 export const ProjectsGrid = ({ projects }: GridProps) => {
   return (
     <Grid
-      width="100%"
-      alignItems={"center"}
-      templateColumns="repeat(auto-fit, minmax(150px,1fr))"
+      width={{ base: "90%", md: "55%" }}
+      templateColumns={{ base: "repeat(1, 1fr)", md: "repeat(4, minmax(50px, 1fr))" }}
       gap={6}
-      overflow={"auto"}
-      height={"50cqh"}
+      overflowY={"auto"}
+      height={"53cqh"}
+      paddingBottom={{ base: "3rem", md: "0" }}
+      css={{
+        "&::-webkit-scrollbar": {
+          width: "3px",
+        },
+        "&::-webkit-scrollbar-track": {
+          background: "#f1f1f1",
+          borderRadius: "10px",
+          marginBottom: "10px",  
+        },
+        "&::-webkit-scrollbar-thumb": {
+          background: "#888",
+          borderRadius: "10px",
+        },
+        "&::-webkit-scrollbar-thumb:hover": {
+          background: "#555",
+        },
+      }}
+      paddingRight="1rem" 
+
     >
       {projects.map((project, id) => {
         return (
@@ -22,7 +41,7 @@ export const ProjectsGrid = ({ projects }: GridProps) => {
             key={project.id + id}
             display={"flex"}
             justifyContent={"center"}
-            height={"23cqh"}
+            height={"25cqh"}
           >
             <ProjectCard project={project}></ProjectCard>
           </GridItem>
@@ -31,3 +50,4 @@ export const ProjectsGrid = ({ projects }: GridProps) => {
     </Grid>
   );
 };
+
