@@ -16,11 +16,13 @@ import { Message } from "../entities/user.entity";
 
 @Resolver()
 export class FileResolver {
+
   @Query(() => [File])
   async listFilesByProject(@Arg("project_id") project_id: string) {
     const files = await new FilesService().listFilesByProjectId(project_id);
     return files;
   }
+
   @Query(() => [File])
   async findFileById(@Arg("id") id: string) {
     const fileById = await new FilesService().findById(+id);
