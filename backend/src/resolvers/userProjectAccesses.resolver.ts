@@ -9,6 +9,7 @@ import {
   FindAllInfoUserAccessesProject,
   UserAccessProjectResponse,
 } from "../entities/userProjectAccesses.entity";
+import { Project } from "../entities/project.entity";
 
 @Resolver()
 export class UserProjectAccessesResolver {
@@ -128,6 +129,13 @@ export class UserProjectAccessesResolver {
     }
 
     return m;
+  }
+
+  @Authorized()
+  @Query(() => [Project])
+  async listAccesProject(@Arg("userId") userId: number) {
+    const listAccesProject = await new UserProjectAccessesService().findUsersByAccessesProject(userId);
+    return listAccesProject;
   }
 
 }

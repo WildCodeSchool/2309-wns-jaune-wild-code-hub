@@ -13,8 +13,7 @@ import { SignJWT } from "jose";
 import { MyContext } from "..";
 import Cookies from "cookies";
 import { Project } from "../entities/project.entity";
-import { CreateUserProjectAccessesInput, UsersProjectsAccesses } from "../entities/userProjectAccesses.entity";
-import UserProjectAccessesService from "../services/userProjectAccesses.service";
+
 @Resolver()
 export class UserResolver {
 
@@ -25,17 +24,20 @@ export class UserResolver {
     return users;
   }
 
+  @Authorized()
   @Query(() => [User])
   async listUsersByRole(@Arg("role") role: ROLE) {
     const users = await new UsersService().listByRole(role);
     return users;
   }
 
+  @Authorized()
   @Query(() => [User])
   async listUsersByPseudo(@Arg("pseudo") pseudo: string) {
     const users = await new UsersService().listUsersByPseudo(pseudo);
     return users;
   }
+
 
   @Query(() => User)
   async findUserById(@Arg("id") id: string) {
@@ -44,6 +46,7 @@ export class UserResolver {
     if (!userById) throw new Error("Please note, the client does not exist");
     return userById;
   }
+
 
   @Query(() => User)
   async findUserByEmail(@Arg("email") email: string) {
@@ -118,11 +121,16 @@ export class UserResolver {
 
   @Authorized()
   @Mutation(() => Message)
-  async updateUser(@Arg("data") data: UpdateUserInput) {
+  async updateUser(@Arg("data") data: UpdateUserInput, @Ctx() ctx: MyContext) {
+
+    console.log(ctx);
+
     const { id, ...otherData } = data;
     if (otherData.password) {
       otherData.password = await argon2.hash(otherData.password);
     }
+
+    // const 
     const updateUser = await new UsersService().update(+id, otherData);
     const m = new Message();
     if (updateUser) {
@@ -222,13 +230,6 @@ export class UserResolver {
     }
 
     return m;
-  }
-
-  @Authorized()
-  @Query(() => [Project])
-  async listAccesProject(@Arg("userId") userId: number) {
-    const listAccesProject = await new UserProjectAccessesService().findUsersByAccessesProject(userId);
-    return listAccesProject;
   }
 
   @Query(() => User)
