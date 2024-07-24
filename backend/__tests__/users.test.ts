@@ -200,7 +200,6 @@ describe("Test for a new user", () => {
 
     assert(response.body.kind === "single");
     if (response?.body?.singleResult?.errors) {
-      console.log(response?.body?.singleResult?.errors)
       expect(response?.body?.singleResult?.errors[0]?.message).toEqual('This email and pseudo is already in use!');
     }
   });
@@ -224,7 +223,6 @@ describe("Test for a new user", () => {
 
     assert(response.body.kind === "single");
     if (response?.body?.singleResult?.errors) {
-      console.log(response?.body?.singleResult?.errors)
       expect(response?.body?.singleResult?.errors[0]?.message).toEqual('This email is already in use!');
     }
   });
@@ -248,7 +246,6 @@ describe("Test for a new user", () => {
 
     assert(response.body.kind === "single");
     if (response?.body?.singleResult?.errors) {
-      console.log(response?.body?.singleResult?.errors)
       expect(response?.body?.singleResult?.errors[0]?.message).toEqual('This pseudo is already in use!');
     }
   });
@@ -301,7 +298,6 @@ describe("Test for a new user", () => {
   );
     assert(response.body.kind === "single");  
     if (response?.body?.singleResult?.errors) {
-      console.log(response?.body?.singleResult?.errors)
       expect(response?.body?.singleResult?.errors[0]?.message).toEqual('This email already exists in our database!');
     }
   });
@@ -326,7 +322,6 @@ describe("Test for a new user", () => {
   );
     assert(response.body.kind === "single");  
     if (response?.body?.singleResult?.errors) {
-      console.log(response?.body?.singleResult?.errors)
       expect(response?.body?.singleResult?.errors[0]?.message).toEqual('This pseudo already exists in our database!');
     }
   });

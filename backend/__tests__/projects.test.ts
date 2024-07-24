@@ -28,6 +28,15 @@ export const CREATE_USER = `#graphql
   }
 `;
 
+export const UPDATE_USERS_ACCESSES_PROJECTS = `#graphql
+mutation UsersProjectsAccesses ($data: UpdateUserProjectAccessesInput!) {
+  updateAccessProject(data: $data) {            
+    message
+    success
+  }
+}
+`;
+
 // Define GraphQL Queries and Mutations
 const LIST_PROJECTS = `#graphql
   query Projects {
@@ -114,6 +123,10 @@ const DELETE_PROJECT = `#graphql
 
 type ResponseDataCreateUser = {
   register: User;
+}
+
+type ResponseDataUpdateUserAccessesProject = {
+  updateAccessProject: Message;
 }
 
 type ResponseDataListProject = {
@@ -283,6 +296,60 @@ describe("Test for a new project", () => {
     expect(response.body.singleResult.data?.updateProject?.success).toEqual(true);
   });
 
+  it("Update user access project - Update Editor : Test Update Project", async () => {
+    const response = await server.executeOperation<ResponseDataUpdateUserAccessesProject>({
+      query: UPDATE_USERS_ACCESSES_PROJECTS,
+      variables: {
+        data: {
+          role: "EDITOR",
+          project_id: 1,
+          user_id: 1
+        },
+      },
+    },
+    {
+      contextValue : {
+        user : {
+          id : 1
+        }
+      }
+    }
+  );
+    console.log(JSON.stringify(response.body))
+    assert(response.body.kind === "single");
+    console.error(response.body.singleResult.errors)
+    console.log("data", response.body.singleResult.data?.updateAccessProject)
+    expect(response.body.singleResult.data?.updateAccessProject?.success).toEqual(true);
+  });
+
+  it("Update project not authorize project", async () => {
+    const response = await server.executeOperation<ResponseDataUpdate>({
+      query: UPDATE_PROJECT,
+      variables: {
+        data: {
+          id: 1,
+          name: "Project2",
+          category: "Javascript",
+          private: false,
+        },
+      },
+    },
+    {
+      contextValue : {
+        user : {
+          id : 1
+        }
+      }
+    }
+  );
+
+    assert(response.body.kind === "single");
+    if (response?.body?.singleResult?.errors) {
+      console.log(response?.body?.singleResult?.errors)
+      expect(response?.body?.singleResult?.errors[0]?.message).toEqual('You must be the owner of the project to modify it!');
+    }
+  });
+
   it("Find projects after update", async () => {
     const response = await server.executeOperation<ResponseDataListProject>({
       query: LIST_PROJECTS,
@@ -335,6 +402,33 @@ describe("Test for a new project", () => {
 
     assert(response.body.kind === "single");
     expect(response.body.singleResult.data?.listPublicProjects).toHaveLength(1);
+  });
+
+  it("Update user access project - Update Owner : Test Delete Project", async () => {
+    const response = await server.executeOperation<ResponseDataUpdateUserAccessesProject>({
+      query: UPDATE_USERS_ACCESSES_PROJECTS,
+      variables: {
+        "data": {
+          role: "OWNER",
+          project_id: 1,
+          user_id: 1
+        },
+      },
+    },
+    {
+      contextValue : {
+        user : {
+          id : 1,
+          role : "ADMIN"
+        }
+      }
+    }
+  );
+    console.log(JSON.stringify(response.body))
+    assert(response.body.kind === "single");
+    console.error(response.body.singleResult.errors)
+    console.log("data", response.body.singleResult.data?.updateAccessProject)
+    expect(response.body.singleResult.data?.updateAccessProject?.success).toEqual(true);
   });
 
   it("Delete project", async () => {
