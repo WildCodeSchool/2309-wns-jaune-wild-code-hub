@@ -10,7 +10,7 @@ import datasource from "../src/lib/db_test";
 import { EntityTarget, Repository } from "typeorm";
 import assert from "assert";
 import { UserProjectAccessesResolver } from "../src/resolvers/userProjectAccesses.resolver";
-import { UsersProjectsAccesses } from "../src/entities/userProjectAccesses.entity";
+import { UsersProjectsAccesses, UserAccessProjectResponse, CreateUserProjectAccessesInput } from "../src/entities/userProjectAccesses.entity";
 import { UserResolver } from "../src/resolvers/user.resolver";
 
 export const CREATE_USER = `#graphql
@@ -244,7 +244,6 @@ describe("Test for a new project", () => {
     if (response.body.singleResult.errors) {
       console.error('Errors:', response.body.singleResult.errors);
     }
-    console.log(JSON.stringify(response.body.singleResult.data?.createProject))
     const id = response.body.singleResult.data?.createProject?.id;
     expect(id).not.toBeNull();
     expect(response.body.singleResult.data?.createProject?.name).toEqual("Project1");
@@ -270,7 +269,15 @@ describe("Test for a new project", () => {
           private: false,
         },
       },
-    });
+    },
+    {
+      contextValue : {
+        user : {
+          id : 1
+        }
+      }
+    }
+  );
 
     assert(response.body.kind === "single");
     expect(response.body.singleResult.data?.updateProject?.success).toEqual(true);
@@ -336,7 +343,15 @@ describe("Test for a new project", () => {
       variables: {
         id: 1,
       },
-    });
+    },
+    {
+      contextValue : {
+        user : {
+          id : 1
+        }
+      }
+    }
+  );
 
     assert(response.body.kind === "single");
     expect(response.body.singleResult.data?.deleteProject?.success).toEqual(true);
