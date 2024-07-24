@@ -231,43 +231,15 @@ const Editor: NextPageWithLayout = () => {
           <Flex
             ref={fileBarRef}
             height={"100%"}
-            overflow={"scroll"}
+            overflowX={"scroll"}
+            overflowY={"hidden"}
             width={"100%"}
-            style={{
-              scrollbarColor: "red",
+            sx={{
+              "scrollbar-color": "#8A98A4 #363636",
+              scrollbarWidth: "thin",
             }}
             onWheel={handleScroll}
           >
-            {openFiles &&
-              openFiles.map((openFile) => (
-                <FileInfo
-                  key={openFile.id}
-                  fileName={`${openFile.name}.${openFile.extension}`}
-                  onClose={() => handleFileClose(openFile.id)}
-                  isSelected={openFile.id === file?.id}
-                  onClick={() => setFile(openFile)}
-                />
-              ))}
-            {openFiles &&
-              openFiles.map((openFile) => (
-                <FileInfo
-                  key={openFile.id}
-                  fileName={`${openFile.name}.${openFile.extension}`}
-                  onClose={() => handleFileClose(openFile.id)}
-                  isSelected={openFile.id === file?.id}
-                  onClick={() => setFile(openFile)}
-                />
-              ))}
-            {openFiles &&
-              openFiles.map((openFile) => (
-                <FileInfo
-                  key={openFile.id}
-                  fileName={`${openFile.name}.${openFile.extension}`}
-                  onClose={() => handleFileClose(openFile.id)}
-                  isSelected={openFile.id === file?.id}
-                  onClick={() => setFile(openFile)}
-                />
-              ))}
             {openFiles &&
               openFiles.map((openFile) => (
                 <FileInfo
