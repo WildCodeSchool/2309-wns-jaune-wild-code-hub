@@ -107,3 +107,15 @@ export class DeleteFile {
   @Field({ nullable: true })
   content: string;
 }
+
+@InputType()
+export class SearchFile {
+  @Field()
+  project_id: string;
+
+  @Field()
+  name: string;
+
+  @Field()
+  category: string;
+}

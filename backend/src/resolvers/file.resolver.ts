@@ -23,6 +23,11 @@ export class FileResolver {
     return fileById;
   }
 
+  @Query(() => [File])
+  async searchFiles(@Arg("searchText") searchText: string): Promise<File[]> {
+    return this.filesService.searchFiles(searchText);
+  }
+
   @Mutation(() => File)
   async register(
     @Arg("data") data: CreateFileInput,
@@ -78,6 +83,7 @@ export class FileResolver {
     m.success = true;
     return m;
   }
+
   //   @Mutation(() => CreateFile){
   //   async register (@Arg("data") data: CreateFileInput){
   //     const files =await new FilesService().findByFile(data.file_id);

@@ -1,6 +1,11 @@
 import { In, Like, Repository, UpdateFilter } from "typeorm";
 import datasource from "../lib/db";
-import { File, CreateFileInput, UpdateFile } from "../entities/file.entity";
+import {
+  File,
+  CreateFileInput,
+  UpdateFile,
+  SearchFile,
+} from "../entities/file.entity";
 
 export default class FilesService {
   db: Repository<File>;
@@ -71,5 +76,16 @@ export default class FilesService {
     }
     await this.db.delete({ language });
     return fileToDelete;
+  }
+
+  async search(searchText: string) {
+    return this.db
+      .createQueryBuilder("file")
+      .where("file.name ILIKE :searchText", { searchText: `%${searchText}%` })
+      .orWhere("file.type ILIKE :searchText", { searchText: `%${searchText}%` })
+      .orWhere("file.language ILIKE :searchText", {
+        searchText: `%${searchText}%`,
+      })
+      .getMany();
   }
 }
