@@ -108,22 +108,6 @@ const BashOutput: React.FC<BashOutputProps> = ({ logs }) => {
           {renderLogMessage(log, logIndex)}
         </Box>
       ))}
-      <Text>Some content</Text>
-      <Text>Some content</Text>
-      <Text>Some content</Text>
-      <Text>Some content</Text>
-      <Text>Some content</Text>
-      <Text>Some content</Text> <Text>Some content</Text>
-      <Text>Some content</Text>
-      <Text>Some content</Text> <Text>Some content</Text>
-      <Text>Some content</Text>
-      <Text>Some content</Text> <Text>Some content</Text>
-      <Text>Some content</Text>
-      <Text>Some content</Text> <Text>Some content</Text>
-      <Text>Some content</Text>
-      <Text>Some content</Text> <Text>Some content</Text>
-      <Text>Some content</Text>
-      <Text>Some content</Text>
     </Box>
   );
 };
