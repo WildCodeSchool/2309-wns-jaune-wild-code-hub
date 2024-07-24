@@ -22,6 +22,8 @@ import ProjectsService from "../services/projects.service";
 
 @Resolver()
 export class ProjectResolver {
+
+  @Authorized()
   @Query(() => [Project])
   async listProjects() {
     const projects = await new ProjectsService().list();
