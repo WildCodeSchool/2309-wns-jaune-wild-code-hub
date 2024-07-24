@@ -78,9 +78,7 @@ export class ProjectResolver {
   ): Promise<PaginatedProjects> {
     const projects = await new ProjectsService().listByPublic(offset, limit);
     return projects;
-  }
-
-  
+  }  
 
   @Query(() => [Project])
   async listProjectsByCategory(@Arg("category") category: string) {
