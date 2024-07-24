@@ -13,6 +13,7 @@ import datasource from "../lib/db";
 import FilesService from "./files.service";
 import { File } from "../entities/file.entity";
 import  UserProjectAccessesService from "./userProjectAccesses.service";
+import { log } from "console";
 
 export default class ProjectsService {
   db: Repository<Project>;
@@ -93,12 +94,14 @@ export default class ProjectsService {
 
     const newProject = this.db.create(data);
     const savedProject = await this.db.save(newProject);
-    
+    console.log("savedProject", savedProject)
     if (!savedProject)
       throw new Error("Unable to create this project, please try again later!");
 
     const files = await new FilesService().createDefaultFiles(savedProject.id);
     savedProject.files = files;
+
+    console.log("files", files);
 
     const dateUserProjectAcesses = {
       user_id: userId,
@@ -108,6 +111,7 @@ export default class ProjectsService {
 
     await new UserProjectAccessesService().createAccessesProject(dateUserProjectAcesses);
 
+    console.log("tototo0", "new accesses created")
     return savedProject;
 
   }
@@ -170,7 +174,7 @@ export default class ProjectsService {
 
   async delete(id: number) {
     const projectToDelete = await this.findById(id);
-    console.log(projectToDelete);
+    // console.log(projectToDelete);
     if (!projectToDelete) {
       throw new Error("The project does not exist !");
     }
