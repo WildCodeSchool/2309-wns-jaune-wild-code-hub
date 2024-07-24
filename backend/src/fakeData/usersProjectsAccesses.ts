@@ -80,7 +80,7 @@ const fakeUsersProjectsAccesses = [
   },
   {
     user_id: 3,
-    project_id: 3,
+    project_id: 8,
     role: "VIEWER" as UserRole,
     created_at: new Date(),
     updated_at: new Date(),
@@ -88,6 +88,39 @@ const fakeUsersProjectsAccesses = [
   {
     user_id: 1,
     project_id: 7,
+    role: "OWNER" as UserRole,
+    created_at: new Date(),
+    updated_at: new Date(),
+  },
+  {
+    user_id: 3,
+    project_id: 9,
+    role: "OWNER" as UserRole,
+    created_at: new Date(),
+    updated_at: new Date(),
+  },
+  {
+    user_id: 1,
+    project_id: 10,
+    role: "OWNER" as UserRole,
+    created_at: new Date(),
+    updated_at: new Date(),
+  },
+  {
+    user_id: 2,
+    project_id: 11,
+    role: "OWNER" as UserRole,
+    created_at: new Date(),
+    updated_at: new Date(),
+  }, {
+    user_id: 1,
+    project_id: 12,
+    role: "OWNER" as UserRole,
+    created_at: new Date(),
+    updated_at: new Date(),
+  }, {
+    user_id: 2,
+    project_id: 13,
     role: "OWNER" as UserRole,
     created_at: new Date(),
     updated_at: new Date(),

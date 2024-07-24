@@ -101,8 +101,6 @@ export default function Home() {
         </Text>
         <Button 
           variant="secondary"           
-          w="50%"
-          mt="1rem"
           onClick={() => {
             setIsOpen(false);
             router.push("/projects");

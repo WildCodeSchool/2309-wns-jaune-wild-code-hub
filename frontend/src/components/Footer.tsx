@@ -4,7 +4,7 @@ import { FaGithub } from 'react-icons/fa';
 
 const Footer: React.FC = () => {
   return (
-    <Box as="footer" bg="black" py={10} px={5} color="white">
+    <Box as="footer" bg="black" pt={10} px={5} color="white">
       <Flex justify="space-around" wrap="wrap" mb={4} direction={{ base: 'column', md: 'row' }} align={{ base: 'center', md: 'start' }}>
         <Box textAlign={{ base: 'center', md: 'left' }} mb={{ base: 5, md: 0 }}>
           <Text fontSize="lg" fontWeight="bold">Wild Code Hub</Text>
