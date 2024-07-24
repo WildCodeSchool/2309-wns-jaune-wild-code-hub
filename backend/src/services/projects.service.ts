@@ -161,6 +161,12 @@ export default class ProjectsService {
     if (!projectToUpdate) {
       throw new Error("The project does not exist !");
     }
+
+    const checkName = await this.findByName(data.name);
+
+    if (checkName)
+      throw new Error("This project name is already taken!");
+
     const projectToSave = this.db.merge(projectToUpdate, {
       ...data,
     });

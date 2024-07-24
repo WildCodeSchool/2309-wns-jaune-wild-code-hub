@@ -127,7 +127,7 @@ export class UserResolver {
       throw new Error("Access denied! You need to be authenticated to perform this action!");
 
     if (ctx.user.role !== "ADMIN" && data.id != ctx.user.id)
-      throw new Error("You must be a site admin to change another user's information!"); 
+      throw new Error("You must be a site administrator to do this action!"); 
 
     const { id, ...otherData } = data;
     if (otherData.password) {
@@ -146,7 +146,6 @@ export class UserResolver {
         throw new Error("This pseudo already exists in our database!");
     }
 
-    // const 
     const updateUser = await new UsersService().update(+id, otherData);
     const m = new Message();
     if (updateUser) {
@@ -167,7 +166,7 @@ export class UserResolver {
       throw new Error("Access denied! You need to be authenticated to perform this action!");
 
     if (ctx.user.role !== "ADMIN" && id != ctx.user.id)
-      throw new Error("You must be a site admin to change another user's information!"); 
+      throw new Error("You must be a site administrator to do this action!"); 
 
     const delUser = await new UsersService().delete(id);
     const m = new Message();
@@ -197,7 +196,6 @@ export class UserResolver {
     return m;
   }
 
-  // @Authorized()
   @Query(() => [Project])
   async listLikeProject(@Arg("userId") userId: string) {
     const projects = await new UsersService().listLikedProjects(+userId);

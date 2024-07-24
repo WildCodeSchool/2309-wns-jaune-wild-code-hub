@@ -5,7 +5,6 @@ import datasourceInitial from "../src/lib/db"; //on importe la datasource de tes
 import datasource from "../src/lib/db_test"; //on importe la datasource initial pour le spyOn
 import { User, Message } from "../src/entities/user.entity";
 import assert from "assert";
-// import {}
 
 let server: ApolloServer;
 
