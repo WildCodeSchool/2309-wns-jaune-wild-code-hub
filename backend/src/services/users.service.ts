@@ -10,7 +10,6 @@ import datasource from "../lib/db";
 
 import { Project } from "../entities/project.entity";
 import {
-  CreateUserProjectAccessesInput,
   UserRole,
   UsersProjectsAccesses,
 } from "../entities/userProjectAccesses.entity";

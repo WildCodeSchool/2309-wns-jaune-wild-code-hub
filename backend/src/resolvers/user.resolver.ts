@@ -104,12 +104,12 @@ export class UserResolver {
 
   @Mutation(() => User)
   async register(@Arg("data") data: CreateUserInput) {
-    const user = await new UsersService().findByEmail(data.email);
+    const email = await new UsersService().findByEmail(data.email);
     const pseudo = await new UsersService().findByPseudo(data.pseudo);
 
-    if (user && pseudo) {
+    if (email && pseudo) {
       throw new Error("This email and pseudo is already in use!");
-    } else if (user) {
+    } else if (email) {
       throw new Error("This email is already in use!");
     } else if (pseudo) {
       throw new Error("This pseudo is already in use!");
@@ -123,11 +123,27 @@ export class UserResolver {
   @Mutation(() => Message)
   async updateUser(@Arg("data") data: UpdateUserInput, @Ctx() ctx: MyContext) {
 
-    console.log(ctx);
+    if (!ctx.user)
+      throw new Error("Access denied! You need to be authenticated to perform this action!");
+
+    if (ctx.user.role !== "ADMIN" && data.id != ctx.user.id)
+      throw new Error("You must be a site admin to change another user's information!"); 
 
     const { id, ...otherData } = data;
     if (otherData.password) {
       otherData.password = await argon2.hash(otherData.password);
+    }
+
+    if (data?.email) {
+      const checkUserEmail = await new UsersService().findByEmail(data?.email);
+      if (checkUserEmail)
+        throw new Error("This email already exists in our database!");
+    }
+
+    if (data?.pseudo) {
+      const checkUserPseudo = await new UsersService().findByEmail(data?.email);
+      if (checkUserPseudo)
+        throw new Error("This pseudo already exists in our database!");
     }
 
     // const 
@@ -145,7 +161,14 @@ export class UserResolver {
 
   @Authorized()
   @Mutation(() => Message)
-  async deleteUser(@Arg("id") id: number) {
+  async deleteUser(@Arg("id") id: number, @Ctx() ctx: MyContext) {
+
+    if (!ctx.user)
+      throw new Error("Access denied! You need to be authenticated to perform this action!");
+
+    if (ctx.user.role !== "ADMIN" && id != ctx.user.id)
+      throw new Error("You must be a site admin to change another user's information!"); 
+
     const delUser = await new UsersService().delete(id);
     const m = new Message();
 
