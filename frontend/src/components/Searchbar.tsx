@@ -30,7 +30,7 @@ const Searchbar = ({ onResults }: SearchbarProps) => {
     if (term) {
       searchProjects({ variables: { name: term } });
     } else {
-      setResults([]); 
+      setResults([]); // Clear results if search term is empty
       onResults([]);
     }
   };
