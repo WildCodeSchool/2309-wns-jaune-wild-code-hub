@@ -78,7 +78,11 @@ export class User {
   run_counter: number;
 
   @Field()
-  @UpdateDateColumn({ name: 'last_login', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
+  @UpdateDateColumn({
+    name: "last_login",
+    default: () => "CURRENT_TIMESTAMP",
+    onUpdate: "CURRENT_TIMESTAMP",
+  })
   last_login: Date;
 
   @Field()
@@ -86,18 +90,25 @@ export class User {
   created_at: Date;
 
   @Field()
-  @UpdateDateColumn({ name: 'updated_at', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
+  @UpdateDateColumn({
+    name: "updated_at",
+    default: () => "CURRENT_TIMESTAMP",
+    onUpdate: "CURRENT_TIMESTAMP",
+  })
   update_at: Date;
 
-  @ManyToMany(() => Project, project => project.likedByUsers)
+  @ManyToMany(() => Project, (project) => project.likedByUsers)
   @JoinTable({
     name: "users_projects_likes",
     joinColumn: { name: "user_id" },
-    inverseJoinColumn: { name: "project_id" }
+    inverseJoinColumn: { name: "project_id" },
   })
   likedProjects: Project[];
 
-  @OneToMany(() => UsersProjectsAccesses, UsersProjectsAccesses => UsersProjectsAccesses.user)
+  @OneToMany(
+    () => UsersProjectsAccesses,
+    (UsersProjectsAccesses) => UsersProjectsAccesses.user
+  )
   usersProjectsAccesses: UsersProjectsAccesses[];
 }
 
@@ -130,7 +141,6 @@ export class CreateUserInput {
 
 @InputType()
 export class UpdateUserInput {
-
   @Field(() => ID)
   id: number;
 
@@ -180,3 +190,11 @@ export class Message {
   message: string;
 }
 
+@InputType()
+export class InputChangePassword {
+  @Field()
+  token: string;
+
+  @Field()
+  password: string;
+}

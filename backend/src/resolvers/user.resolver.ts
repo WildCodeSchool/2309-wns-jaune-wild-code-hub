@@ -1,17 +1,32 @@
-import { Arg, Float, Ctx,  Mutation, Query, Resolver, Authorized } from "type-graphql";
+import {
+  Arg,
+  Float,
+  Ctx,
+  Mutation,
+  Query,
+  Resolver,
+  Authorized,
+} from "type-graphql";
 import UsersService from "../services/users.service";
-import { User, CreateUserInput, UpdateUserInput, ROLE, Message, InputLogin } from "../entities/user.entity";
+import {
+  User,
+  CreateUserInput,
+  UpdateUserInput,
+  ROLE,
+  Message,
+  InputLogin,
+  InputChangePassword,
+} from "../entities/user.entity";
 import * as argon2 from "argon2";
 import { SignJWT } from "jose";
 import { MyContext } from "..";
 import Cookies from "cookies";
 import { Project } from "../entities/project.entity";
 import { CreateUserProjectAccessesInput } from "../entities/userProjectAccesses.entity";
-
+import Reset from "../entities/reset.entity";
 @Resolver()
 export class UserResolver {
-
-  @Authorized(['ADMIN'])
+  @Authorized(["ADMIN"])
   @Query(() => [User])
   async listUsers() {
     const users = await new UsersService().list();
@@ -42,7 +57,8 @@ export class UserResolver {
   @Query(() => User)
   async findUserByPseudo(@Arg("pseudo") pseudo: string) {
     const userByPseudo = await new UsersService().findByPseudo(pseudo);
-    if (!userByPseudo) throw new Error("Please note, the client does not exist");
+    if (!userByPseudo)
+      throw new Error("Please note, the client does not exist");
     return userByPseudo;
   }
 
@@ -55,7 +71,6 @@ export class UserResolver {
       user = await new UsersService().findByEmail(infos.email);
     } else {
       user = await new UsersService().findByPseudo(infos.pseudo);
-
     }
     if (!user) {
       throw new Error("Check your login information !");
@@ -64,11 +79,11 @@ export class UserResolver {
     const isPasswordValid = await argon2.verify(user.password, infos.password);
     const m = new Message();
     if (isPasswordValid) {
-      const token = await new SignJWT({ 
+      const token = await new SignJWT({
         email: user.email,
         role: user.role,
         pseudo: user.pseudo,
-        id : user.id
+        id: user.id,
       })
         .setProtectedHeader({ alg: "HS256", typ: "jwt" })
         .setExpirationTime("2h")
@@ -85,7 +100,7 @@ export class UserResolver {
     }
     return m;
   }
-  
+
   @Mutation(() => User)
   async register(@Arg("data") data: CreateUserInput) {
     const user = await new UsersService().findByEmail(data.email);
@@ -98,7 +113,7 @@ export class UserResolver {
     } else if (pseudo) {
       throw new Error("This pseudo is already in use!");
     }
-    
+
     const newUser = await new UsersService().create(data);
     return newUser;
   }
@@ -121,13 +136,57 @@ export class UserResolver {
     }
     return m;
   }
-  
+
+  @Query(() => Message)
+  async checkResetToken(@Arg("token") token: string) {
+    const success = await new UsersService().checkResetTokenValidity(token);
+    console.log(success);
+
+    const m = new Message();
+    m.message = "Check du token";
+    m.success = success;
+
+    return m;
+  }
+
+  @Mutation(() => Reset)
+  async resetPassword(@Arg("email") email: string) {
+    //générer un token
+    const resetToken = await new UsersService().createResetToken(email);
+    return resetToken;
+  }
+
+  @Mutation(() => Message)
+  async changePassword(@Arg("data") data: InputChangePassword) {
+    const m = new Message();
+
+    const resetToken = await new UsersService().checkResetTokenValidity(
+      data.token
+    );
+    if (!resetToken) {
+      m.message = "Votre token n'est plus bon";
+      m.success = false;
+    } else {
+      const tokenInfos = await new UsersService().findResetToken(data.token);
+      if (tokenInfos) {
+        const { user } = tokenInfos;
+        const userModified = await new UsersService().changePassword(
+          data.password,
+          user
+        );
+        console.log("userModified", userModified);
+        m.message = "Votre mot de passe a été changé, reconnectez vous";
+        m.success = true;
+      }
+    }
+    return m;
+  }
   @Authorized()
   @Mutation(() => Message)
   async deleteUser(@Arg("id") id: number) {
     const delUser = await new UsersService().delete(id);
     const m = new Message();
-    
+
     if (delUser) {
       m.message = "User deleted!";
       m.success = true;
@@ -135,10 +194,10 @@ export class UserResolver {
       m.message = "Unable to delete user!";
       m.success = false;
     }
-    
+
     return m;
   }
-  
+
   @Authorized()
   @Query(() => Message)
   async logout(@Ctx() ctx: MyContext) {
@@ -149,7 +208,7 @@ export class UserResolver {
     const m = new Message();
     m.message = "You have been disconnected !";
     m.success = true;
-    
+
     return m;
   }
 
@@ -165,9 +224,14 @@ export class UserResolver {
 
   @Authorized()
   @Mutation(() => Message)
-  async addLikeProject(@Arg("userId") userId: number, @Arg("projectId") projectId: number) {
-
-    const likedProjects = await new UsersService().likeProject(userId, projectId);
+  async addLikeProject(
+    @Arg("userId") userId: number,
+    @Arg("projectId") projectId: number
+  ) {
+    const likedProjects = await new UsersService().likeProject(
+      userId,
+      projectId
+    );
 
     const m = new Message();
 
@@ -180,14 +244,18 @@ export class UserResolver {
     }
 
     return m;
-
   }
 
   @Authorized()
   @Mutation(() => Message)
-  async deleteLikeProject(@Arg("userId") userId: number, @Arg("projectId") projectId: number) {
-
-    const likedProjects = await new UsersService().dislikeProject(userId, projectId);
+  async deleteLikeProject(
+    @Arg("userId") userId: number,
+    @Arg("projectId") projectId: number
+  ) {
+    const likedProjects = await new UsersService().dislikeProject(
+      userId,
+      projectId
+    );
 
     const m = new Message();
 
@@ -200,29 +268,33 @@ export class UserResolver {
     }
 
     return m;
-    
   }
 
   @Authorized()
   @Query(() => [Project])
-  async listAccesProject (@Arg("userId") userId: number) {
-    const listAccesProject = await new UsersService().findUsersByAccessesProject(userId);
+  async listAccesProject(@Arg("userId") userId: number) {
+    const listAccesProject =
+      await new UsersService().findUsersByAccessesProject(userId);
     return listAccesProject;
   }
 
   @Authorized()
   @Mutation(() => Message)
-  async addAccessProject (@Arg("data") data: CreateUserProjectAccessesInput) {
-    const user = await new UsersService().findByAccessesProject(data.user_id, data.project_id);
-    
+  async addAccessProject(@Arg("data") data: CreateUserProjectAccessesInput) {
+    const user = await new UsersService().findByAccessesProject(
+      data.user_id,
+      data.project_id
+    );
+
     if (user) {
       throw new Error("This user already has access to this project!");
     }
 
     if (user) throw new Error("This name of project is already in use!");
-    
-    const newUserAccessesProject = await new UsersService().createAccessesProject(data);
-    
+
+    const newUserAccessesProject =
+      await new UsersService().createAccessesProject(data);
+
     const m = new Message();
 
     if (newUserAccessesProject) {
@@ -238,10 +310,13 @@ export class UserResolver {
 
   @Authorized()
   @Mutation(() => Message)
-  async deleteAccessProject (@Arg("userId") userId: number, @Arg("projectId") projectId: number) {
+  async deleteAccessProject(
+    @Arg("userId") userId: number,
+    @Arg("projectId") projectId: number
+  ) {
+    const deleteUserAccessesProject =
+      await new UsersService().deleteAccessesProject(userId, projectId);
 
-    const deleteUserAccessesProject = await new UsersService().deleteAccessesProject(userId, projectId);
-    
     const m = new Message();
 
     if (deleteUserAccessesProject) {
@@ -254,5 +329,4 @@ export class UserResolver {
 
     return m;
   }
-
 }
