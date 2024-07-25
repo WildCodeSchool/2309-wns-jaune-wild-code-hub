@@ -12,7 +12,7 @@ import {
 import datasource from "../lib/db";
 import FilesService from "./files.service";
 import { File } from "../entities/file.entity";
-import  UserProjectAccessesService from "./userProjectAccesses.service";
+import UserProjectAccessesService from "./userProjectAccesses.service";
 
 export default class ProjectsService {
   db: Repository<Project>;
@@ -59,7 +59,6 @@ export default class ProjectsService {
   //   return project;
   // }
 
-
   async listByPublic(offset: number = 0, limit: number = 8) {
     const [projects, total] = await this.db.findAndCount({
       where: {
@@ -69,7 +68,7 @@ export default class ProjectsService {
       skip: offset,
       take: limit,
     });
-    
+
     return {
       projects,
       total,
@@ -107,8 +106,24 @@ export default class ProjectsService {
     return userAccesses;
   }
 
-  async create(data: CreateProjectInput, userId : number) {
+  async ListPublicOwnedByUser(userId: number) {
+    const userProjectAccessesRepository = datasource.getRepository(
+      UsersProjectsAccesses
+    );
 
+    const userAccesses = await userProjectAccessesRepository.find({
+      where: {
+        user_id: userId,
+        role: UserRole.OWNER,
+        project: { private: false },
+      },
+      relations: ["project.usersProjectsAccesses"],
+    });
+
+    return userAccesses;
+  }
+
+  async create(data: CreateProjectInput, userId: number) {
     const newProject = this.db.create(data);
     const savedProject = await this.db.save(newProject);
     if (!savedProject)
@@ -120,13 +135,14 @@ export default class ProjectsService {
     const dateUserProjectAcesses = {
       user_id: userId,
       project_id: savedProject.id,
-      role : "OWNER" as UserRole,
-    }
+      role: "OWNER" as UserRole,
+    };
 
-    await new UserProjectAccessesService().createAccessesProject(dateUserProjectAcesses);
+    await new UserProjectAccessesService().createAccessesProject(
+      dateUserProjectAcesses
+    );
 
     return savedProject;
-
   }
 
   async createDefaultFiles(projectId: number) {
@@ -175,8 +191,7 @@ export default class ProjectsService {
 
     const checkName = await this.findByName(data.name);
 
-    if (checkName)
-      throw new Error("This project name is already taken!");
+    if (checkName) throw new Error("This project name is already taken!");
 
     const projectToSave = this.db.merge(projectToUpdate, {
       ...data,
