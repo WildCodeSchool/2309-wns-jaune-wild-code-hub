@@ -176,10 +176,10 @@ export class UserResolver {
 
     const isPasswordValid = await argon2.verify(user?.password, data.password);
 
-    if (!isPasswordValid)
-      throw new Error("Unable to find this user!"); 
-    
-    const delUser = await new UsersService().delete(data.id + 100);
+    if (!isPasswordValid && ctx.user.role !== "ADMIN")
+      throw new Error("The password is incorrect!"); 
+
+    const delUser = await new UsersService().delete(data.id);
     const m = new Message();
 
     if (delUser) {

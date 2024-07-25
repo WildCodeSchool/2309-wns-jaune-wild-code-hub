@@ -11,11 +11,9 @@ export const ProjectsGrid = ({ projects }: GridProps) => {
     <Grid
       // width={{ base: "90%", md: "55%" }}
       templateColumns={{ base: "repeat(1, 1fr)", md: "repeat(4, minmax(50px, 1fr))" }}
-      gap={4}
+      gap={6}
       overflowY={"auto"}
-      // height={"52cqh"}
-      
-      paddingTop={"3rem"}
+      height={"53cqh"}
       paddingBottom={{ base: "3rem", md: "0" }}
       css={{
         "&::-webkit-scrollbar": {
@@ -43,8 +41,7 @@ export const ProjectsGrid = ({ projects }: GridProps) => {
             key={project.id + id}
             display={"flex"}
             justifyContent={"center"}
-            height={"240px"}
-            pb={"1rem"}
+            height={"40cqh"}
           >
             <ProjectCard project={project}></ProjectCard>
           </GridItem>

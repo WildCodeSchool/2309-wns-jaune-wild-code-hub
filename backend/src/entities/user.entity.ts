@@ -196,6 +196,6 @@ export class DeleteUserInput {
   @Field(() => ID)
   id: number;
 
-  @Field({ nullable: true })
+  @Field()
   password: string;
 }
