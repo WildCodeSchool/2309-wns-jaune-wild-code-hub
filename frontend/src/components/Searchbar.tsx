@@ -1,9 +1,10 @@
-import { Flex, IconButton, Input, Spinner, Box, List, ListItem, Text } from "@chakra-ui/react";
+import { Flex, IconButton, Input, Spinner, Box, List, ListItem, Text, LinkOverlay } from "@chakra-ui/react";
 import { SearchIcon } from "@chakra-ui/icons";
 import React, { useState, ChangeEvent, useEffect } from "react";
 import { useLazyQuery } from "@apollo/client";
 import { ListPublicProjectsByNameQuery, ListPublicProjectsByNameQueryVariables, Project } from "@/types/graphql";
 import { LIST_PUBLIC_PROJECTS_BY_NAME } from "@/requetes/queries/project.queries";
+import NextLink from "next/link";
 
 type SearchbarProps = {
   onResults: (projects: Project[]) => void;
@@ -12,6 +13,7 @@ type SearchbarProps = {
 const Searchbar = ({ onResults }: SearchbarProps) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [results, setResults] = useState<Project[]>([]);
+  
   const [searchProjects, { loading, data }] = useLazyQuery<
     ListPublicProjectsByNameQuery,
     ListPublicProjectsByNameQueryVariables
@@ -30,56 +32,65 @@ const Searchbar = ({ onResults }: SearchbarProps) => {
     if (term) {
       searchProjects({ variables: { name: term } });
     } else {
-      setResults([]); 
+      setResults([]);
       onResults([]);
     }
   };
 
+  const handleResultClick = () => {
+    setSearchTerm("");
+    setResults([]);
+  };
+
   return (
-    <Flex
-      direction="column"
-      borderRadius={100}
-      align={"center"}
-      px={"1rem"}
-      padding={"0.5rem"}
-      bg={"background2"}
-      color={"white"}
-      w={"40%"}
-    >
-      <Flex align={"center"} w={"100%"}>
+    <Flex direction="column" align="center" width="40%">
+      <Flex
+        position="relative"
+        borderRadius={100}
+        align="center"
+        px="1rem"
+        padding="0.5rem"
+        bg="background2"
+        color="white"
+        width="100%"
+      >
         <Input
-          variant={"unstyled"}
+          variant="unstyled"
           borderRadius={100}
-          pl={"1rem"}
+          pl="1rem"
           placeholder="Search for projects"
-          border={"transparent"}
+          border="transparent"
           _focus={{ outline: "none" }}
-          outline={"none"}
+          outline="none"
           value={searchTerm}
           onChange={handleSearch}
         />
         <IconButton
           aria-label="Magnifying glass"
-          size={"xs"}
+          size="xs"
           icon={loading ? <Spinner size="xs" /> : <SearchIcon />}
-          bg={"primary"}
-          color={"black"}
+          bg="primary"
+          color="black"
         ></IconButton>
       </Flex>
-      {results.length > 0 && (
+      {searchTerm && results.length > 0 && (
         <Box
-          mt={"0.5rem"}
-          w={"100%"}
-          bg={"white"}
-          borderRadius={"md"}
-          boxShadow={"md"}
-          maxHeight={"200px"}
-          overflowY={"auto"}
+          position="absolute"
+          mt="2.5rem"
+          width={{ base: "250px", sm: "40%" }}
+          bg="black"
+          borderRadius="md"
+          boxShadow="md"
+          maxHeight="150px"
+          overflowY="auto"
+          zIndex={1}
         >
           <List spacing={2}>
             {results.map((project) => (
-              <ListItem key={project.id} p={"0.5rem"} _hover={{ bg: "gray.100" }}>
-                <Text>{project.name}</Text>
+              <ListItem key={project.id} p="0.4rem" _hover={{ bg: "grey" }}>
+                <LinkOverlay as={NextLink} href={`editor/${project.id}`} onClick={handleResultClick}>
+                  <Text>{project.name}</Text>
+                </LinkOverlay>
               </ListItem>
             ))}
           </List>
