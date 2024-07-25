@@ -5,7 +5,6 @@ import FileEditor from "./FileEditor";
 import FileInfo from "./FileInfo";
 import { FindAllInfoUserAccessesProject, Project } from "@/types/graphql";
 import { File } from "@/types/editor";
-import { Panel } from "react-resizable-panels";
 
 type EditorProps = {
   setData: Dispatch<React.SetStateAction<File[]>>;

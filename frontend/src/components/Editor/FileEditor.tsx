@@ -3,7 +3,7 @@ import MonacoEditor, { OnChange } from "@monaco-editor/react";
 import { editor } from "monaco-editor";
 
 interface File {
-  id: number;
+  id: string;
   name: string;
   extension: string;
   content: string;

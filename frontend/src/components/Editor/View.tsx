@@ -1,7 +1,7 @@
 import { ButtonGroup, Center, Flex } from "@chakra-ui/react";
-import React from "react";
+import React, { SetStateAction } from "react";
 import ShareEditor from "./ShareEditor/ShareEditor";
-import SettingEditor from "./SettingEditor";
+import SettingEditor from "./SettingEditor/SettingEditor";
 import { FindAllInfoUserAccessesProject, Project } from "@/types/graphql";
 type ViewProps = {
   iframeRef: React.RefObject<HTMLIFrameElement>;
@@ -12,6 +12,7 @@ type ViewProps = {
     React.SetStateAction<FindAllInfoUserAccessesProject[] | null>
   >;
   checkOwner: boolean;
+  setProject: React.Dispatch<SetStateAction<Project | null>>;
 };
 
 const View = ({
@@ -21,6 +22,7 @@ const View = ({
   users,
   setUsers,
   checkOwner,
+  setProject,
 }: ViewProps) => {
   return (
     <Flex height={"100%"} overflow={"auto"} flexDirection={"column"}>
@@ -41,7 +43,13 @@ const View = ({
             setUsers={setUsers}
             checkOwner={checkOwner}
           />
-          <SettingEditor project={project} expectedOrigin={expectedOrigin} />
+          <SettingEditor
+            project={project}
+            expectedOrigin={expectedOrigin}
+            checkOwner={checkOwner}
+            setProject={setProject}
+            users={users}
+          />
         </ButtonGroup>
       </Flex>
       <iframe

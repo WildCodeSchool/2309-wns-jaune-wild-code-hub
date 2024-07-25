@@ -1,44 +1,25 @@
-import SettingEditor from "@/components/Editor/SettingEditor";
-import ShareEditor from "@/components/Editor/ShareEditor/ShareEditor";
-import UpdateListFilesEditor from "@/components/Editor/UpdateListFilesEditor";
+import EditorPanel from "@/components/Editor/EditorPanel";
+import InfosPanel from "@/components/Editor/InfosPanel";
+import View from "@/components/Editor/View";
 import CustomToast from "@/components/ToastCustom/CustomToast";
 import { PROJECT_BY_ID } from "@/requetes/queries/project.queries";
 import { LIST_USERS_ACCESSES_PROJECT } from "@/requetes/queries/usersAccessesProjects.queries";
 import { File } from "@/types/editor";
 import { FindAllInfoUserAccessesProject, Project } from "@/types/graphql";
 import { useQuery } from "@apollo/client";
-import {
-  Accordion,
-  AccordionButton,
-  AccordionIcon,
-  AccordionItem,
-  AccordionPanel,
-  Box,
-  ButtonGroup,
-  Center,
-  Flex,
-  Heading,
-  Text,
-} from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 import DOMPurify from "dompurify";
 import Cookies from "js-cookie";
 import { useRouter } from "next/router";
-import React, { useEffect, useRef, useState } from "react";
-import { useResizable } from "react-resizable-layout";
+import { useEffect, useRef, useState } from "react";
 import {
   ImperativePanelHandle,
   Panel,
   PanelGroup,
   PanelResizeHandle,
 } from "react-resizable-panels";
-import FileEditor from "../../components/Editor/FileEditor";
-import FileInfo from "../../components/Editor/FileInfo";
 import Terminal from "../../components/Editor/Terminal";
 import { NextPageWithLayout } from "../_app";
-import View from "@/components/Editor/View";
-import EditorPanel from "@/components/Editor/EditorPanel";
-import FileItemList from "@/components/FileItemList";
-import InfosPanel from "@/components/Editor/InfosPanel";
 
 const Editor: NextPageWithLayout = () => {
   const expectedOrigin = process.env.NEXT_PUBLIC_URL_ORIGIN;
@@ -397,6 +378,7 @@ const Editor: NextPageWithLayout = () => {
             users={users}
             setUsers={setUsers}
             expectedOrigin={expectedOrigin}
+            setProject={setProject}
           />
         </Panel>
       </PanelGroup>
