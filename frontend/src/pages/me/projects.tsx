@@ -31,15 +31,16 @@ const Projects: NextPageWithLayout = () => {
           setProjects(
             data.listProjectsByUserWithRole.map((item) => ({
               ...item.project,
+              //  ?? Pas besoin des fichiers dans la grid ni dans les projectCard inutile dans la query donc modifier la query
               files: item.project.files || [], // Ajouter les fichiers si non présents
             }))
-          // setProjects(
-          //   data.listProjectsByUserWithRole.map((item) => item.project)
-          // );
-        );
-      },
-    });
-  }
+            // setProjects(
+            //   data.listProjectsByUserWithRole.map((item) => item.project)
+            // );
+          );
+        },
+      });
+    }
   }, [userId, getProjects, data]);
   return (
     <ProfilePageContainer>

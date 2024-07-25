@@ -14,6 +14,23 @@ export const FIND_USER_BY_ID = gql`
   }
 `;
 
+export const FIND_USER_INFOS_BY_ID = gql`
+  query FindUserInfosById($findUserByIdId: String!) {
+    findUserById(id: $findUserByIdId) {
+      id
+      pseudo
+      ban
+      last_login
+      firstname
+      lastname
+      email
+    }
+  }
+`;
+
+
+
+
 export const FIND_PROJECT_OWNER = gql`
   query FindProjectOwner($projectId: String!) {
     findProjectOwner(projectId: $projectId) {

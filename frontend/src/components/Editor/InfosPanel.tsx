@@ -1,13 +1,9 @@
+import { File as EditorFile } from "@/types/editor";
 import {
-  File,
-  ListUsersAccessesProjectLazyQueryHookResult,
-  ListUsersWithAccessesLazyQueryHookResult,
   Project,
-  useListUsersAccessesProjectLazyQuery,
   useListUsersLikesPerProjectLazyQuery,
   useListUsersWithAccessesLazyQuery,
 } from "@/types/graphql";
-import { File as EditorFile } from "@/types/editor";
 import {
   Accordion,
   AccordionButton,
@@ -19,18 +15,18 @@ import {
   Box,
   Flex,
   Heading,
-  Stack,
+  IconButton,
   Text,
 } from "@chakra-ui/react";
+import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import FileItemList from "../FileItemList";
-import { LIST_USERS_WITH_ACCESSES } from "@/requetes/queries/usersAccessesProjects.queries";
-import { useLazyQuery } from "@apollo/client";
 type InfosPanelProps = {
   project: Project | null;
   setOpenFiles: React.Dispatch<React.SetStateAction<EditorFile[]>>;
 };
 const InfosPanel = ({ project, setOpenFiles }: InfosPanelProps) => {
+  const router = useRouter();
   const [contributors, setContributors] = useState<Array<{
     __typename?: "FindAllInfoUserAccessesProject";
     role: string;
@@ -48,7 +44,6 @@ const InfosPanel = ({ project, setOpenFiles }: InfosPanelProps) => {
     }[]
   >([]);
 
-  //TODO Add Link to Profile page of user + toolttip
   const [getContributors] = useListUsersWithAccessesLazyQuery();
   const [getSupporters] = useListUsersLikesPerProjectLazyQuery();
   useEffect(() => {
@@ -134,7 +129,23 @@ const InfosPanel = ({ project, setOpenFiles }: InfosPanelProps) => {
                   {contributors?.map((contributor) => {
                     const { user } = contributor;
                     if (contributor.role === "OWNER")
-                      return <Avatar key={user?.id} name={user?.pseudo} />;
+                      return (
+                        <IconButton
+                          aria-label="See user profile"
+                          onClick={() => router.push(`user/${user?.id}`)}
+                          icon={
+                            <Avatar
+                              key={user?.id}
+                              name={user?.pseudo}
+                              onClick={() => router.push(`/user/${user?.id}`)}
+                              title={`See ${user?.pseudo} profile`}
+                              _hover={{
+                                cursor: "pointer",
+                              }}
+                            />
+                          }
+                        />
+                      );
                   })}
                 </AvatarGroup>
               </Box>
@@ -146,7 +157,17 @@ const InfosPanel = ({ project, setOpenFiles }: InfosPanelProps) => {
                   {contributors?.map((contributor) => {
                     const { user } = contributor;
                     if (contributor.role != "OWNER")
-                      return <Avatar key={user?.id} name={user?.pseudo} />;
+                      return (
+                        <Avatar
+                          key={user?.id}
+                          name={user?.pseudo}
+                          onClick={() => router.push(`/user/${user?.id}`)}
+                          title={`See ${user?.pseudo} profile`}
+                          _hover={{
+                            cursor: "pointer",
+                          }}
+                        />
+                      );
                   })}
                 </AvatarGroup>
               </Box>
@@ -155,7 +176,17 @@ const InfosPanel = ({ project, setOpenFiles }: InfosPanelProps) => {
                 <Text>Likes : </Text>
                 <AvatarGroup spacing={1} flexWrap={"wrap"} size={"sm"}>
                   {supporters?.map((user) => {
-                    return <Avatar key={user?.id} name={user?.pseudo} />;
+                    return (
+                      <Avatar
+                        key={user?.id}
+                        name={user?.pseudo}
+                        title={`See ${user?.pseudo} profile`}
+                        _hover={{
+                          cursor: "pointer",
+                        }}
+                        onClick={() => router.push(`/user/${user.id}`)}
+                      />
+                    );
                   })}
                 </AvatarGroup>
               </Box>

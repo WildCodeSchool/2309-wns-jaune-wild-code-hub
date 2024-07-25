@@ -101,3 +101,15 @@ export const LIST_PUBLIC_PROJECTS = gql`
     }
   }
 `;
+
+export const LIST_PUBLIC_PROJECTS_OWNED_BY_USER = gql`
+  query ListPublicOwnedByUser($listPublicProjectsOwnedByUserId: String!) {
+    listPublicProjectsOwnedByUser(id: $listPublicProjectsOwnedByUserId) {
+      project {
+        id
+        name
+        category
+      }
+    }
+  }
+`;
