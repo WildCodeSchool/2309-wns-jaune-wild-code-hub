@@ -10,11 +10,11 @@ import {
 import NextLink from "next/link";
 import React from "react";
 
-import MeSidebar from "./MeSidebarContent";
 import { usePathname } from "next/navigation";
-import FilesList from "../Editor/FilesList";
+import MeSidebar from "./MeSidebarContent";
 
 import EditorSidebarContent from "./EditorSidebarContent";
+import ProfileSidebarContent from "./ProfileSidebarContent";
 
 type Props = {
   isOpen: boolean;
@@ -82,6 +82,8 @@ const Sidebar = ({ isOpen, setIsOpen }: Props) => {
         >
           {pathname?.startsWith("/me") && <MeSidebar />}
           {pathname?.startsWith("/editor") && <EditorSidebarContent />}
+          {pathname?.startsWith("/user") && <ProfileSidebarContent />}
+
           <LinkBox
             width="fit-content"
             _hover={{
