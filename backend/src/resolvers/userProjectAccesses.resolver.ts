@@ -8,7 +8,8 @@ import {
   UpdateUserProjectAccessesInput,
   FindAllInfoUserAccessesProject,
   UserAccessProjectResponse,
-} from "../entities/userProjectAccesses.entity";
+} from "../entities/usersProjectsAccesses.entity";
+import { Project } from "../entities/project.entity";
 
 @Resolver()
 export class UserProjectAccessesResolver {
@@ -39,10 +40,10 @@ export class UserProjectAccessesResolver {
     if (!checkUserOwner)
       throw new Error("You do not have access to this project!");
 
-    if (checkUserOwner.role !== "OWNER")
+    if (checkUserOwner.role !== "OWNER" && context.user.role !== "ADMIN")
       throw new Error("You must be owner to give other users access to this project");
     
-    if(data.role.toLocaleUpperCase() === "OWNER")
+    if(data.role.toLocaleUpperCase() === "OWNER" && context.user.role !== "ADMIN")
       throw new Error("You do not have the right to add a second owner to the project");
     
     const existingUserAccess = await new UserProjectAccessesService().findByAccessesProject(data.user_id, data.project_id);
@@ -105,14 +106,14 @@ export class UserProjectAccessesResolver {
       throw new Error("Access denied! You need to be authenticated to perform this action!");
 
     const checkUserOwner = await new UserProjectAccessesService().findByAccessesProject(context.user.id, data.project_id);
-    
+
     if (!checkUserOwner)
       throw new Error("You do not have access to this project!");
 
-    if (checkUserOwner.role !== "OWNER")
+    if (checkUserOwner.role !== "OWNER" && context.user.role !== "ADMIN")
       throw new Error("You must be owner to give other users access to this project");
 
-    if(data.role.toLocaleUpperCase() === "OWNER")
+    if(data.role.toLocaleUpperCase() === "OWNER"  && context.user.role !== "ADMIN")
       throw new Error("You do not have the right to add a second owner to the project");
 
     const updateUserAccessesProject = await new UserProjectAccessesService().updateAccessesProject(data);
@@ -128,6 +129,13 @@ export class UserProjectAccessesResolver {
     }
 
     return m;
+  }
+
+  @Authorized()
+  @Query(() => [Project])
+  async listAccesProject(@Arg("userId") userId: number) {
+    const listAccesProject = await new UserProjectAccessesService().findUsersByAccessesProject(userId);
+    return listAccesProject;
   }
 
 }

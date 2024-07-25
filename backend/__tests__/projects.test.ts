@@ -10,7 +10,7 @@ import datasource from "../src/lib/db_test";
 import { EntityTarget, Repository } from "typeorm";
 import assert from "assert";
 import { UserProjectAccessesResolver } from "../src/resolvers/userProjectAccesses.resolver";
-import { UsersProjectsAccesses } from "../src/entities/userProjectAccesses.entity";
+import { UsersProjectsAccesses, UserAccessProjectResponse, CreateUserProjectAccessesInput } from "../src/entities/usersProjectsAccesses.entity";
 import { UserResolver } from "../src/resolvers/user.resolver";
 
 export const CREATE_USER = `#graphql
@@ -26,6 +26,15 @@ export const CREATE_USER = `#graphql
       run_counter
     }
   }
+`;
+
+export const UPDATE_USERS_ACCESSES_PROJECTS = `#graphql
+mutation UsersProjectsAccesses ($data: UpdateUserProjectAccessesInput!) {
+  updateAccessProject(data: $data) {            
+    message
+    success
+  }
+}
 `;
 
 // Define GraphQL Queries and Mutations
@@ -123,6 +132,10 @@ type ResponseDataCreateUser = {
   register: User;
 }
 
+type ResponseDataUpdateUserAccessesProject = {
+  updateAccessProject: Message;
+}
+
 type ResponseDataListProject = {
   listProjects: Project[];
 }
@@ -186,7 +199,6 @@ beforeAll(async () => {
   await datasource.initialize();
   const entityMetadatas = datasource.entityMetadatas;
   const entities = entityMetadatas.map(metadata => metadata.name);
-  console.log("Entities in the Data Source:", entities);
 });
 
 afterAll(async () => {
@@ -246,12 +258,8 @@ describe("Test for a new project", () => {
       }
     }
   );
-    console.log(JSON.stringify(response.body))
     assert(response.body.kind === "single");
-    if (response.body.singleResult.errors) {
-      console.error('Errors:', response.body.singleResult.errors);
-    }
-    console.log(JSON.stringify(response.body.singleResult.data?.createProject))
+
     const id = response.body.singleResult.data?.createProject?.id;
     expect(id).not.toBeNull();
     expect(response.body.singleResult.data?.createProject?.name).toEqual("Project1");
@@ -277,10 +285,68 @@ describe("Test for a new project", () => {
           private: false,
         },
       },
-    });
+    },
+    {
+      contextValue : {
+        user : {
+          id : 1
+        }
+      }
+    }
+  );
 
     assert(response.body.kind === "single");
     expect(response.body.singleResult.data?.updateProject?.success).toEqual(true);
+  });
+
+  it("Update user access project - Update Editor : Test Update Project", async () => {
+    const response = await server.executeOperation<ResponseDataUpdateUserAccessesProject>({
+      query: UPDATE_USERS_ACCESSES_PROJECTS,
+      variables: {
+        data: {
+          role: "EDITOR",
+          project_id: 1,
+          user_id: 1
+        },
+      },
+    },
+    {
+      contextValue : {
+        user : {
+          id : 1
+        }
+      }
+    }
+  );
+    assert(response.body.kind === "single");
+    expect(response.body.singleResult.data?.updateAccessProject?.success).toEqual(true);
+  });
+
+  it("Update project not authorize project", async () => {
+    const response = await server.executeOperation<ResponseDataUpdate>({
+      query: UPDATE_PROJECT,
+      variables: {
+        data: {
+          id: 1,
+          name: "Project2",
+          category: "Javascript",
+          private: false,
+        },
+      },
+    },
+    {
+      contextValue : {
+        user : {
+          id : 1
+        }
+      }
+    }
+  );
+
+    assert(response.body.kind === "single");
+    if (response?.body?.singleResult?.errors) {
+      expect(response?.body?.singleResult?.errors[0]?.message).toEqual('You must be the owner of the project to modify it!');
+    }
   });
 
   it("Find projects after update", async () => {
@@ -342,13 +408,46 @@ describe("Test for a new project", () => {
     expect(response.body.singleResult.data?.listPublicProjects?.offset).toEqual(1);
   });
 
+  it("Update user access project - Update Owner : Test Delete Project", async () => {
+    const response = await server.executeOperation<ResponseDataUpdateUserAccessesProject>({
+      query: UPDATE_USERS_ACCESSES_PROJECTS,
+      variables: {
+        "data": {
+          role: "OWNER",
+          project_id: 1,
+          user_id: 1
+        },
+      },
+    },
+    {
+      contextValue : {
+        user : {
+          id : 1,
+          role : "ADMIN"
+        }
+      }
+    }
+  );
+    assert(response.body.kind === "single");
+    expect(response.body.singleResult.data?.updateAccessProject?.success).toEqual(true);
+  });
+
   it("Delete project", async () => {
     const response = await server.executeOperation<ResponseDataDelete>({
       query: DELETE_PROJECT,
       variables: {
         id: 1,
       },
-    });
+    },
+    {
+      contextValue : {
+        user : {
+          id : 1,
+          role : "USER"
+        }
+      }
+    }
+  );
 
     assert(response.body.kind === "single");
     expect(response.body.singleResult.data?.deleteProject?.success).toEqual(true);

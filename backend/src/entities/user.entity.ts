@@ -13,7 +13,7 @@ import { Length } from "class-validator";
 import { Field, ID, InputType, ObjectType } from "type-graphql";
 import * as argon2 from "argon2";
 import { Project } from "./project.entity";
-import { UsersProjectsAccesses } from "./userProjectAccesses.entity";
+import { UsersProjectsAccesses } from "./usersProjectsAccesses.entity";
 export type ROLE = "ADMIN" | "USER";
 
 @ObjectType()

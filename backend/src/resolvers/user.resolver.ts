@@ -13,8 +13,7 @@ import { SignJWT } from "jose";
 import { MyContext } from "..";
 import Cookies from "cookies";
 import { Project } from "../entities/project.entity";
-import { CreateUserProjectAccessesInput, UsersProjectsAccesses } from "../entities/userProjectAccesses.entity";
-import UserProjectAccessesService from "../services/userProjectAccesses.service";
+
 @Resolver()
 export class UserResolver {
 
@@ -25,17 +24,20 @@ export class UserResolver {
     return users;
   }
 
+  @Authorized()
   @Query(() => [User])
   async listUsersByRole(@Arg("role") role: ROLE) {
     const users = await new UsersService().listByRole(role);
     return users;
   }
 
+  @Authorized()
   @Query(() => [User])
   async listUsersByPseudo(@Arg("pseudo") pseudo: string) {
     const users = await new UsersService().listUsersByPseudo(pseudo);
     return users;
   }
+
 
   @Query(() => User)
   async findUserById(@Arg("id") id: string) {
@@ -44,6 +46,7 @@ export class UserResolver {
     if (!userById) throw new Error("Please note, the client does not exist");
     return userById;
   }
+
 
   @Query(() => User)
   async findUserByEmail(@Arg("email") email: string) {
@@ -101,12 +104,12 @@ export class UserResolver {
 
   @Mutation(() => User)
   async register(@Arg("data") data: CreateUserInput) {
-    const user = await new UsersService().findByEmail(data.email);
+    const email = await new UsersService().findByEmail(data.email);
     const pseudo = await new UsersService().findByPseudo(data.pseudo);
 
-    if (user && pseudo) {
+    if (email && pseudo) {
       throw new Error("This email and pseudo is already in use!");
-    } else if (user) {
+    } else if (email) {
       throw new Error("This email is already in use!");
     } else if (pseudo) {
       throw new Error("This pseudo is already in use!");
@@ -118,11 +121,31 @@ export class UserResolver {
 
   @Authorized()
   @Mutation(() => Message)
-  async updateUser(@Arg("data") data: UpdateUserInput) {
+  async updateUser(@Arg("data") data: UpdateUserInput, @Ctx() ctx: MyContext) {
+
+    if (!ctx.user)
+      throw new Error("Access denied! You need to be authenticated to perform this action!");
+
+    if (ctx.user.role !== "ADMIN" && data.id != ctx.user.id)
+      throw new Error("You must be a site administrator to do this action!"); 
+
     const { id, ...otherData } = data;
     if (otherData.password) {
       otherData.password = await argon2.hash(otherData.password);
     }
+
+    if (data?.email) {
+      const checkUserEmail = await new UsersService().findByEmail(data?.email);
+      if (checkUserEmail)
+        throw new Error("This email already exists in our database!");
+    }
+
+    if (data?.pseudo) {
+      const checkUserPseudo = await new UsersService().findByEmail(data?.email);
+      if (checkUserPseudo)
+        throw new Error("This pseudo already exists in our database!");
+    }
+
     const updateUser = await new UsersService().update(+id, otherData);
     const m = new Message();
     if (updateUser) {
@@ -137,7 +160,14 @@ export class UserResolver {
 
   @Authorized()
   @Mutation(() => Message)
-  async deleteUser(@Arg("id") id: number) {
+  async deleteUser(@Arg("id") id: number, @Ctx() ctx: MyContext) {
+
+    if (!ctx.user)
+      throw new Error("Access denied! You need to be authenticated to perform this action!");
+
+    if (ctx.user.role !== "ADMIN" && id != ctx.user.id)
+      throw new Error("You must be a site administrator to do this action!"); 
+
     const delUser = await new UsersService().delete(id);
     const m = new Message();
 
@@ -166,7 +196,6 @@ export class UserResolver {
     return m;
   }
 
-  // @Authorized()
   @Query(() => [Project])
   async listLikeProject(@Arg("userId") userId: string) {
     const projects = await new UsersService().listLikedProjects(+userId);
@@ -222,13 +251,6 @@ export class UserResolver {
     }
 
     return m;
-  }
-
-  @Authorized()
-  @Query(() => [Project])
-  async listAccesProject(@Arg("userId") userId: number) {
-    const listAccesProject = await new UserProjectAccessesService().findUsersByAccessesProject(userId);
-    return listAccesProject;
   }
 
   @Query(() => User)

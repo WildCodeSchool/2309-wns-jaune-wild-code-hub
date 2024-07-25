@@ -9,7 +9,7 @@ import {
 } from "typeorm";
 import { User, Message } from "./user.entity";
 import { Project } from "./project.entity";
-import { Field, ID, InputType, ObjectType } from "type-graphql";
+import { Field, InputType, ObjectType } from "type-graphql";
 
 export enum UserRole {
   EDITOR = "EDITOR",

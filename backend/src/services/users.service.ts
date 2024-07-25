@@ -10,10 +10,9 @@ import datasource from "../lib/db";
 
 import { Project } from "../entities/project.entity";
 import {
-  CreateUserProjectAccessesInput,
   UserRole,
   UsersProjectsAccesses,
-} from "../entities/userProjectAccesses.entity";
+} from "../entities/usersProjectsAccesses.entity";
 
 export default class UsersService {
   db: Repository<User>;

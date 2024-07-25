@@ -15,13 +15,17 @@ import {
 import { Message, User } from "../entities/user.entity";
 import { MyContext } from "../index"; 
 import {
+  FindAllInfoUserAccessesProject,
   UserAccessProjectOutput,
   UserRole,
-} from "../entities/userProjectAccesses.entity";
+} from "../entities/usersProjectsAccesses.entity";
 import ProjectsService from "../services/projects.service";
+import UserProjectAccessesService from "../services/userProjectAccesses.service";
 
 @Resolver()
 export class ProjectResolver {
+
+  @Authorized()
   @Query(() => [Project])
   async listProjects() {
     const projects = await new ProjectsService().list();
@@ -88,7 +92,13 @@ export class ProjectResolver {
 
   @Authorized()
   @Query(() => [Project])
-  async listProjectsByUser(@Arg("id") id: string) {
+  async listProjectsByUser(@Arg("id") id: string,  @Ctx() ctx: MyContext) {
+    if (!ctx.user)
+      throw new Error("Access denied! You need to be authenticated to perform this action!");
+
+    if (ctx.user.role !== "ADMIN" && +id != ctx.user.id)
+      throw new Error("You must be a site administrator to do this action!"); 
+
     const projects = await new ProjectsService().listByUserId(+id);
     return projects;
   }
@@ -98,8 +108,9 @@ export class ProjectResolver {
   @Query(() => [UserAccessProjectOutput])
   async listProjectsByUserWithRole(
     @Arg("id") id: string,
-    @Arg("userRole", () => [String], { nullable: true }) userRole?: UserRole[]
+    @Arg("userRole", () => [String], { nullable: true }) userRole?: UserRole[],
   ) {
+
     const projects = await new ProjectsService().ListByUserWithRole(
       +id,
       userRole
@@ -122,8 +133,19 @@ export class ProjectResolver {
 
   @Authorized()
   @Mutation(() => Message)
-  async updateProject(@Arg("data") data: UpdateProjectInput) {
+  async updateProject(@Arg("data") data: UpdateProjectInput, @Ctx() ctx: MyContext) {
+
     const { id, ...otherData } = data;
+
+    if (!ctx.user)
+      throw new Error("Access denied! You need to be authenticated to perform this action!");
+    
+    const listAccesProject = await new UserProjectAccessesService().findUsersByAccessesProject(data.id);
+    const dataOwner = listAccesProject.find((user: FindAllInfoUserAccessesProject) => user?.user_id == ctx?.user?.id);
+    
+    if (dataOwner?.role !== "OWNER" && ctx.user.role !== "ADMIN")
+      throw new Error("You must be the owner of the project to modify it!"); 
+
     const updateProject = await new ProjectsService().update(+id, otherData);
     const m = new Message();
     if (updateProject) {
@@ -138,7 +160,17 @@ export class ProjectResolver {
 
   @Authorized()
   @Mutation(() => Message)
-  async deleteProject(@Arg("id") id: number) {
+  async deleteProject(@Arg("id") id: number, @Ctx() ctx: MyContext) {
+
+    if (!ctx.user)
+      throw new Error("Access denied! You need to be authenticated to perform this action!");
+    
+    const listAccesProject = await new UserProjectAccessesService().findUsersByAccessesProject(id);
+    const dataOwner = listAccesProject.find((user: FindAllInfoUserAccessesProject) => user?.user_id == ctx?.user?.id);
+    
+    if (dataOwner?.role !== "OWNER" && ctx.user.role !== "ADMIN")
+      throw new Error("You must be the owner of the project to modify it!"); 
+
     const delProject = await new ProjectsService().delete(id);
     const m = new Message();
     if (delProject) {
