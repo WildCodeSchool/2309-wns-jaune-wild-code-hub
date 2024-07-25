@@ -8,7 +8,7 @@ import {
   UpdateUserProjectAccessesInput,
   FindAllInfoUserAccessesProject,
   UserAccessProjectResponse,
-} from "../entities/userProjectAccesses.entity";
+} from "../entities/usersProjectsAccesses.entity";
 import { Project } from "../entities/project.entity";
 
 @Resolver()

@@ -12,7 +12,7 @@ import { Project } from "../entities/project.entity";
 import {
   UserRole,
   UsersProjectsAccesses,
-} from "../entities/userProjectAccesses.entity";
+} from "../entities/usersProjectsAccesses.entity";
 
 export default class UsersService {
   db: Repository<User>;

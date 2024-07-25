@@ -4,7 +4,7 @@ import {
   UsersProjectsAccesses,
   CreateUserProjectAccessesInput,
   UpdateUserProjectAccessesInput,
-} from "../entities/userProjectAccesses.entity";
+} from "../entities/usersProjectsAccesses.entity";
 import { validate } from "class-validator";
 
 export default class UserProjectAccessesService {

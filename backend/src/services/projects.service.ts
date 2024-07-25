@@ -8,7 +8,7 @@ import {
 import {
   UserRole,
   UsersProjectsAccesses,
-} from "../entities/userProjectAccesses.entity";
+} from "../entities/usersProjectsAccesses.entity";
 import datasource from "../lib/db";
 import FilesService from "./files.service";
 import { File } from "../entities/file.entity";

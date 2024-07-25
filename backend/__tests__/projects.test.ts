@@ -10,7 +10,7 @@ import datasource from "../src/lib/db_test";
 import { EntityTarget, Repository } from "typeorm";
 import assert from "assert";
 import { UserProjectAccessesResolver } from "../src/resolvers/userProjectAccesses.resolver";
-import { UsersProjectsAccesses, UserAccessProjectResponse, CreateUserProjectAccessesInput } from "../src/entities/userProjectAccesses.entity";
+import { UsersProjectsAccesses, UserAccessProjectResponse, CreateUserProjectAccessesInput } from "../src/entities/usersProjectsAccesses.entity";
 import { UserResolver } from "../src/resolvers/user.resolver";
 
 export const CREATE_USER = `#graphql
@@ -252,6 +252,7 @@ describe("Test for a new project", () => {
     }
   );
     assert(response.body.kind === "single");
+
     const id = response.body.singleResult.data?.createProject?.id;
     expect(id).not.toBeNull();
     expect(response.body.singleResult.data?.createProject?.name).toEqual("Project1");

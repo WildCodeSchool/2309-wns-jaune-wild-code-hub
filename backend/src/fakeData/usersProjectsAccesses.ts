@@ -1,4 +1,4 @@
-import { UserRole } from "../entities/userProjectAccesses.entity";
+import { UserRole } from "../entities/usersProjectsAccesses.entity";
 
 const fakeUsersProjectsAccesses = [
   {

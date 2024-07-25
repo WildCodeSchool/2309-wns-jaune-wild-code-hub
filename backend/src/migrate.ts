@@ -7,7 +7,7 @@ import fakeFile from "./fakeData/file";
 import * as argon2 from "argon2";
 import db from "./lib/db";
 import fakeUsersProjectsLikes from "./fakeData/usersProjectsLikes";
-import { UsersProjectsAccesses } from "./entities/userProjectAccesses.entity"; 
+import { UsersProjectsAccesses } from "./entities/usersProjectsAccesses.entity"; 
 import fakeUsersProjectsAccesses from "./fakeData/usersProjectsAccesses";
 
 async function migrate() {

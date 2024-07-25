@@ -18,7 +18,7 @@ import {
   FindAllInfoUserAccessesProject,
   UserAccessProjectOutput,
   UserRole,
-} from "../entities/userProjectAccesses.entity";
+} from "../entities/usersProjectsAccesses.entity";
 import ProjectsService from "../services/projects.service";
 import UserProjectAccessesService from "../services/userProjectAccesses.service";
 
