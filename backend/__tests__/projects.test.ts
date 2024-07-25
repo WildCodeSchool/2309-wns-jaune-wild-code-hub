@@ -192,7 +192,6 @@ beforeAll(async () => {
   await datasource.initialize();
   const entityMetadatas = datasource.entityMetadatas;
   const entities = entityMetadatas.map(metadata => metadata.name);
-  console.log("Entities in the Data Source:", entities);
 });
 
 afterAll(async () => {
@@ -252,11 +251,7 @@ describe("Test for a new project", () => {
       }
     }
   );
-    console.log(JSON.stringify(response.body))
     assert(response.body.kind === "single");
-    if (response.body.singleResult.errors) {
-      console.error('Errors:', response.body.singleResult.errors);
-    }
     const id = response.body.singleResult.data?.createProject?.id;
     expect(id).not.toBeNull();
     expect(response.body.singleResult.data?.createProject?.name).toEqual("Project1");
@@ -315,10 +310,7 @@ describe("Test for a new project", () => {
       }
     }
   );
-    console.log(JSON.stringify(response.body))
     assert(response.body.kind === "single");
-    console.error(response.body.singleResult.errors)
-    console.log("data", response.body.singleResult.data?.updateAccessProject)
     expect(response.body.singleResult.data?.updateAccessProject?.success).toEqual(true);
   });
 
@@ -345,7 +337,6 @@ describe("Test for a new project", () => {
 
     assert(response.body.kind === "single");
     if (response?.body?.singleResult?.errors) {
-      console.log(response?.body?.singleResult?.errors)
       expect(response?.body?.singleResult?.errors[0]?.message).toEqual('You must be the owner of the project to modify it!');
     }
   });
@@ -424,10 +415,7 @@ describe("Test for a new project", () => {
       }
     }
   );
-    console.log(JSON.stringify(response.body))
     assert(response.body.kind === "single");
-    console.error(response.body.singleResult.errors)
-    console.log("data", response.body.singleResult.data?.updateAccessProject)
     expect(response.body.singleResult.data?.updateAccessProject?.success).toEqual(true);
   });
 
@@ -441,7 +429,8 @@ describe("Test for a new project", () => {
     {
       contextValue : {
         user : {
-          id : 1
+          id : 1,
+          role : "USER"
         }
       }
     }
