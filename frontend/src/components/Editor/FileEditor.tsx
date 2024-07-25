@@ -3,7 +3,7 @@ import MonacoEditor, { OnChange } from "@monaco-editor/react";
 import { editor } from "monaco-editor";
 
 interface File {
-  id: number;
+  id: string;
   name: string;
   extension: string;
   content: string;
@@ -18,14 +18,22 @@ interface Props {
   language: string | undefined;
 }
 
-const FileEditor: React.FC<Props> = ({ code, setCode, file, setData, language }) => {
+const FileEditor: React.FC<Props> = ({
+  code,
+  setCode,
+  file,
+  setData,
+  language,
+}) => {
   const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
 
   const handleChange: OnChange = (value) => {
     if (value && file) {
       setCode(value);
       setData((prevData) =>
-        prevData.map((item) => (item.id === file.id ? { ...item, content: value } : item))
+        prevData.map((item) =>
+          item.id === file.id ? { ...item, content: value } : item
+        )
       );
     }
   };
@@ -41,7 +49,8 @@ const FileEditor: React.FC<Props> = ({ code, setCode, file, setData, language })
     });
   };
 
-  const handleEditorDidMount = (editor: any, monaco: any) => { //A ne pas suprimmée editor ! Obliger pour Monaco
+  const handleEditorDidMount = (editor: any, monaco: any) => {
+    //A ne pas suprimmée editor ! Obliger pour Monaco
     if (!monaco) return;
     defaultTheme(monaco);
     monaco.editor.setTheme("theme");
@@ -62,8 +71,6 @@ const FileEditor: React.FC<Props> = ({ code, setCode, file, setData, language })
 
   return (
     <MonacoEditor
-      width="100%"
-      height="50%"
       language={language || "javascript"}
       value={code}
       onChange={handleChange}

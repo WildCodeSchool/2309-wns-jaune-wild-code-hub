@@ -41,11 +41,20 @@ export const DELETE_USER = gql`
 `;
 
 export const LIST_USERS_BY_PSEUDO = gql`
-  query ListUsersByPseudo($pseudo: String!)  {
+  query ListUsersByPseudo($pseudo: String!) {
     listUsersByPseudo(pseudo: $pseudo) {
       pseudo
       id
       email
+    }
+  }
+`;
+
+export const LIST_USERS_LIKING_PROJECT = gql`
+  query ListUsersLikesPerProject($projectId: Float!) {
+    listUsersLikesPerProject(projectId: $projectId) {
+      pseudo
+      id
     }
   }
 `;
