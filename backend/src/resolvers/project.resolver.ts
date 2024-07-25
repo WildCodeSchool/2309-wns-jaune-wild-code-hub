@@ -70,12 +70,6 @@ export class ProjectResolver {
     return projectByName;
   }
 
-  // @Query(() => [Project])
-  // async listPublicProjects() {
-  //   const projects = await new ProjectsService().listByPublic();
-  //   return projects;
-  // }
-
   @Query(() => PaginatedProjects)
   async listPublicProjects(
     @Arg("offset", () => Int, { defaultValue: 0 }) offset: number,
@@ -84,6 +78,15 @@ export class ProjectResolver {
     const projects = await new ProjectsService().listByPublic(offset, limit);
     return projects;
   }
+
+  @Query(() => [Project])
+  async listPublicProjectsByName(@Arg("name") name: string) {
+    const projectsPublicByName = await new ProjectsService().listPublicProjectsByName(name);
+    if (!projectsPublicByName)
+      throw new Error("Please note, the project does not exist")
+    console.log(projectsPublicByName)
+    return projectsPublicByName;
+  }  
 
   @Query(() => [Project])
   async listProjectsByCategory(@Arg("category") category: string) {

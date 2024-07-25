@@ -68,8 +68,8 @@ const FIND_PROJECT_BY_NAME = `#graphql
 `;
 
 const LIST_PROJECTS_PUBLIC = `#graphql
-  query Projects($limit: Int!, $offset: Int!) {
-    listPublicProjects (limit: $limit, offset: $offset){            
+  query Projects($limit: Int!, $offset: Int!, $name:String ) {
+    listPublicProjects (limit: $limit, offset: $offset, name: $name){            
       projects {
       id
       name

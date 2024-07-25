@@ -98,6 +98,15 @@ export const LIST_PUBLIC_PROJECTS = gql`
       total
       offset
       limit
+      }
+  }
+`;
+ 
+export const LIST_PUBLIC_PROJECTS_BY_NAME = gql`
+  query listPublicProjectsByName($name: String!) {
+    listPublicProjectsByName(name: $name) {
+      id
+      name      
     }
   }
 `;
@@ -113,3 +122,4 @@ export const LIST_PUBLIC_PROJECTS_OWNED_BY_USER = gql`
     }
   }
 `;
+
