@@ -18,9 +18,12 @@ import { LOGIN } from "@/requetes/queries/auth.queries";
 import { InputLogin, LoginQuery, LoginQueryVariables } from "@/types/graphql";
 import { useLazyQuery } from "@apollo/client";
 // import { checkRegex, emailRegex, pseudoRegex } from "@/regex";
+import CustomToast from '@/components/ToastCustom/CustomToast';
 
 const Login = () => {
+
     const router = useRouter();
+    const { showAlert } = CustomToast();
 
     const [login, { error }] = useLazyQuery<
         LoginQuery,
@@ -28,12 +31,15 @@ const Login = () => {
     >(LOGIN, {
         onCompleted: (data) => {
             if (data.login.success) {
-                console.log(data)
+                showAlert("success", data.login.message)
                 router.push("/");
+            } else {
+                showAlert("error", data.login.message)
             }
         },
         onError: (error) => {
             console.log(error);
+            showAlert("error", "We are sorry, there seems to be an error with the server. Please try again later.")
           },
     });
 
@@ -59,7 +65,6 @@ const Login = () => {
     const handleSubmit = (newErrors: any, newData: any) => {
         if (Object.keys(newErrors).length === 0) {
             let data = newData as InputLogin;
-            console.log(data)
             const pseudoConnect = { infos: { pseudo: data.pseudo, password: data.password } };
             const emailConnect = { infos: { email: data.email, password: data.password } } ; 
             login({
@@ -68,9 +73,9 @@ const Login = () => {
         }
     }
 
-    const handleSubmitVerify = async (e: React.FormEvent<HTMLFormElement>)  => {
+    const handleSubmitVerify = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        const newErrors = {
+        const newErrors: { password: string; emailOrPseudo: string } = {
             password: '',
             emailOrPseudo: '', 
         };

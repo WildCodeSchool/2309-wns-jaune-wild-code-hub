@@ -4,12 +4,12 @@ import {
   CreateDateColumn,
   Column,
   ManyToOne,
-  JoinTable,
-  ManyToMany,
   UpdateDateColumn,
+  JoinColumn,
 } from "typeorm";
-import { Length, Min } from "class-validator";
+import { Length } from "class-validator";
 import { Field, ID, InputType, ObjectType } from "type-graphql";
+import { Project } from "./project.entity";
 
 @ObjectType()
 @Entity()
@@ -18,28 +18,37 @@ export class File {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Field()
-  @Column()
-  project_id: string;
+
+  @ManyToOne(() => Project, (project) => project.files, { onDelete: "CASCADE" })
+  @JoinColumn({ name: "project_id" })
+  project: Project;
+
 
   @Field()
   @Column({ length: 100 })
   @Length(1, 100, {
-    message: " le nom du fichier doit contenir entre 1 et 100 caractères ",
+    message: "The file name must contain between 1 and 100 characters",
   })
   name: string;
 
   @Field()
-  @Column()
-  category: string;
+  @Column({ length: 50 })
+  @Length(1, 50, { message: "Type must have between 1 to 50 characters" })
+  type: string;
 
   @Field()
-  @Column()
+  @Column({ length: 10 })
+  @Length(1, 10, {
+    message: "Language must have between 1 to 20 characters",
+  })
   language: string;
 
   @Field()
-  @Column()
-  type: string;
+  @Column({ length: 6 })
+  @Length(1, 6, {
+    message: "Extension must have between 1 to 6 characters",
+  })
+  extension: string;
 
   @Field()
   @Column()
@@ -50,20 +59,48 @@ export class File {
   created_at: Date;
 
   @Field()
-  @CreateDateColumn({ default: () => "CURRENT_TIMESTAMP" })
+  @UpdateDateColumn({
+    name: "updated_at",
+    default: () => "CURRENT_TIMESTAMP",
+    onUpdate: "CURRENT_TIMESTAMP",
+  })
   update_at: Date;
 }
 
 @InputType()
 export class CreateFileInput {
   @Field()
-  project_id: string;
+  project_id: number;
 
   @Field()
   name: string;
 
   @Field()
   language: string;
+
+  @Field()
+  extension: string;
+
+  @Field()
+  type: string;
+
+  @Field({ nullable: true })
+  content: string;
+}
+
+@InputType()
+export class UpdateFileInput {
+  @Field()
+  id: number;
+
+  @Field()
+  name: string;
+
+  @Field()
+  language: string;
+
+  @Field()
+  extension: string;
 
   @Field()
   type: string;

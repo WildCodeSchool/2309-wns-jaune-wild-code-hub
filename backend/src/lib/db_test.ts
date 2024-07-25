@@ -8,6 +8,7 @@ export default new DataSource({
   password: "root",
   database: "wildcodehub-test",
   synchronize: true,
-  logging: ["query", "error"],
+  // logging: ["query", "error"],
+  logging: false,
   entities: ["src/entities/*.ts"],
 });

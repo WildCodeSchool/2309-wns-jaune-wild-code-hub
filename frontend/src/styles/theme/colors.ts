@@ -5,6 +5,7 @@ const colors = {
   background: "#000000",
   text: "#EDF8E1",
   grey: "#363636",
+  lightGrey: "#8A98A4",
   placeholder: "#A0AEC0",
   background2: "#151515",
   textSecondary: "#807D7D",

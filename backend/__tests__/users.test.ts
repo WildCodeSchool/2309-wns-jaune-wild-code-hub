@@ -5,7 +5,6 @@ import datasourceInitial from "../src/lib/db"; //on importe la datasource de tes
 import datasource from "../src/lib/db_test"; //on importe la datasource initial pour le spyOn
 import { User, Message } from "../src/entities/user.entity";
 import assert from "assert";
-// import {}
 
 let server: ApolloServer;
 
@@ -182,7 +181,76 @@ describe("Test for a new user", () => {
     expect(response.body.singleResult.data?.register?.firstname).toEqual("Toto");
   });
 
-  it("Update user", async () => { 
+  it("Create user | Duplicate email & pseudo", async () => { 
+    const response = await server.executeOperation<ResponseDataCreate>({
+      query: CREATE_USER,   
+      variables: {
+        data:{
+          lastname :"Toto",
+          firstname : "Toto",
+          pseudo : "Toto",
+          email : "toto@gmail.com",
+          password: "toto",
+          ban : false,
+          role: "ADMIN",
+          run_counter : 1
+        }
+      }   
+    })
+
+    assert(response.body.kind === "single");
+    if (response?.body?.singleResult?.errors) {
+      expect(response?.body?.singleResult?.errors[0]?.message).toEqual('This email and pseudo is already in use!');
+    }
+  });
+
+  it("Create user | Duplicate email", async () => { 
+    const response = await server.executeOperation<ResponseDataCreate>({
+      query: CREATE_USER,   
+      variables: {
+        data:{
+          lastname :"Toto",
+          firstname : "Toto",
+          pseudo : "Totso",
+          email : "toto@gmail.com",
+          password: "toto",
+          ban : false,
+          role: "ADMIN",
+          run_counter : 1
+        }
+      }   
+    })
+
+    assert(response.body.kind === "single");
+    if (response?.body?.singleResult?.errors) {
+      expect(response?.body?.singleResult?.errors[0]?.message).toEqual('This email is already in use!');
+    }
+  });
+
+  it("Create user | Duplicate pseudo", async () => { 
+    const response = await server.executeOperation<ResponseDataCreate>({
+      query: CREATE_USER,   
+      variables: {
+        data:{
+          lastname :"Toto",
+          firstname : "Toto",
+          pseudo : "Toto",
+          email : "totsso@gmail.com",
+          password: "toto",
+          ban : false,
+          role: "ADMIN",
+          run_counter : 1
+        }
+      }   
+    })
+
+    assert(response.body.kind === "single");
+    if (response?.body?.singleResult?.errors) {
+      expect(response?.body?.singleResult?.errors[0]?.message).toEqual('This pseudo is already in use!');
+    }
+  });
+
+  it("Update user Admin | duplicate email", async () => { 
     const response = await server.executeOperation<ResponseDataUpdate>({
       query: UPDATE_USER,   
       variables: {
@@ -197,9 +265,65 @@ describe("Test for a new user", () => {
           run_counter : 1
         }
       }   
-    });
+    },
+    {
+      contextValue : {
+        user : {
+          id : "1"
+        }
+      }
+    }
+  );
     assert(response.body.kind === "single");  
     expect(response.body.singleResult.data?.updateUser?.success).toEqual(true);
+  });
+
+  it("Update user Admin | duplicate email", async () => { 
+    const response = await server.executeOperation<ResponseDataUpdate>({
+      query: UPDATE_USER,   
+      variables: {
+        data:{
+          id : 1,
+          email : "tata@gmail.com",
+        }
+      }   
+    },
+    {
+      contextValue : {
+        user : {
+          id : "1"
+        }
+      }
+    }
+  );
+    assert(response.body.kind === "single");  
+    if (response?.body?.singleResult?.errors) {
+      expect(response?.body?.singleResult?.errors[0]?.message).toEqual('This email already exists in our database!');
+    }
+  });
+
+  it("Update user Admin | duplicate pseudo", async () => { 
+    const response = await server.executeOperation<ResponseDataUpdate>({
+      query: UPDATE_USER,   
+      variables: {
+        data:{
+          id : 1,
+          pseudo : "tata",
+        }
+      }   
+    },
+    {
+      contextValue : {
+        user : {
+          id : "1"
+        }
+      }
+    }
+  );
+    assert(response.body.kind === "single");  
+    if (response?.body?.singleResult?.errors) {
+      expect(response?.body?.singleResult?.errors[0]?.message).toEqual('This pseudo already exists in our database!');
+    }
   });
 
   it("Find users after creation of the user in the db", async () => {
@@ -233,6 +357,19 @@ describe("Test for a new user", () => {
     expect(response.body.singleResult.data?.findUserById?.firstname).toEqual("Toto");
   });
 
+    it("Find user by ID | not user exite", async () => {
+      const response = await server.executeOperation<ResponseDataFindUserById>({
+        query: FIND_USER_BY_ID,  
+        variables: {
+          id: "2"
+        }  
+      });
+      assert(response.body.kind === "single");
+      if (response?.body?.singleResult?.errors) {
+        expect(response?.body?.singleResult?.errors[0]?.message).toEqual('Please note, the client does not exist');
+      }
+    });
+
     it("Find user by Email", async () => {
       const response = await server.executeOperation<ResponseDataFindUserByEmail>({
         query: FIND_USER_BY_EMAIL,  
@@ -242,6 +379,19 @@ describe("Test for a new user", () => {
       });
       assert(response.body.kind === "single");
       expect(response.body.singleResult.data?.findUserByEmail?.email).toEqual("tata@gmail.com");
+    });
+
+    it("Find user by Email | not user exite", async () => {
+      const response = await server.executeOperation<ResponseDataFindUserByEmail>({
+        query: FIND_USER_BY_EMAIL,  
+        variables: {
+          email: "tatasss@gmail.com"
+        }  
+      });
+      assert(response.body.kind === "single");
+      if (response?.body?.singleResult?.errors) {
+        expect(response?.body?.singleResult?.errors[0]?.message).toEqual('Please note, the client does not exist');
+      }
     });
 
     it("Find user by Pseudo", async () => {
@@ -255,13 +405,34 @@ describe("Test for a new user", () => {
       expect(response.body.singleResult.data?.findUserByPseudo?.pseudo).toEqual("tata");
     });
 
+    it("Find user by Pseudo | not user exite", async () => {
+      const response = await server.executeOperation<ResponseDataFindUserByPseudo>({
+        query: FIND_USER_BY_PSEUDO,  
+        variables: {
+          pseudo: "sss"
+        }  
+      });
+      assert(response.body.kind === "single");
+      if (response?.body?.singleResult?.errors) {
+        expect(response?.body?.singleResult?.errors[0]?.message).toEqual('Please note, the client does not exist');
+      }
+    });
+
     it("Delete user", async () => { 
       const response = await server.executeOperation<ResponseDataDelete>({
         query: DELETE_USER,   
         variables: {
           id : 1
         }   
-      });
+      },
+      {
+        contextValue : {
+          user : {
+            id : "1"
+          }
+        }
+      }
+    );
       assert(response.body.kind === "single");
       expect(response.body.singleResult.data?.deleteUser?.success).toEqual(true);
     });

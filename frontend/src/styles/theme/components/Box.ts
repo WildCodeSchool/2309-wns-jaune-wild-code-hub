@@ -7,6 +7,13 @@ const box =  {
         alignItems: "center",
         height: "100vh",
     },
+    editor: {
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100vh",
+        // : "100vh",
+    },
     containerBox : {
         display: "flex",
         flexDirection: "column" as ResponsiveValue<"column" | "row">,

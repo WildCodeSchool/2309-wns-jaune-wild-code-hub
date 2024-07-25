@@ -7,7 +7,7 @@ import fakeFile from "./fakeData/file";
 import * as argon2 from "argon2";
 import db from "./lib/db";
 import fakeUsersProjectsLikes from "./fakeData/usersProjectsLikes";
-import { UsersProjectsAccesses } from "./entities/userProjectAccesses.entity"; 
+import { UsersProjectsAccesses } from "./entities/usersProjectsAccesses.entity"; 
 import fakeUsersProjectsAccesses from "./fakeData/usersProjectsAccesses";
 
 async function migrate() {
@@ -36,6 +36,13 @@ async function migrate() {
     await db.query("ALTER SEQUENCE project_id_seq RESTART WITH 1");
     const projectRepository = db.getRepository(Project);
     await projectRepository.save(fakeProjects);
+
+    // Migrate file
+    // await db.getRepository(File).clear();
+    await db.query('TRUNCATE TABLE "file" CASCADE');
+    await db.query("ALTER SEQUENCE file_id_seq RESTART WITH 1");
+    const fileRepository = db.getRepository(File);
+    await fileRepository.save(fakeFile);
 
     //Migrate Like 
     for (let i = 0; i < fakeUsersProjectsLikes.length; i++) {

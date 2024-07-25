@@ -25,6 +25,7 @@ const Button = defineStyleConfig({
     primary: {
       bg: "primary",
       color: "background",
+      border: "2px solid white",
     },
     secondary: {
       border: "2px solid",

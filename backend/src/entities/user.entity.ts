@@ -13,7 +13,7 @@ import { Length } from "class-validator";
 import { Field, ID, InputType, ObjectType } from "type-graphql";
 import * as argon2 from "argon2";
 import { Project } from "./project.entity";
-import { UsersProjectsAccesses } from "./userProjectAccesses.entity";
+import { UsersProjectsAccesses } from "./usersProjectsAccesses.entity";
 export type ROLE = "ADMIN" | "USER";
 
 @ObjectType()
@@ -31,28 +31,28 @@ export class User {
   @Field()
   @Column({ length: 50 })
   @Length(3, 50, {
-    message: "Le nom de famille doit contenir entre 3 et 50 caractères",
+    message: "Last name must be between 3 and 50 characters",
   })
   lastname: string;
 
   @Field()
   @Column({ length: 50 })
   @Length(3, 50, {
-    message: "Le prénom doit contenir entre 3 et 50 caractères",
+    message: "The first name must contain between 3 and 50 characters",
   })
   firstname: string;
 
   @Field()
   @Column({ unique: true, length: 20 })
   @Length(3, 20, {
-    message: "Le pseudo doit contenir entre 3 et 20 caractères",
+    message: "The nickname must contain between 3 and 20 characters",
   })
   pseudo: string;
 
   @Field()
   @Column({ unique: true, length: 200 })
   @Length(5, 200, {
-    message: "L'email doit contenir entre 5 et 200 caractères",
+    message: "The email must contain between 5 and 200 characters",
   })
   email: string;
 
@@ -78,7 +78,11 @@ export class User {
   run_counter: number;
 
   @Field()
-  @UpdateDateColumn({ name: 'last_login', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
+  @UpdateDateColumn({
+    name: "last_login",
+    default: () => "CURRENT_TIMESTAMP",
+    onUpdate: "CURRENT_TIMESTAMP",
+  })
   last_login: Date;
 
   @Field()
@@ -86,18 +90,25 @@ export class User {
   created_at: Date;
 
   @Field()
-  @UpdateDateColumn({ name: 'updated_at', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
+  @UpdateDateColumn({
+    name: "updated_at",
+    default: () => "CURRENT_TIMESTAMP",
+    onUpdate: "CURRENT_TIMESTAMP",
+  })
   update_at: Date;
 
-  @ManyToMany(() => Project, project => project.likedByUsers)
+  @ManyToMany(() => Project, (project) => project.likedByUsers)
   @JoinTable({
     name: "users_projects_likes",
     joinColumn: { name: "user_id" },
-    inverseJoinColumn: { name: "project_id" }
+    inverseJoinColumn: { name: "project_id" },
   })
   likedProjects: Project[];
 
-  @OneToMany(() => UsersProjectsAccesses, UsersProjectsAccesses => UsersProjectsAccesses.user)
+  @OneToMany(
+    () => UsersProjectsAccesses,
+    (UsersProjectsAccesses) => UsersProjectsAccesses.user
+  )
   usersProjectsAccesses: UsersProjectsAccesses[];
 }
 
@@ -130,7 +141,6 @@ export class CreateUserInput {
 
 @InputType()
 export class UpdateUserInput {
-
   @Field(() => ID)
   id: number;
 
@@ -179,4 +189,3 @@ export class Message {
   @Field()
   message: string;
 }
-
