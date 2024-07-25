@@ -24,9 +24,20 @@ const LikedProjects: NextPageWithLayout = () => {
           userId,
         },
       });
-      data?.listLikeProject && setProjects(data?.listLikeProject);
+      // data?.listLikeProject && setProjects(data?.listLikeProject);
     }
   }, [userId, getProjects, data]);
+
+  useEffect(() => {
+    if (data?.listLikeProject) {
+      // Transform the data to match the Project type if necessary
+      const transformedProjects = data.listLikeProject.map((project) => ({
+        ...project,
+        files: project.files || [], // Assuming files should be an empty array if not provided
+      }));
+      setProjects(transformedProjects);
+    }
+  }, [data]);
   return (
     <ProfilePageContainer>
       <Heading fontSize={"3cqw"}>Welcome to your Workspace</Heading>
