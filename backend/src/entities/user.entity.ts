@@ -189,3 +189,13 @@ export class Message {
   @Field()
   message: string;
 }
+
+
+@InputType()
+export class DeleteUserInput {
+  @Field(() => ID)
+  id: number;
+
+  @Field({ nullable: true })
+  password: string;
+}
