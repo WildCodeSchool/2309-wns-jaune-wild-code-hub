@@ -44,7 +44,6 @@ const InfosPanel = ({ project, setOpenFiles }: InfosPanelProps) => {
     }[]
   >([]);
 
-  //TODO Add Link to Profile page of user + toolttip
   const [getContributors] = useListUsersWithAccessesLazyQuery();
   const [getSupporters] = useListUsersLikesPerProjectLazyQuery();
   useEffect(() => {
@@ -139,6 +138,10 @@ const InfosPanel = ({ project, setOpenFiles }: InfosPanelProps) => {
                               key={user?.id}
                               name={user?.pseudo}
                               onClick={() => router.push(`/user/${user?.id}`)}
+                              title={`See ${user?.pseudo} profile`}
+                              _hover={{
+                                cursor: "pointer",
+                              }}
                             />
                           }
                         />
@@ -159,6 +162,10 @@ const InfosPanel = ({ project, setOpenFiles }: InfosPanelProps) => {
                           key={user?.id}
                           name={user?.pseudo}
                           onClick={() => router.push(`/user/${user?.id}`)}
+                          title={`See ${user?.pseudo} profile`}
+                          _hover={{
+                            cursor: "pointer",
+                          }}
                         />
                       );
                   })}
@@ -171,9 +178,9 @@ const InfosPanel = ({ project, setOpenFiles }: InfosPanelProps) => {
                   {supporters?.map((user) => {
                     return (
                       <Avatar
-                        title={`See ${user.pseudo} profile`}
                         key={user?.id}
                         name={user?.pseudo}
+                        title={`See ${user?.pseudo} profile`}
                         _hover={{
                           cursor: "pointer",
                         }}
