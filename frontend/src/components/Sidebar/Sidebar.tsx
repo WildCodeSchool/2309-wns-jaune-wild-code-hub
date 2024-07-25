@@ -14,6 +14,8 @@ import MeSidebar from "./MeSidebarContent";
 import { usePathname } from "next/navigation";
 import FilesList from "../Editor/FilesList";
 
+import EditorSidebarContent from "./EditorSidebarContent";
+
 type Props = {
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -28,12 +30,11 @@ const Sidebar = ({ isOpen, setIsOpen }: Props) => {
       transition="all .5s ease"
       style={{
         backgroundColor: "background",
-        left: isOpen ? 0 : "-13rem",
+        left: isOpen ? 0 : "-14rem",
         top: 0,
         height: "100vh",
         paddingTop: "4.5rem",
         position: "fixed",
-        paddingLeft: "2rem",
         flexDirection: "column",
         justifyContent: "space-between",
         alignItems: "start",
@@ -43,6 +44,7 @@ const Sidebar = ({ isOpen, setIsOpen }: Props) => {
       }}
     >
       <IconButton
+        isRound
         aria-label="toggle sidebar"
         icon={<ChevronRightIcon />}
         transition="all .5s ease"
@@ -51,10 +53,10 @@ const Sidebar = ({ isOpen, setIsOpen }: Props) => {
           brightness: "150%",
         }}
         style={{
-          position: "absolute",
+          position: "relative",
           rotate: isOpen ? "180deg" : "0deg",
-          right: 0,
-          translate: "50% 25%",
+          left: "16rem",
+          translate: "-50% 10%",
           backgroundColor: "gray",
           opacity: 0.7,
           fontSize: 24,
@@ -68,29 +70,40 @@ const Sidebar = ({ isOpen, setIsOpen }: Props) => {
           exit: { delay: 0.1, duration: 0.5 },
           enter: { duration: 0.5 },
         }}
+        style={{
+          height: "100%",
+          width: "100%",
+        }}
       >
-        {pathname?.startsWith("/me") && <MeSidebar />}
-      </SlideFade>
-      <SlideFade in={isOpen} offsetX="-16rem">
-        <LinkBox
-          _hover={{
-            textDecoration: "none",
-            color: "accent",
-            appearance: "none",
-          }}
+        <Flex
+          flexDirection={"column"}
+          justifyContent={"space-between"}
+          height={"100%"}
         >
-          <Box id="settings" fontSize={28}>
-            <SettingsIcon marginRight={4} />
-            <LinkOverlay
-              as={NextLink}
-              href="/me/settings"
-              display={"inline-flex"}
-              verticalAlign={"text-top"}
-            >
-              Settings
-            </LinkOverlay>
-          </Box>
-        </LinkBox>
+          {pathname?.startsWith("/me") && <MeSidebar />}
+          {pathname?.startsWith("/editor") && <EditorSidebarContent />}
+          <LinkBox
+            width="fit-content"
+            _hover={{
+              textDecoration: "none",
+              color: "accent",
+              appearance: "none",
+              cursor: "pointer",
+            }}
+          >
+            <Box id="settings" width={"fit-content"} pl={6} fontSize={28}>
+              <SettingsIcon marginRight={4} />
+              <LinkOverlay
+                as={NextLink}
+                href="/me/settings"
+                display={"inline-flex"}
+                verticalAlign={"text-top"}
+              >
+                Settings
+              </LinkOverlay>
+            </Box>
+          </LinkBox>
+        </Flex>
       </SlideFade>
     </Flex>
   );

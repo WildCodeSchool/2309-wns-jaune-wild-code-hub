@@ -16,10 +16,10 @@ const FileInfo: React.FC<FileInfoProps> = ({
   onClick,
 }) => {
   //  V1 close file
-  // const handleCloseClick = (event: React.MouseEvent) => {
-  //   event.stopPropagation();
-  //     onClose();
-  // };
+  const handleCloseClick = (event: React.MouseEvent) => {
+    event.stopPropagation();
+    onClose();
+  };
 
   return (
     <Box
@@ -36,11 +36,7 @@ const FileInfo: React.FC<FileInfoProps> = ({
     >
       {fileName}
       {/* V1 close file */}
-      {/* <CloseIcon
-        width="10px"
-        cursor="pointer"
-        // onClick={handleCloseClick}
-      /> */}
+      <CloseIcon width="10px" cursor="pointer" onClick={handleCloseClick} />
     </Box>
   );
 };
