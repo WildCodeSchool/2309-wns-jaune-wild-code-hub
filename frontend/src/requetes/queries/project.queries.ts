@@ -85,21 +85,29 @@ export const LIKED_PROJECTS = gql`
 
 export const LIST_PUBLIC_PROJECTS = gql`
   query ListPublicProjects($limit: Int!, $offset: Int!) {
-  listPublicProjects(limit: $limit, offset: $offset) {
-    projects {
+    listPublicProjects(limit: $limit, offset: $offset) {
+      projects {
+        id
+        name
+        category
+        private
+        created_at
+        update_at
+      }
+      total
+      offset
+      limit
+      }
+  }
+`;
+ 
+export const LIST_PUBLIC_PROJECTS_BY_NAME = gql`
+  query listPublicProjectsByName($name: String!) {
+    listPublicProjectsByName(name: $name) {
       id
-      name
-      category
-      private
-      created_at
-      update_at
-    }
-    total
-    offset
-    limit
+      name      
     }
   }
 `;
 
 
- 
