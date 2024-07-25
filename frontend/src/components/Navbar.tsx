@@ -29,7 +29,7 @@ const Navbar = () => {
 
   const handleSearchResults = (results: Project[]) => {
     setProjects(results);
-  };
+  };  
 
   return (
     <>
