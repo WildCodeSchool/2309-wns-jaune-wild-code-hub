@@ -9,11 +9,9 @@ type GridProps = {
 export const ProjectsGrid = ({ projects }: GridProps) => {
   return (
     <Grid
-      width={{ base: "90%", md: "55%" }}
       templateColumns={{ base: "repeat(1, 1fr)", md: "repeat(4, minmax(50px, 1fr))" }}
       gap={6}
       overflowY={"auto"}
-      height={"53cqh"}
       paddingBottom={{ base: "3rem", md: "0" }}
       css={{
         "&::-webkit-scrollbar": {
@@ -50,4 +48,3 @@ export const ProjectsGrid = ({ projects }: GridProps) => {
     </Grid>
   );
 };
-
