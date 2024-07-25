@@ -73,6 +73,202 @@ export type MutationUpdateUserArgs = {
   data: UpdateUserInput;
 };
 
+//Reset Password
+export type InputChangePassword = {
+  password: Scalars["String"]["input"];
+  token: Scalars["String"]["input"];
+};
+
+export type MutationChangePasswordArgs = {
+  data: InputChangePassword;
+};
+
+export type MutationResetPasswordArgs = {
+  email: Scalars["String"]["input"];
+};
+
+export type Reset = {
+  __typename?: "Reset";
+  expirationDate: Scalars["DateTimeISO"]["output"];
+  id: Scalars["String"]["output"];
+  resetToken: Scalars["String"]["output"];
+  user: User;
+};
+
+export type ResetPasswordMutationVariables = Exact<{
+  email: Scalars["String"]["input"];
+}>;
+
+export type ResetPasswordMutation = {
+  __typename?: "Mutation";
+  resetPassword: {
+    __typename?: "Reset";
+    expirationDate: any;
+    id: string;
+    resetToken: string;
+  };
+};
+
+export type ChangePasswordMutationVariables = Exact<{
+  data: InputChangePassword;
+}>;
+
+export type ChangePasswordMutation = {
+  __typename?: "Mutation";
+  changePassword: { __typename?: "Message"; message: string; success: boolean };
+};
+
+export type CheckResetTokenQueryVariables = Exact<{
+  token: Scalars["String"]["input"];
+}>;
+
+export type CheckResetTokenQuery = {
+  __typename?: "Query";
+  checkResetToken: {
+    __typename?: "Message";
+    message: string;
+    success: boolean;
+  };
+};
+
+export const ResetPasswordDocument = gql`
+  mutation ResetPassword($email: String!) {
+    resetPassword(email: $email) {
+      expirationDate
+      id
+      resetToken
+    }
+  }
+`;
+
+export type ResetPasswordMutationFn = Apollo.MutationFunction<
+  ResetPasswordMutation,
+  ResetPasswordMutationVariables
+>;
+
+export function useResetPasswordMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    ResetPasswordMutation,
+    ResetPasswordMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    ResetPasswordMutation,
+    ResetPasswordMutationVariables
+  >(ResetPasswordDocument, options);
+}
+
+export type ResetPasswordMutationHookResult = ReturnType<
+  typeof useResetPasswordMutation
+>;
+
+export type ResetPasswordMutationResult =
+  Apollo.MutationResult<ResetPasswordMutation>;
+export type ResetPasswordMutationOptions = Apollo.BaseMutationOptions<
+  ResetPasswordMutation,
+  ResetPasswordMutationVariables
+>;
+
+export const ChangePasswordDocument = gql`
+  mutation ChangePassword($data: InputChangePassword!) {
+    changePassword(data: $data) {
+      message
+      success
+    }
+  }
+`;
+
+export type ChangePasswordMutationFn = Apollo.MutationFunction<
+  ChangePasswordMutation,
+  ChangePasswordMutationVariables
+>;
+
+export function useChangePasswordMutation(
+  baseOptions: Apollo.MutationHookOptions<
+    ChangePasswordMutation,
+    ChangePasswordMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    ChangePasswordMutation,
+    ChangePasswordMutationVariables
+  >(ChangePasswordDocument, options);
+}
+
+export type ChangePasswordMutationHookResult = ReturnType<
+  typeof useChangePasswordMutation
+>;
+export type ChangePasswordMutationResult =
+  Apollo.MutationResult<ChangePasswordMutation>;
+export type ChangePasswordMutationOptions = Apollo.BaseMutationOptions<
+  ChangePasswordMutation,
+  ChangePasswordMutationVariables
+>;
+
+export const CheckResetTokenDocument = gql`
+  query CheckResetToken($token: String) {
+    checkResetToken(token: $token) {
+      message
+      success
+    }
+  }
+`;
+
+export function useCheckResetTokenQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    CheckResetTokenQuery,
+    CheckResetTokenQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<CheckResetTokenQuery, CheckResetTokenQueryVariables>(
+    CheckResetTokenDocument,
+    options
+  );
+}
+
+export function useCheckResetTokenLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    CheckResetTokenQuery,
+    CheckResetTokenQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    CheckResetTokenQuery,
+    CheckResetTokenQueryVariables
+  >(CheckResetTokenDocument, options);
+}
+
+export function useCheckResetTokenSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    CheckResetTokenQuery,
+    CheckResetTokenQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<
+    CheckResetTokenQuery,
+    CheckResetTokenQueryVariables
+  >(CheckResetTokenDocument, options);
+}
+
+export type CheckResetTokenHookResult = ReturnType<
+  typeof useCheckResetTokenQuery
+>;
+export type useCheckResetTokenLazyQueryHookResult = ReturnType<
+  typeof useCheckResetTokenLazyQuery
+>;
+export type useCheckResetTokenSuspenseQueryHookResult = ReturnType<
+  typeof useCheckResetTokenSuspenseQuery
+>;
+export type useCheckResetTokenQueryResult = Apollo.QueryResult<
+  CheckResetTokenQuery,
+  CheckResetTokenQueryVariables
+>;
+
 export type Project = {
   __typename?: "Project";
   category: Scalars["String"]["output"];
@@ -302,17 +498,17 @@ export const LogoutDocument = gql`
   }
 `;
 
-export interface RequestPasswordResetMutation {
-  requestPasswordReset: {
-    success: boolean;
-    message: string;
-  };
-}
+// export interface RequestPasswordResetMutation {
+//   requestPasswordReset: {
+//     success: boolean;
+//     message: string;
+//   };
+// }
 
-// Type for the RequestPasswordReset mutation variables
-export interface RequestPasswordResetMutationVariables {
-  email: string;
-}
+// // Type for the RequestPasswordReset mutation variables
+// export interface RequestPasswordResetMutationVariables {
+//   email: string;
+// }
 
 /**
  * __useLogoutQuery__

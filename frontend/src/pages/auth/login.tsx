@@ -14,7 +14,7 @@ import {
   Link,
 } from "@chakra-ui/react";
 import components from "@/styles/theme/components";
-import { LOGIN, REQUEST_PASSWORD_RESET } from "@/requetes/queries/auth.queries";
+import { LOGIN, CHECK_RESET_TOKEN } from "@/requetes/queries/auth.queries";
 import { InputLogin, LoginQuery, LoginQueryVariables } from "@/types/graphql";
 import { useLazyQuery } from "@apollo/client";
 // import { checkRegex, emailRegex, pseudoRegex } from "@/regex";
@@ -36,9 +36,6 @@ const Login = ({ isConnected }: { isConnected: boolean }) => {
       },
     }
   );
-  const [resetPassword, setResetPassword] = useState<boolean>(false);
-
-  const sendResetPassword = async () => {};
 
   const [success, setSuccess] = useState<boolean>(false);
 
@@ -172,46 +169,21 @@ const Login = ({ isConnected }: { isConnected: boolean }) => {
                 </InputGroup>
                 <FormErrorMessage>{errors.password}</FormErrorMessage>
               </FormControl>
-              {resetPassword && (
-                <div className="grid gap-4">
-                  <div className="grid">
-                    <label> Email</label>
-                    <input
-                      type="text"
-                      name="email"
-                      value={FormData?.emailOrPseudo}
-                      onChange={handleInputChange}
-                    />
-                  </div>
-                  <div>
-                    <Text>
-                      Success ! Check your email to reset your password.
-                    </Text>
-                  </div>
-                  <div>
-                    <button
-                      className=" px-4 py-2 rounded cursor-pointer"
-                      color="primary"
-                      onClick={sendResetPassword}
-                    >
-                      Reset my password
-                    </button>
-                  </div>
+
+              <div className="grid gap-4">
+                <div>
+                  <button
+                    className=" px-4 py-2 rounded cursor-pointer"
+                    color="primary"
+                  >
+                    Reset my password
+                  </button>
                 </div>
-              )}
+              </div>
 
               <Box textAlign="center">
                 <Box mt={5}>
-                  <Link href="/auth/forgetpassword">
-                    <Text
-                      onClick={() => setResetPassword(!resetPassword)}
-                      fontSize="xs"
-                      color="primary"
-                      as="b"
-                    >
-                      {resetPassword ? "Login" : "Forget password ?"}
-                    </Text>
-                  </Link>
+                  <Link href="/auth/forgetpassword"></Link>
                 </Box>
                 <Box mt={5}>
                   <Text fontSize="xs" color="grey" as="b">

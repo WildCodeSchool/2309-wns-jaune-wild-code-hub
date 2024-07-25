@@ -24,9 +24,9 @@ export const CHECK_AUTH = gql`
   }
 `;
 
-export const REQUEST_PASSWORD_RESET = gql`
-  mutation RequestPasswordReset($email: String!) {
-    requestPasswordReset(email: $email) {
+export const CHECK_RESET_TOKEN = gql`
+  query CheckResetToken($token: String!) {
+    checkResetToken(token: $token) {
       success
       message
     }
