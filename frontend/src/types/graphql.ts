@@ -1,80 +1,90 @@
-import { gql } from '@apollo/client';
-import * as Apollo from '@apollo/client';
+import { gql } from "@apollo/client";
+import * as Apollo from "@apollo/client";
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
-export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
-export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+export type Exact<T extends { [key: string]: unknown }> = {
+  [K in keyof T]: T[K];
+};
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
+  [SubKey in K]?: Maybe<T[SubKey]>;
+};
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
+  [SubKey in K]: Maybe<T[SubKey]>;
+};
+export type MakeEmpty<
+  T extends { [key: string]: unknown },
+  K extends keyof T
+> = { [_ in K]?: never };
+export type Incremental<T> =
+  | T
+  | {
+      [P in keyof T]?: P extends " $fragmentName" | "__typename" ? T[P] : never;
+    };
 const defaultOptions = {} as const;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: { input: string; output: string; }
-  String: { input: string; output: string; }
-  Boolean: { input: boolean; output: boolean; }
-  Int: { input: number; output: number; }
-  Float: { input: number; output: number; }
-  DateTimeISO: { input: any; output: any; }
+  ID: { input: string; output: string };
+  String: { input: string; output: string };
+  Boolean: { input: boolean; output: boolean };
+  Int: { input: number; output: number };
+  Float: { input: number; output: number };
+  DateTimeISO: { input: any; output: any };
 };
 
 export type CreateUserInput = {
-  ban: Scalars['Boolean']['input'];
-  email: Scalars['String']['input'];
-  firstname: Scalars['String']['input'];
-  lastname: Scalars['String']['input'];
-  password: Scalars['String']['input'];
-  pseudo: Scalars['String']['input'];
-  role?: InputMaybe<Scalars['String']['input']>;
-  run_counter: Scalars['Float']['input'];
+  ban: Scalars["Boolean"]["input"];
+  email: Scalars["String"]["input"];
+  firstname: Scalars["String"]["input"];
+  lastname: Scalars["String"]["input"];
+  password: Scalars["String"]["input"];
+  pseudo: Scalars["String"]["input"];
+  role?: InputMaybe<Scalars["String"]["input"]>;
+  run_counter: Scalars["Float"]["input"];
 };
 
 export type InputLogin = {
-  email?: InputMaybe<Scalars['String']['input']>;
-  password: Scalars['String']['input'];
-  pseudo?: InputMaybe<Scalars['String']['input']>;
+  email?: InputMaybe<Scalars["String"]["input"]>;
+  password: Scalars["String"]["input"];
+  pseudo?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type Message = {
-  __typename?: 'Message';
-  message: Scalars['String']['output'];
-  success: Scalars['Boolean']['output'];
+  __typename?: "Message";
+  message: Scalars["String"]["output"];
+  success: Scalars["Boolean"]["output"];
 };
 
 export type Mutation = {
-  __typename?: 'Mutation';
+  __typename?: "Mutation";
   deleteUser: Message;
   register: User;
   updateUser: Message;
 };
 
-
 export type MutationDeleteUserArgs = {
-  id: Scalars['Float']['input'];
+  id: Scalars["Float"]["input"];
 };
-
 
 export type MutationRegisterArgs = {
   data: CreateUserInput;
 };
-
 
 export type MutationUpdateUserArgs = {
   data: UpdateUserInput;
 };
 
 export type Project = {
-  __typename?: 'Project';
-  category: Scalars['String']['output'];
-  created_at: Scalars['DateTimeISO']['output'];
-  id: Scalars['ID']['output'];
-  name: Scalars['String']['output'];
-  private: Scalars['Boolean']['output'];
-  update_at: Scalars['DateTimeISO']['output'];
+  __typename?: "Project";
+  category: Scalars["String"]["output"];
+  created_at: Scalars["DateTimeISO"]["output"];
+  id: Scalars["ID"]["output"];
+  name: Scalars["String"]["output"];
+  private: Scalars["Boolean"]["output"];
+  update_at: Scalars["DateTimeISO"]["output"];
 };
 
 export type Query = {
-  __typename?: 'Query';
+  __typename?: "Query";
   ListProjects: Array<Project>;
   findUserByEmail: User;
   findUserById: User;
@@ -85,94 +95,107 @@ export type Query = {
   logout: Message;
 };
 
-
 export type QueryFindUserByEmailArgs = {
-  email: Scalars['String']['input'];
+  email: Scalars["String"]["input"];
 };
-
 
 export type QueryFindUserByIdArgs = {
-  id: Scalars['String']['input'];
+  id: Scalars["String"]["input"];
 };
-
 
 export type QueryFindUserByPseudoArgs = {
-  pseudo: Scalars['String']['input'];
+  pseudo: Scalars["String"]["input"];
 };
-
 
 export type QueryListUsersByRoleArgs = {
-  role: Scalars['String']['input'];
+  role: Scalars["String"]["input"];
 };
-
 
 export type QueryLoginArgs = {
   infos: InputLogin;
 };
 
 export type UpdateUserInput = {
-  ban?: InputMaybe<Scalars['Boolean']['input']>;
-  email?: InputMaybe<Scalars['String']['input']>;
-  firstname?: InputMaybe<Scalars['String']['input']>;
-  id: Scalars['ID']['input'];
-  lastname?: InputMaybe<Scalars['String']['input']>;
-  password?: InputMaybe<Scalars['String']['input']>;
-  pseudo?: InputMaybe<Scalars['String']['input']>;
-  role?: InputMaybe<Scalars['String']['input']>;
-  run_counter?: InputMaybe<Scalars['Float']['input']>;
+  ban?: InputMaybe<Scalars["Boolean"]["input"]>;
+  email?: InputMaybe<Scalars["String"]["input"]>;
+  firstname?: InputMaybe<Scalars["String"]["input"]>;
+  id: Scalars["ID"]["input"];
+  lastname?: InputMaybe<Scalars["String"]["input"]>;
+  password?: InputMaybe<Scalars["String"]["input"]>;
+  pseudo?: InputMaybe<Scalars["String"]["input"]>;
+  role?: InputMaybe<Scalars["String"]["input"]>;
+  run_counter?: InputMaybe<Scalars["Float"]["input"]>;
 };
 
 export type User = {
-  __typename?: 'User';
-  ban: Scalars['Boolean']['output'];
-  created_at: Scalars['DateTimeISO']['output'];
-  email: Scalars['String']['output'];
-  firstname: Scalars['String']['output'];
-  id: Scalars['ID']['output'];
-  last_login: Scalars['DateTimeISO']['output'];
-  lastname: Scalars['String']['output'];
-  password: Scalars['String']['output'];
-  pseudo: Scalars['String']['output'];
-  role: Scalars['String']['output'];
-  run_counter: Scalars['Float']['output'];
-  update_at: Scalars['DateTimeISO']['output'];
+  __typename?: "User";
+  ban: Scalars["Boolean"]["output"];
+  created_at: Scalars["DateTimeISO"]["output"];
+  email: Scalars["String"]["output"];
+  firstname: Scalars["String"]["output"];
+  id: Scalars["ID"]["output"];
+  last_login: Scalars["DateTimeISO"]["output"];
+  lastname: Scalars["String"]["output"];
+  password: Scalars["String"]["output"];
+  pseudo: Scalars["String"]["output"];
+  role: Scalars["String"]["output"];
+  run_counter: Scalars["Float"]["output"];
+  update_at: Scalars["DateTimeISO"]["output"];
 };
 
 export type RegisterMutationVariables = Exact<{
   data: CreateUserInput;
 }>;
 
-
-export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'User', pseudo: string, run_counter: number, role: string, password: string, lastname: string, firstname: string, email: string, ban: boolean } };
+export type RegisterMutation = {
+  __typename?: "Mutation";
+  register: {
+    __typename?: "User";
+    pseudo: string;
+    run_counter: number;
+    role: string;
+    password: string;
+    lastname: string;
+    firstname: string;
+    email: string;
+    ban: boolean;
+  };
+};
 
 export type LoginQueryVariables = Exact<{
   infos: InputLogin;
 }>;
 
+export type LoginQuery = {
+  __typename?: "Query";
+  login: { __typename?: "Message"; success: boolean; message: string };
+};
 
-export type LoginQuery = { __typename?: 'Query', login: { __typename?: 'Message', success: boolean, message: string } };
+export type LogoutQueryVariables = Exact<{ [key: string]: never }>;
 
-export type LogoutQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type LogoutQuery = { __typename?: 'Query', logout: { __typename?: 'Message', success: boolean, message: string } };
-
+export type LogoutQuery = {
+  __typename?: "Query";
+  logout: { __typename?: "Message"; success: boolean; message: string };
+};
 
 export const RegisterDocument = gql`
-    mutation Register($data: CreateUserInput!) {
-  register(data: $data) {
-    pseudo
-    run_counter
-    role
-    password
-    lastname
-    firstname
-    email
-    ban
+  mutation Register($data: CreateUserInput!) {
+    register(data: $data) {
+      pseudo
+      run_counter
+      role
+      password
+      lastname
+      firstname
+      email
+      ban
+    }
   }
-}
-    `;
-export type RegisterMutationFn = Apollo.MutationFunction<RegisterMutation, RegisterMutationVariables>;
+`;
+export type RegisterMutationFn = Apollo.MutationFunction<
+  RegisterMutation,
+  RegisterMutationVariables
+>;
 
 /**
  * __useRegisterMutation__
@@ -191,21 +214,32 @@ export type RegisterMutationFn = Apollo.MutationFunction<RegisterMutation, Regis
  *   },
  * });
  */
-export function useRegisterMutation(baseOptions?: Apollo.MutationHookOptions<RegisterMutation, RegisterMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<RegisterMutation, RegisterMutationVariables>(RegisterDocument, options);
-      }
+export function useRegisterMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    RegisterMutation,
+    RegisterMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<RegisterMutation, RegisterMutationVariables>(
+    RegisterDocument,
+    options
+  );
+}
 export type RegisterMutationHookResult = ReturnType<typeof useRegisterMutation>;
 export type RegisterMutationResult = Apollo.MutationResult<RegisterMutation>;
-export type RegisterMutationOptions = Apollo.BaseMutationOptions<RegisterMutation, RegisterMutationVariables>;
+export type RegisterMutationOptions = Apollo.BaseMutationOptions<
+  RegisterMutation,
+  RegisterMutationVariables
+>;
 export const LoginDocument = gql`
-    query Login($infos: InputLogin!) {
-  login(infos: $infos) {
-    success
-    message
+  query Login($infos: InputLogin!) {
+    login(infos: $infos) {
+      success
+      message
+    }
   }
-}
-    `;
+`;
 
 /**
  * __useLoginQuery__
@@ -223,30 +257,62 @@ export const LoginDocument = gql`
  *   },
  * });
  */
-export function useLoginQuery(baseOptions: Apollo.QueryHookOptions<LoginQuery, LoginQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<LoginQuery, LoginQueryVariables>(LoginDocument, options);
-      }
-export function useLoginLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<LoginQuery, LoginQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<LoginQuery, LoginQueryVariables>(LoginDocument, options);
-        }
-export function useLoginSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<LoginQuery, LoginQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<LoginQuery, LoginQueryVariables>(LoginDocument, options);
-        }
+export function useLoginQuery(
+  baseOptions: Apollo.QueryHookOptions<LoginQuery, LoginQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<LoginQuery, LoginQueryVariables>(
+    LoginDocument,
+    options
+  );
+}
+export function useLoginLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<LoginQuery, LoginQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<LoginQuery, LoginQueryVariables>(
+    LoginDocument,
+    options
+  );
+}
+export function useLoginSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<LoginQuery, LoginQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<LoginQuery, LoginQueryVariables>(
+    LoginDocument,
+    options
+  );
+}
 export type LoginQueryHookResult = ReturnType<typeof useLoginQuery>;
 export type LoginLazyQueryHookResult = ReturnType<typeof useLoginLazyQuery>;
-export type LoginSuspenseQueryHookResult = ReturnType<typeof useLoginSuspenseQuery>;
-export type LoginQueryResult = Apollo.QueryResult<LoginQuery, LoginQueryVariables>;
+export type LoginSuspenseQueryHookResult = ReturnType<
+  typeof useLoginSuspenseQuery
+>;
+export type LoginQueryResult = Apollo.QueryResult<
+  LoginQuery,
+  LoginQueryVariables
+>;
 export const LogoutDocument = gql`
-    query Logout {
-  logout {
-    success
-    message
+  query Logout {
+    logout {
+      success
+      message
+    }
   }
+`;
+
+export interface RequestPasswordResetMutation {
+  requestPasswordReset: {
+    success: boolean;
+    message: string;
+  };
 }
-    `;
+
+// Type for the RequestPasswordReset mutation variables
+export interface RequestPasswordResetMutationVariables {
+  email: string;
+}
 
 /**
  * __useLogoutQuery__
@@ -263,19 +329,42 @@ export const LogoutDocument = gql`
  *   },
  * });
  */
-export function useLogoutQuery(baseOptions?: Apollo.QueryHookOptions<LogoutQuery, LogoutQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<LogoutQuery, LogoutQueryVariables>(LogoutDocument, options);
-      }
-export function useLogoutLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<LogoutQuery, LogoutQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<LogoutQuery, LogoutQueryVariables>(LogoutDocument, options);
-        }
-export function useLogoutSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<LogoutQuery, LogoutQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<LogoutQuery, LogoutQueryVariables>(LogoutDocument, options);
-        }
+export function useLogoutQuery(
+  baseOptions?: Apollo.QueryHookOptions<LogoutQuery, LogoutQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<LogoutQuery, LogoutQueryVariables>(
+    LogoutDocument,
+    options
+  );
+}
+export function useLogoutLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<LogoutQuery, LogoutQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<LogoutQuery, LogoutQueryVariables>(
+    LogoutDocument,
+    options
+  );
+}
+export function useLogoutSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    LogoutQuery,
+    LogoutQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<LogoutQuery, LogoutQueryVariables>(
+    LogoutDocument,
+    options
+  );
+}
 export type LogoutQueryHookResult = ReturnType<typeof useLogoutQuery>;
 export type LogoutLazyQueryHookResult = ReturnType<typeof useLogoutLazyQuery>;
-export type LogoutSuspenseQueryHookResult = ReturnType<typeof useLogoutSuspenseQuery>;
-export type LogoutQueryResult = Apollo.QueryResult<LogoutQuery, LogoutQueryVariables>;
+export type LogoutSuspenseQueryHookResult = ReturnType<
+  typeof useLogoutSuspenseQuery
+>;
+export type LogoutQueryResult = Apollo.QueryResult<
+  LogoutQuery,
+  LogoutQueryVariables
+>;

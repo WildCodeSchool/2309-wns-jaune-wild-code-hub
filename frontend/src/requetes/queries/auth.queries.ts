@@ -23,3 +23,12 @@ export const CHECK_AUTH = gql`
     isAuthenticated
   }
 `;
+
+export const REQUEST_PASSWORD_RESET = gql`
+  mutation RequestPasswordReset($email: String!) {
+    requestPasswordReset(email: $email) {
+      success
+      message
+    }
+  }
+`;
