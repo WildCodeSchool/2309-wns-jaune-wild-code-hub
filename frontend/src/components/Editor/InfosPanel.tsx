@@ -78,7 +78,9 @@ const InfosPanel = ({ project, setOpenFiles }: InfosPanelProps) => {
       const newFile = files.find((file) => +file.id === fileId);
       newFile &&
         setOpenFiles((prevState) => {
-          return [...prevState, newFile];
+          if (prevState.find((file) => file.id === newFile.id))
+            return prevState;
+          else return [...prevState, newFile];
         });
     }
   };
