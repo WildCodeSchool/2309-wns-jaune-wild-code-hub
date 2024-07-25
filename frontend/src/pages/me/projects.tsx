@@ -29,11 +29,17 @@ const Projects: NextPageWithLayout = () => {
         },
         onCompleted(data) {
           setProjects(
-            data.listProjectsByUserWithRole.map((item) => item.project)
-          );
-        },
-      });
-    }
+            data.listProjectsByUserWithRole.map((item) => ({
+              ...item.project,
+              files: item.project.files || [], // Ajouter les fichiers si non présents
+            }))
+          // setProjects(
+          //   data.listProjectsByUserWithRole.map((item) => item.project)
+          // );
+        );
+      },
+    });
+  }
   }, [userId, getProjects, data]);
   return (
     <ProfilePageContainer>

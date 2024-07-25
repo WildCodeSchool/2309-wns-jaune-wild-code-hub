@@ -30,7 +30,11 @@ const SharedWithMe: NextPageWithLayout = () => {
       });
       data?.listProjectsByUserWithRole &&
         setProjects(
-          data?.listProjectsByUserWithRole.map((item) => item.project)
+          // data?.listProjectsByUserWithRole.map((item) => item.project)
+          data.listProjectsByUserWithRole.map((item) => ({
+            ...item.project,
+            files: item.project.files || [],
+          }))
         );
     }
   }, [userId, getProjects, data]);
