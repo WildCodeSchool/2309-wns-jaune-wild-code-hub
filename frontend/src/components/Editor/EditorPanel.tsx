@@ -80,7 +80,7 @@ const EditorPanel = ({
         <Flex
           ref={fileBarRef}
           height={"100%"}
-          overflowX={"scroll"}
+          overflowX={"auto"}
           overflowY={"hidden"}
           width={"100%"}
           sx={{
