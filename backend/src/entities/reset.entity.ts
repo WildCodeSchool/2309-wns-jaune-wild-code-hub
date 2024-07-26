@@ -24,10 +24,10 @@ export default class Reset {
     const mailer = new Mailer(
       undefined,
       this.user.email,
-      "Réinitialisation de mot de passe",
+      "Reset du password",
       process.env.SENDGRID_TEMPLATE_RESET!,
       {
-        resetLink: `${process.env.FRONT_LINK!}/auth/reset/${this.resetToken}`,
+        resetLink: `${process.env.FRONT_LINK!}/auth/Reset/${this.resetToken}`,
       }
     );
     await mailer.send();
@@ -47,6 +47,6 @@ export default class Reset {
   user: User;
 
   @Field()
-  @Column({ type: "datetime" })
+  @Column("timestamp")
   expirationDate: Date;
 }

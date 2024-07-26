@@ -8,6 +8,7 @@ import {
   ManyToMany,
   UpdateDateColumn,
   OneToMany,
+  AfterInsert,
 } from "typeorm";
 import { Length } from "class-validator";
 import { Field, ID, InputType, ObjectType } from "type-graphql";
@@ -15,6 +16,7 @@ import * as argon2 from "argon2";
 import { Project } from "./project.entity";
 import { UsersProjectsAccesses } from "./userProjectAccesses.entity";
 export type ROLE = "ADMIN" | "USER";
+import Mailer from "../lib/mailer";
 
 @ObjectType()
 @Entity()
@@ -22,6 +24,19 @@ export class User {
   @BeforeInsert()
   protected async hashPassword() {
     this.password = await argon2.hash(this.password);
+  }
+  @AfterInsert()
+  protected async afterRegister() {
+    const mailer = new Mailer(
+      undefined,
+      this.email,
+      "Bienvenue",
+      process.env.SENDGRID_TEMPLATE_REGISTER!,
+      {
+        email: this.email,
+      }
+    );
+    await mailer.send();
   }
 
   @Field(() => ID)

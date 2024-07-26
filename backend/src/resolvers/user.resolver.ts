@@ -24,6 +24,7 @@ import Cookies from "cookies";
 import { Project } from "../entities/project.entity";
 import { CreateUserProjectAccessesInput } from "../entities/userProjectAccesses.entity";
 import Reset from "../entities/reset.entity";
+
 @Resolver()
 export class UserResolver {
   @Authorized(["ADMIN"])
@@ -151,7 +152,11 @@ export class UserResolver {
 
   @Mutation(() => Reset)
   async resetPassword(@Arg("email") email: string) {
-    //générer un token
+    console.log("👉🏻👉🏻", email);
+    const user = await new UsersService().findByEmail(email);
+    if (!user) {
+      throw new Error("No user found with this email");
+    }
     const resetToken = await new UsersService().createResetToken(email);
     return resetToken;
   }

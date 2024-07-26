@@ -89,9 +89,10 @@ export default class UsersService {
       throw new Error("Ce user n'existe pas");
     }
     let resetToken = await this.dbReset.findOne({
-      where: { user },
+      where: { user: { id: user.id } },
       relations: { user: true },
     });
+
     if (!resetToken) {
       resetToken = this.dbReset.create({ user });
     }
@@ -100,7 +101,8 @@ export default class UsersService {
     resetToken.expirationDate = new Date(date.getTime());
     resetToken.resetToken = uuid();
     const newResetToken = this.dbReset.create(resetToken);
-    return await this.dbReset.save(newResetToken);
+    const newTokenInstance = await this.dbReset.save(newResetToken);
+    return newTokenInstance;
   }
 
   async findResetToken(token: string) {
