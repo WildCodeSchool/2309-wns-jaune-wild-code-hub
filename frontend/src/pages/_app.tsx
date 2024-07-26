@@ -40,7 +40,7 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
         <Navbar />
         <ToastProvider />
         {getLayout(<Component {...pageProps} />)}
-        {/* <Footer /> */}
+        <Footer />
       </ChakraProvider>
     </ApolloProvider>
   );

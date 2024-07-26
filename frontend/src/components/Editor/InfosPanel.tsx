@@ -1,4 +1,4 @@
-import { File as EditorFile } from "@/types/editor";
+import { File as EditorFile, File } from "@/types/editor";
 import {
   Project,
   useListUsersLikesPerProjectLazyQuery,
@@ -12,16 +12,18 @@ import {
   AccordionPanel,
   Avatar,
   AvatarGroup,
+  Badge,
   Box,
+  Divider,
   Flex,
   Heading,
-  IconButton,
-  Text,
+  Stack,
+  Text
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import FileItemList from "../FileItemList";
-import { File } from "@/types/editor";
+
 type InfosPanelProps = {
   project: Project | null;
   setOpenFiles: React.Dispatch<React.SetStateAction<EditorFile[]>>;
@@ -30,6 +32,17 @@ type InfosPanelProps = {
 };
 const InfosPanel = ({ project, setOpenFiles, setCode, setFile }: InfosPanelProps) => {
   const router = useRouter();
+  const [maxAvatar, setMaxAvatar] = useState(9);
+  const [owner, setOwner] = useState<
+    | {
+        __typename?: "User";
+        pseudo: string;
+        id: string;
+      }
+    | null
+    | undefined
+  >(null);
+
   const [contributors, setContributors] = useState<Array<{
     __typename?: "FindAllInfoUserAccessesProject";
     role: string;
@@ -56,7 +69,13 @@ const InfosPanel = ({ project, setOpenFiles, setCode, setFile }: InfosPanelProps
           projectId: +project.id,
         },
         onCompleted(data) {
-          setContributors(data.listUsersAccessesProject);
+          setContributors(
+            data.listUsersAccessesProject.filter((user) => user.role != "OWNER")
+          );
+          setOwner(
+            data.listUsersAccessesProject.find((user) => user.role === "OWNER")
+              ?.user
+          );
         },
       });
       getSupporters({
@@ -95,29 +114,36 @@ const InfosPanel = ({ project, setOpenFiles, setCode, setFile }: InfosPanelProps
         </Heading>
       </Flex>
 
-      <Accordion allowToggle>
-        <AccordionItem>
-          <h2>
-            <AccordionButton>
-              <Box as="span" flex="1" textAlign="left">
-                Files
-              </Box>
-              <AccordionIcon />
-            </AccordionButton>
-          </h2>
-          <AccordionPanel pb={4}>
-            <Flex flexDirection={"column"}>
-              {project?.files
-                ? project.files.map((file) => (
-                    <FileItemList
-                      key={file.id}
-                      file={file}
-                      openFiles={handleOpenFiles}
-                    />
-                  ))
-                : "There will be files here in the near futur"}
-            </Flex>
-          </AccordionPanel>
+      <Accordion allowMultiple defaultIndex={[0]}>
+        <AccordionItem position={"relative"}>
+          {({ isExpanded }) => {
+            return (
+              <>
+                <h2>
+                  <AccordionButton as="div">
+                    <Box as="span" flex="1" textAlign="left">
+                      Files
+                    </Box>
+
+                    <AccordionIcon />
+                  </AccordionButton>
+                </h2>
+                <AccordionPanel pb={4}>
+                  <Flex flexDirection={"column"}>
+                    {project?.files
+                      ? project.files.map((file) => (
+                          <FileItemList
+                            key={file.id}
+                            file={file}
+                            openFiles={handleOpenFiles}
+                          />
+                        ))
+                      : "There will be files here in the near futur"}
+                  </Flex>
+                </AccordionPanel>
+              </>
+            );
+          }}
         </AccordionItem>
         <AccordionItem>
           <h2>
@@ -129,41 +155,55 @@ const InfosPanel = ({ project, setOpenFiles, setCode, setFile }: InfosPanelProps
             </AccordionButton>
           </h2>
           <AccordionPanel pb={4}>
-            <Flex flexDirection={"column"}>
-              <Box width={"100%"}>
-                <Text>Creator : </Text>
-                <AvatarGroup spacing={1} flexWrap={"wrap"} size={"sm"}>
-                  {contributors?.map((contributor) => {
-                    const { user } = contributor;
-                    if (contributor.role === "OWNER")
-                      return (
-                        <IconButton
-                          aria-label="See user profile"
-                          onClick={() => router.push(`user/${user?.id}`)}
-                          icon={
-                            <Avatar
-                              key={user?.id}
-                              name={user?.pseudo}
-                              onClick={() => router.push(`/user/${user?.id}`)}
-                              title={`See ${user?.pseudo} profile`}
-                              _hover={{
-                                cursor: "pointer",
-                              }}
-                            />
-                          }
-                        />
-                      );
-                  })}
-                </AvatarGroup>
+            <Flex flexDirection={"column"} gap={2}>
+              <Flex
+                width={"100%"}
+                alignItems={"center"}
+                flexDirection={"column"}
+                gap={2}
+                pb={2}
+              >
+                {owner && (
+                  <Avatar
+                    size={"md"}
+                    key={owner?.id}
+                    name={owner?.pseudo}
+                    onClick={() => router.push(`/user/${owner?.id}`)}
+                    title={`See ${owner?.pseudo} profile`}
+                    _hover={{
+                      cursor: "pointer",
+                    }}
+                  />
+                )}
+              </Flex>
+              <Divider orientation="horizontal" />
+              <Box>
+                Created :{" "}
+                {project?.created_at &&
+                  new Date(project.created_at).toLocaleDateString()}
               </Box>
-              <Box>Created : {project?.created_at}</Box>
-              <Box>Last Update : {project?.update_at} </Box>
+              <Divider orientation="horizontal" />
+              <Box>
+                Last Update :{" "}
+                {project?.update_at &&
+                  new Date(project.update_at).toLocaleDateString()}
+              </Box>
+              <Divider orientation="horizontal" />
               <Box width={"100%"}>
-                <Text>Contributors : </Text>
-                <AvatarGroup spacing={1} flexWrap={"wrap"} size={"sm"}>
-                  {contributors?.map((contributor) => {
-                    const { user } = contributor;
-                    if (contributor.role != "OWNER")
+                <Stack direction={"row"} alignItems={"center"}>
+                  <Text>Contributors : </Text>
+                  <Badge
+                    height={"fit-content"}
+                    bgColor="primary"
+                    color={"black"}
+                  >
+                    {contributors?.length || 0}
+                  </Badge>
+                </Stack>
+                <AvatarGroup spacing={1} flexWrap={"wrap"} size={"sm"} max={9}>
+                  {contributors && contributors.length > 0 ? (
+                    contributors?.map((contributor) => {
+                      const { user } = contributor;
                       return (
                         <Avatar
                           key={user?.id}
@@ -175,26 +215,48 @@ const InfosPanel = ({ project, setOpenFiles, setCode, setFile }: InfosPanelProps
                           }}
                         />
                       );
-                  })}
+                    })
+                  ) : (
+                    <Text>No contributors on this project</Text>
+                  )}
                 </AvatarGroup>
               </Box>
-
+              <Divider orientation="horizontal" />
               <Box width={"100%"}>
-                <Text>Likes : </Text>
+                <Stack direction={"row"} alignItems={"center"}>
+                  <Text>Likes : </Text>
+                  <Badge height={"fit-content"} bgColor="secondary">
+                    {supporters.length}
+                  </Badge>
+                </Stack>
                 <AvatarGroup spacing={1} flexWrap={"wrap"} size={"sm"}>
-                  {supporters?.map((user) => {
-                    return (
-                      <Avatar
-                        key={user?.id}
-                        name={user?.pseudo}
-                        title={`See ${user?.pseudo} profile`}
-                        _hover={{
-                          cursor: "pointer",
-                        }}
-                        onClick={() => router.push(`/user/${user.id}`)}
-                      />
-                    );
+                  {supporters?.map((user, index) => {
+                    if (index < maxAvatar) {
+                      return (
+                        <Avatar
+                          key={user?.id}
+                          name={user?.pseudo}
+                          title={`See ${user?.pseudo} profile`}
+                          _hover={{
+                            cursor: "pointer",
+                          }}
+                          onClick={() => router.push(`/user/${user.id}`)}
+                        />
+                      );
+                    }
                   })}
+                  {supporters.length > maxAvatar && (
+                    <Avatar
+                      title="Show all users"
+                      _hover={{
+                        cursor: "pointer",
+                      }}
+                      name={`+${supporters.length - maxAvatar}`}
+                      getInitials={(name) => name}
+                      backgroundColor={"grey"}
+                      onClick={() => setMaxAvatar(supporters.length)}
+                    />
+                  )}
                 </AvatarGroup>
               </Box>
             </Flex>
