@@ -216,59 +216,6 @@ const Editor: NextPageWithLayout = () => {
                 setFile={setFile}
                 file={file}
               />
-              {/* <Flex
-                height={"2.5rem"}
-                alignItems={"center"}
-                justifyContent={"space-between"}
-              >
-                <Flex
-                  ref={fileBarRef}
-                  height={"100%"}
-                  overflowX={"scroll"}
-                  overflowY={"hidden"}
-                  width={"100%"}
-                  sx={{
-                    "scrollbar-color": "#8A98A4 #363636",
-                    scrollbarWidth: "thin",
-                  }}
-                  onWheel={handleScroll}
-                >
-                  {openFiles &&
-                    openFiles.map((openFile) => (
-                      <FileInfo
-                        key={openFile.id}
-                        fileName={`${openFile.name}.${openFile.extension}`}
-                        onClose={() => handleFileClose(openFile.id)}
-                        isSelected={openFile.id === file?.id}
-                        onClick={() => setFile(openFile)}
-                      />
-                    ))}
-                </Flex>
-
-                <UpdateListFilesEditor
-                  data={data}
-                  project={project}
-                  expectedOrigin={expectedOrigin}
-                  listUserAuthorisationSave={listUserAuthorisationSave}
-                />
-              </Flex>
-              <Flex height={"100%"}>
-                {file ? (
-                  <FileEditor
-                    code={code}
-                    setCode={handleCodeChange}
-                    file={file}
-                    setData={setData}
-                    language={file.language}
-                  />
-                ) : (
-                  <Box p={4} width="100%" bg="background2">
-                    <Text color="white" textAlign="center">
-                      Select a file to edit its content.
-                    </Text>
-                  </Box>
-                )}
-              </Flex> */}
             </Panel>
             <PanelResizeHandle
               style={{
@@ -302,10 +249,5 @@ const Editor: NextPageWithLayout = () => {
     </Flex>
   );
 };
-
-// V1 Add list info
-// Editor.getLayout = function getLayout(page) {
-//   return <SidebarLayout>{page}</SidebarLayout>;
-// };
 
 export default Editor;
