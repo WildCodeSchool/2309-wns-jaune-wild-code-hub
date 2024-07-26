@@ -155,8 +155,6 @@ const Editor: NextPageWithLayout = () => {
       showAlert("error", projectById?.error?.message);
       router.push("/auth/login");
     } else {
-      // setOpenFiles(projectById?.data?.findProjectById?.files);
-      // setFile(projectById?.data?.findProjectById.files[0]);
       setData(projectById?.data?.findProjectById.files);
       setProject(projectById?.data?.findProjectById);
     }
@@ -182,46 +180,6 @@ const Editor: NextPageWithLayout = () => {
 
   const ref = useRef<ImperativePanelHandle>(null);
 
-  // useEffect(() => {
-  //   if (file) {
-  //     setCode(file.content);
-  //     setOpenFiles((prevOpenFiles) => {
-  //       if (!prevOpenFiles.find((f) => f.id === file.id)) {
-  //         return [...prevOpenFiles, file];
-  //       }
-  //       return prevOpenFiles;
-  //     });
-  //   }
-  // }, [file]);
-
-  // const handleCodeChange = (newCode: string): void => {
-  //   setCode(newCode);
-  //   setData((prevData) =>
-  //     prevData.map((f) => (f.id === file?.id ? { ...f, content: newCode } : f))
-  //   );
-  // };
-
-  // const handleFileClose = (fileId: number): void => {
-  //   setOpenFiles((prevOpenFiles) => {
-  //     const newOpenFiles = prevOpenFiles.filter((f) => f.id !== fileId);
-  //     if (newOpenFiles.length === 0) {
-  //       setFile(null);
-  //       setCode("");
-  //     } else if (file?.id === fileId) {
-  //       setFile(newOpenFiles[0]);
-  //       setCode(newOpenFiles[0].content);
-  //     }
-  //     return newOpenFiles;
-  //   });
-  // };
-
-  // const handleScroll = (event: React.WheelEvent<HTMLDivElement>) => {
-  //   const { deltaY } = event;
-  //   if (fileBarRef.current) {
-  //     fileBarRef.current.scrollLeft += deltaY;
-  //   }
-  // };
-
   return (
     <Flex
       id="editor-page"
@@ -235,51 +193,6 @@ const Editor: NextPageWithLayout = () => {
       <PanelGroup direction="horizontal">
         <Panel minSize={15}>
           <InfosPanel project={project} setOpenFiles={setOpenFiles} setCode={setCode} setFile={setFile} />
-          {/* <Flex height={"100%"} flexDirection={"column"}>
-            <Flex flexDirection={"column"} textAlign={"center"} gap={1}>
-              <Heading size={"lg"} textAlign={"center"}>
-                Project Name
-              </Heading>
-              <Text fontSize={"xs"}>by</Text>
-              <Heading size={"md"}>{}</Heading>
-            </Flex>
-
-            <Accordion allowToggle>
-              <AccordionItem>
-                <h2>
-                  <AccordionButton>
-                    <Box as="span" flex="1" textAlign="left">
-                      Infos
-                    </Box>
-                    <AccordionIcon />
-                  </AccordionButton>
-                </h2>
-                <AccordionPanel pb={4}>
-                  <Flex flexDirection={"column"}></Flex>
-                </AccordionPanel>
-              </AccordionItem>
-
-              <AccordionItem>
-                <h2>
-                  <AccordionButton>
-                    <Box as="span" flex="1" textAlign="left">
-                      Files
-                    </Box>
-                    <AccordionIcon />
-                  </AccordionButton>
-                </h2>
-                <AccordionPanel pb={4}>
-                  <Flex flexDirection={"column"}>
-                    {project?.files
-                      ? project.files.map((file) => (
-                          <FileItemList key={file.id} file={file} />
-                        ))
-                      : "There will be files here in the near futur"}
-                  </Flex>
-                </AccordionPanel>
-              </AccordionItem>
-            </Accordion>
-          </Flex> */}
         </Panel>
         <PanelResizeHandle
           style={{
