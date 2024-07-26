@@ -13,7 +13,7 @@ import { ProjectsGrid } from "@/components/ProjectsGrid";
 import { NextPageWithLayout } from "../_app";
 
 const Projects: NextPageWithLayout = () => {
-  const [projects, setProjects] = useState<Project[]>([]);
+  const [projects, setProjects] = useState<Omit<Project, "files">[]>([]);
 
   const userId = Cookies.get("id");
 
@@ -29,14 +29,7 @@ const Projects: NextPageWithLayout = () => {
         },
         onCompleted(data) {
           setProjects(
-            data.listProjectsByUserWithRole.map((item) => ({
-              ...item.project,
-              //  ?? Pas besoin des fichiers dans la grid ni dans les projectCard inutile dans la query donc modifier la query
-              files: item.project.files || [], // Ajouter les fichiers si non présents
-            }))
-            // setProjects(
-            //   data.listProjectsByUserWithRole.map((item) => item.project)
-            // );
+            data.listProjectsByUserWithRole.map((item) => item.project)
           );
         },
       });
