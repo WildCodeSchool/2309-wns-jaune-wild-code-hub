@@ -7,6 +7,7 @@ import {
   ROLE,
   Message,
   InputLogin,
+  DeleteUserInput,
 } from "../entities/user.entity";
 import * as argon2 from "argon2";
 import { SignJWT } from "jose";
@@ -160,15 +161,25 @@ export class UserResolver {
 
   @Authorized()
   @Mutation(() => Message)
-  async deleteUser(@Arg("id") id: number, @Ctx() ctx: MyContext) {
+  async deleteUser(@Arg("data") data: DeleteUserInput, @Ctx() ctx: MyContext) {
 
     if (!ctx.user)
       throw new Error("Access denied! You need to be authenticated to perform this action!");
 
-    if (ctx.user.role !== "ADMIN" && id != ctx.user.id)
+    if (ctx.user.role !== "ADMIN" && data.id != ctx.user.id)
       throw new Error("You must be a site administrator to do this action!"); 
 
-    const delUser = await new UsersService().delete(id);
+    const user = await new UsersService().findById(data.id);
+
+    if (!user)
+      throw new Error("Unable to find this user!"); 
+
+    const isPasswordValid = await argon2.verify(user?.password, data.password);
+
+    if (!isPasswordValid && ctx.user.role !== "ADMIN")
+      throw new Error("The password is incorrect!"); 
+
+    const delUser = await new UsersService().delete(data.id);
     const m = new Message();
 
     if (delUser) {
