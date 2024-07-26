@@ -103,7 +103,11 @@ const Terminal: React.FC<TerminalProps> = ({ logs, panelRef }) => {
             </Accordion>
           );
         } else {
-          return <Text key={argIndex}>{content}</Text>;
+          return (
+            <Text as="pre" key={argIndex} color={typeof arg === "string" ? "blue.500" : "white"}>
+              {content}
+            </Text>
+          );
         }
       });
     };
@@ -137,6 +141,7 @@ const Terminal: React.FC<TerminalProps> = ({ logs, panelRef }) => {
           width={"100%"}
           bg={"background2"}
           overflow={"auto"}
+          ref={outputRef}
         >
           {logs.map((log, logIndex) => (
             <Box key={logIndex} borderBottom="1px solid gray" py={1}>

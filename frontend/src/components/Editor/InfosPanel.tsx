@@ -21,11 +21,14 @@ import {
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import FileItemList from "../FileItemList";
+import { File } from "@/types/editor";
 type InfosPanelProps = {
   project: Project | null;
   setOpenFiles: React.Dispatch<React.SetStateAction<EditorFile[]>>;
+  setCode: React.Dispatch<React.SetStateAction<string>>;
+  setFile: React.Dispatch<React.SetStateAction<File | null>>;
 };
-const InfosPanel = ({ project, setOpenFiles }: InfosPanelProps) => {
+const InfosPanel = ({ project, setOpenFiles, setCode, setFile }: InfosPanelProps) => {
   const router = useRouter();
   const [contributors, setContributors] = useState<Array<{
     __typename?: "FindAllInfoUserAccessesProject";
@@ -71,12 +74,16 @@ const InfosPanel = ({ project, setOpenFiles }: InfosPanelProps) => {
     if (project) {
       const { files } = project;
       const newFile = files.find((file) => +file.id === fileId);
-      newFile &&
+      console.log("new file", newFile)
+      newFile && (
         setOpenFiles((prevState) => {
           if (prevState.find((file) => file.id === newFile.id))
             return prevState;
           else return [...prevState, newFile];
-        });
+        }),
+        setCode(newFile.content),
+        setFile(newFile)
+      )
     }
   };
 

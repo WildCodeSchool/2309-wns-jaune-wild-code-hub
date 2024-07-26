@@ -1,5 +1,5 @@
 import { validate } from "class-validator";
-import { In, Like, Repository } from "typeorm";
+import { ILike, In, Like, Repository } from "typeorm";
 import {
   CreateProjectInput,
   Project,
@@ -49,15 +49,16 @@ export default class ProjectsService {
     return projects;
   }
 
-  // async listByPublic() {
-  //   const project = await this.db.find({
-  //     where: {
-  //       private: false,
-  //     },
-  //     relations: ["files"],
-  //   });
-  //   return project;
-  // }
+  async listPublicProjectsByName(name: string) {
+  const projects = await this.db.find({
+   where: {
+        name: ILike(`%${name}%`),
+        private: false,
+    },
+    relations: ["files"],
+    });
+  return projects;
+  }
 
   async listByPublic(offset: number = 0, limit: number = 8) {
     const [projects, total] = await this.db.findAndCount({
