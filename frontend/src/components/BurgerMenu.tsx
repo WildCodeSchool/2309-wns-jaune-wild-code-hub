@@ -13,12 +13,18 @@ import NextLink from "next/link";
 import Searchbar from "./Searchbar";
 import { usePathname, useRouter } from "next/navigation";
 import MeSidebar from "./Sidebar/MeSidebarContent";
+import { Project } from "@/types/graphql";
 
 
 const BurgerMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [projects, setProjects] = useState<Omit<Project, "files">[]>([]);
   const pathname = usePathname();
   const router = useRouter();
+
+  const handleSearchResults = (results: Project[]) => {
+    setProjects(results);
+  };  
 
   return (
     <Box position="fixed" top="1rem" right="1rem" zIndex="1000">
@@ -87,7 +93,7 @@ const BurgerMenu = () => {
               w={"260%"}
              paddingTop="4rem"
             >
-              <Searchbar/>
+              <Searchbar onResults={handleSearchResults} />
             </Flex> 
            <MeSidebar />
           </Box>

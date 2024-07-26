@@ -9,12 +9,14 @@ import {
   useBreakpointValue,
 } from "@chakra-ui/react";
 import React, { useEffect, useMemo, useState } from "react";
+import { Project } from "@/types/graphql";
 import Searchbar from "./Searchbar";
 import Cookies from "js-cookie";
 import { useParams, usePathname, useRouter } from "next/navigation";
 import BurgerMenu from "./BurgerMenu";
 
 const Navbar = () => {
+  const [projects, setProjects] = useState<Omit<Project, "files">[]>([]);
   const router = useRouter();
   const pathname = usePathname();
   const [user, setUser] = useState<string | undefined>(undefined);
@@ -23,6 +25,11 @@ const Navbar = () => {
     setUser(pseudo);
   }, [pseudo]);
   const isDesktop = useBreakpointValue({ base: false, md: true });
+
+
+  const handleSearchResults = (results: Project[]) => {
+    setProjects(results);
+  };  
 
   return (
     <>
@@ -39,7 +46,7 @@ const Navbar = () => {
           <Button variant={"link"} onClick={() => router.push("/")}>
             {"< Wild Code Hub />"}
           </Button>
-          <Searchbar />
+          <Searchbar onResults={handleSearchResults} />
           {user ? (
             <Box display="flex" gap={"1rem"}>
               {pathname != "/me" && (
