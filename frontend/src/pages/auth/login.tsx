@@ -1,4 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
+import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/router";
 import {
@@ -11,10 +12,9 @@ import {
   InputGroup,
   InputRightElement,
   Text,
-  Link,
 } from "@chakra-ui/react";
 import components from "@/styles/theme/components";
-import { LOGIN, CHECK_RESET_TOKEN } from "@/requetes/queries/auth.queries";
+import { LOGIN } from "@/requetes/queries/auth.queries";
 import { InputLogin, LoginQuery, LoginQueryVariables } from "@/types/graphql";
 import { useLazyQuery } from "@apollo/client";
 // import { checkRegex, emailRegex, pseudoRegex } from "@/regex";
@@ -36,8 +36,6 @@ const Login = ({ isConnected }: { isConnected: boolean }) => {
       },
     }
   );
-
-  const [success, setSuccess] = useState<boolean>(false);
 
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
@@ -169,21 +167,13 @@ const Login = ({ isConnected }: { isConnected: boolean }) => {
                 </InputGroup>
                 <FormErrorMessage>{errors.password}</FormErrorMessage>
               </FormControl>
-
-              <div className="grid gap-4">
-                <div>
-                  <button
-                    className=" px-4 py-2 rounded cursor-pointer"
-                    color="primary"
-                  >
-                    Reset my password
-                  </button>
-                </div>
-              </div>
-
               <Box textAlign="center">
                 <Box mt={5}>
-                  <Link href="/auth/forgetpassword"></Link>
+                  <Link href="/auth/forgetpassword">
+                    <Text fontSize="xs" color="primary" as="b">
+                      Forget password ?
+                    </Text>
+                  </Link>
                 </Box>
                 <Box mt={5}>
                   <Text fontSize="xs" color="grey" as="b">

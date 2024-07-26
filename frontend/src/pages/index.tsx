@@ -142,7 +142,7 @@ export default function Home() {
             >
               <Box>
                 <Heading variant={"homepage"} textAlign={"left"}>
-                  Accelarate your git worflow
+                  Accelarate your git workflow
                 </Heading>
                 <Text color={"textSecondary"} fontSize={"26px"} py={"3rem"}>
                   Our comminuty has more than 9 weeks of history, so we will

@@ -3,6 +3,7 @@ import {
   ResetPasswordMutation,
   ResetPasswordMutationVariables,
 } from "@/types/graphql";
+import components from "@/styles/theme/components";
 import { useMutation } from "@apollo/client";
 
 import {
@@ -19,7 +20,7 @@ import {
 } from "@chakra-ui/react";
 
 function ResetByEmail() {
-  const [resetPassword, { data }] = useMutation<
+  const [resetPassword, { data, error }] = useMutation<
     ResetPasswordMutation,
     ResetPasswordMutationVariables
   >(RESET_PASSWORD);
@@ -29,21 +30,47 @@ function ResetByEmail() {
     const data = Object.fromEntries(formData) as { email: string };
     resetPassword({ variables: { email: data.email } });
   };
+
   return (
-    <main className={`Flex min-h-screen items-center p-24 jb`}>
-      <div>
-        {!data?.resetPassword.resetToken ? (
-          <form onSubmit={handleSubmit}>
-            <input name="email" placeholder="Indiquez votre email" />
-            <input type="submit" />
-          </form>
-        ) : (
-          <div>
-            <Text>Vérifiez vos emails</Text>
-          </div>
-        )}
-      </div>
-    </main>
+    <Box
+      {...components.Box.main}
+      bgColor={"background"}
+      bgRepeat={"no-repeat"}
+      bgImage="url(/BGForm.png)"
+      textAlign="center"
+    >
+      <Box {...components.Box.containerBox} p={30}>
+        <Text fontSize="4xl" color="white" as="b" mb={10}>
+          Reset your Password !
+        </Text>
+        <Box {...components.Box.form} p={2}>
+          <main>
+            {!data?.resetPassword.resetToken ? (
+              <form onSubmit={handleSubmit}>
+                <FormControl isInvalid={!!error} mb={2}>
+                  <FormLabel color="text">Enter your email</FormLabel>
+                  <Input
+                    color="placeholder"
+                    bg="white"
+                    name="email"
+                    placeholder="Enter your email"
+                    type="email"
+                    required
+                  />
+                  <FormErrorMessage>{error?.message}</FormErrorMessage>
+                </FormControl>
+                <Button type="submit" variant="secondary" mt={5}>
+                  Reset Password
+                </Button>
+              </form>
+            ) : (
+              <Text>Check your emails</Text>
+            )}
+          </main>
+        </Box>
+      </Box>
+    </Box>
   );
 }
+
 export default ResetByEmail;
