@@ -224,6 +224,7 @@ export type Query = {
   listProjectsByUser: Array<Project>;
   listProjectsByUserWithRole: Array<UserAccessProjectOutput>;
   listPublicProjects: PaginatedProjects;
+  listPublicProjectsOwnedByUser: Array<UserAccessProjectOutput>;
   listUsers: Array<User>;
   listUsersAccessesProject: Array<FindAllInfoUserAccessesProject>;
   listUsersByPseudo: Array<User>;
@@ -313,6 +314,11 @@ export type QueryListProjectsByUserWithRoleArgs = {
 export type QueryListPublicProjectsArgs = {
   limit?: Scalars['Int']['input'];
   offset?: Scalars['Int']['input'];
+};
+
+
+export type QueryListPublicProjectsOwnedByUserArgs = {
+  id: Scalars['String']['input'];
 };
 
 
@@ -502,9 +508,7 @@ export type ListProjectsByUserWithRoleQueryVariables = Exact<{
 }>;
 
 
-export type ListProjectsByUserWithRoleQuery = { __typename?: 'Query', listProjectsByUserWithRole: Array<{ __typename?: 'UserAccessProjectOutput', role: string, project: {
-  files: never[]; __typename?: 'Project', update_at: any, private: boolean, name: string, id: string, created_at: any, category: string 
-} }> };
+export type ListProjectsByUserWithRoleQuery = { __typename?: 'Query', listProjectsByUserWithRole: Array<{ __typename?: 'UserAccessProjectOutput', role: string, project: { __typename?: 'Project', update_at: any, private: boolean, name: string, id: string, created_at: any, category: string } }> };
 
 export type CountLikesPerProjectQueryVariables = Exact<{
   projectId: Scalars['Float']['input'];
@@ -518,9 +522,7 @@ export type ListLikeProjectQueryVariables = Exact<{
 }>;
 
 
-export type ListLikeProjectQuery = { __typename?: 'Query', listLikeProject: Array<{
-  files: never[]; __typename?: 'Project', update_at: any, private: boolean, name: string, id: string, created_at: any, category: string 
-}> };
+export type ListLikeProjectQuery = { __typename?: 'Query', listLikeProject: Array<{ __typename?: 'Project', update_at: any, private: boolean, name: string, id: string, created_at: any, category: string }> };
 
 export type ListPublicProjectsQueryVariables = Exact<{
   limit: Scalars['Int']['input'];
