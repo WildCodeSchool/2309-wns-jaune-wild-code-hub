@@ -1,26 +1,8 @@
-import { Avatar, Flex, Link, PropsOf, SlideFade, Text } from "@chakra-ui/react";
-import React, { PropsWithChildren, useEffect, useState } from "react";
+import { Avatar, Flex, Text } from "@chakra-ui/react";
 import Cookies from "js-cookie";
-import NextLink from "next/link";
-import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
+import { CustomLink } from "../CustomLink";
 
-type LinkProps = PropsWithChildren & PropsOf<typeof Link>;
-
-const CustomLink = ({ children, ...props }: LinkProps) => {
-  const pathname = usePathname();
-
-  return (
-    <Link
-      as={NextLink}
-      color={pathname === props.href ? "secondary" : "text"}
-      pointerEvents={pathname === props.href ? "none" : "auto"}
-      _hover={{ textDecoration: "none", color: "accent" }}
-      {...props}
-    >
-      {children}
-    </Link>
-  );
-};
 const MeSidebar = () => {
   const [user, setUser] = useState<Record<string, string> | null>(null);
   const pseudo = Cookies.get("pseudo");
@@ -30,7 +12,7 @@ const MeSidebar = () => {
   return (
     <>
       {user && (
-        <Flex id="top-nav" pt={"4rem"} direction={"column"} gap={12}>
+        <Flex id="top-nav" pl={"2rem"} direction={"column"} gap={12}>
           <Flex id="user" gap={4} alignItems={"center"}>
             <Avatar name={user.pseudo} />
             <Text>{user.pseudo}</Text>

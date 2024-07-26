@@ -31,7 +31,7 @@ import { useEffect, useState } from "react";
 import { FaFileExcel } from "react-icons/fa";
 
 type Props = {
-  project: Omit<Project, "files">;
+  project: Pick<Project, "id" | "category" | "name">;
 };
 
 const ProjectCard = ({ project }: Props) => {
@@ -49,22 +49,27 @@ const ProjectCard = ({ project }: Props) => {
     });
 
   return (
-    <LinkBox  
+    <LinkBox
       maxWidth={"205px"}
       width={"100%"}
       height={"100%"}
       maxHeight={"250px"}
       borderRadius={24}
       overflow="hidden"
-      >
+    >
       <Card
         height={"100%"}
         display="flex"
         flexDirection="column"
         justifyContent="space-between"
       >
-        <Box backgroundColor="grey" height="52%" display="flex" alignItems="center" justifyContent="center">       
-        </Box>
+        <Box
+          backgroundColor="grey"
+          height="52%"
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+        ></Box>
 
         <Avatar
           name={projectOwner?.pseudo}
@@ -75,8 +80,15 @@ const ProjectCard = ({ project }: Props) => {
           transform="translate(-50%, -50%)"
           border="4px solid white"
         />
-        
-        <Box backgroundColor="white" height="48%" display="flex" flexDirection="column" justifyContent="space-between" p={4}>
+
+        <Box
+          backgroundColor="white"
+          height="48%"
+          display="flex"
+          flexDirection="column"
+          justifyContent="space-between"
+          p={4}
+        >
           <CardBody
             display={"flex"}
             flexDirection={"column"}
@@ -101,7 +113,6 @@ const ProjectCard = ({ project }: Props) => {
             justifyContent={"center"}
             color="gray.500"
             p={"0 0.5rem 0.5rem 0.5rem"}
-            
           >
             <ButtonGroup>
               <Button
@@ -134,8 +145,6 @@ const ProjectCard = ({ project }: Props) => {
             </ButtonGroup>
           </CardFooter>
         </Box>
-        
-
       </Card>
     </LinkBox>
   );

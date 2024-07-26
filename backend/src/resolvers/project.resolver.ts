@@ -10,10 +10,11 @@ import {
 import {
   CreateProjectInput,
   Project,
-  UpdateProjectInput, PaginatedProjects,
+  UpdateProjectInput,
+  PaginatedProjects,
 } from "../entities/project.entity";
 import { Message, User } from "../entities/user.entity";
-import { MyContext } from "../index"; 
+import { MyContext } from "../index";
 import {
   FindAllInfoUserAccessesProject,
   UserAccessProjectOutput,
@@ -24,7 +25,6 @@ import UserProjectAccessesService from "../services/userProjectAccesses.service"
 
 @Resolver()
 export class ProjectResolver {
-
   @Authorized()
   @Query(() => [Project])
   async listProjects() {
@@ -37,28 +37,29 @@ export class ProjectResolver {
     @Arg("id") id: string,
     @Ctx() context: MyContext
   ): Promise<Project | undefined> {
-
     if (isNaN(+id)) throw new Error("Specify a correct id");
-    
-    const projectById = await new ProjectsService().findById(+id);
-    
-    if (!projectById) 
-      throw new Error("Please note, the project does not exist") 
 
-    if (!projectById.private) 
-      return projectById;
-    
-    if (projectById.private && context.user == null) 
-      throw new Error("Access denied! You need to be authenticated to perform this action!")
+    const projectById = await new ProjectsService().findById(+id);
+
+    if (!projectById)
+      throw new Error("Please note, the project does not exist");
+
+    if (!projectById.private) return projectById;
+
+    if (projectById.private && context.user == null)
+      throw new Error(
+        "Access denied! You need to be authenticated to perform this action!"
+      );
 
     const userAccessesProject = projectById.usersProjectsAccesses;
-    const checkUserAccessesProject = userAccessesProject.filter((user) => user.user_id === context.user?.id);
+    const checkUserAccessesProject = userAccessesProject.filter(
+      (user) => user.user_id === context.user?.id
+    );
 
     if (checkUserAccessesProject.length === 0)
-      throw new Error("You do not have permission to access this project!")
+      throw new Error("You do not have permission to access this project!");
 
-
-    return projectById
+    return projectById;
   }
 
   @Query(() => Project)
@@ -77,12 +78,12 @@ export class ProjectResolver {
 
   @Query(() => PaginatedProjects)
   async listPublicProjects(
-    @Arg('offset', () => Int, { defaultValue: 0 }) offset: number,
-    @Arg('limit', () => Int, { defaultValue: 8 }) limit: number
+    @Arg("offset", () => Int, { defaultValue: 0 }) offset: number,
+    @Arg("limit", () => Int, { defaultValue: 8 }) limit: number
   ): Promise<PaginatedProjects> {
     const projects = await new ProjectsService().listByPublic(offset, limit);
     return projects;
-  }  
+  }
 
   @Query(() => [Project])
   async listProjectsByCategory(@Arg("category") category: string) {
@@ -92,25 +93,25 @@ export class ProjectResolver {
 
   @Authorized()
   @Query(() => [Project])
-  async listProjectsByUser(@Arg("id") id: string,  @Ctx() ctx: MyContext) {
+  async listProjectsByUser(@Arg("id") id: string, @Ctx() ctx: MyContext) {
     if (!ctx.user)
-      throw new Error("Access denied! You need to be authenticated to perform this action!");
+      throw new Error(
+        "Access denied! You need to be authenticated to perform this action!"
+      );
 
     if (ctx.user.role !== "ADMIN" && +id != ctx.user.id)
-      throw new Error("You must be a site administrator to do this action!"); 
+      throw new Error("You must be a site administrator to do this action!");
 
     const projects = await new ProjectsService().listByUserId(+id);
     return projects;
   }
 
-  
   @Authorized()
   @Query(() => [UserAccessProjectOutput])
   async listProjectsByUserWithRole(
     @Arg("id") id: string,
-    @Arg("userRole", () => [String], { nullable: true }) userRole?: UserRole[],
+    @Arg("userRole", () => [String], { nullable: true }) userRole?: UserRole[]
   ) {
-
     const projects = await new ProjectsService().ListByUserWithRole(
       +id,
       userRole
@@ -119,32 +120,55 @@ export class ProjectResolver {
   }
 
   @Authorized()
+  @Query(() => [UserAccessProjectOutput])
+  async listPublicProjectsOwnedByUser(@Arg("id") id: string) {
+    const projects = await new ProjectsService().ListPublicOwnedByUser(+id);
+    return projects;
+  }
+
+  @Authorized()
   @Mutation(() => Project)
-  async createProject(@Arg("data") data: CreateProjectInput, @Ctx() context: MyContext) {
+  async createProject(
+    @Arg("data") data: CreateProjectInput,
+    @Ctx() context: MyContext
+  ) {
     if (!context.user)
-      throw new Error("Access denied! You need to be authenticated to perform this action!");
+      throw new Error(
+        "Access denied! You need to be authenticated to perform this action!"
+      );
     const project = await new ProjectsService().findByName(data.name);
     if (project) throw new Error("This name of project is already in use!");
-    const newProject = await new ProjectsService().create(data, context?.user?.id);
+    const newProject = await new ProjectsService().create(
+      data,
+      context?.user?.id
+    );
 
-    
     return newProject;
   }
 
   @Authorized()
   @Mutation(() => Message)
-  async updateProject(@Arg("data") data: UpdateProjectInput, @Ctx() ctx: MyContext) {
-
+  async updateProject(
+    @Arg("data") data: UpdateProjectInput,
+    @Ctx() ctx: MyContext
+  ) {
     const { id, ...otherData } = data;
 
     if (!ctx.user)
-      throw new Error("Access denied! You need to be authenticated to perform this action!");
-    
-    const listAccesProject = await new UserProjectAccessesService().findUsersByAccessesProject(data.id);
-    const dataOwner = listAccesProject.find((user: FindAllInfoUserAccessesProject) => user?.user_id == ctx?.user?.id);
-    
+      throw new Error(
+        "Access denied! You need to be authenticated to perform this action!"
+      );
+
+    const listAccesProject =
+      await new UserProjectAccessesService().findUsersByAccessesProject(
+        data.id
+      );
+    const dataOwner = listAccesProject.find(
+      (user: FindAllInfoUserAccessesProject) => user?.user_id == ctx?.user?.id
+    );
+
     if (dataOwner?.role !== "OWNER" && ctx.user.role !== "ADMIN")
-      throw new Error("You must be the owner of the project to modify it!"); 
+      throw new Error("You must be the owner of the project to modify it!");
 
     const updateProject = await new ProjectsService().update(+id, otherData);
     const m = new Message();
@@ -161,15 +185,19 @@ export class ProjectResolver {
   @Authorized()
   @Mutation(() => Message)
   async deleteProject(@Arg("id") id: number, @Ctx() ctx: MyContext) {
-
     if (!ctx.user)
-      throw new Error("Access denied! You need to be authenticated to perform this action!");
-    
-    const listAccesProject = await new UserProjectAccessesService().findUsersByAccessesProject(id);
-    const dataOwner = listAccesProject.find((user: FindAllInfoUserAccessesProject) => user?.user_id == ctx?.user?.id);
-    
+      throw new Error(
+        "Access denied! You need to be authenticated to perform this action!"
+      );
+
+    const listAccesProject =
+      await new UserProjectAccessesService().findUsersByAccessesProject(id);
+    const dataOwner = listAccesProject.find(
+      (user: FindAllInfoUserAccessesProject) => user?.user_id == ctx?.user?.id
+    );
+
     if (dataOwner?.role !== "OWNER" && ctx.user.role !== "ADMIN")
-      throw new Error("You must be the owner of the project to modify it!"); 
+      throw new Error("You must be the owner of the project to modify it!");
 
     const delProject = await new ProjectsService().delete(id);
     const m = new Message();

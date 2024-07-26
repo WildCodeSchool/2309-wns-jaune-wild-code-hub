@@ -9,37 +9,34 @@ interface FileInfoProps {
   onClick: () => void;
 }
 
-const FileInfo: React.FC<FileInfoProps> = ({ fileName, onClose, isSelected, onClick }) => {
-  
+const FileInfo: React.FC<FileInfoProps> = ({
+  fileName,
+  onClose,
+  isSelected,
+  onClick,
+}) => {
   //  V1 close file
-  // const handleCloseClick = (event: React.MouseEvent) => {
-  //   event.stopPropagation();
-  //     onClose();
-  // };
+  const handleCloseClick = (event: React.MouseEvent) => {
+    event.stopPropagation();
+    onClose();
+  };
 
   return (
     <Box
-        bg={isSelected ? "grey" : "background2"}
-        color={isSelected ? "white" : "grey"}
-        p="1px"
-        cursor="pointer"
-        mr="1px"
-        style={{
-          display: "flex",
-          alignItems: "center",
-        }}
-        onClick={onClick}
+      display="flex"
+      bg={isSelected ? "grey" : "background2"}
+      color={isSelected ? "white" : "grey"}
+      alignItems="center"
+      cursor="pointer"
+      onClick={onClick}
+      height={"100%"}
+      justifyContent={"space-between"}
+      paddingInline={2}
+      gap={2}
     >
-      <p style={{ marginLeft:"3px", marginRight: "5px" }}>{fileName}</p>
+      {fileName}
       {/* V1 close file */}
-      {/* <CloseIcon 
-        ml="9px"
-        mr="9px"
-        width="10px"
-        mt="3px"
-        cursor="pointer"
-        onClick={handleCloseClick}
-        /> */}
+      <CloseIcon width="10px" cursor="pointer" onClick={handleCloseClick} />
     </Box>
   );
 };

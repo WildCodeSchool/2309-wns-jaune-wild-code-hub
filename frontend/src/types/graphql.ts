@@ -488,7 +488,7 @@ export type FindProjectByIdQueryVariables = Exact<{
 }>;
 
 
-export type FindProjectByIdQuery = { __typename?: 'Query', findProjectById: { __typename?: 'Project', id: string, name: string, private: boolean, update_at: any, created_at: any, category: string, files: Array<{ __typename?: 'File', language: string, extension: string, name: string, type: string, id: string, content: string }> } };
+export type FindProjectByIdQuery = { __typename?: 'Query', findProjectById: { __typename?: 'Project', id: string, name: string, private: boolean, update_at: any, created_at: any, category: string, files: Array<{ __typename?: 'File', language: string, extension: string, name: string, type: string, id: string, content: string, created_at: any, update_at: any }> } };
 
 export type ListProjectsByUserQueryVariables = Exact<{
   listProjectsByUserId: Scalars['String']['input'];
@@ -532,12 +532,26 @@ export type ListPublicProjectsQueryVariables = Exact<{
 
 export type ListPublicProjectsQuery = { __typename?: 'Query', listPublicProjects: { __typename?: 'PaginatedProjects', total: number, offset: number, limit: number, projects: Array<{ __typename?: 'Project', id: string, name: string, category: string, private: boolean, created_at: any, update_at: any }> } };
 
+export type ListPublicOwnedByUserQueryVariables = Exact<{
+  listPublicProjectsOwnedByUserId: Scalars['String']['input'];
+}>;
+
+
+export type ListPublicOwnedByUserQuery = { __typename?: 'Query', listPublicProjectsOwnedByUser: Array<{ __typename?: 'UserAccessProjectOutput', project: { __typename?: 'Project', id: string, name: string, category: string } }> };
+
 export type FindUserByIdQueryVariables = Exact<{
   findUserByIdId: Scalars['String']['input'];
 }>;
 
 
 export type FindUserByIdQuery = { __typename?: 'Query', findUserById: { __typename?: 'User', id: string, created_at: any, email: string, firstname: string, lastname: string, pseudo: string, run_counter: number } };
+
+export type FindUserInfosByIdQueryVariables = Exact<{
+  findUserByIdId: Scalars['String']['input'];
+}>;
+
+
+export type FindUserInfosByIdQuery = { __typename?: 'Query', findUserById: { __typename?: 'User', id: string, pseudo: string, ban: boolean, last_login: any, firstname: string, lastname: string, email: string } };
 
 export type FindProjectOwnerQueryVariables = Exact<{
   projectId: Scalars['String']['input'];
@@ -567,12 +581,26 @@ export type ListUsersByPseudoQueryVariables = Exact<{
 
 export type ListUsersByPseudoQuery = { __typename?: 'Query', listUsersByPseudo: Array<{ __typename?: 'User', pseudo: string, id: string, email: string }> };
 
+export type ListUsersLikesPerProjectQueryVariables = Exact<{
+  projectId: Scalars['Float']['input'];
+}>;
+
+
+export type ListUsersLikesPerProjectQuery = { __typename?: 'Query', listUsersLikesPerProject: Array<{ __typename?: 'User', pseudo: string, id: string }> };
+
 export type ListUsersAccessesProjectQueryVariables = Exact<{
   projectId: Scalars['Float']['input'];
 }>;
 
 
 export type ListUsersAccessesProjectQuery = { __typename?: 'Query', listUsersAccessesProject: Array<{ __typename?: 'FindAllInfoUserAccessesProject', user_id: number, project_id: number, updated_at: any, role: string, created_at: any, user?: { __typename?: 'User', role: string, pseudo: string, id: string, created_at: any, update_at: any } | null, project?: { __typename?: 'Project', category: string, id: string, name: string, private: boolean, created_at: any, update_at: any } | null }> };
+
+export type ListUsersWithAccessesQueryVariables = Exact<{
+  projectId: Scalars['Float']['input'];
+}>;
+
+
+export type ListUsersWithAccessesQuery = { __typename?: 'Query', listUsersAccessesProject: Array<{ __typename?: 'FindAllInfoUserAccessesProject', role: string, user?: { __typename?: 'User', pseudo: string, id: string } | null }> };
 
 
 export const RegisterDocument = gql`
@@ -1050,6 +1078,8 @@ export const FindProjectByIdDocument = gql`
       type
       id
       content
+      created_at
+      update_at
     }
   }
 }
@@ -1359,6 +1389,50 @@ export type ListPublicProjectsQueryHookResult = ReturnType<typeof useListPublicP
 export type ListPublicProjectsLazyQueryHookResult = ReturnType<typeof useListPublicProjectsLazyQuery>;
 export type ListPublicProjectsSuspenseQueryHookResult = ReturnType<typeof useListPublicProjectsSuspenseQuery>;
 export type ListPublicProjectsQueryResult = Apollo.QueryResult<ListPublicProjectsQuery, ListPublicProjectsQueryVariables>;
+export const ListPublicOwnedByUserDocument = gql`
+    query ListPublicOwnedByUser($listPublicProjectsOwnedByUserId: String!) {
+  listPublicProjectsOwnedByUser(id: $listPublicProjectsOwnedByUserId) {
+    project {
+      id
+      name
+      category
+    }
+  }
+}
+    `;
+
+/**
+ * __useListPublicOwnedByUserQuery__
+ *
+ * To run a query within a React component, call `useListPublicOwnedByUserQuery` and pass it any options that fit your needs.
+ * When your component renders, `useListPublicOwnedByUserQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useListPublicOwnedByUserQuery({
+ *   variables: {
+ *      listPublicProjectsOwnedByUserId: // value for 'listPublicProjectsOwnedByUserId'
+ *   },
+ * });
+ */
+export function useListPublicOwnedByUserQuery(baseOptions: Apollo.QueryHookOptions<ListPublicOwnedByUserQuery, ListPublicOwnedByUserQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ListPublicOwnedByUserQuery, ListPublicOwnedByUserQueryVariables>(ListPublicOwnedByUserDocument, options);
+      }
+export function useListPublicOwnedByUserLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ListPublicOwnedByUserQuery, ListPublicOwnedByUserQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ListPublicOwnedByUserQuery, ListPublicOwnedByUserQueryVariables>(ListPublicOwnedByUserDocument, options);
+        }
+export function useListPublicOwnedByUserSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<ListPublicOwnedByUserQuery, ListPublicOwnedByUserQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<ListPublicOwnedByUserQuery, ListPublicOwnedByUserQueryVariables>(ListPublicOwnedByUserDocument, options);
+        }
+export type ListPublicOwnedByUserQueryHookResult = ReturnType<typeof useListPublicOwnedByUserQuery>;
+export type ListPublicOwnedByUserLazyQueryHookResult = ReturnType<typeof useListPublicOwnedByUserLazyQuery>;
+export type ListPublicOwnedByUserSuspenseQueryHookResult = ReturnType<typeof useListPublicOwnedByUserSuspenseQuery>;
+export type ListPublicOwnedByUserQueryResult = Apollo.QueryResult<ListPublicOwnedByUserQuery, ListPublicOwnedByUserQueryVariables>;
 export const FindUserByIdDocument = gql`
     query FindUserById($findUserByIdId: String!) {
   findUserById(id: $findUserByIdId) {
@@ -1405,6 +1479,52 @@ export type FindUserByIdQueryHookResult = ReturnType<typeof useFindUserByIdQuery
 export type FindUserByIdLazyQueryHookResult = ReturnType<typeof useFindUserByIdLazyQuery>;
 export type FindUserByIdSuspenseQueryHookResult = ReturnType<typeof useFindUserByIdSuspenseQuery>;
 export type FindUserByIdQueryResult = Apollo.QueryResult<FindUserByIdQuery, FindUserByIdQueryVariables>;
+export const FindUserInfosByIdDocument = gql`
+    query FindUserInfosById($findUserByIdId: String!) {
+  findUserById(id: $findUserByIdId) {
+    id
+    pseudo
+    ban
+    last_login
+    firstname
+    lastname
+    email
+  }
+}
+    `;
+
+/**
+ * __useFindUserInfosByIdQuery__
+ *
+ * To run a query within a React component, call `useFindUserInfosByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFindUserInfosByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFindUserInfosByIdQuery({
+ *   variables: {
+ *      findUserByIdId: // value for 'findUserByIdId'
+ *   },
+ * });
+ */
+export function useFindUserInfosByIdQuery(baseOptions: Apollo.QueryHookOptions<FindUserInfosByIdQuery, FindUserInfosByIdQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<FindUserInfosByIdQuery, FindUserInfosByIdQueryVariables>(FindUserInfosByIdDocument, options);
+      }
+export function useFindUserInfosByIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FindUserInfosByIdQuery, FindUserInfosByIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<FindUserInfosByIdQuery, FindUserInfosByIdQueryVariables>(FindUserInfosByIdDocument, options);
+        }
+export function useFindUserInfosByIdSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<FindUserInfosByIdQuery, FindUserInfosByIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<FindUserInfosByIdQuery, FindUserInfosByIdQueryVariables>(FindUserInfosByIdDocument, options);
+        }
+export type FindUserInfosByIdQueryHookResult = ReturnType<typeof useFindUserInfosByIdQuery>;
+export type FindUserInfosByIdLazyQueryHookResult = ReturnType<typeof useFindUserInfosByIdLazyQuery>;
+export type FindUserInfosByIdSuspenseQueryHookResult = ReturnType<typeof useFindUserInfosByIdSuspenseQuery>;
+export type FindUserInfosByIdQueryResult = Apollo.QueryResult<FindUserInfosByIdQuery, FindUserInfosByIdQueryVariables>;
 export const FindProjectOwnerDocument = gql`
     query FindProjectOwner($projectId: String!) {
   findProjectOwner(projectId: $projectId) {
@@ -1555,6 +1675,47 @@ export type ListUsersByPseudoQueryHookResult = ReturnType<typeof useListUsersByP
 export type ListUsersByPseudoLazyQueryHookResult = ReturnType<typeof useListUsersByPseudoLazyQuery>;
 export type ListUsersByPseudoSuspenseQueryHookResult = ReturnType<typeof useListUsersByPseudoSuspenseQuery>;
 export type ListUsersByPseudoQueryResult = Apollo.QueryResult<ListUsersByPseudoQuery, ListUsersByPseudoQueryVariables>;
+export const ListUsersLikesPerProjectDocument = gql`
+    query ListUsersLikesPerProject($projectId: Float!) {
+  listUsersLikesPerProject(projectId: $projectId) {
+    pseudo
+    id
+  }
+}
+    `;
+
+/**
+ * __useListUsersLikesPerProjectQuery__
+ *
+ * To run a query within a React component, call `useListUsersLikesPerProjectQuery` and pass it any options that fit your needs.
+ * When your component renders, `useListUsersLikesPerProjectQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useListUsersLikesPerProjectQuery({
+ *   variables: {
+ *      projectId: // value for 'projectId'
+ *   },
+ * });
+ */
+export function useListUsersLikesPerProjectQuery(baseOptions: Apollo.QueryHookOptions<ListUsersLikesPerProjectQuery, ListUsersLikesPerProjectQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ListUsersLikesPerProjectQuery, ListUsersLikesPerProjectQueryVariables>(ListUsersLikesPerProjectDocument, options);
+      }
+export function useListUsersLikesPerProjectLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ListUsersLikesPerProjectQuery, ListUsersLikesPerProjectQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ListUsersLikesPerProjectQuery, ListUsersLikesPerProjectQueryVariables>(ListUsersLikesPerProjectDocument, options);
+        }
+export function useListUsersLikesPerProjectSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<ListUsersLikesPerProjectQuery, ListUsersLikesPerProjectQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<ListUsersLikesPerProjectQuery, ListUsersLikesPerProjectQueryVariables>(ListUsersLikesPerProjectDocument, options);
+        }
+export type ListUsersLikesPerProjectQueryHookResult = ReturnType<typeof useListUsersLikesPerProjectQuery>;
+export type ListUsersLikesPerProjectLazyQueryHookResult = ReturnType<typeof useListUsersLikesPerProjectLazyQuery>;
+export type ListUsersLikesPerProjectSuspenseQueryHookResult = ReturnType<typeof useListUsersLikesPerProjectSuspenseQuery>;
+export type ListUsersLikesPerProjectQueryResult = Apollo.QueryResult<ListUsersLikesPerProjectQuery, ListUsersLikesPerProjectQueryVariables>;
 export const ListUsersAccessesProjectDocument = gql`
     query ListUsersAccessesProject($projectId: Float!) {
   listUsersAccessesProject(project_id: $projectId) {
@@ -1614,3 +1775,47 @@ export type ListUsersAccessesProjectQueryHookResult = ReturnType<typeof useListU
 export type ListUsersAccessesProjectLazyQueryHookResult = ReturnType<typeof useListUsersAccessesProjectLazyQuery>;
 export type ListUsersAccessesProjectSuspenseQueryHookResult = ReturnType<typeof useListUsersAccessesProjectSuspenseQuery>;
 export type ListUsersAccessesProjectQueryResult = Apollo.QueryResult<ListUsersAccessesProjectQuery, ListUsersAccessesProjectQueryVariables>;
+export const ListUsersWithAccessesDocument = gql`
+    query ListUsersWithAccesses($projectId: Float!) {
+  listUsersAccessesProject(project_id: $projectId) {
+    user {
+      pseudo
+      id
+    }
+    role
+  }
+}
+    `;
+
+/**
+ * __useListUsersWithAccessesQuery__
+ *
+ * To run a query within a React component, call `useListUsersWithAccessesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useListUsersWithAccessesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useListUsersWithAccessesQuery({
+ *   variables: {
+ *      projectId: // value for 'projectId'
+ *   },
+ * });
+ */
+export function useListUsersWithAccessesQuery(baseOptions: Apollo.QueryHookOptions<ListUsersWithAccessesQuery, ListUsersWithAccessesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ListUsersWithAccessesQuery, ListUsersWithAccessesQueryVariables>(ListUsersWithAccessesDocument, options);
+      }
+export function useListUsersWithAccessesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ListUsersWithAccessesQuery, ListUsersWithAccessesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ListUsersWithAccessesQuery, ListUsersWithAccessesQueryVariables>(ListUsersWithAccessesDocument, options);
+        }
+export function useListUsersWithAccessesSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<ListUsersWithAccessesQuery, ListUsersWithAccessesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<ListUsersWithAccessesQuery, ListUsersWithAccessesQueryVariables>(ListUsersWithAccessesDocument, options);
+        }
+export type ListUsersWithAccessesQueryHookResult = ReturnType<typeof useListUsersWithAccessesQuery>;
+export type ListUsersWithAccessesLazyQueryHookResult = ReturnType<typeof useListUsersWithAccessesLazyQuery>;
+export type ListUsersWithAccessesSuspenseQueryHookResult = ReturnType<typeof useListUsersWithAccessesSuspenseQuery>;
+export type ListUsersWithAccessesQueryResult = Apollo.QueryResult<ListUsersWithAccessesQuery, ListUsersWithAccessesQueryVariables>;

@@ -1,10 +1,7 @@
 import React, { useState } from "react";
-import { 
-  Project,
-  FindAllInfoUserAccessesProject
-} from "@/types/graphql";
+import { Project, FindAllInfoUserAccessesProject } from "@/types/graphql";
 import GenericModal from "@/components/GenericModal";
-import { 
+import {
   Button,
   Box,
   Tabs,
@@ -13,7 +10,7 @@ import {
   Tab,
   TabPanel,
 } from "@chakra-ui/react";
-import CustomToast from '@/components/ToastCustom/CustomToast';
+import CustomToast from "@/components/ToastCustom/CustomToast";
 import ShareURL from "./ShareURL";
 import ShareAddPeople from "./ShareAddPeople";
 import ShareManagementPeople from "./ShareManagementPeople";
@@ -22,13 +19,20 @@ import ShareListPeople from "./ShareListPeople";
 interface ShareEditorProps {
   project: Project | null;
   expectedOrigin: string | undefined;
-  users : FindAllInfoUserAccessesProject[] | null;
-  setUsers: React.Dispatch<React.SetStateAction<FindAllInfoUserAccessesProject[] | null>>;
-  checkOwner : boolean;
+  users: FindAllInfoUserAccessesProject[] | null;
+  setUsers: React.Dispatch<
+    React.SetStateAction<FindAllInfoUserAccessesProject[] | null>
+  >;
+  checkOwner: boolean;
 }
 
-const ShareEditor: React.FC<ShareEditorProps> = ({ project, expectedOrigin, users, setUsers, checkOwner }) => {
-
+const ShareEditor: React.FC<ShareEditorProps> = ({
+  project,
+  expectedOrigin,
+  users,
+  setUsers,
+  checkOwner,
+}) => {
   const { showAlert } = CustomToast();
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
 
@@ -44,7 +48,13 @@ const ShareEditor: React.FC<ShareEditorProps> = ({ project, expectedOrigin, user
 
   return (
     <>
-      <Button type="button" variant="secondary" onClick={shareModalOpen}>
+      <Button
+        type="button"
+        variant="secondary"
+        size={"sm"}
+        paddingInline={6}
+        onClick={shareModalOpen}
+      >
         Share
       </Button>
 
@@ -54,57 +64,74 @@ const ShareEditor: React.FC<ShareEditorProps> = ({ project, expectedOrigin, user
         title="Share project"
       >
         <Tabs>
-          <TabList mb={5} display="flex" justifyContent="center" alignItems="center">
-            <Tab 
-              _selected={{ color: "primary", borderBottom: "2px solid primary" }}
+          <TabList
+            mb={5}
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+          >
+            <Tab
+              _selected={{
+                color: "primary",
+                borderBottom: "2px solid primary",
+              }}
               _focus={{ boxShadow: "none" }}
             >
               Share URL
             </Tab>
-            { checkOwner ?
-              <Tab 
-                _selected={{ color: "primary", borderBottom: "2px solid primary" }}
+            {checkOwner ? (
+              <Tab
+                _selected={{
+                  color: "primary",
+                  borderBottom: "2px solid primary",
+                }}
                 _focus={{ boxShadow: "none" }}
               >
                 Add people
               </Tab>
-              :
-              <Tab 
-                _selected={{ color: "primary", borderBottom: "2px solid primary" }}
+            ) : (
+              <Tab
+                _selected={{
+                  color: "primary",
+                  borderBottom: "2px solid primary",
+                }}
                 _focus={{ boxShadow: "none" }}
               >
                 List people
               </Tab>
-            }
-            { checkOwner &&
-              <Tab 
-                _selected={{ color: "primary", borderBottom: "2px solid primary" }}
+            )}
+            {checkOwner && (
+              <Tab
+                _selected={{
+                  color: "primary",
+                  borderBottom: "2px solid primary",
+                }}
                 _focus={{ boxShadow: "none" }}
               >
                 Management
               </Tab>
-            }
+            )}
           </TabList>
           <Box>
-          <TabPanels>
-            <TabPanel>
-              <ShareURL project={project}/>
-            </TabPanel>
-            { checkOwner ?
+            <TabPanels>
               <TabPanel>
-                <ShareAddPeople setUsers={setUsers} />
+                <ShareURL project={project} />
               </TabPanel>
-              :
-              <TabPanel>
-                <ShareListPeople users={users} />
-              </TabPanel>
-            }
-            { checkOwner &&
-              <TabPanel>
-                <ShareManagementPeople users={users} setUsers={setUsers} />
-              </TabPanel>
-            }
-          </TabPanels>
+              {checkOwner ? (
+                <TabPanel>
+                  <ShareAddPeople setUsers={setUsers} />
+                </TabPanel>
+              ) : (
+                <TabPanel>
+                  <ShareListPeople users={users} />
+                </TabPanel>
+              )}
+              {checkOwner && (
+                <TabPanel>
+                  <ShareManagementPeople users={users} setUsers={setUsers} />
+                </TabPanel>
+              )}
+            </TabPanels>
           </Box>
         </Tabs>
       </GenericModal>
