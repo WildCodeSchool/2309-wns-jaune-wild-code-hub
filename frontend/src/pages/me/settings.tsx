@@ -104,7 +104,6 @@ const Settings: NextPageWithLayout = () => {
           data: userForm,
         },
         onCompleted(data) {
-          console.log("data", data.updateUser.message);
           setUser((prevState) => ({
             ...prevState,
             password: "",
