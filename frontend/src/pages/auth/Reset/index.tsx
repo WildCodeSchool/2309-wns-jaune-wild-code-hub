@@ -28,7 +28,12 @@ function ResetByEmail() {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const data = Object.fromEntries(formData) as { email: string };
-    resetPassword({ variables: { email: data.email } });
+    resetPassword({
+      variables: { email: data.email },
+      onError(error) {
+        console.log("ERROR", error);
+      },
+    });
   };
 
   return (

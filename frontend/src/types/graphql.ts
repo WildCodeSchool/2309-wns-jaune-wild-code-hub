@@ -73,7 +73,7 @@ export type MutationUpdateUserArgs = {
   data: UpdateUserInput;
 };
 
-//Reset Password
+//RESET PASSWORD
 export type InputChangePassword = {
   password: Scalars["String"]["input"];
   token: Scalars["String"]["input"];

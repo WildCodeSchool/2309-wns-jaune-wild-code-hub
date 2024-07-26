@@ -169,7 +169,7 @@ const Login = ({ isConnected }: { isConnected: boolean }) => {
               </FormControl>
               <Box textAlign="center">
                 <Box mt={5}>
-                  <Link href="/auth/forgetpassword">
+                  <Link href="/auth/Reset">
                     <Text fontSize="xs" color="primary" as="b">
                       Forget password ?
                     </Text>
