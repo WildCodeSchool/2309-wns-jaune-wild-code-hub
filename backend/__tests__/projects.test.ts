@@ -59,8 +59,8 @@ const FIND_PROJECT_BY_NAME = `#graphql
 `;
 
 const LIST_PROJECTS_PUBLIC = `#graphql
-  query Projects($limit: Int!, $offset: Int!, $name:String ) {
-    listPublicProjects (limit: $limit, offset: $offset, name: $name){            
+  query Projects($limit: Int!, $offset: Int!) {
+    listPublicProjects (limit: $limit, offset: $offset){            
       projects {
       id
       name
@@ -332,14 +332,14 @@ describe("Test for a new project", () => {
     const response = await server.executeOperation<ResponseDataListProjectPublic>({
       query: LIST_PROJECTS_PUBLIC,
        variables: {
-        offset: 1,
+        offset: 0,
         limit :8,
       },
     });
 
     assert(response.body.kind === "single");
-    console.log('TOTOTOTO', response.body.singleResult.data?.listPublicProjects?.projects.length);
-    expect(response.body.singleResult.data?.listPublicProjects?.offset).toEqual(1);
+    console.log('test', JSON.stringify(response.body.singleResult))
+    expect(response.body.singleResult.data?.listPublicProjects?.projects).toHaveLength(1);
   });
 
   it("Delete project", async () => {
