@@ -234,7 +234,7 @@ const Editor: NextPageWithLayout = () => {
     >
       <PanelGroup direction="horizontal">
         <Panel minSize={15}>
-          <InfosPanel project={project} setOpenFiles={setOpenFiles} />
+          <InfosPanel project={project} setOpenFiles={setOpenFiles} setCode={setCode} setFile={setFile} />
           {/* <Flex height={"100%"} flexDirection={"column"}>
             <Flex flexDirection={"column"} textAlign={"center"} gap={1}>
               <Heading size={"lg"} textAlign={"center"}>

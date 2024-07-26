@@ -76,6 +76,7 @@ const EditorPanel = ({
       fileBarRef.current.scrollLeft += deltaY;
     }
   };
+  
   return (
     <>
       <Flex
