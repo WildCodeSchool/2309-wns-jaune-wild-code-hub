@@ -7,28 +7,23 @@ import NextLink from "next/link";
 
 import {
   Avatar,
+  Box,
   Button,
   ButtonGroup,
   Card,
   CardBody,
   CardFooter,
-  Flex,
   Heading,
   IconButton,
-  Image,
   LinkBox,
   LinkOverlay,
   Stack,
-  Text,
-  Box,
+  Text
 } from "@chakra-ui/react";
-import Cookies from "js-cookie";
 
 import CommentIcon from "./Icons/CommentIcon";
 import HeartIcon from "./Icons/HeartIcon";
 import ShareIcon from "./Icons/ShareIcon";
-import { useEffect, useState } from "react";
-import { FaFileExcel } from "react-icons/fa";
 
 type Props = {
   project: Pick<Project, "id" | "category" | "name">;
@@ -102,7 +97,7 @@ const ProjectCard = ({ project }: Props) => {
                 textAlign={"center"}
                 color="gray.800"
               >
-                <LinkOverlay as={NextLink} href={`editor/${project.id}`}>
+                <LinkOverlay as={NextLink} href={`/editor/${project.id}`}>
                   {project.name}
                 </LinkOverlay>
               </Heading>

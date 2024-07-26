@@ -91,7 +91,7 @@ const EditorPanel = ({
           overflowY={"hidden"}
           width={"100%"}
           sx={{
-            "scrollbar-color": "#8A98A4 #363636",
+            scrollbarColor: "#8A98A4 #363636",
             scrollbarWidth: "thin",
           }}
           onWheel={handleScroll}
