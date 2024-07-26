@@ -75,7 +75,7 @@ const UserProfile: NextPageWithLayout = () => {
     return (
       <Center width={"100%"}>
         <Stack direction="column" alignItems={"center"}>
-          <WarningIcon color={"red.200"} boxSize={8} />
+          <WarningIcon color={"#FC8181"} boxSize={8} />
           <Text paddingInline={"4rem"} fontSize={20} textAlign={"center"}>
             An error occured while loading the user information, please refresh
             the page or try again later
