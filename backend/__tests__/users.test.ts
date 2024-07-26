@@ -80,8 +80,8 @@ export const UPDATE_USER = `#graphql
 `
 
 export const DELETE_USER = `#graphql
-  mutation User ($id: Float!) {
-    deleteUser(id: $id) {            
+  mutation User ($data: DeleteUserInput!) {
+    deleteUser(data: $data) {            
       message
       success
     }
@@ -422,13 +422,17 @@ describe("Test for a new user", () => {
       const response = await server.executeOperation<ResponseDataDelete>({
         query: DELETE_USER,   
         variables: {
-          id : 1
+          data : {
+            id : 1,
+            password : "toto"
+          }
         }   
       },
       {
         contextValue : {
           user : {
-            id : "1"
+            id : "1",
+            role : "ADMIN"
           }
         }
       }

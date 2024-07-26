@@ -49,6 +49,11 @@ export type CreateUserProjectAccessesInput = {
   user_id: Scalars['Float']['input'];
 };
 
+export type DeleteUserInput = {
+  id: Scalars['ID']['input'];
+  password: Scalars['String']['input'];
+};
+
 export type DeleteUserProjectAccessesInput = {
   project_id: Scalars['Float']['input'];
   user_id: Scalars['Float']['input'];
@@ -152,7 +157,7 @@ export type MutationDeleteProjectArgs = {
 
 
 export type MutationDeleteUserArgs = {
-  id: Scalars['Float']['input'];
+  data: DeleteUserInput;
 };
 
 
@@ -485,6 +490,7 @@ export type ResolversTypes = ResolversObject<{
   CreateUserInput: CreateUserInput;
   CreateUserProjectAccessesInput: CreateUserProjectAccessesInput;
   DateTimeISO: ResolverTypeWrapper<Scalars['DateTimeISO']['output']>;
+  DeleteUserInput: DeleteUserInput;
   DeleteUserProjectAccessesInput: DeleteUserProjectAccessesInput;
   File: ResolverTypeWrapper<File>;
   FindAllInfoUserAccessesProject: ResolverTypeWrapper<FindAllInfoUserAccessesProject>;
@@ -515,6 +521,7 @@ export type ResolversParentTypes = ResolversObject<{
   CreateUserInput: CreateUserInput;
   CreateUserProjectAccessesInput: CreateUserProjectAccessesInput;
   DateTimeISO: Scalars['DateTimeISO']['output'];
+  DeleteUserInput: DeleteUserInput;
   DeleteUserProjectAccessesInput: DeleteUserProjectAccessesInput;
   File: File;
   FindAllInfoUserAccessesProject: FindAllInfoUserAccessesProject;
@@ -583,7 +590,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   deleteFile?: Resolver<ResolversTypes['Message'], ParentType, ContextType, RequireFields<MutationDeleteFileArgs, 'id'>>;
   deleteLikeProject?: Resolver<ResolversTypes['Message'], ParentType, ContextType, RequireFields<MutationDeleteLikeProjectArgs, 'projectId' | 'userId'>>;
   deleteProject?: Resolver<ResolversTypes['Message'], ParentType, ContextType, RequireFields<MutationDeleteProjectArgs, 'id'>>;
-  deleteUser?: Resolver<ResolversTypes['Message'], ParentType, ContextType, RequireFields<MutationDeleteUserArgs, 'id'>>;
+  deleteUser?: Resolver<ResolversTypes['Message'], ParentType, ContextType, RequireFields<MutationDeleteUserArgs, 'data'>>;
   register?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationRegisterArgs, 'data'>>;
   updateAccessProject?: Resolver<ResolversTypes['Message'], ParentType, ContextType, RequireFields<MutationUpdateAccessProjectArgs, 'data'>>;
   updateFile?: Resolver<ResolversTypes['Message'], ParentType, ContextType, RequireFields<MutationUpdateFileArgs, 'data'>>;

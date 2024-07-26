@@ -3,7 +3,6 @@ import {
   Project,
   useListUsersLikesPerProjectLazyQuery,
   useListUsersWithAccessesLazyQuery,
-  File
 } from "@/types/graphql";
 import {
   Accordion,
@@ -22,6 +21,7 @@ import {
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import FileItemList from "../FileItemList";
+import { File } from "@/types/editor";
 type InfosPanelProps = {
   project: Project | null;
   setOpenFiles: React.Dispatch<React.SetStateAction<EditorFile[]>>;

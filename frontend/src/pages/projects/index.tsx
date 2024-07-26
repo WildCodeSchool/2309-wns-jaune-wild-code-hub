@@ -2,7 +2,7 @@ import Loader from "@/components/Loader";
 import { ProfilePageContainer } from "@/components/ProfilePageContainer";
 import { ProjectsGrid } from "@/components/ProjectsGrid";
 import { Project, useListPublicProjectsLazyQuery } from "@/types/graphql";
-import { Box, Button, Center, Flex, Heading, Stack } from "@chakra-ui/react";
+import { Box, Button, Center, Flex, Heading, Stack, Text } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { NextPageWithLayout } from "../_app";
 
@@ -34,7 +34,7 @@ const Workspace: NextPageWithLayout = () => {
   return (
     <Box paddingTop="3rem" bg={"black"} overflow="hidden">
       <ProfilePageContainer>
-        <Heading textAlign="center" color="white" fontSize={{ base: "36px" }} paddingBottom={{ base: "3rem", md: "40px" }}>
+        <Heading textAlign="center" color="white" fontSize={{ base: "36px", sm : "40px"}} paddingBottom={{ base: "3rem", md: "40px" }}>
           What Wild Code Hub offers
         </Heading>
 
