@@ -88,7 +88,7 @@ const Searchbar = ({ onResults }: SearchbarProps) => {
           <List spacing={2}>
             {results.map((project) => (
               <ListItem key={project.id} p="0.4rem" _hover={{ bg: "grey" }}>
-                <LinkOverlay as={NextLink} href={`editor/${project.id}`} onClick={handleResultClick}>
+                <LinkOverlay as={NextLink} href={`/editor/${project.id}`} onClick={handleResultClick}>
                   <Text>{project.name}</Text>
                 </LinkOverlay>
               </ListItem>
