@@ -79,6 +79,7 @@ export default class FilesService {
     for (const fileData of data) {
       const { id, ...otherData } = fileData;
       const updateFile = await this.update(id, otherData);
+      console.log(updateFile)
       const m = new Message();
       if (updateFile) {
         m.message = `File with name ${otherData.name}.${otherData.extension} updated!`;
