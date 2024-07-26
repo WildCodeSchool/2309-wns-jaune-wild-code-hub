@@ -38,6 +38,7 @@ const UpdateListFilesEditor: React.FC<UpdateListFilesEditorProps> = ({
     },
     onError(error) {
       console.log("error", error);
+      console.log("error message", error.message)
       showAlert(
         "error",
         "We are sorry, there seems to be an error with the server. Please try again later."
@@ -59,10 +60,12 @@ const UpdateListFilesEditor: React.FC<UpdateListFilesEditorProps> = ({
       );
       if (checkAuthorisationSave) {
         const newData = data.map((item: any) => {
-          const { __typename, id, ...rest } = item;
+          const { __typename, id, created_at, update_at, ...rest } = item;
           return { ...rest, id: +id };
         });
-        if (data) {
+
+        console.log(newData)
+        if (newData) {
           updateMultipleFiles({
             variables: {
               data: newData,

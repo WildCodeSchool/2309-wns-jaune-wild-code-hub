@@ -14,6 +14,10 @@ type EditorProps = {
   project: Project | null;
   expectedOrigin?: string;
   listUserAuthorisationSave: FindAllInfoUserAccessesProject[] | null;
+  code: string;
+  file: File | null;
+  setCode: React.Dispatch<React.SetStateAction<string>>;
+  setFile: React.Dispatch<React.SetStateAction<File | null>>;
 };
 
 const EditorPanel = ({
@@ -24,10 +28,12 @@ const EditorPanel = ({
   project,
   expectedOrigin,
   listUserAuthorisationSave,
+  setCode,
+  code,
+  setFile,
+  file
 }: EditorProps) => {
   const fileBarRef = useRef<HTMLDivElement | null>(null);
-  const [code, setCode] = useState<string>("");
-  const [file, setFile] = useState<File | null>(null);
 
   useEffect(() => {
     if (file) {

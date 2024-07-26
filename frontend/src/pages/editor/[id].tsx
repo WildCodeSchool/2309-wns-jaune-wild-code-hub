@@ -35,8 +35,8 @@ const Editor: NextPageWithLayout = () => {
     variables: { projectId: router.query.id ? +router.query.id : null },
   });
 
-  // const [code, setCode] = useState<string>("");
-  // const [file, setFile] = useState<File | null>(null);
+  const [code, setCode] = useState<string>("");
+  const [file, setFile] = useState<File | null>(null);
   const [openFiles, setOpenFiles] = useState<File[]>([]);
   const [project, setProject] = useState<Project | null>(null);
   const [consoleLogs, setConsoleLogs] = useState<any[]>([]);
@@ -298,6 +298,10 @@ const Editor: NextPageWithLayout = () => {
                 openFiles={openFiles}
                 setOpenFiles={setOpenFiles}
                 data={data}
+                setCode={setCode}
+                code={code}
+                setFile={setFile}
+                file={file}
               />
               {/* <Flex
                 height={"2.5rem"}
