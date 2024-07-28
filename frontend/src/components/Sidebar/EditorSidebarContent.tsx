@@ -18,7 +18,7 @@ import {
 } from "@chakra-ui/react";
 import { useParams } from "next/navigation";
 import { useState } from "react";
-import FileItemList from "../FileItemList";
+import FileItemList from "../Editor/FileItemList";
 
 const EditorSidebarContent = () => {
   const [files, setFiles] = useState<Array<File> | null>(null);
