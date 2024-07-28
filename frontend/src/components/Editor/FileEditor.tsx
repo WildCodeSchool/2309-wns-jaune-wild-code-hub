@@ -50,7 +50,7 @@ const FileEditor: React.FC<Props> = ({
   };
 
   const handleEditorDidMount = (editor: any, monaco: any) => {
-    //A ne pas suprimmée editor ! Obliger pour Monaco
+    //A ne pas suprimmée (editor : any) ! Obliger pour Monaco
     if (!monaco) return;
     defaultTheme(monaco);
     monaco.editor.setTheme("theme");

@@ -31,7 +31,7 @@ const EditorPanel = ({
   setCode,
   code,
   setFile,
-  file
+  file,
 }: EditorProps) => {
   const fileBarRef = useRef<HTMLDivElement | null>(null);
 

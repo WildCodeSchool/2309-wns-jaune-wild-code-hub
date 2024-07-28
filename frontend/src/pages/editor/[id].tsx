@@ -191,8 +191,15 @@ const Editor: NextPageWithLayout = () => {
       pt={"5rem"}
     >
       <PanelGroup direction="horizontal">
+
         <Panel minSize={15}>
-          <InfosPanel project={project} setOpenFiles={setOpenFiles} setCode={setCode} setFile={setFile} />
+          <InfosPanel 
+            project={project}
+            setOpenFiles={setOpenFiles}
+            setCode={setCode}
+            setFile={setFile}
+            setProject={setProject}
+          />
         </Panel>
         <PanelResizeHandle
           style={{

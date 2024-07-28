@@ -128,9 +128,9 @@ const SettingManagement: React.FC<SettingManagementProps> = ({ project, setProje
     }
 
     deleteProject({
-        variables: {
-            deleteProjectId : +project?.id
-        },
+      variables: {
+          deleteProjectId : +project?.id
+      },
     });
   };
 
