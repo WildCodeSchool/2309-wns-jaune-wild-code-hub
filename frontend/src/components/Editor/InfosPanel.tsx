@@ -110,7 +110,7 @@ const InfosPanel = ({ project, setOpenFiles, setCode, setFile }: InfosPanelProps
     <Flex height={"100%"} flexDirection={"column"}>
       <Flex flexDirection={"column"} textAlign={"center"} paddingBlock={4}>
         <Heading size={"md"} textAlign={"center"}>
-          Project Name
+          {project?.name}
         </Heading>
       </Flex>
 
