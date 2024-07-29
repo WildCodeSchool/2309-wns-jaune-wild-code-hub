@@ -440,6 +440,13 @@ export type DeleteFileMutationVariables = Exact<{
 
 export type DeleteFileMutation = { __typename?: 'Mutation', deleteFile: { __typename?: 'Message', success: boolean, message: string } };
 
+export type UpdateFileMutationVariables = Exact<{
+  data: UpdateFileInput;
+}>;
+
+
+export type UpdateFileMutation = { __typename?: 'Mutation', updateFile: { __typename?: 'Message', success: boolean, message: string } };
+
 export type UpdateProjectMutationVariables = Exact<{
   data: UpdateProjectInput;
 }>;
@@ -729,6 +736,40 @@ export function useDeleteFileMutation(baseOptions?: Apollo.MutationHookOptions<D
 export type DeleteFileMutationHookResult = ReturnType<typeof useDeleteFileMutation>;
 export type DeleteFileMutationResult = Apollo.MutationResult<DeleteFileMutation>;
 export type DeleteFileMutationOptions = Apollo.BaseMutationOptions<DeleteFileMutation, DeleteFileMutationVariables>;
+export const UpdateFileDocument = gql`
+    mutation updateFile($data: UpdateFileInput!) {
+  updateFile(data: $data) {
+    success
+    message
+  }
+}
+    `;
+export type UpdateFileMutationFn = Apollo.MutationFunction<UpdateFileMutation, UpdateFileMutationVariables>;
+
+/**
+ * __useUpdateFileMutation__
+ *
+ * To run a mutation, you first call `useUpdateFileMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateFileMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateFileMutation, { data, loading, error }] = useUpdateFileMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useUpdateFileMutation(baseOptions?: Apollo.MutationHookOptions<UpdateFileMutation, UpdateFileMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateFileMutation, UpdateFileMutationVariables>(UpdateFileDocument, options);
+      }
+export type UpdateFileMutationHookResult = ReturnType<typeof useUpdateFileMutation>;
+export type UpdateFileMutationResult = Apollo.MutationResult<UpdateFileMutation>;
+export type UpdateFileMutationOptions = Apollo.BaseMutationOptions<UpdateFileMutation, UpdateFileMutationVariables>;
 export const UpdateProjectDocument = gql`
     mutation updateProject($data: UpdateProjectInput!) {
   updateProject(data: $data) {

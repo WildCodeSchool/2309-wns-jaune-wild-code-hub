@@ -17,3 +17,12 @@ export const DELETE_FILE = gql`
     }
   }
 `;
+
+export const UPDATE_FILE = gql`
+  mutation updateFile($data: UpdateFileInput!) {
+    updateFile(data: $data) {
+      success
+      message
+    }
+  }
+`;

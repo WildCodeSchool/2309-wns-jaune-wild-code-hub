@@ -4,7 +4,6 @@ import View from "@/components/Editor/View";
 import CustomToast from "@/components/ToastCustom/CustomToast";
 import { PROJECT_BY_ID } from "@/requetes/queries/project.queries";
 import { LIST_USERS_ACCESSES_PROJECT } from "@/requetes/queries/usersAccessesProjects.queries";
-// import { File } from "@/types/editor";
 import { FindAllInfoUserAccessesProject, Project, File } from "@/types/graphql";
 import { useQuery } from "@apollo/client";
 import { Flex } from "@chakra-ui/react";
