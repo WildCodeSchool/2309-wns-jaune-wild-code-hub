@@ -1,8 +1,9 @@
-import { File as EditorFile, File } from "@/types/editor";
+import { File as EditorFile } from "@/types/editor";
 import {
   Project,
   useListUsersLikesPerProjectLazyQuery,
   useListUsersWithAccessesLazyQuery,
+  File,
 } from "@/types/graphql";
 import {
   Accordion,

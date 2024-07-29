@@ -21,7 +21,10 @@ export default class FilesService {
   }
 
   async findById(id: number) {
-    return this.db.findOne({ where: { id } });
+    return this.db.findOne({ 
+      where: { id },
+      relations: ["project"], 
+    });
   }
 
   async findByName(name: string, project_id: number) {
@@ -95,7 +98,6 @@ export default class FilesService {
   
   async delete(id: number) {
     const fileToDelete = await this.findById(id);
-    console.log(fileToDelete);
     if (!fileToDelete) {
       throw new Error("The file does not exist !");
     }
