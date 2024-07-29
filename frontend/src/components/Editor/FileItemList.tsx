@@ -26,16 +26,23 @@ type Props = {
   setData: React.Dispatch<React.SetStateAction<File[]>>;
 };
 
+type GenerateLanguageProps =  {
+  name : string,
+  extension : string,
+  language : string,
+}
+
 const FileItemList = ({ file, openFiles, project, setProject, setData}: Props) => {
-  const [isModalUpdateOpen, setIsModalUpdateOpen] = useState(false);
-  const [isModalDeleteOpen, setIsModalDeleteOpen] = useState(false);
-  const [nameFile, setNameFile] = useState(file.name);
-  const [extentionFile, setExtentionFile] = useState(file.extension);
+  
+  const [isModalUpdateOpen, setIsModalUpdateOpen] = useState<boolean>(false);
+  const [isModalDeleteOpen, setIsModalDeleteOpen] = useState<boolean>(false);
+  const [nameFile, setNameFile] = useState<string>(file.name);
+  const [extentionFile, setExtentionFile] = useState<string>(file.extension);
 
   const { showAlert } = CustomToast();
 
-  const generateLanguage = () => {
-    let newData = {
+  const generateLanguage: () => GenerateLanguageProps = (): GenerateLanguageProps => {
+    let newData : GenerateLanguageProps = {
       name : nameFile,
       extension : extentionFile,
       language : "",
@@ -136,7 +143,7 @@ const FileItemList = ({ file, openFiles, project, setProject, setData}: Props) =
   });
 
 
-  const handleClickUpdate = () => {
+  const handleClickUpdate: () => void = () => {
     if (!nameFile || !extentionFile ) 
       return showAlert("error", "Please complete all fields in the form!");
     updateFile({
@@ -152,7 +159,7 @@ const FileItemList = ({ file, openFiles, project, setProject, setData}: Props) =
     });
   };
 
-  const handleClickDelete = () => {
+  const handleClickDelete: () => void  = () => {
     deleteFile({
       variables: {
         deleteFileId : +file.id,
@@ -160,19 +167,19 @@ const FileItemList = ({ file, openFiles, project, setProject, setData}: Props) =
     });
   };
 
-  const openModalDelete = () => {
+  const openModalDelete: () => void  = () => {
     setIsModalDeleteOpen(true);
   };
 
-  const closeModalDelete = () => {
+  const closeModalDelete: () => void  = () => {
     setIsModalDeleteOpen(false);
   };
 
-  const openModalUpdate = () => {
+  const openModalUpdate: () => void  = () => {
     setIsModalUpdateOpen(true);
   };
 
-  const closeModalUpdate = () => {
+  const closeModalUpdate: () => void  = () => {
     setIsModalUpdateOpen(false);
   };
 
