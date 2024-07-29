@@ -62,7 +62,6 @@ export class FileResolver {
   @Authorized()
   @Mutation(() => [Message])
   async updateMultipleFiles(@Arg("data", () => [UpdateFileInput]) data: UpdateFileInput[]) {
-    console.log("felfd,kfdfkfdkdf,df,")
     const messages = await new FilesService().updateMultiple(data);
     return messages;
   }

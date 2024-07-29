@@ -30,9 +30,10 @@ type InfosPanelProps = {
   setCode: React.Dispatch<React.SetStateAction<string>>;
   setFile: React.Dispatch<React.SetStateAction<File | null>>;
   setProject: React.Dispatch<React.SetStateAction<Project | null>>;
+  setData: React.Dispatch<React.SetStateAction<File[] | null>>;
 };
 
-const InfosPanel = ({ project, setOpenFiles, setCode, setFile, setProject }: InfosPanelProps) => {
+const InfosPanel = ({ project, setOpenFiles, setCode, setFile, setProject, setData }: InfosPanelProps) => {
   const router = useRouter();
   const [maxAvatar, setMaxAvatar] = useState(9);
   const [owner, setOwner] = useState<
@@ -140,6 +141,7 @@ const InfosPanel = ({ project, setOpenFiles, setCode, setFile, setProject }: Inf
                             openFiles={handleOpenFiles}
                             project={project}
                             setProject={setProject}
+                            setData={setData}
                           />
                         ))
                       : "There will be files here in the near futur"}

@@ -14,16 +14,16 @@ import {
 import { DELETE_FILE } from "@/requetes/mutations/file.mutations";
 import CustomToast from '@/components/ToastCustom/CustomToast';
 import { useMutation } from "@apollo/client";
-import { log } from "console";
 
 type Props = {
   file: File;
   openFiles: (fileId: number) => void;
   project: Project;
   setProject: React.Dispatch<React.SetStateAction<Project | null>>;
+  setData: React.Dispatch<React.SetStateAction<File[] | null>>;
 };
 
-const FileItemList = ({ file, openFiles, project, setProject}: Props) => {
+const FileItemList = ({ file, openFiles, project, setProject, setData}: Props) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { showAlert } = CustomToast();
@@ -38,6 +38,7 @@ const FileItemList = ({ file, openFiles, project, setProject}: Props) => {
       setTimeout(() => {
         const filesRest = project?.files?.filter(filePoject => filePoject.id !== file.id );
         setProject({ ...project, files: filesRest });
+        setData(filesRest);
         setIsModalOpen(false)
       }, 100)
     } else {

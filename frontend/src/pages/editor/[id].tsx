@@ -91,9 +91,11 @@ const Editor: NextPageWithLayout = () => {
   };
 
   const updateIframe: () => void = (): void => {
+    console.log("cddkdckdc")
     if (window.location.origin !== expectedOrigin) return;
     const iframe = iframeRef.current;
     if (iframe) {
+      console.log("iframe")
       const document = iframe.contentDocument;
       if (document) {
         document.open();
@@ -131,6 +133,8 @@ const Editor: NextPageWithLayout = () => {
 
   useEffect(() => {
     updateIframe();
+    console.log("totto")
+    console.log("data", data)
   }, [data]);
 
   useEffect(() => {
@@ -199,6 +203,7 @@ const Editor: NextPageWithLayout = () => {
             setCode={setCode}
             setFile={setFile}
             setProject={setProject}
+            setData={setData}
           />
         </Panel>
         <PanelResizeHandle
