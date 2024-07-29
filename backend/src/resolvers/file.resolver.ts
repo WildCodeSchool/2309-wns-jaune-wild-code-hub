@@ -39,15 +39,17 @@ export class FileResolver {
     if (context.user == null)
       throw new Error("Access denied! You need to be authenticated to perform this action!");
 
-    const listUsersAccessesProject = await new UserProjectAccessesService().findUsersByAccessesProject(+data.project_id);
-
-    const findUserRoleAccessesProject = listUsersAccessesProject.find(user => user.user_id === context.user?.id);
-
-    if (!findUserRoleAccessesProject)
-      throw new Error("You do not have access to this project!");
-
-    if (findUserRoleAccessesProject.role === "VIEWER" && context.user.role !== "ADMIN")
-      throw new Error("You must be an owner or editor to create this file!");
+    if (context.user.role !== "ADMIN") {    
+      const listUsersAccessesProject = await new UserProjectAccessesService().findUsersByAccessesProject(+data.project_id);
+  
+      const findUserRoleAccessesProject = listUsersAccessesProject.find(user => user.user_id === context.user?.id);
+  
+      if (!findUserRoleAccessesProject)
+        throw new Error("You do not have access to this project!");
+  
+      if (findUserRoleAccessesProject.role === "VIEWER")
+        throw new Error("You must be an owner or editor to create this file!");
+    }
 
     const file = await new FilesService().findByName(
       data.name,
@@ -69,15 +71,17 @@ export class FileResolver {
     const fileById = await new FilesService().findById(data.id);
     if (!fileById) throw new Error("File does not exit");
 
-    const listUsersAccessesProject = await new UserProjectAccessesService().findUsersByAccessesProject(+fileById.project.id);
-
-    const findUserRoleAccessesProject = listUsersAccessesProject.find(user => user.user_id === context.user?.id);
-
-    if (!findUserRoleAccessesProject)
-      throw new Error("You do not have access to this project!");
-
-    if (findUserRoleAccessesProject.role === "VIEWER" && context.user.role !== "ADMIN")
-      throw new Error("You must be an owner or editor to update this file!");
+    if (context.user.role !== "ADMIN") {
+      const listUsersAccessesProject = await new UserProjectAccessesService().findUsersByAccessesProject(+fileById.project.id);
+  
+      const findUserRoleAccessesProject = listUsersAccessesProject.find(user => user.user_id === context.user?.id);
+  
+      if (!findUserRoleAccessesProject)
+        throw new Error("You do not have access to this project!");
+  
+      if (findUserRoleAccessesProject.role === "VIEWER")
+        throw new Error("You must be an owner or editor to update this file!");
+    }
 
     const { id, ...otherData } = data;
     const updateFile = await new FilesService().update(id, otherData);
@@ -109,16 +113,19 @@ export class FileResolver {
     const fileById = await new FilesService().findById(id);
     if (!fileById) throw new Error("File does not exit");
 
-    const listUsersAccessesProject = await new UserProjectAccessesService().findUsersByAccessesProject(+fileById.project.id);
-
-    const findUserRoleAccessesProject = listUsersAccessesProject.find(user => user.user_id === context.user?.id);
-
-    if (!findUserRoleAccessesProject)
-      throw new Error("You do not have access to this project!");
-
-    if (findUserRoleAccessesProject.role === "VIEWER" && context.user.role !== "ADMIN")
-      throw new Error("You must be an owner or editor to delete this file!");
-
+    if (context.user.role !== "ADMIN") {
+      const listUsersAccessesProject = await new UserProjectAccessesService().findUsersByAccessesProject(+fileById.project.id);
+  
+      const findUserRoleAccessesProject = listUsersAccessesProject.find(user => user.user_id === context.user?.id);
+  
+      if (!findUserRoleAccessesProject)
+        throw new Error("You do not have access to this project!");
+  
+      if (findUserRoleAccessesProject.role === "VIEWER")
+        throw new Error("You must be an owner or editor to delete this file!");
+      
+    }
+    
     const delFile = await new FilesService().delete(id);
     const m = new Message();
     if (delFile) {

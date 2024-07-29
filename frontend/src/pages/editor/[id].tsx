@@ -195,7 +195,6 @@ const Editor: NextPageWithLayout = () => {
       pt={"5rem"}
     >
       <PanelGroup direction="horizontal">
-
         <Panel minSize={15}>
           <InfosPanel 
             project={project}
