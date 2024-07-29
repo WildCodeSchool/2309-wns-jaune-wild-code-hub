@@ -49,8 +49,6 @@ const Editor: NextPageWithLayout = () => {
     FindAllInfoUserAccessesProject[] | null
   >(null);
 
-  console.log("users", users);
-
   const getCombinedCode = (): string => {
     const htmlFiles = data?.filter((file) => file.extension === "html");
     const cssFiles = data?.filter((file) => file.extension === "css");

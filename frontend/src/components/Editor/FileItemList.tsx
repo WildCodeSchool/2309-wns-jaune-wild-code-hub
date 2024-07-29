@@ -16,7 +16,6 @@ import {
 import { DELETE_FILE, UPDATE_FILE } from "@/requetes/mutations/file.mutations";
 import CustomToast from '@/components/ToastCustom/CustomToast';
 import { useMutation } from "@apollo/client";
-import { languages } from "monaco-editor";
 
 type Props = {
   file: File;
@@ -33,7 +32,7 @@ type GenerateLanguageProps =  {
 }
 
 const FileItemList = ({ file, openFiles, project, setProject, setData}: Props) => {
-  
+
   const [isModalUpdateOpen, setIsModalUpdateOpen] = useState<boolean>(false);
   const [isModalDeleteOpen, setIsModalDeleteOpen] = useState<boolean>(false);
   const [nameFile, setNameFile] = useState<string>(file.name);
@@ -204,10 +203,10 @@ const FileItemList = ({ file, openFiles, project, setProject, setData}: Props) =
           {file.name}
         </Button>
         <Flex alignItems={"center"}>
-          <Tooltip label={"Rename file"} bgColor={"grey"} color={"text"}>
+          <Tooltip label={"Edit file"} bgColor={"grey"} color={"text"}>
             <IconButton
               size={"xs"}
-              aria-label="rename file"
+              aria-label="Edit file"
               variant={"ghost"}
               icon={<EditIcon boxSize={3} />}
               onClick={openModalUpdate}
@@ -216,7 +215,7 @@ const FileItemList = ({ file, openFiles, project, setProject, setData}: Props) =
           <Tooltip label={"Delete file"} bgColor={"grey"} color={"text"}>
             <IconButton
               size={"xs"}
-              aria-label="delete file"
+              aria-label="Delete file"
               variant={"ghost"}
               icon={<DeleteIcon boxSize={3} />}
               onClick={openModalDelete}
@@ -244,7 +243,7 @@ const FileItemList = ({ file, openFiles, project, setProject, setData}: Props) =
           </Box>
         </Box>
       </GenericModal>
-      <GenericModal isOpen={isModalUpdateOpen} onClose={closeModalUpdate} title="Rename file">
+      <GenericModal isOpen={isModalUpdateOpen} onClose={closeModalUpdate} title="Edit file">
         <Box display="flex" justifyContent="center" alignItems="center" height="100%">
           <Box width="100%" maxWidth="250px" textAlign="center">
             <Text color="white" mb={2}>Enter Name of the File </Text>
