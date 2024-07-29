@@ -30,7 +30,7 @@ type InfosPanelProps = {
   setCode: React.Dispatch<React.SetStateAction<string>>;
   setFile: React.Dispatch<React.SetStateAction<File | null>>;
   setProject: React.Dispatch<React.SetStateAction<Project | null>>;
-  setData: React.Dispatch<React.SetStateAction<File[] | null>>;
+  setData: React.Dispatch<React.SetStateAction<File[]>>;
 };
 
 const InfosPanel = ({ project, setOpenFiles, setCode, setFile, setProject, setData }: InfosPanelProps) => {

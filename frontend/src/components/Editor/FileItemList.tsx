@@ -20,7 +20,7 @@ type Props = {
   openFiles: (fileId: number) => void;
   project: Project;
   setProject: React.Dispatch<React.SetStateAction<Project | null>>;
-  setData: React.Dispatch<React.SetStateAction<File[] | null>>;
+  setData: React.Dispatch<React.SetStateAction<File[]>>;
 };
 
 const FileItemList = ({ file, openFiles, project, setProject, setData}: Props) => {
