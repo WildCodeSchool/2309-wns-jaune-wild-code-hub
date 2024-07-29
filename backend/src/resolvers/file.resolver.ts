@@ -47,7 +47,7 @@ export class FileResolver {
       throw new Error("You do not have access to this project!");
 
     if (findUserRoleAccessesProject.role === "VIEWER" && context.user.role !== "ADMIN")
-      throw new Error("You must be an owner or editor to delete this file!");
+      throw new Error("You must be an owner or editor to create this file!");
 
     const file = await new FilesService().findByName(
       data.name,
@@ -77,7 +77,7 @@ export class FileResolver {
       throw new Error("You do not have access to this project!");
 
     if (findUserRoleAccessesProject.role === "VIEWER" && context.user.role !== "ADMIN")
-      throw new Error("You must be an owner or editor to delete this file!");
+      throw new Error("You must be an owner or editor to update this file!");
 
     const { id, ...otherData } = data;
     const updateFile = await new FilesService().update(id, otherData);
