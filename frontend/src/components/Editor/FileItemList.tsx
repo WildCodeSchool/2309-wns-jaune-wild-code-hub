@@ -19,10 +19,11 @@ import { useMutation } from "@apollo/client";
 
 type Props = {
   file: File;
-  openFiles: (fileId: number) => void;
+  handleOpenFiles: (fileId: number) => void;
   project: Project;
   setProject: React.Dispatch<React.SetStateAction<Project | null>>;
   setData: React.Dispatch<React.SetStateAction<File[]>>;
+  setOpenFiles: React.Dispatch<React.SetStateAction<File[]>>;
 };
 
 type GenerateLanguageProps =  {
@@ -31,7 +32,7 @@ type GenerateLanguageProps =  {
   language : string,
 }
 
-const FileItemList = ({ file, openFiles, project, setProject, setData}: Props) => {
+const FileItemList = ({ file, handleOpenFiles, project, setProject, setData, setOpenFiles }: Props) => {
 
   const [isModalUpdateOpen, setIsModalUpdateOpen] = useState<boolean>(false);
   const [isModalDeleteOpen, setIsModalDeleteOpen] = useState<boolean>(false);
@@ -67,6 +68,13 @@ const FileItemList = ({ file, openFiles, project, setProject, setData}: Props) =
   >(UPDATE_FILE, {
   onCompleted: (data) => {
       if (data?.updateFile?.success) {
+        setOpenFiles((prevFiles) => {
+          const updatedFiles = prevFiles.map((f) => 
+            f.id === file.id ? { ...f, name: generateLanguage().name, extension: generateLanguage().extension, language : generateLanguage().language } : f
+          );
+          return updatedFiles;
+        });
+
         setData((prevFiles) => {
           const updatedFiles = prevFiles.map((f) => 
             f.id === file.id ? { ...f, name: generateLanguage().name, extension: generateLanguage().extension, language : generateLanguage().language } : f
@@ -116,6 +124,13 @@ const FileItemList = ({ file, openFiles, project, setProject, setData}: Props) =
       showAlert("success", data?.deleteFile?.message);
       setTimeout(() => {
         const filesRest = project?.files?.filter(filePoject => filePoject.id !== file.id );
+        
+        setOpenFiles((prevFiles) => {
+          const newFiles = prevFiles.filter((f) => 
+            f.id !== file.id
+          );
+          return newFiles;
+        });
         setProject({ ...project, files: filesRest });
         setData(filesRest);
         setIsModalDeleteOpen(false)
@@ -186,7 +201,7 @@ const FileItemList = ({ file, openFiles, project, setProject, setData}: Props) =
     <>
       <Flex justifyContent={"space-between"} width={"100%"}>
         <Button
-          onClick={() => openFiles(+file.id)}
+          onClick={() => handleOpenFiles(+file.id)}
           variant={"ghost"}
           leftIcon={
             file.extension === "js" ? (

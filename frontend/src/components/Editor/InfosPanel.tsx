@@ -138,10 +138,11 @@ const InfosPanel = ({ project, setOpenFiles, setCode, setFile, setProject, setDa
                           <FileItemList
                             key={file.id}
                             file={file}
-                            openFiles={handleOpenFiles}
+                            handleOpenFiles={handleOpenFiles}
                             project={project}
                             setProject={setProject}
                             setData={setData}
+                            setOpenFiles={setOpenFiles}
                           />
                         ))
                       : "There will be files here in the near futur"}

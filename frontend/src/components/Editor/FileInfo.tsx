@@ -35,7 +35,6 @@ const FileInfo: React.FC<FileInfoProps> = ({
       gap={2}
     >
       {fileName}
-      {/* V1 close file */}
       <CloseIcon width="10px" cursor="pointer" onClick={handleCloseClick} />
     </Box>
   );

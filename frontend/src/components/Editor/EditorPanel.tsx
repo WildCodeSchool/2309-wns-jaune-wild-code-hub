@@ -32,6 +32,7 @@ const EditorPanel = ({
   setFile,
   file,
 }: EditorProps) => {
+
   const fileBarRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -44,7 +45,7 @@ const EditorPanel = ({
         return prevOpenFiles;
       });
     }
-  }, [file, setOpenFiles]);
+  }, [file, setOpenFiles, setFile, setCode]);
 
   const handleCodeChange: (newCode: string) => void = (newCode: string): void => {
     setCode(newCode);
