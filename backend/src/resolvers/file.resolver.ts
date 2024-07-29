@@ -34,7 +34,21 @@ export class FileResolver {
 
   @Authorized()
   @Mutation(() => File)
-  async createFile(@Arg("data") data: CreateFileInput) {
+  async createFile(@Arg("data") data: CreateFileInput, @Ctx() context: MyContext) {
+
+    if (context.user == null)
+      throw new Error("Access denied! You need to be authenticated to perform this action!");
+
+    const listUsersAccessesProject = await new UserProjectAccessesService().findUsersByAccessesProject(+data.project_id);
+
+    const findUserRoleAccessesProject = listUsersAccessesProject.find(user => user.user_id === context.user?.id);
+
+    if (!findUserRoleAccessesProject)
+      throw new Error("You do not have access to this project!");
+
+    if (findUserRoleAccessesProject.role === "VIEWER" && context.user.role !== "ADMIN")
+      throw new Error("You must be an owner or editor to delete this file!");
+
     const file = await new FilesService().findByName(
       data.name,
       data.project_id
