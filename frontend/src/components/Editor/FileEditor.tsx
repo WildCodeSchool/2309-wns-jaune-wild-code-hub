@@ -1,14 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import MonacoEditor, { OnChange } from "@monaco-editor/react";
 import { editor } from "monaco-editor";
-
-interface File {
-  id: string;
-  name: string;
-  extension: string;
-  content: string;
-  language: string;
-}
+import { File } from "@/types/graphql";
 
 interface Props {
   code: string;

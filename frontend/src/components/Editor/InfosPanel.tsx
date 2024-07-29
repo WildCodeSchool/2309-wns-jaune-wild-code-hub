@@ -1,4 +1,4 @@
-import { File as EditorFile } from "@/types/editor";
+import { File as EditorFile } from "@/types/graphql";
 import {
   Project,
   useListUsersLikesPerProjectLazyQuery,

@@ -3,8 +3,8 @@ import React, { Dispatch, useEffect, useRef, useState } from "react";
 import UpdateListFilesEditor from "./UpdateListFilesEditor";
 import FileEditor from "./FileEditor";
 import FileInfo from "./FileInfo";
-import { FindAllInfoUserAccessesProject, Project } from "@/types/graphql";
-import { File } from "@/types/editor";
+import { FindAllInfoUserAccessesProject, Project, File } from "@/types/graphql";
+// import { File } from "@/types/editor";
 
 type EditorProps = {
   setData: Dispatch<React.SetStateAction<File[]>>;
