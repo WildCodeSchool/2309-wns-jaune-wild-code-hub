@@ -38,11 +38,12 @@ const UpdateListFilesEditor: React.FC<UpdateListFilesEditorProps> = ({
       });
     },
     onError(error) {
-      console.log("error", error);
-      console.log("error message", error.message)
       showAlert(
-        "error",
-        "We are sorry, there seems to be an error with the server. Please try again later."
+        'error',
+        error.message ?
+          error.message
+        :
+          "We are sorry, there seems to be an error with the server. Please try again later."
       );
     },
   });

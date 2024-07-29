@@ -97,7 +97,6 @@ const InfosPanel = ({ project, setOpenFiles, setCode, setFile, setProject, setDa
     if (project) {
       const { files } = project;
       const newFile = files.find((file) => +file.id === fileId);
-      console.log("new file", newFile)
       newFile && (
         setOpenFiles((prevState) => {
           if (prevState.find((file) => file.id === newFile.id))

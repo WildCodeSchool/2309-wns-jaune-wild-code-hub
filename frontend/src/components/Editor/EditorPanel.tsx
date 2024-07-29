@@ -54,10 +54,8 @@ const EditorPanel = ({
   };
 
   const handleFileClose: (fileId: number) => void = (fileId: number): void => {
-    console.log("fileId", fileId);
     setOpenFiles((prevOpenFiles) => {
       const newOpenFiles = prevOpenFiles.filter((f) => +f.id !== fileId);
-      console.log("newOpenFiles", newOpenFiles);
       if (newOpenFiles.length === 0) {
         setFile(null);
         setCode("");

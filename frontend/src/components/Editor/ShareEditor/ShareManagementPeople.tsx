@@ -94,8 +94,13 @@ const ShareManagementPeople: React.FC<ShareManagementPeopleProps> = ({ users, se
       }
     },
     onError(error) {
-      console.log("error", error)
-      showAlert('error', 'We are sorry, there seems to be an error with the server. Please try again later.');
+      showAlert(
+        'error',
+        error.message ?
+          error.message
+        :
+          "We are sorry, there seems to be an error with the server. Please try again later."
+      );
     }
   });
 
@@ -116,8 +121,13 @@ const ShareManagementPeople: React.FC<ShareManagementPeopleProps> = ({ users, se
       }
     },
     onError(error) {
-      console.log("error", error)
-      showAlert('error', 'We are sorry, there seems to be an error with the server. Please try again later.');
+      showAlert(
+        'error',
+        error.message ?
+          error.message
+        :
+          "We are sorry, there seems to be an error with the server. Please try again later."
+      );
     }
   });
 
