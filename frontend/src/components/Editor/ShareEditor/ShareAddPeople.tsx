@@ -97,7 +97,7 @@ const ShareAddPeople: React.FC<ShareAddPeopleProps> = ({ setUsers }) => {
     setAuthorizeSearchTerm(inputValue.length > 0);
   }
 
-  const handleClick = () => {
+  const handleClick: () => void = () => {
     if (!selectedUser || role.length === 0 || !router.query.id || typeof +router.query.id !== "number") {
       return showAlert("error", "Please complete all fields in the form!");
     }

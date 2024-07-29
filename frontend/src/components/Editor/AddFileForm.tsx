@@ -13,10 +13,10 @@ interface AddFileFormProps {
 }
 
 const AddFileForm: React.FC<AddFileFormProps> = ({ addFile }) => {
-  const [fileName, setFileName] = useState("");
-  const [error, setError] = useState("");
+  const [fileName, setFileName] = useState<string>("");
+  const [error, setError] = useState<string>("");
 
-  const handleSubmit = (event: React.FormEvent) => {
+  const handleSubmit: (event: React.FormEvent) => void = (event: React.FormEvent) => {
     event.preventDefault();
 
     if (!checkRegex(fileNamePattern, fileName)) {

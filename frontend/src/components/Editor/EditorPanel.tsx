@@ -1,10 +1,9 @@
 import { Box, Button, Flex, Text } from "@chakra-ui/react";
-import React, { Dispatch, useEffect, useRef, useState } from "react";
+import React, { Dispatch, useEffect, useRef } from "react";
 import UpdateListFilesEditor from "./UpdateListFilesEditor";
 import FileEditor from "./FileEditor";
 import FileInfo from "./FileInfo";
 import { FindAllInfoUserAccessesProject, Project, File } from "@/types/graphql";
-// import { File } from "@/types/editor";
 
 type EditorProps = {
   setData: Dispatch<React.SetStateAction<File[]>>;
@@ -47,14 +46,14 @@ const EditorPanel = ({
     }
   }, [file, setOpenFiles]);
 
-  const handleCodeChange = (newCode: string): void => {
+  const handleCodeChange: (newCode: string) => void = (newCode: string): void => {
     setCode(newCode);
     setData((prevData) =>
       prevData.map((f) => (f.id === file?.id ? { ...f, content: newCode } : f))
     );
   };
 
-  const handleFileClose = (fileId: number): void => {
+  const handleFileClose: (fileId: number) => void = (fileId: number): void => {
     console.log("fileId", fileId);
     setOpenFiles((prevOpenFiles) => {
       const newOpenFiles = prevOpenFiles.filter((f) => +f.id !== fileId);
@@ -69,8 +68,8 @@ const EditorPanel = ({
       return newOpenFiles;
     });
   };
-  console.log("openFiles", openFiles);
-  const handleScroll = (event: React.WheelEvent<HTMLDivElement>) => {
+
+  const handleScroll: (event: React.WheelEvent<HTMLDivElement>) => void = (event: React.WheelEvent<HTMLDivElement>) => {
     const { deltaY } = event;
     if (fileBarRef.current) {
       fileBarRef.current.scrollLeft += deltaY;

@@ -5,12 +5,13 @@ import {
   UpdateMultipleFilesMutation,
   UpdateMultipleFilesMutationVariables,
   Project,
+  File,
 } from "@/types/graphql";
 import { useMutation } from "@apollo/client";
 import { UPDATE_MULTIPLE_FILES } from "@/requetes/mutations/file.mutations";
-import { File } from "@/types/editor";
 import { FindAllInfoUserAccessesProject } from "@/types/graphql";
 import Cookies from "js-cookie";
+
 interface UpdateListFilesEditorProps {
   data: File[];
   project: Project | null;
@@ -52,7 +53,7 @@ const UpdateListFilesEditor: React.FC<UpdateListFilesEditorProps> = ({
     if (!project || listUserAuthorisationSave == null)
       return showAlert("error", "Please wait while the project loads!");
 
-    const getCookieIdUser = Cookies.get("id");
+    const getCookieIdUser: string | undefined = Cookies.get("id");
     if (getCookieIdUser) {
       const checkAuthorisationSave = listUserAuthorisationSave?.find(
         (user: FindAllInfoUserAccessesProject) =>
@@ -64,7 +65,6 @@ const UpdateListFilesEditor: React.FC<UpdateListFilesEditorProps> = ({
           return { ...rest, id: +id };
         });
 
-        console.log(newData)
         if (newData) {
           updateMultipleFiles({
             variables: {

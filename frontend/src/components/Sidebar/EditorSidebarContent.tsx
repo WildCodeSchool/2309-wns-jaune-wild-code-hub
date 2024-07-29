@@ -18,7 +18,7 @@ import {
 } from "@chakra-ui/react";
 import { useParams } from "next/navigation";
 import { useState } from "react";
-import FileItemList from "../Editor/FileItemList";
+
 
 const EditorSidebarContent = () => {
   const [files, setFiles] = useState<Array<File> | null>(null);
@@ -44,7 +44,7 @@ const EditorSidebarContent = () => {
       });
     },
   });
-  console.log("project", project);
+
   return (
     <Flex id="top-nav" width={"100%"} direction={"column"} gap={12}></Flex>
   );

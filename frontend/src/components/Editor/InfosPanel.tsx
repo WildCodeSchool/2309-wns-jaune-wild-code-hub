@@ -36,7 +36,7 @@ type InfosPanelProps = {
 
 const InfosPanel = ({ project, setOpenFiles, setCode, setFile, setProject, setData }: InfosPanelProps) => {
   const router = useRouter();
-  const [maxAvatar, setMaxAvatar] = useState(9);
+  const [maxAvatar, setMaxAvatar] = useState<number>(9);
   const [owner, setOwner] = useState<
     | {
         __typename?: "User";
@@ -93,7 +93,7 @@ const InfosPanel = ({ project, setOpenFiles, setCode, setFile, setProject, setDa
     }
   }, [project, getContributors, getSupporters]);
 
-  const handleOpenFiles = (fileId: number) => {
+  const handleOpenFiles: (fileId: number) => void = (fileId: number) => {
     if (project) {
       const { files } = project;
       const newFile = files.find((file) => +file.id === fileId);

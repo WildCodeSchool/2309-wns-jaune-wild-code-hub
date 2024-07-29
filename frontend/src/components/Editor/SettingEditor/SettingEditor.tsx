@@ -24,7 +24,7 @@ const SettingEditor: React.FC<SettingEditorProps> = ({
   const { showAlert } = CustomToast();
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
 
-  const settingProject: () => void = async () => {
+  const settingProject: () => void = async ()=> {
     if (window.location.origin !== expectedOrigin) return;
     if (!project) {
       showAlert("error", "Please wait while the project loads!");

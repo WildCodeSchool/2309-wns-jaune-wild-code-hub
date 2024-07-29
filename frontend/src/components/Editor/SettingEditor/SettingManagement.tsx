@@ -35,7 +35,7 @@ const SettingManagement: React.FC<SettingManagementProps> = ({ project, setProje
 
   const { showAlert } = CustomToast();
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [nameProject, setNameProject] = useState<string>(project?.name ? project?.name : "");
   const [privateProject, setPrivateProject] = useState<boolean>(project?.private ? true : false);
 
@@ -106,7 +106,7 @@ const SettingManagement: React.FC<SettingManagementProps> = ({ project, setProje
     }
     });
 
-  const handleClickUpdate = () => {
+  const handleClickUpdate: () => void = () => {
     if (!nameProject || !project || !router.query.id || typeof +router.query.id !== "number") {
       return showAlert("error", "Please complete all fields in the form!");
     }
@@ -122,7 +122,7 @@ const SettingManagement: React.FC<SettingManagementProps> = ({ project, setProje
     });
   };
 
-  const handleClickDelete = () => {
+  const handleClickDelete: () => void = () => {
     if (!nameProject || !project || !router.query.id || typeof +router.query.id !== "number") {
       return showAlert("error", "Please complete all fields in the form!");
     }
@@ -134,11 +134,11 @@ const SettingManagement: React.FC<SettingManagementProps> = ({ project, setProje
     });
   };
 
-  const openModal = () => {
+  const openModal: () => void = () => {
     setIsModalOpen(true);
   };
 
-  const closeModal = () => {
+  const closeModal: () => void = () => {
     setIsModalOpen(false);
   };
 
