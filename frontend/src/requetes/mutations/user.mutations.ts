@@ -9,11 +9,11 @@ export const UPDATE_USER = gql`
   }
 `;
 
-// export const DELETE_USER = gql`
-//   mutation DeleteUser($deleteUserId: Float!) {
-//     deleteUser(id: $deleteUserId) {
-//       message
-//       success
-//     }
-//   }
-// `;
+export const DELETE_USER = gql`
+  mutation DeleteUser($data: DeleteUserInput!) {
+    deleteUser(data: $data) {
+      message
+      success
+    }
+  }
+`;
