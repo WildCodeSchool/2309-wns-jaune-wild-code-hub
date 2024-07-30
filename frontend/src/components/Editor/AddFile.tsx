@@ -16,11 +16,11 @@ import { AddIcon } from "@chakra-ui/icons";
 import CustomToast from '@/components/ToastCustom/CustomToast';
 import GenericModal from "../GenericModal";
 
-interface AddFileFormProps {
+interface AddFileProps {
   addFile?: (fileName: string) => void;
 }
 
-const AddFileForm: React.FC<AddFileFormProps> = ({ addFile }) => {
+const AddFile: React.FC<AddFileProps> = ({ addFile }) => {
   const [fileName, setFileName] = useState<string>("");
   const [error, setError] = useState<string>("");
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -122,4 +122,4 @@ const AddFileForm: React.FC<AddFileFormProps> = ({ addFile }) => {
   );
 };
 
-export default AddFileForm;
+export default AddFile;
