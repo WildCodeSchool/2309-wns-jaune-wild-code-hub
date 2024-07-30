@@ -28,9 +28,9 @@ const Terminal: React.FC<TerminalProps> = ({ logs, panelRef }) => {
   const [expandedState, setExpandedState] = useState<{
     [logIndex: number]: { [argIndex: number]: boolean };
   }>({});
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
 
-  const toggleTerminal = () => {
+  const toggleTerminal: () => void = () => {
     const panel = panelRef.current;
     if (panel?.isCollapsed()) {
       panel.expand();
@@ -42,7 +42,7 @@ const Terminal: React.FC<TerminalProps> = ({ logs, panelRef }) => {
   };
 
   useEffect(() => {
-    const scrollToBottom = () => {
+    const scrollToBottom: () => void = () => {
       if (outputRef.current) {
         outputRef.current.scrollTop = outputRef.current.scrollHeight;
       }
@@ -51,7 +51,7 @@ const Terminal: React.FC<TerminalProps> = ({ logs, panelRef }) => {
     scrollToBottom();
   }, [logs]);
 
-  const toggleAccordion = (logIndex: number, argIndex: number) => {
+  const toggleAccordion: (logIndex: number, argIndex: number) => void = (logIndex: number, argIndex: number) => {
     setExpandedState((prevState) => ({
       ...prevState,
       [logIndex]: {

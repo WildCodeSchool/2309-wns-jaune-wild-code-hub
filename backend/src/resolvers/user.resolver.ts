@@ -88,7 +88,7 @@ export class UserResolver {
         id: user.id,
       })
         .setProtectedHeader({ alg: "HS256", typ: "jwt" })
-        .setExpirationTime("2h")
+        .setExpirationTime("1d")
         .sign(new TextEncoder().encode(`${process.env.SECRET_KEY}`));
 
       let cookies = new Cookies(ctx.req, ctx.res);

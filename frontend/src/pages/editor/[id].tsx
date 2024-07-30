@@ -4,8 +4,7 @@ import View from "@/components/Editor/View";
 import CustomToast from "@/components/ToastCustom/CustomToast";
 import { PROJECT_BY_ID } from "@/requetes/queries/project.queries";
 import { LIST_USERS_ACCESSES_PROJECT } from "@/requetes/queries/usersAccessesProjects.queries";
-import { File } from "@/types/editor";
-import { FindAllInfoUserAccessesProject, Project } from "@/types/graphql";
+import { FindAllInfoUserAccessesProject, Project, File } from "@/types/graphql";
 import { useQuery } from "@apollo/client";
 import { Flex } from "@chakra-ui/react";
 import DOMPurify from "dompurify";
@@ -50,9 +49,7 @@ const Editor: NextPageWithLayout = () => {
     FindAllInfoUserAccessesProject[] | null
   >(null);
 
-  console.log("users", users);
-
-  const getCombinedCode = (): string => {
+  const getCombinedCode: () => string = (): string => {
     const htmlFiles = data?.filter((file) => file.extension === "html");
     const cssFiles = data?.filter((file) => file.extension === "css");
     const jsFiles = data?.filter((file) => file.extension === "js");
@@ -192,7 +189,14 @@ const Editor: NextPageWithLayout = () => {
     >
       <PanelGroup direction="horizontal">
         <Panel minSize={15}>
-          <InfosPanel project={project} setOpenFiles={setOpenFiles} setCode={setCode} setFile={setFile} />
+          <InfosPanel 
+            project={project}
+            setOpenFiles={setOpenFiles}
+            setCode={setCode}
+            setFile={setFile}
+            setProject={setProject}
+            setData={setData}
+          />
         </Panel>
         <PanelResizeHandle
           style={{

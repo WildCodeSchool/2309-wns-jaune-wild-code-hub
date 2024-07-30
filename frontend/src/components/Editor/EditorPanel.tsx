@@ -1,10 +1,9 @@
 import { Box, Button, Flex, Text } from "@chakra-ui/react";
-import React, { Dispatch, useEffect, useRef, useState } from "react";
+import React, { Dispatch, useEffect, useRef } from "react";
 import UpdateListFilesEditor from "./UpdateListFilesEditor";
 import FileEditor from "./FileEditor";
 import FileInfo from "./FileInfo";
-import { FindAllInfoUserAccessesProject, Project } from "@/types/graphql";
-import { File } from "@/types/editor";
+import { FindAllInfoUserAccessesProject, Project, File } from "@/types/graphql";
 
 type EditorProps = {
   setData: Dispatch<React.SetStateAction<File[]>>;
@@ -31,8 +30,9 @@ const EditorPanel = ({
   setCode,
   code,
   setFile,
-  file
+  file,
 }: EditorProps) => {
+
   const fileBarRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -45,32 +45,30 @@ const EditorPanel = ({
         return prevOpenFiles;
       });
     }
-  }, [file, setOpenFiles]);
+  }, [file, setOpenFiles, setFile, setCode, openFiles]);
 
-  const handleCodeChange = (newCode: string): void => {
+  const handleCodeChange: (newCode: string) => void = (newCode: string): void => {
     setCode(newCode);
     setData((prevData) =>
       prevData.map((f) => (f.id === file?.id ? { ...f, content: newCode } : f))
     );
   };
 
-  const handleFileClose = (fileId: number): void => {
-    console.log("fileId", fileId);
+  const handleFileClose: (fileId: number) => void = (fileId: number): void => {
     setOpenFiles((prevOpenFiles) => {
       const newOpenFiles = prevOpenFiles.filter((f) => +f.id !== fileId);
-      console.log("newOpenFiles", newOpenFiles);
       if (newOpenFiles.length === 0) {
         setFile(null);
         setCode("");
       } else if (Number(file?.id) === fileId) {
-        setFile(newOpenFiles[0]);
-        setCode(newOpenFiles[0].content);
+        setFile(newOpenFiles[newOpenFiles.length - 1]);
+        setCode(newOpenFiles[newOpenFiles.length - 1].content);
       }
       return newOpenFiles;
     });
   };
-  console.log("openFiles", openFiles);
-  const handleScroll = (event: React.WheelEvent<HTMLDivElement>) => {
+
+  const handleScroll: (event: React.WheelEvent<HTMLDivElement>) => void = (event: React.WheelEvent<HTMLDivElement>) => {
     const { deltaY } = event;
     if (fileBarRef.current) {
       fileBarRef.current.scrollLeft += deltaY;

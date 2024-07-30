@@ -8,3 +8,21 @@ export const UPDATE_MULTIPLE_FILES = gql`
     }
   }
 `;
+
+export const DELETE_FILE = gql`
+  mutation deleteFile($deleteFileId: Float!) {
+    deleteFile(id: $deleteFileId) {
+      success
+      message
+    }
+  }
+`;
+
+export const UPDATE_FILE = gql`
+  mutation updateFile($data: UpdateFileInput!) {
+    updateFile(data: $data) {
+      success
+      message
+    }
+  }
+`;

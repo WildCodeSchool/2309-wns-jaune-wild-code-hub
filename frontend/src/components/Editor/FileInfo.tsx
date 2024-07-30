@@ -15,8 +15,8 @@ const FileInfo: React.FC<FileInfoProps> = ({
   isSelected,
   onClick,
 }) => {
-  //  V1 close file
-  const handleCloseClick = (event: React.MouseEvent) => {
+
+  const handleCloseClick: (event: React.MouseEvent) => void = (event: React.MouseEvent) => {
     event.stopPropagation();
     onClose();
   };
@@ -35,7 +35,6 @@ const FileInfo: React.FC<FileInfoProps> = ({
       gap={2}
     >
       {fileName}
-      {/* V1 close file */}
       <CloseIcon width="10px" cursor="pointer" onClick={handleCloseClick} />
     </Box>
   );

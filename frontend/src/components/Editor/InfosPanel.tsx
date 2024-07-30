@@ -1,8 +1,9 @@
-import { File as EditorFile, File } from "@/types/editor";
+import { File as EditorFile } from "@/types/graphql";
 import {
   Project,
   useListUsersLikesPerProjectLazyQuery,
   useListUsersWithAccessesLazyQuery,
+  File,
 } from "@/types/graphql";
 import {
   Accordion,
@@ -22,17 +23,21 @@ import {
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import FileItemList from "../FileItemList";
+import FileItemList from "./FileItemList"
+import AddFileForm from "./AddFileForm";
 
 type InfosPanelProps = {
   project: Project | null;
   setOpenFiles: React.Dispatch<React.SetStateAction<EditorFile[]>>;
   setCode: React.Dispatch<React.SetStateAction<string>>;
   setFile: React.Dispatch<React.SetStateAction<File | null>>;
+  setProject: React.Dispatch<React.SetStateAction<Project | null>>;
+  setData: React.Dispatch<React.SetStateAction<File[]>>;
 };
-const InfosPanel = ({ project, setOpenFiles, setCode, setFile }: InfosPanelProps) => {
+
+const InfosPanel = ({ project, setOpenFiles, setCode, setFile, setProject, setData }: InfosPanelProps) => {
   const router = useRouter();
-  const [maxAvatar, setMaxAvatar] = useState(9);
+  const [maxAvatar, setMaxAvatar] = useState<number>(9);
   const [owner, setOwner] = useState<
     | {
         __typename?: "User";
@@ -89,11 +94,10 @@ const InfosPanel = ({ project, setOpenFiles, setCode, setFile }: InfosPanelProps
     }
   }, [project, getContributors, getSupporters]);
 
-  const handleOpenFiles = (fileId: number) => {
+  const handleOpenFiles: (fileId: number) => void = (fileId: number) => {
     if (project) {
       const { files } = project;
       const newFile = files.find((file) => +file.id === fileId);
-      console.log("new file", newFile)
       newFile && (
         setOpenFiles((prevState) => {
           if (prevState.find((file) => file.id === newFile.id))
@@ -110,11 +114,11 @@ const InfosPanel = ({ project, setOpenFiles, setCode, setFile }: InfosPanelProps
     <Flex height={"100%"} flexDirection={"column"}>
       <Flex flexDirection={"column"} textAlign={"center"} paddingBlock={4}>
         <Heading size={"md"} textAlign={"center"}>
-          Project Name
+          {project?.name}
         </Heading>
       </Flex>
 
-      <Accordion allowMultiple defaultIndex={[0]}>
+      <Accordion allowToggle defaultIndex={[0]}>
         <AccordionItem position={"relative"}>
           {({ isExpanded }) => {
             return (
@@ -122,9 +126,8 @@ const InfosPanel = ({ project, setOpenFiles, setCode, setFile }: InfosPanelProps
                 <h2>
                   <AccordionButton as="div">
                     <Box as="span" flex="1" textAlign="left">
-                      Files
+                      Files <AddFileForm />
                     </Box>
-
                     <AccordionIcon />
                   </AccordionButton>
                 </h2>
@@ -135,7 +138,13 @@ const InfosPanel = ({ project, setOpenFiles, setCode, setFile }: InfosPanelProps
                           <FileItemList
                             key={file.id}
                             file={file}
-                            openFiles={handleOpenFiles}
+                            handleOpenFiles={handleOpenFiles}
+                            project={project}
+                            setProject={setProject}
+                            setData={setData}
+                            setOpenFiles={setOpenFiles}
+                            setCode={setCode}
+                            setFile={setFile}
                           />
                         ))
                       : "There will be files here in the near futur"}

@@ -5,12 +5,13 @@ import {
   UpdateMultipleFilesMutation,
   UpdateMultipleFilesMutationVariables,
   Project,
+  File,
 } from "@/types/graphql";
 import { useMutation } from "@apollo/client";
 import { UPDATE_MULTIPLE_FILES } from "@/requetes/mutations/file.mutations";
-import { File } from "@/types/editor";
 import { FindAllInfoUserAccessesProject } from "@/types/graphql";
 import Cookies from "js-cookie";
+
 interface UpdateListFilesEditorProps {
   data: File[];
   project: Project | null;
@@ -37,11 +38,12 @@ const UpdateListFilesEditor: React.FC<UpdateListFilesEditorProps> = ({
       });
     },
     onError(error) {
-      console.log("error", error);
-      console.log("error message", error.message)
       showAlert(
-        "error",
-        "We are sorry, there seems to be an error with the server. Please try again later."
+        'error',
+        error.message ?
+          error.message
+        :
+          "We are sorry, there seems to be an error with the server. Please try again later."
       );
     },
   });
@@ -52,7 +54,7 @@ const UpdateListFilesEditor: React.FC<UpdateListFilesEditorProps> = ({
     if (!project || listUserAuthorisationSave == null)
       return showAlert("error", "Please wait while the project loads!");
 
-    const getCookieIdUser = Cookies.get("id");
+    const getCookieIdUser: string | undefined = Cookies.get("id");
     if (getCookieIdUser) {
       const checkAuthorisationSave = listUserAuthorisationSave?.find(
         (user: FindAllInfoUserAccessesProject) =>
@@ -64,7 +66,6 @@ const UpdateListFilesEditor: React.FC<UpdateListFilesEditorProps> = ({
           return { ...rest, id: +id };
         });
 
-        console.log(newData)
         if (newData) {
           updateMultipleFiles({
             variables: {

@@ -21,9 +21,9 @@ import {
   Text
 } from "@chakra-ui/react";
 
-import CommentIcon from "./Icons/CommentIcon";
-import HeartIcon from "./Icons/HeartIcon";
-import ShareIcon from "./Icons/ShareIcon";
+import CommentIcon from "./Editor/Icons/CommentIcon";
+import HeartIcon from "./Editor/Icons/HeartIcon";
+import ShareIcon from "./Editor/Icons/ShareIcon";
 
 type Props = {
   project: Pick<Project, "id" | "category" | "name">;
