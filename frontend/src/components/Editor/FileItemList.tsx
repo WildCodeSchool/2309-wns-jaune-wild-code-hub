@@ -24,6 +24,8 @@ type Props = {
   setProject: React.Dispatch<React.SetStateAction<Project | null>>;
   setData: React.Dispatch<React.SetStateAction<File[]>>;
   setOpenFiles: React.Dispatch<React.SetStateAction<File[]>>;
+  setCode: React.Dispatch<React.SetStateAction<string>>;
+  setFile: React.Dispatch<React.SetStateAction<File | null>>;
 };
 
 type GenerateLanguageProps =  {
@@ -32,7 +34,7 @@ type GenerateLanguageProps =  {
   language : string,
 }
 
-const FileItemList = ({ file, handleOpenFiles, project, setProject, setData, setOpenFiles }: Props) => {
+const FileItemList = ({ file, handleOpenFiles, project, setProject, setData, setOpenFiles, setCode, setFile }: Props) => {
 
   const [isModalUpdateOpen, setIsModalUpdateOpen] = useState<boolean>(false);
   const [isModalDeleteOpen, setIsModalDeleteOpen] = useState<boolean>(false);
@@ -68,11 +70,16 @@ const FileItemList = ({ file, handleOpenFiles, project, setProject, setData, set
   >(UPDATE_FILE, {
   onCompleted: (data) => {
       if (data?.updateFile?.success) {
-        setOpenFiles((prevFiles) => {
-          const updatedFiles = prevFiles.map((f) => 
-            f.id === file.id ? { ...f, name: generateLanguage().name, extension: generateLanguage().extension, language : generateLanguage().language } : f
-          );
-          return updatedFiles;
+        setOpenFiles((prevOpenFiles) => {
+          const newOpenFiles = prevOpenFiles.filter((f) => +f.id !== +file.id);
+          if (newOpenFiles.length === 0) {
+            setFile(null);
+            setCode("");
+          } else if (Number(file?.id) ===  +file.id) {
+            setFile(newOpenFiles[newOpenFiles.length - 1]);
+            setCode(newOpenFiles[newOpenFiles.length - 1].content);
+          }
+          return newOpenFiles;
         });
 
         setData((prevFiles) => {
@@ -124,13 +131,19 @@ const FileItemList = ({ file, handleOpenFiles, project, setProject, setData, set
       showAlert("success", data?.deleteFile?.message);
       setTimeout(() => {
         const filesRest = project?.files?.filter(filePoject => filePoject.id !== file.id );
-        
-        setOpenFiles((prevFiles) => {
-          const newFiles = prevFiles.filter((f) => 
-            f.id !== file.id
-          );
-          return newFiles;
+
+        setOpenFiles((prevOpenFiles) => {
+          const newOpenFiles = prevOpenFiles.filter((f) => +f.id !== +file.id);
+          if (newOpenFiles.length === 0) {
+            setFile(null);
+            setCode("");
+          } else if (Number(file?.id) ===  +file.id) {
+            setFile(newOpenFiles[newOpenFiles.length - 1]);
+            setCode(newOpenFiles[newOpenFiles.length - 1].content);
+          }
+          return newOpenFiles;
         });
+
         setProject({ ...project, files: filesRest });
         setData(filesRest);
         setIsModalDeleteOpen(false)

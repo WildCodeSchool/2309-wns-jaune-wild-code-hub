@@ -19,8 +19,9 @@ const FileEditor: React.FC<Props> = ({
   language,
 }) => {
   const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
-
+  const monacoRef = useRef<typeof import("monaco-editor") | null>(null);
   const handleChange: OnChange = (value) => {
+
     if (value && file) {
       setCode(value);
       setData((prevData) =>
@@ -45,6 +46,8 @@ const FileEditor: React.FC<Props> = ({
   const handleEditorDidMount: (editor: any, monaco: any) => void = (editor: any, monaco: any) => {
     //A ne pas suprimmée (editor : any) ! Obliger pour Monaco
     if (!monaco) return;
+    editorRef.current = editor;
+    monacoRef.current = monaco;
     defaultTheme(monaco);
     monaco.editor.setTheme("theme");
   };
@@ -61,6 +64,15 @@ const FileEditor: React.FC<Props> = ({
       window.removeEventListener("resize", resizeEditor);
     };
   }, []);
+
+    useEffect(() => {
+    if (editorRef.current && language && monacoRef.current) {
+      const model = editorRef.current.getModel();
+      if (model) {
+        monacoRef.current.editor.setModelLanguage(model, language);
+      }
+    }
+  }, [language]);
 
   return (
     <MonacoEditor

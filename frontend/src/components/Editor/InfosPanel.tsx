@@ -143,6 +143,8 @@ const InfosPanel = ({ project, setOpenFiles, setCode, setFile, setProject, setDa
                             setProject={setProject}
                             setData={setData}
                             setOpenFiles={setOpenFiles}
+                            setCode={setCode}
+                            setFile={setFile}
                           />
                         ))
                       : "There will be files here in the near futur"}

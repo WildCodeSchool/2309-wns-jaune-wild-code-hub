@@ -45,7 +45,7 @@ const EditorPanel = ({
         return prevOpenFiles;
       });
     }
-  }, [file, setOpenFiles, setFile, setCode]);
+  }, [file, setOpenFiles, setFile, setCode, openFiles]);
 
   const handleCodeChange: (newCode: string) => void = (newCode: string): void => {
     setCode(newCode);
@@ -61,8 +61,8 @@ const EditorPanel = ({
         setFile(null);
         setCode("");
       } else if (Number(file?.id) === fileId) {
-        setFile(newOpenFiles[0]);
-        setCode(newOpenFiles[0].content);
+        setFile(newOpenFiles[newOpenFiles.length - 1]);
+        setCode(newOpenFiles[newOpenFiles.length - 1].content);
       }
       return newOpenFiles;
     });
