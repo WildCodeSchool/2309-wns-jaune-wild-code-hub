@@ -24,6 +24,7 @@ import {
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import FileItemList from "./FileItemList"
+import AddFileForm from "./AddFileForm";
 
 type InfosPanelProps = {
   project: Project | null;
@@ -117,7 +118,7 @@ const InfosPanel = ({ project, setOpenFiles, setCode, setFile, setProject, setDa
         </Heading>
       </Flex>
 
-      <Accordion allowMultiple defaultIndex={[0]}>
+      <Accordion allowToggle defaultIndex={[0]}>
         <AccordionItem position={"relative"}>
           {({ isExpanded }) => {
             return (
@@ -125,9 +126,8 @@ const InfosPanel = ({ project, setOpenFiles, setCode, setFile, setProject, setDa
                 <h2>
                   <AccordionButton as="div">
                     <Box as="span" flex="1" textAlign="left">
-                      Files
+                      Files <AddFileForm />
                     </Box>
-
                     <AccordionIcon />
                   </AccordionButton>
                 </h2>

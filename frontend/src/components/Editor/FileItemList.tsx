@@ -254,10 +254,10 @@ const FileItemList = ({ file, handleOpenFiles, project, setProject, setData, set
       <GenericModal isOpen={isModalDeleteOpen} onClose={closeModalDelete} title="Deleting file">
         <Box display="flex" justifyContent="center" alignItems="center" height="100%">
           <Box width="100%" maxWidth="250px" textAlign="center">
-            <Text color="white" mb={8}>
+            <Text color="white" mb={25}>
               Deleting your file will erase all your information and data from Wild Code Hub. This action is irreversible.
             </Text>
-            <Text color="white" mb={8}>
+            <Text color="white" mb={25}>
               Are you sure you want to delete the file {file?.name}.{file?.extension} ?
             </Text>
             <ButtonGroup spacing={5} mt={4} display="flex" justifyContent="center">
