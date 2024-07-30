@@ -35,6 +35,12 @@ type InfosPanelProps = {
   setData: React.Dispatch<React.SetStateAction<File[]>>;
 };
 
+export type GenerateLanguageProps =  {
+  name : string,
+  extension : string,
+  language : string,
+}
+
 const InfosPanel = ({ project, setOpenFiles, setCode, setFile, setProject, setData }: InfosPanelProps) => {
   const router = useRouter();
   const [maxAvatar, setMaxAvatar] = useState<number>(9);
@@ -110,6 +116,27 @@ const InfosPanel = ({ project, setOpenFiles, setCode, setFile, setProject, setDa
     }
   };
 
+  const generateLanguage: (name : string, extention : string) => GenerateLanguageProps = (name : string, extention : string): GenerateLanguageProps => {
+    let newData : GenerateLanguageProps = {
+      name : name,
+      extension : extention,
+      language : "",
+    }
+    
+    switch (extention) {
+      case "js":
+        newData.language = "javascript"
+        break;
+      case "css":
+        newData.language = "css"
+        break;
+      case "html":
+        newData.language = "html"
+        break;
+    }
+    return newData;
+  }
+
   return (
     <Flex height={"100%"} flexDirection={"column"}>
       <Flex flexDirection={"column"} textAlign={"center"} paddingBlock={4}>
@@ -146,6 +173,7 @@ const InfosPanel = ({ project, setOpenFiles, setCode, setFile, setProject, setDa
                             setOpenFiles={setOpenFiles}
                             setCode={setCode}
                             setFile={setFile}
+                            generateLanguage={generateLanguage}
                           />
                         ))
                       : "There will be files here in the near futur"}

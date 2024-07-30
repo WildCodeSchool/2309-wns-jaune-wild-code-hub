@@ -16,6 +16,7 @@ import {
 import { DELETE_FILE, UPDATE_FILE } from "@/requetes/mutations/file.mutations";
 import CustomToast from '@/components/ToastCustom/CustomToast';
 import { useMutation } from "@apollo/client";
+import { GenerateLanguageProps } from "./InfosPanel";
 
 type Props = {
   file: File;
@@ -26,15 +27,10 @@ type Props = {
   setOpenFiles: React.Dispatch<React.SetStateAction<File[]>>;
   setCode: React.Dispatch<React.SetStateAction<string>>;
   setFile: React.Dispatch<React.SetStateAction<File | null>>;
+  generateLanguage : (name : string, extention : string) => GenerateLanguageProps;
 };
 
-type GenerateLanguageProps =  {
-  name : string,
-  extension : string,
-  language : string,
-}
-
-const FileItemList = ({ file, handleOpenFiles, project, setProject, setData, setOpenFiles, setCode, setFile }: Props) => {
+const FileItemList = ({ file, handleOpenFiles, project, setProject, setData, setOpenFiles, setCode, setFile, generateLanguage }: Props) => {
 
   const [isModalUpdateOpen, setIsModalUpdateOpen] = useState<boolean>(false);
   const [isModalDeleteOpen, setIsModalDeleteOpen] = useState<boolean>(false);
@@ -42,27 +38,6 @@ const FileItemList = ({ file, handleOpenFiles, project, setProject, setData, set
   const [extentionFile, setExtentionFile] = useState<string>(file.extension);
 
   const { showAlert } = CustomToast();
-
-  const generateLanguage: () => GenerateLanguageProps = (): GenerateLanguageProps => {
-    let newData : GenerateLanguageProps = {
-      name : nameFile,
-      extension : extentionFile,
-      language : "",
-    }
-    
-    switch (extentionFile) {
-      case "js":
-        newData.language = "javascript"
-        break;
-      case "css":
-        newData.language = "css"
-        break;
-      case "html":
-        newData.language = "html"
-        break;
-    }
-    return newData;
-  }
 
   const [updateFile] = useMutation<
   UpdateFileMutation,
@@ -84,7 +59,7 @@ const FileItemList = ({ file, handleOpenFiles, project, setProject, setData, set
 
         setData((prevFiles) => {
           const updatedFiles = prevFiles.map((f) => 
-            f.id === file.id ? { ...f, name: generateLanguage().name, extension: generateLanguage().extension, language : generateLanguage().language } : f
+            f.id === file.id ? { ...f, name: generateLanguage(nameFile, extentionFile).name, extension: generateLanguage(nameFile, extentionFile).extension, language : generateLanguage(nameFile, extentionFile).language } : f
           );
           return updatedFiles;
         });
@@ -92,7 +67,7 @@ const FileItemList = ({ file, handleOpenFiles, project, setProject, setData, set
         setProject((prevProject) => {
           if (prevProject) {
             const updatedFiles = prevProject.files.map((f) => 
-              f.id === file.id ? { ...f, name: generateLanguage().name, extension: generateLanguage().extension, language : generateLanguage().language } : f
+              f.id === file.id ? { ...f, name: generateLanguage(nameFile, extentionFile).name, extension: generateLanguage(nameFile, extentionFile).extension, language : generateLanguage(nameFile, extentionFile).language } : f
             );
             return { ...prevProject, files: updatedFiles };
           }
@@ -177,9 +152,9 @@ const FileItemList = ({ file, handleOpenFiles, project, setProject, setData, set
       variables: {
         data : {
           id : +file.id,
-          name : generateLanguage().name,
-          extension : generateLanguage().extension,
-          language : generateLanguage().language,
+          name : generateLanguage(nameFile, extentionFile).name,
+          extension : generateLanguage(nameFile, extentionFile).extension,
+          language : generateLanguage(nameFile, extentionFile).language,
           type : "file",
         }
       },
