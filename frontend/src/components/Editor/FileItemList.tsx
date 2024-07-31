@@ -47,15 +47,17 @@ const FileItemList = ({ file, handleOpenFiles, project, setProject, setData, set
     if (data?.updateFile?.success) {
       setOpenFiles((prevOpenFiles) => {
         const newOpenFiles = prevOpenFiles.filter((f) => +f.id !== +file.id);
-        if (newOpenFiles.length === 0) {
-          setFile(null);
-          setCode("");
-        } else if (Number(file?.id) ===  +file.id) {
-          setFile(newOpenFiles[newOpenFiles.length - 1]);
-          setCode(newOpenFiles[newOpenFiles.length - 1].content);
-        }
+    
+        setCode(file.content)
+        setFile({
+          ...file,
+          name: generateLanguage(nameFile, extentionFile).name,
+          extension: generateLanguage(nameFile, extentionFile).extension,
+          language : generateLanguage(nameFile, extentionFile).language
+        })
         return newOpenFiles;
       });
+
 
       setData((prevFiles) => {
         const updatedFiles = prevFiles.map((f) => 
