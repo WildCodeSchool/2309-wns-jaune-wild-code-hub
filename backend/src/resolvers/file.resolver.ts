@@ -51,11 +51,16 @@ export class FileResolver {
         throw new Error("You must be an owner or editor to create this file!");
     }
 
-    const file = await new FilesService().findByName(
+    const checkDuplicateFileProject = await new FilesService().findFileDuplicate(
+      data.project_id,
       data.name,
-      data.project_id
+      data.language,
+      data.extension
     );
-    if (file) throw new Error("This name of project is already in use!");
+
+    if (checkDuplicateFileProject)
+      throw new Error("You do not have the right to add a new file with the same name and using the same language!");
+
     const newFile = await new FilesService().create(data);
     return newFile;
   }
@@ -82,6 +87,16 @@ export class FileResolver {
       if (findUserRoleAccessesProject.role === "VIEWER")
         throw new Error("You must be an owner or editor to update this file!");
     }
+
+    const checkDuplicateFileProject = await new FilesService().findFileDuplicate(
+      fileById.project.id,
+      data.name,
+      data.language,
+      data.extension
+    );
+
+    if (checkDuplicateFileProject && checkDuplicateFileProject.id !== data.id)
+      throw new Error("You do not have the right to modify this file because a file with the same name and using the same language already exists.");
 
     const { id, ...otherData } = data;
     const updateFile = await new FilesService().update(id, otherData);

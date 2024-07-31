@@ -447,6 +447,13 @@ export type UpdateFileMutationVariables = Exact<{
 
 export type UpdateFileMutation = { __typename?: 'Mutation', updateFile: { __typename?: 'Message', success: boolean, message: string } };
 
+export type CreateFileMutationVariables = Exact<{
+  data: CreateFileInput;
+}>;
+
+
+export type CreateFileMutation = { __typename?: 'Mutation', createFile: { __typename?: 'File', id: string, name: string, type: string, language: string, extension: string, content: string, created_at: any, update_at: any } };
+
 export type UpdateProjectMutationVariables = Exact<{
   data: UpdateProjectInput;
 }>;
@@ -777,6 +784,46 @@ export function useUpdateFileMutation(baseOptions?: Apollo.MutationHookOptions<U
 export type UpdateFileMutationHookResult = ReturnType<typeof useUpdateFileMutation>;
 export type UpdateFileMutationResult = Apollo.MutationResult<UpdateFileMutation>;
 export type UpdateFileMutationOptions = Apollo.BaseMutationOptions<UpdateFileMutation, UpdateFileMutationVariables>;
+export const CreateFileDocument = gql`
+    mutation createFile($data: CreateFileInput!) {
+  createFile(data: $data) {
+    id
+    name
+    type
+    language
+    extension
+    content
+    created_at
+    update_at
+  }
+}
+    `;
+export type CreateFileMutationFn = Apollo.MutationFunction<CreateFileMutation, CreateFileMutationVariables>;
+
+/**
+ * __useCreateFileMutation__
+ *
+ * To run a mutation, you first call `useCreateFileMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateFileMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createFileMutation, { data, loading, error }] = useCreateFileMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useCreateFileMutation(baseOptions?: Apollo.MutationHookOptions<CreateFileMutation, CreateFileMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateFileMutation, CreateFileMutationVariables>(CreateFileDocument, options);
+      }
+export type CreateFileMutationHookResult = ReturnType<typeof useCreateFileMutation>;
+export type CreateFileMutationResult = Apollo.MutationResult<CreateFileMutation>;
+export type CreateFileMutationOptions = Apollo.BaseMutationOptions<CreateFileMutation, CreateFileMutationVariables>;
 export const UpdateProjectDocument = gql`
     mutation updateProject($data: UpdateProjectInput!) {
   updateProject(data: $data) {

@@ -20,6 +20,20 @@ export default class FilesService {
     });
   }
 
+  async findFileDuplicate(project_id: number, name: string, language : string, extension : string) {
+    return this.db.findOne({ 
+      where: {
+        project: {
+          id: project_id
+        },
+        name : name,
+        language : language,
+        extension : extension,
+      },
+      relations: ["project"], 
+    });
+  }
+
   async findById(id: number) {
     return this.db.findOne({ 
       where: { id },

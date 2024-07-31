@@ -24,7 +24,7 @@ import {
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import FileItemList from "./FileItemList"
-import AddFileForm from "./AddFileForm";
+import AddFile from "@/components/Editor/FileManagementEditor/AddFile";
 
 type InfosPanelProps = {
   project: Project | null;
@@ -34,6 +34,12 @@ type InfosPanelProps = {
   setProject: React.Dispatch<React.SetStateAction<Project | null>>;
   setData: React.Dispatch<React.SetStateAction<File[]>>;
 };
+
+export type GenerateLanguageProps =  {
+  name : string,
+  extension : string,
+  language : string,
+}
 
 const InfosPanel = ({ project, setOpenFiles, setCode, setFile, setProject, setData }: InfosPanelProps) => {
   const router = useRouter();
@@ -110,6 +116,27 @@ const InfosPanel = ({ project, setOpenFiles, setCode, setFile, setProject, setDa
     }
   };
 
+  const generateLanguage: (name : string, extention : string) => GenerateLanguageProps = (name : string, extention : string): GenerateLanguageProps => {
+    let newData : GenerateLanguageProps = {
+      name : name,
+      extension : extention,
+      language : "",
+    }
+    
+    switch (extention) {
+      case "js":
+        newData.language = "javascript"
+        break;
+      case "css":
+        newData.language = "css"
+        break;
+      case "html":
+        newData.language = "html"
+        break;
+    }
+    return newData;
+  }
+
   return (
     <Flex height={"100%"} flexDirection={"column"}>
       <Flex flexDirection={"column"} textAlign={"center"} paddingBlock={4}>
@@ -126,12 +153,21 @@ const InfosPanel = ({ project, setOpenFiles, setCode, setFile, setProject, setDa
                 <h2>
                   <AccordionButton as="div">
                     <Box as="span" flex="1" textAlign="left">
-                      Files <AddFileForm />
+                      Files
                     </Box>
                     <AccordionIcon />
                   </AccordionButton>
                 </h2>
                 <AccordionPanel pb={4}>
+                  <AddFile
+                    project={project}
+                    setProject={setProject}
+                    setData={setData}
+                    setOpenFiles={setOpenFiles}
+                    setCode={setCode}
+                    setFile={setFile}
+                    generateLanguage={generateLanguage}
+                  />
                   <Flex flexDirection={"column"}>
                     {project?.files
                       ? project.files.map((file) => (
@@ -145,6 +181,7 @@ const InfosPanel = ({ project, setOpenFiles, setCode, setFile, setProject, setDa
                             setOpenFiles={setOpenFiles}
                             setCode={setCode}
                             setFile={setFile}
+                            generateLanguage={generateLanguage}
                           />
                         ))
                       : "There will be files here in the near futur"}
