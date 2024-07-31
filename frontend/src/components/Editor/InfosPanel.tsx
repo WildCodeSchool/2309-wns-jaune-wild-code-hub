@@ -26,6 +26,7 @@ import React, { useEffect, useState } from "react";
 import FileItemList from "./FileItemList"
 import AddFile from "@/components/Editor/FileManagementEditor/AddFile";
 import DownloadFile from "./FileManagementEditor/DownloadFile";
+import Cookies from "js-cookie";
 
 type InfosPanelProps = {
   project: Project | null;
@@ -73,6 +74,8 @@ const InfosPanel = ({ project, setOpenFiles, setCode, setFile, setProject, setDa
     }[]
   >([]);
 
+  const [meLike, setMeLike] = useState<boolean>(false);
+
   const [getContributors] = useListUsersWithAccessesLazyQuery();
   const [getSupporters] = useListUsersLikesPerProjectLazyQuery();
   useEffect(() => {
@@ -101,6 +104,17 @@ const InfosPanel = ({ project, setOpenFiles, setCode, setFile, setProject, setDa
       });
     }
   }, [project, getContributors, getSupporters]);
+
+  useEffect(() => {
+    const getCookieIdUser = Cookies.get("id");
+    if (supporters) {
+      const checkLike = supporters.filter(user => user.id == getCookieIdUser);
+      if (checkLike.length !== 0)
+        setMeLike(true);
+      else
+        setMeLike(false);     
+    }
+  }, [supporters])
 
   const handleOpenFiles: (fileId: number) => void = (fileId: number) => {
     if (project) {
@@ -143,7 +157,7 @@ const InfosPanel = ({ project, setOpenFiles, setCode, setFile, setProject, setDa
     <Flex height={"100%"} flexDirection={"column"}>
       <Flex flexDirection={"column"} textAlign={"center"} paddingBlock={4}>
         <Heading size={"md"} textAlign={"center"}>
-          {project?.name}
+          {project?.name} {meLike ? "oui" : "non"}
         </Heading>
       </Flex>
 
