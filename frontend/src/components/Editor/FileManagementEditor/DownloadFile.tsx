@@ -5,7 +5,7 @@ import { DownloadIcon } from "@chakra-ui/icons";
 import { IconButton, Tooltip } from "@chakra-ui/react";
 import JSZip from "jszip";
 import { saveAs } from "file-saver";
-import DOMPurify from 'dompurify'; // Library to sanitize HTML
+import DOMPurify from 'dompurify';
 
 interface DownloadFileProps {
   data: File[];
