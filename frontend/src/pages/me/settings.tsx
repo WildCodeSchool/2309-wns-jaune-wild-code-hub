@@ -5,7 +5,7 @@ import SidebarLayout from "@/components/Sidebar/SidebarLayout";
 import { checkRegex, emailRegex, passwordRegex, pseudoRegex } from "@/regex";
 import {
   UpdateUserInput,
-  useDeleteUserMutation,
+  // useDeleteUserMutation,
   useFindUserByIdLazyQuery,
   User,
   useUpdateUserMutation,
@@ -32,7 +32,7 @@ const Settings: NextPageWithLayout = () => {
   const router = useRouter();
   const [getUser, { loading, error }] = useFindUserByIdLazyQuery();
   const [updateUser] = useUpdateUserMutation();
-  const [deleteUser] = useDeleteUserMutation();
+  // const [deleteUser] = useDeleteUserMutation();
 
   useEffect(() => {
     userId &&
@@ -104,7 +104,6 @@ const Settings: NextPageWithLayout = () => {
           data: userForm,
         },
         onCompleted(data) {
-          console.log("data", data.updateUser.message);
           setUser((prevState) => ({
             ...prevState,
             password: "",
@@ -118,16 +117,17 @@ const Settings: NextPageWithLayout = () => {
     }
   };
   const handleDeleteAccount = () => {
+    console.log("progess...")
     //TODO add confirmation modal
-    userId &&
-      deleteUser({
-        variables: {
-          deleteUserId: +userId,
-        },
-        onCompleted(data, clientOptions) {
-          router.push("/");
-        },
-      });
+    // userId &&
+    //   deleteUser({
+    //     variables: {
+    //       deleteUserId: +userId,
+    //     },
+    //     onCompleted(data, clientOptions) {
+    //       router.push("/");
+    //     },
+    //   });
   };
   return (
     <Flex

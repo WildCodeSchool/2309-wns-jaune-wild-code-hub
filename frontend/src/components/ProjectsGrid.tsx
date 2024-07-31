@@ -3,17 +3,19 @@ import ProjectCard from "./ProjectCard";
 import { Project } from "@/types/graphql";
 
 type GridProps = {
-  projects: Omit<Project, "files">[];
+  projects: Pick<Project, "id" | "category" | "name">[];
 };
 
 export const ProjectsGrid = ({ projects }: GridProps) => {
   return (
     <Grid
-      width={{ base: "90%", md: "55%" }}
-      templateColumns={{ base: "repeat(1, 1fr)", md: "repeat(4, minmax(50px, 1fr))" }}
+      templateColumns={{
+        base: "repeat(1, 1fr)",
+        md: "repeat(4, minmax(50px, 1fr))",
+      }}
       gap={6}
       overflowY={"auto"}
-      height={"53cqh"}
+      height={{ base: "53cqh", md: "fit-content" }}
       paddingBottom={{ base: "3rem", md: "0" }}
       css={{
         "&::-webkit-scrollbar": {
@@ -22,7 +24,7 @@ export const ProjectsGrid = ({ projects }: GridProps) => {
         "&::-webkit-scrollbar-track": {
           background: "#f1f1f1",
           borderRadius: "10px",
-          marginBottom: "10px",  
+          marginBottom: "10px",
         },
         "&::-webkit-scrollbar-thumb": {
           background: "#888",
@@ -32,8 +34,7 @@ export const ProjectsGrid = ({ projects }: GridProps) => {
           background: "#555",
         },
       }}
-      paddingRight="1rem" 
-
+      paddingRight="1rem"
     >
       {projects.map((project, id) => {
         return (
@@ -41,7 +42,7 @@ export const ProjectsGrid = ({ projects }: GridProps) => {
             key={project.id + id}
             display={"flex"}
             justifyContent={"center"}
-            height={"25cqh"}
+            height={"225px"}
           >
             <ProjectCard project={project}></ProjectCard>
           </GridItem>
@@ -50,4 +51,3 @@ export const ProjectsGrid = ({ projects }: GridProps) => {
     </Grid>
   );
 };
-

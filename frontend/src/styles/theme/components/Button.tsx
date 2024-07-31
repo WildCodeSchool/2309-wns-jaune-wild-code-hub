@@ -3,11 +3,9 @@ import { defineStyleConfig } from "@chakra-ui/react";
 const Button = defineStyleConfig({
   // The styles all button have in common
   baseStyle: {
-    fontWeight: "bold",
+    fontWeight: 600,
     borderColor: "transparent",
-    fontSize: "20",
-    px: "0.5rem",
-    py: "0.5rem",
+    lineHeight: 1,
     borderRadius: "100",
   },
 

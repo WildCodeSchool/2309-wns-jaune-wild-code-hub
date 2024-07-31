@@ -7,31 +7,26 @@ import NextLink from "next/link";
 
 import {
   Avatar,
+  Box,
   Button,
   ButtonGroup,
   Card,
   CardBody,
   CardFooter,
-  Flex,
   Heading,
   IconButton,
-  Image,
   LinkBox,
   LinkOverlay,
   Stack,
-  Text,
-  Box,
+  Text
 } from "@chakra-ui/react";
-import Cookies from "js-cookie";
 
-import CommentIcon from "./Icons/CommentIcon";
-import HeartIcon from "./Icons/HeartIcon";
-import ShareIcon from "./Icons/ShareIcon";
-import { useEffect, useState } from "react";
-import { FaFileExcel } from "react-icons/fa";
+import CommentIcon from "./Editor/Icons/CommentIcon";
+import HeartIcon from "./Editor/Icons/HeartIcon";
+import ShareIcon from "./Editor/Icons/ShareIcon";
 
 type Props = {
-  project: Omit<Project, "files">;
+  project: Pick<Project, "id" | "category" | "name">;
 };
 
 const ProjectCard = ({ project }: Props) => {
@@ -49,22 +44,27 @@ const ProjectCard = ({ project }: Props) => {
     });
 
   return (
-    <LinkBox  
+    <LinkBox
       maxWidth={"205px"}
       width={"100%"}
       height={"100%"}
       maxHeight={"250px"}
       borderRadius={24}
       overflow="hidden"
-      >
+    >
       <Card
         height={"100%"}
         display="flex"
         flexDirection="column"
         justifyContent="space-between"
       >
-        <Box backgroundColor="grey" height="52%" display="flex" alignItems="center" justifyContent="center">       
-        </Box>
+        <Box
+          backgroundColor="grey"
+          height="52%"
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+        ></Box>
 
         <Avatar
           name={projectOwner?.pseudo}
@@ -75,8 +75,15 @@ const ProjectCard = ({ project }: Props) => {
           transform="translate(-50%, -50%)"
           border="4px solid white"
         />
-        
-        <Box backgroundColor="white" height="48%" display="flex" flexDirection="column" justifyContent="space-between" p={4}>
+
+        <Box
+          backgroundColor="white"
+          height="48%"
+          display="flex"
+          flexDirection="column"
+          justifyContent="space-between"
+          p={4}
+        >
           <CardBody
             display={"flex"}
             flexDirection={"column"}
@@ -90,7 +97,7 @@ const ProjectCard = ({ project }: Props) => {
                 textAlign={"center"}
                 color="gray.800"
               >
-                <LinkOverlay as={NextLink} href={`editor/${project.id}`}>
+                <LinkOverlay as={NextLink} href={`/editor/${project.id}`}>
                   {project.name}
                 </LinkOverlay>
               </Heading>
@@ -101,7 +108,6 @@ const ProjectCard = ({ project }: Props) => {
             justifyContent={"center"}
             color="gray.500"
             p={"0 0.5rem 0.5rem 0.5rem"}
-            
           >
             <ButtonGroup>
               <Button
@@ -134,8 +140,6 @@ const ProjectCard = ({ project }: Props) => {
             </ButtonGroup>
           </CardFooter>
         </Box>
-        
-
       </Card>
     </LinkBox>
   );

@@ -3,20 +3,22 @@ import { gql } from "@apollo/client";
 export const PROJECT_BY_ID = gql`
   query findProjectById($findProjectByIdId: String!) {
     findProjectById(id: $findProjectByIdId) {
-        id
+      id
+      name
+      private
+      update_at
+      created_at
+      category
+      files {
+        language
+        extension
         name
-        private
-        update_at
+        type
+        id
+        content
         created_at
-        category
-        files {
-          language
-          extension
-          name
-          type
-          id
-          content
-        }
+        update_at
+      }
     }
   }
 `;
@@ -82,24 +84,42 @@ export const LIKED_PROJECTS = gql`
   }
 `;
 
-
 export const LIST_PUBLIC_PROJECTS = gql`
   query ListPublicProjects($limit: Int!, $offset: Int!) {
-  listPublicProjects(limit: $limit, offset: $offset) {
-    projects {
+    listPublicProjects(limit: $limit, offset: $offset) {
+      projects {
+        id
+        name
+        category
+        private
+        created_at
+        update_at
+      }
+      total
+      offset
+      limit
+      }
+  }
+`;
+ 
+export const LIST_PUBLIC_PROJECTS_BY_NAME = gql`
+  query listPublicProjectsByName($name: String!) {
+    listPublicProjectsByName(name: $name) {
       id
-      name
-      category
-      private
-      created_at
-      update_at
-    }
-    total
-    offset
-    limit
+      name      
     }
   }
 `;
 
+export const LIST_PUBLIC_PROJECTS_OWNED_BY_USER = gql`
+  query ListPublicOwnedByUser($listPublicProjectsOwnedByUserId: String!) {
+    listPublicProjectsOwnedByUser(id: $listPublicProjectsOwnedByUserId) {
+      project {
+        id
+        name
+        category
+      }
+    }
+  }
+`;
 
- 

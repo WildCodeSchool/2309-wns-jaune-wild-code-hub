@@ -42,19 +42,19 @@ const ShareManagementPeople: React.FC<ShareManagementPeopleProps> = ({ users, se
     const { showAlert } = CustomToast();
     const router = useRouter();
   
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
     const [userToDelete, setUserToDelete] = useState<{ id: number, pseudo: string | undefined } | null>(null);
     const [currentPage, setCurrentPage] = useState<number>(1);
     const userPerPage: number = 4;
-    const indexLast = currentPage * userPerPage;
-    const indexFirst = indexLast - userPerPage;
+    const indexLast: number = currentPage * userPerPage;
+    const indexFirst: number = indexLast - userPerPage;
 
     const pagination = () : FindAllInfoUserAccessesProject[] | undefined => {
       const filterOwner = users?.filter((user: FindAllInfoUserAccessesProject) => user.role !== "OWNER");
       return filterOwner?.slice(indexFirst, indexLast);
     };
 
-    const next = (): void => {
+    const next: () => void = (): void => {
       if(!users) 
         return showAlert("error", "Please complete all fields in the form!");
       if (!(currentPage < Math.ceil(users?.length / userPerPage))) 
@@ -62,7 +62,7 @@ const ShareManagementPeople: React.FC<ShareManagementPeopleProps> = ({ users, se
       setCurrentPage(currentPage + 1);
     };
   
-    const previous = (): void => {
+    const previous: () => void = (): void => {
       if(!users) 
         return showAlert("error", "Please complete all fields in the form!");
       if (!(currentPage > 1)) 
@@ -94,8 +94,13 @@ const ShareManagementPeople: React.FC<ShareManagementPeopleProps> = ({ users, se
       }
     },
     onError(error) {
-      console.log("error", error)
-      showAlert('error', 'We are sorry, there seems to be an error with the server. Please try again later.');
+      showAlert(
+        'error',
+        error.message ?
+          error.message
+        :
+          "We are sorry, there seems to be an error with the server. Please try again later."
+      );
     }
   });
 
@@ -116,22 +121,27 @@ const ShareManagementPeople: React.FC<ShareManagementPeopleProps> = ({ users, se
       }
     },
     onError(error) {
-      console.log("error", error)
-      showAlert('error', 'We are sorry, there seems to be an error with the server. Please try again later.');
+      showAlert(
+        'error',
+        error.message ?
+          error.message
+        :
+          "We are sorry, there seems to be an error with the server. Please try again later."
+      );
     }
   });
 
-  const openModal = (id: number, pseudo: string | undefined) => {
+  const openModal: (id: number, pseudo: string | undefined) => void = (id: number, pseudo: string | undefined) => {
     setUserToDelete({ id, pseudo });
     setIsModalOpen(true);
   };
 
-  const closeModal = () => {
+  const closeModal: () => void = () => {
     setIsModalOpen(false);
     setUserToDelete(null);
   };
 
-  const confirmDelete = () => {
+  const confirmDelete: () => void = () => {
     if (userToDelete && router.query.id) {
       deleteAccessProject({
         variables: {
@@ -151,7 +161,7 @@ const ShareManagementPeople: React.FC<ShareManagementPeopleProps> = ({ users, se
     }
   };
 
-  const handleRoleChange = (id: number, role: string, pseudo: string | undefined) => {
+  const handleRoleChange: (id: number, role: string, pseudo: string | undefined) => void = (id: number, role: string, pseudo: string | undefined) => {
     if (!users || !router.query.id || !pseudo || !role)
       return showAlert("error", "Please wait while the project loads!");
     updateAccessProject({

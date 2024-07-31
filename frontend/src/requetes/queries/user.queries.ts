@@ -14,6 +14,23 @@ export const FIND_USER_BY_ID = gql`
   }
 `;
 
+export const FIND_USER_INFOS_BY_ID = gql`
+  query FindUserInfosById($findUserByIdId: String!) {
+    findUserById(id: $findUserByIdId) {
+      id
+      pseudo
+      ban
+      last_login
+      firstname
+      lastname
+      email
+    }
+  }
+`;
+
+
+
+
 export const FIND_PROJECT_OWNER = gql`
   query FindProjectOwner($projectId: String!) {
     findProjectOwner(projectId: $projectId) {
@@ -22,30 +39,21 @@ export const FIND_PROJECT_OWNER = gql`
   }
 `;
 
-export const UPDATE_USER = gql`
-  mutation UpdateUser($data: UpdateUserInput!) {
-    updateUser(data: $data) {
-      success
-      message
-    }
-  }
-`;
-
-export const DELETE_USER = gql`
-  mutation DeleteUser($deleteUserId: Float!) {
-    deleteUser(id: $deleteUserId) {
-      message
-      success
-    }
-  }
-`;
-
 export const LIST_USERS_BY_PSEUDO = gql`
-  query ListUsersByPseudo($pseudo: String!)  {
+  query ListUsersByPseudo($pseudo: String!) {
     listUsersByPseudo(pseudo: $pseudo) {
       pseudo
       id
       email
+    }
+  }
+`;
+
+export const LIST_USERS_LIKING_PROJECT = gql`
+  query ListUsersLikesPerProject($projectId: Float!) {
+    listUsersLikesPerProject(projectId: $projectId) {
+      pseudo
+      id
     }
   }
 `;

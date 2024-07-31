@@ -15,7 +15,7 @@ interface ShareURLProps {
 const ShareURL: React.FC<ShareURLProps> = ({ project }) => {
 
   const { showAlert } = CustomToast();
-  const [currentUrl, setCurrentUrl] = useState("");
+  const [currentUrl, setCurrentUrl] = useState<string>("");
 
   useEffect(() => {
     if (project) {
@@ -24,7 +24,7 @@ const ShareURL: React.FC<ShareURLProps> = ({ project }) => {
     }
   }, [project]);
 
-  const copyToClipboard = () => {
+  const copyToClipboard: () => void = () => {
     navigator.clipboard.writeText(currentUrl)
       .then(() => {
         showAlert("success", "URL copied to clipboard!");

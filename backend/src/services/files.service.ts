@@ -20,8 +20,25 @@ export default class FilesService {
     });
   }
 
+  async findFileDuplicate(project_id: number, name: string, language : string, extension : string) {
+    return this.db.findOne({ 
+      where: {
+        project: {
+          id: project_id
+        },
+        name : name,
+        language : language,
+        extension : extension,
+      },
+      relations: ["project"], 
+    });
+  }
+
   async findById(id: number) {
-    return this.db.findOne({ where: { id } });
+    return this.db.findOne({ 
+      where: { id },
+      relations: ["project"], 
+    });
   }
 
   async findByName(name: string, project_id: number) {
@@ -79,6 +96,7 @@ export default class FilesService {
     for (const fileData of data) {
       const { id, ...otherData } = fileData;
       const updateFile = await this.update(id, otherData);
+      console.log(updateFile)
       const m = new Message();
       if (updateFile) {
         m.message = `File with name ${otherData.name}.${otherData.extension} updated!`;
@@ -94,7 +112,6 @@ export default class FilesService {
   
   async delete(id: number) {
     const fileToDelete = await this.findById(id);
-    console.log(fileToDelete);
     if (!fileToDelete) {
       throw new Error("The file does not exist !");
     }

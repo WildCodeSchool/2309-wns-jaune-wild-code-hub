@@ -50,6 +50,11 @@ export type CreateUserProjectAccessesInput = {
   user_id: Scalars['Float']['input'];
 };
 
+export type DeleteUserInput = {
+  id: Scalars['ID']['input'];
+  password: Scalars['String']['input'];
+};
+
 export type DeleteUserProjectAccessesInput = {
   project_id: Scalars['Float']['input'];
   user_id: Scalars['Float']['input'];
@@ -153,7 +158,7 @@ export type MutationDeleteProjectArgs = {
 
 
 export type MutationDeleteUserArgs = {
-  id: Scalars['Float']['input'];
+  data: DeleteUserInput;
 };
 
 
@@ -224,6 +229,8 @@ export type Query = {
   listProjectsByUser: Array<Project>;
   listProjectsByUserWithRole: Array<UserAccessProjectOutput>;
   listPublicProjects: PaginatedProjects;
+  listPublicProjectsByName: Array<Project>;
+  listPublicProjectsOwnedByUser: Array<UserAccessProjectOutput>;
   listUsers: Array<User>;
   listUsersAccessesProject: Array<FindAllInfoUserAccessesProject>;
   listUsersByPseudo: Array<User>;
@@ -313,6 +320,16 @@ export type QueryListProjectsByUserWithRoleArgs = {
 export type QueryListPublicProjectsArgs = {
   limit?: Scalars['Int']['input'];
   offset?: Scalars['Int']['input'];
+};
+
+
+export type QueryListPublicProjectsByNameArgs = {
+  name: Scalars['String']['input'];
+};
+
+
+export type QueryListPublicProjectsOwnedByUserArgs = {
+  id: Scalars['String']['input'];
 };
 
 
@@ -416,6 +433,27 @@ export type UpdateMultipleFilesMutationVariables = Exact<{
 
 export type UpdateMultipleFilesMutation = { __typename?: 'Mutation', updateMultipleFiles: Array<{ __typename?: 'Message', success: boolean, message: string }> };
 
+export type DeleteFileMutationVariables = Exact<{
+  deleteFileId: Scalars['Float']['input'];
+}>;
+
+
+export type DeleteFileMutation = { __typename?: 'Mutation', deleteFile: { __typename?: 'Message', success: boolean, message: string } };
+
+export type UpdateFileMutationVariables = Exact<{
+  data: UpdateFileInput;
+}>;
+
+
+export type UpdateFileMutation = { __typename?: 'Mutation', updateFile: { __typename?: 'Message', success: boolean, message: string } };
+
+export type CreateFileMutationVariables = Exact<{
+  data: CreateFileInput;
+}>;
+
+
+export type CreateFileMutation = { __typename?: 'Mutation', createFile: { __typename?: 'File', id: string, name: string, type: string, language: string, extension: string, content: string, created_at: any, update_at: any } };
+
 export type UpdateProjectMutationVariables = Exact<{
   data: UpdateProjectInput;
 }>;
@@ -436,6 +474,20 @@ export type CreateProjectMutationVariables = Exact<{
 
 
 export type CreateProjectMutation = { __typename?: 'Mutation', createProject: { __typename?: 'Project', category: string, name: string, id: string, private: boolean, created_at: any, update_at: any, files: Array<{ __typename?: 'File', id: string, name: string, language: string, type: string, extension: string, content: string, created_at: any, update_at: any }> } };
+
+export type UpdateUserMutationVariables = Exact<{
+  data: UpdateUserInput;
+}>;
+
+
+export type UpdateUserMutation = { __typename?: 'Mutation', updateUser: { __typename?: 'Message', success: boolean, message: string } };
+
+export type DeleteUserMutationVariables = Exact<{
+  data: DeleteUserInput;
+}>;
+
+
+export type DeleteUserMutation = { __typename?: 'Mutation', deleteUser: { __typename?: 'Message', message: string, success: boolean } };
 
 export type UpdateAccessProjectMutationVariables = Exact<{
   data: UpdateUserProjectAccessesInput;
@@ -482,7 +534,7 @@ export type FindProjectByIdQueryVariables = Exact<{
 }>;
 
 
-export type FindProjectByIdQuery = { __typename?: 'Query', findProjectById: { __typename?: 'Project', id: string, name: string, private: boolean, update_at: any, created_at: any, category: string, files: Array<{ __typename?: 'File', language: string, extension: string, name: string, type: string, id: string, content: string }> } };
+export type FindProjectByIdQuery = { __typename?: 'Query', findProjectById: { __typename?: 'Project', id: string, name: string, private: boolean, update_at: any, created_at: any, category: string, files: Array<{ __typename?: 'File', language: string, extension: string, name: string, type: string, id: string, content: string, created_at: any, update_at: any }> } };
 
 export type ListProjectsByUserQueryVariables = Exact<{
   listProjectsByUserId: Scalars['String']['input'];
@@ -502,9 +554,7 @@ export type ListProjectsByUserWithRoleQueryVariables = Exact<{
 }>;
 
 
-export type ListProjectsByUserWithRoleQuery = { __typename?: 'Query', listProjectsByUserWithRole: Array<{ __typename?: 'UserAccessProjectOutput', role: string, project: {
-  files: never[]; __typename?: 'Project', update_at: any, private: boolean, name: string, id: string, created_at: any, category: string 
-} }> };
+export type ListProjectsByUserWithRoleQuery = { __typename?: 'Query', listProjectsByUserWithRole: Array<{ __typename?: 'UserAccessProjectOutput', role: string, project: { __typename?: 'Project', update_at: any, private: boolean, name: string, id: string, created_at: any, category: string } }> };
 
 export type CountLikesPerProjectQueryVariables = Exact<{
   projectId: Scalars['Float']['input'];
@@ -518,9 +568,7 @@ export type ListLikeProjectQueryVariables = Exact<{
 }>;
 
 
-export type ListLikeProjectQuery = { __typename?: 'Query', listLikeProject: Array<{
-  files: never[]; __typename?: 'Project', update_at: any, private: boolean, name: string, id: string, created_at: any, category: string 
-}> };
+export type ListLikeProjectQuery = { __typename?: 'Query', listLikeProject: Array<{ __typename?: 'Project', update_at: any, private: boolean, name: string, id: string, created_at: any, category: string }> };
 
 export type ListPublicProjectsQueryVariables = Exact<{
   limit: Scalars['Int']['input'];
@@ -530,12 +578,33 @@ export type ListPublicProjectsQueryVariables = Exact<{
 
 export type ListPublicProjectsQuery = { __typename?: 'Query', listPublicProjects: { __typename?: 'PaginatedProjects', total: number, offset: number, limit: number, projects: Array<{ __typename?: 'Project', id: string, name: string, category: string, private: boolean, created_at: any, update_at: any }> } };
 
+export type ListPublicProjectsByNameQueryVariables = Exact<{
+  name: Scalars['String']['input'];
+}>;
+
+
+export type ListPublicProjectsByNameQuery = { __typename?: 'Query', listPublicProjectsByName: Array<{ __typename?: 'Project', id: string, name: string }> };
+
+export type ListPublicOwnedByUserQueryVariables = Exact<{
+  listPublicProjectsOwnedByUserId: Scalars['String']['input'];
+}>;
+
+
+export type ListPublicOwnedByUserQuery = { __typename?: 'Query', listPublicProjectsOwnedByUser: Array<{ __typename?: 'UserAccessProjectOutput', project: { __typename?: 'Project', id: string, name: string, category: string } }> };
+
 export type FindUserByIdQueryVariables = Exact<{
   findUserByIdId: Scalars['String']['input'];
 }>;
 
 
 export type FindUserByIdQuery = { __typename?: 'Query', findUserById: { __typename?: 'User', id: string, created_at: any, email: string, firstname: string, lastname: string, pseudo: string, run_counter: number } };
+
+export type FindUserInfosByIdQueryVariables = Exact<{
+  findUserByIdId: Scalars['String']['input'];
+}>;
+
+
+export type FindUserInfosByIdQuery = { __typename?: 'Query', findUserById: { __typename?: 'User', id: string, pseudo: string, ban: boolean, last_login: any, firstname: string, lastname: string, email: string } };
 
 export type FindProjectOwnerQueryVariables = Exact<{
   projectId: Scalars['String']['input'];
@@ -544,20 +613,6 @@ export type FindProjectOwnerQueryVariables = Exact<{
 
 export type FindProjectOwnerQuery = { __typename?: 'Query', findProjectOwner: { __typename?: 'User', pseudo: string } };
 
-export type UpdateUserMutationVariables = Exact<{
-  data: UpdateUserInput;
-}>;
-
-
-export type UpdateUserMutation = { __typename?: 'Mutation', updateUser: { __typename?: 'Message', success: boolean, message: string } };
-
-export type DeleteUserMutationVariables = Exact<{
-  deleteUserId: Scalars['Float']['input'];
-}>;
-
-
-export type DeleteUserMutation = { __typename?: 'Mutation', deleteUser: { __typename?: 'Message', message: string, success: boolean } };
-
 export type ListUsersByPseudoQueryVariables = Exact<{
   pseudo: Scalars['String']['input'];
 }>;
@@ -565,12 +620,26 @@ export type ListUsersByPseudoQueryVariables = Exact<{
 
 export type ListUsersByPseudoQuery = { __typename?: 'Query', listUsersByPseudo: Array<{ __typename?: 'User', pseudo: string, id: string, email: string }> };
 
+export type ListUsersLikesPerProjectQueryVariables = Exact<{
+  projectId: Scalars['Float']['input'];
+}>;
+
+
+export type ListUsersLikesPerProjectQuery = { __typename?: 'Query', listUsersLikesPerProject: Array<{ __typename?: 'User', pseudo: string, id: string }> };
+
 export type ListUsersAccessesProjectQueryVariables = Exact<{
   projectId: Scalars['Float']['input'];
 }>;
 
 
 export type ListUsersAccessesProjectQuery = { __typename?: 'Query', listUsersAccessesProject: Array<{ __typename?: 'FindAllInfoUserAccessesProject', user_id: number, project_id: number, updated_at: any, role: string, created_at: any, user?: { __typename?: 'User', role: string, pseudo: string, id: string, created_at: any, update_at: any } | null, project?: { __typename?: 'Project', category: string, id: string, name: string, private: boolean, created_at: any, update_at: any } | null }> };
+
+export type ListUsersWithAccessesQueryVariables = Exact<{
+  projectId: Scalars['Float']['input'];
+}>;
+
+
+export type ListUsersWithAccessesQuery = { __typename?: 'Query', listUsersAccessesProject: Array<{ __typename?: 'FindAllInfoUserAccessesProject', role: string, user?: { __typename?: 'User', pseudo: string, id: string } | null }> };
 
 
 export const RegisterDocument = gql`
@@ -647,6 +716,114 @@ export function useUpdateMultipleFilesMutation(baseOptions?: Apollo.MutationHook
 export type UpdateMultipleFilesMutationHookResult = ReturnType<typeof useUpdateMultipleFilesMutation>;
 export type UpdateMultipleFilesMutationResult = Apollo.MutationResult<UpdateMultipleFilesMutation>;
 export type UpdateMultipleFilesMutationOptions = Apollo.BaseMutationOptions<UpdateMultipleFilesMutation, UpdateMultipleFilesMutationVariables>;
+export const DeleteFileDocument = gql`
+    mutation deleteFile($deleteFileId: Float!) {
+  deleteFile(id: $deleteFileId) {
+    success
+    message
+  }
+}
+    `;
+export type DeleteFileMutationFn = Apollo.MutationFunction<DeleteFileMutation, DeleteFileMutationVariables>;
+
+/**
+ * __useDeleteFileMutation__
+ *
+ * To run a mutation, you first call `useDeleteFileMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteFileMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteFileMutation, { data, loading, error }] = useDeleteFileMutation({
+ *   variables: {
+ *      deleteFileId: // value for 'deleteFileId'
+ *   },
+ * });
+ */
+export function useDeleteFileMutation(baseOptions?: Apollo.MutationHookOptions<DeleteFileMutation, DeleteFileMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteFileMutation, DeleteFileMutationVariables>(DeleteFileDocument, options);
+      }
+export type DeleteFileMutationHookResult = ReturnType<typeof useDeleteFileMutation>;
+export type DeleteFileMutationResult = Apollo.MutationResult<DeleteFileMutation>;
+export type DeleteFileMutationOptions = Apollo.BaseMutationOptions<DeleteFileMutation, DeleteFileMutationVariables>;
+export const UpdateFileDocument = gql`
+    mutation updateFile($data: UpdateFileInput!) {
+  updateFile(data: $data) {
+    success
+    message
+  }
+}
+    `;
+export type UpdateFileMutationFn = Apollo.MutationFunction<UpdateFileMutation, UpdateFileMutationVariables>;
+
+/**
+ * __useUpdateFileMutation__
+ *
+ * To run a mutation, you first call `useUpdateFileMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateFileMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateFileMutation, { data, loading, error }] = useUpdateFileMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useUpdateFileMutation(baseOptions?: Apollo.MutationHookOptions<UpdateFileMutation, UpdateFileMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateFileMutation, UpdateFileMutationVariables>(UpdateFileDocument, options);
+      }
+export type UpdateFileMutationHookResult = ReturnType<typeof useUpdateFileMutation>;
+export type UpdateFileMutationResult = Apollo.MutationResult<UpdateFileMutation>;
+export type UpdateFileMutationOptions = Apollo.BaseMutationOptions<UpdateFileMutation, UpdateFileMutationVariables>;
+export const CreateFileDocument = gql`
+    mutation createFile($data: CreateFileInput!) {
+  createFile(data: $data) {
+    id
+    name
+    type
+    language
+    extension
+    content
+    created_at
+    update_at
+  }
+}
+    `;
+export type CreateFileMutationFn = Apollo.MutationFunction<CreateFileMutation, CreateFileMutationVariables>;
+
+/**
+ * __useCreateFileMutation__
+ *
+ * To run a mutation, you first call `useCreateFileMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateFileMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createFileMutation, { data, loading, error }] = useCreateFileMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useCreateFileMutation(baseOptions?: Apollo.MutationHookOptions<CreateFileMutation, CreateFileMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateFileMutation, CreateFileMutationVariables>(CreateFileDocument, options);
+      }
+export type CreateFileMutationHookResult = ReturnType<typeof useCreateFileMutation>;
+export type CreateFileMutationResult = Apollo.MutationResult<CreateFileMutation>;
+export type CreateFileMutationOptions = Apollo.BaseMutationOptions<CreateFileMutation, CreateFileMutationVariables>;
 export const UpdateProjectDocument = gql`
     mutation updateProject($data: UpdateProjectInput!) {
   updateProject(data: $data) {
@@ -763,6 +940,74 @@ export function useCreateProjectMutation(baseOptions?: Apollo.MutationHookOption
 export type CreateProjectMutationHookResult = ReturnType<typeof useCreateProjectMutation>;
 export type CreateProjectMutationResult = Apollo.MutationResult<CreateProjectMutation>;
 export type CreateProjectMutationOptions = Apollo.BaseMutationOptions<CreateProjectMutation, CreateProjectMutationVariables>;
+export const UpdateUserDocument = gql`
+    mutation UpdateUser($data: UpdateUserInput!) {
+  updateUser(data: $data) {
+    success
+    message
+  }
+}
+    `;
+export type UpdateUserMutationFn = Apollo.MutationFunction<UpdateUserMutation, UpdateUserMutationVariables>;
+
+/**
+ * __useUpdateUserMutation__
+ *
+ * To run a mutation, you first call `useUpdateUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateUserMutation, { data, loading, error }] = useUpdateUserMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useUpdateUserMutation(baseOptions?: Apollo.MutationHookOptions<UpdateUserMutation, UpdateUserMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateUserMutation, UpdateUserMutationVariables>(UpdateUserDocument, options);
+      }
+export type UpdateUserMutationHookResult = ReturnType<typeof useUpdateUserMutation>;
+export type UpdateUserMutationResult = Apollo.MutationResult<UpdateUserMutation>;
+export type UpdateUserMutationOptions = Apollo.BaseMutationOptions<UpdateUserMutation, UpdateUserMutationVariables>;
+export const DeleteUserDocument = gql`
+    mutation DeleteUser($data: DeleteUserInput!) {
+  deleteUser(data: $data) {
+    message
+    success
+  }
+}
+    `;
+export type DeleteUserMutationFn = Apollo.MutationFunction<DeleteUserMutation, DeleteUserMutationVariables>;
+
+/**
+ * __useDeleteUserMutation__
+ *
+ * To run a mutation, you first call `useDeleteUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteUserMutation, { data, loading, error }] = useDeleteUserMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useDeleteUserMutation(baseOptions?: Apollo.MutationHookOptions<DeleteUserMutation, DeleteUserMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteUserMutation, DeleteUserMutationVariables>(DeleteUserDocument, options);
+      }
+export type DeleteUserMutationHookResult = ReturnType<typeof useDeleteUserMutation>;
+export type DeleteUserMutationResult = Apollo.MutationResult<DeleteUserMutation>;
+export type DeleteUserMutationOptions = Apollo.BaseMutationOptions<DeleteUserMutation, DeleteUserMutationVariables>;
 export const UpdateAccessProjectDocument = gql`
     mutation UpdateAccessProject($data: UpdateUserProjectAccessesInput!) {
   updateAccessProject(data: $data) {
@@ -1048,6 +1293,8 @@ export const FindProjectByIdDocument = gql`
       type
       id
       content
+      created_at
+      update_at
     }
   }
 }
@@ -1357,6 +1604,91 @@ export type ListPublicProjectsQueryHookResult = ReturnType<typeof useListPublicP
 export type ListPublicProjectsLazyQueryHookResult = ReturnType<typeof useListPublicProjectsLazyQuery>;
 export type ListPublicProjectsSuspenseQueryHookResult = ReturnType<typeof useListPublicProjectsSuspenseQuery>;
 export type ListPublicProjectsQueryResult = Apollo.QueryResult<ListPublicProjectsQuery, ListPublicProjectsQueryVariables>;
+export const ListPublicProjectsByNameDocument = gql`
+    query listPublicProjectsByName($name: String!) {
+  listPublicProjectsByName(name: $name) {
+    id
+    name
+  }
+}
+    `;
+
+/**
+ * __useListPublicProjectsByNameQuery__
+ *
+ * To run a query within a React component, call `useListPublicProjectsByNameQuery` and pass it any options that fit your needs.
+ * When your component renders, `useListPublicProjectsByNameQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useListPublicProjectsByNameQuery({
+ *   variables: {
+ *      name: // value for 'name'
+ *   },
+ * });
+ */
+export function useListPublicProjectsByNameQuery(baseOptions: Apollo.QueryHookOptions<ListPublicProjectsByNameQuery, ListPublicProjectsByNameQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ListPublicProjectsByNameQuery, ListPublicProjectsByNameQueryVariables>(ListPublicProjectsByNameDocument, options);
+      }
+export function useListPublicProjectsByNameLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ListPublicProjectsByNameQuery, ListPublicProjectsByNameQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ListPublicProjectsByNameQuery, ListPublicProjectsByNameQueryVariables>(ListPublicProjectsByNameDocument, options);
+        }
+export function useListPublicProjectsByNameSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<ListPublicProjectsByNameQuery, ListPublicProjectsByNameQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<ListPublicProjectsByNameQuery, ListPublicProjectsByNameQueryVariables>(ListPublicProjectsByNameDocument, options);
+        }
+export type ListPublicProjectsByNameQueryHookResult = ReturnType<typeof useListPublicProjectsByNameQuery>;
+export type ListPublicProjectsByNameLazyQueryHookResult = ReturnType<typeof useListPublicProjectsByNameLazyQuery>;
+export type ListPublicProjectsByNameSuspenseQueryHookResult = ReturnType<typeof useListPublicProjectsByNameSuspenseQuery>;
+export type ListPublicProjectsByNameQueryResult = Apollo.QueryResult<ListPublicProjectsByNameQuery, ListPublicProjectsByNameQueryVariables>;
+export const ListPublicOwnedByUserDocument = gql`
+    query ListPublicOwnedByUser($listPublicProjectsOwnedByUserId: String!) {
+  listPublicProjectsOwnedByUser(id: $listPublicProjectsOwnedByUserId) {
+    project {
+      id
+      name
+      category
+    }
+  }
+}
+    `;
+
+/**
+ * __useListPublicOwnedByUserQuery__
+ *
+ * To run a query within a React component, call `useListPublicOwnedByUserQuery` and pass it any options that fit your needs.
+ * When your component renders, `useListPublicOwnedByUserQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useListPublicOwnedByUserQuery({
+ *   variables: {
+ *      listPublicProjectsOwnedByUserId: // value for 'listPublicProjectsOwnedByUserId'
+ *   },
+ * });
+ */
+export function useListPublicOwnedByUserQuery(baseOptions: Apollo.QueryHookOptions<ListPublicOwnedByUserQuery, ListPublicOwnedByUserQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ListPublicOwnedByUserQuery, ListPublicOwnedByUserQueryVariables>(ListPublicOwnedByUserDocument, options);
+      }
+export function useListPublicOwnedByUserLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ListPublicOwnedByUserQuery, ListPublicOwnedByUserQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ListPublicOwnedByUserQuery, ListPublicOwnedByUserQueryVariables>(ListPublicOwnedByUserDocument, options);
+        }
+export function useListPublicOwnedByUserSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<ListPublicOwnedByUserQuery, ListPublicOwnedByUserQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<ListPublicOwnedByUserQuery, ListPublicOwnedByUserQueryVariables>(ListPublicOwnedByUserDocument, options);
+        }
+export type ListPublicOwnedByUserQueryHookResult = ReturnType<typeof useListPublicOwnedByUserQuery>;
+export type ListPublicOwnedByUserLazyQueryHookResult = ReturnType<typeof useListPublicOwnedByUserLazyQuery>;
+export type ListPublicOwnedByUserSuspenseQueryHookResult = ReturnType<typeof useListPublicOwnedByUserSuspenseQuery>;
+export type ListPublicOwnedByUserQueryResult = Apollo.QueryResult<ListPublicOwnedByUserQuery, ListPublicOwnedByUserQueryVariables>;
 export const FindUserByIdDocument = gql`
     query FindUserById($findUserByIdId: String!) {
   findUserById(id: $findUserByIdId) {
@@ -1403,6 +1735,52 @@ export type FindUserByIdQueryHookResult = ReturnType<typeof useFindUserByIdQuery
 export type FindUserByIdLazyQueryHookResult = ReturnType<typeof useFindUserByIdLazyQuery>;
 export type FindUserByIdSuspenseQueryHookResult = ReturnType<typeof useFindUserByIdSuspenseQuery>;
 export type FindUserByIdQueryResult = Apollo.QueryResult<FindUserByIdQuery, FindUserByIdQueryVariables>;
+export const FindUserInfosByIdDocument = gql`
+    query FindUserInfosById($findUserByIdId: String!) {
+  findUserById(id: $findUserByIdId) {
+    id
+    pseudo
+    ban
+    last_login
+    firstname
+    lastname
+    email
+  }
+}
+    `;
+
+/**
+ * __useFindUserInfosByIdQuery__
+ *
+ * To run a query within a React component, call `useFindUserInfosByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFindUserInfosByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFindUserInfosByIdQuery({
+ *   variables: {
+ *      findUserByIdId: // value for 'findUserByIdId'
+ *   },
+ * });
+ */
+export function useFindUserInfosByIdQuery(baseOptions: Apollo.QueryHookOptions<FindUserInfosByIdQuery, FindUserInfosByIdQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<FindUserInfosByIdQuery, FindUserInfosByIdQueryVariables>(FindUserInfosByIdDocument, options);
+      }
+export function useFindUserInfosByIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FindUserInfosByIdQuery, FindUserInfosByIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<FindUserInfosByIdQuery, FindUserInfosByIdQueryVariables>(FindUserInfosByIdDocument, options);
+        }
+export function useFindUserInfosByIdSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<FindUserInfosByIdQuery, FindUserInfosByIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<FindUserInfosByIdQuery, FindUserInfosByIdQueryVariables>(FindUserInfosByIdDocument, options);
+        }
+export type FindUserInfosByIdQueryHookResult = ReturnType<typeof useFindUserInfosByIdQuery>;
+export type FindUserInfosByIdLazyQueryHookResult = ReturnType<typeof useFindUserInfosByIdLazyQuery>;
+export type FindUserInfosByIdSuspenseQueryHookResult = ReturnType<typeof useFindUserInfosByIdSuspenseQuery>;
+export type FindUserInfosByIdQueryResult = Apollo.QueryResult<FindUserInfosByIdQuery, FindUserInfosByIdQueryVariables>;
 export const FindProjectOwnerDocument = gql`
     query FindProjectOwner($projectId: String!) {
   findProjectOwner(projectId: $projectId) {
@@ -1443,74 +1821,6 @@ export type FindProjectOwnerQueryHookResult = ReturnType<typeof useFindProjectOw
 export type FindProjectOwnerLazyQueryHookResult = ReturnType<typeof useFindProjectOwnerLazyQuery>;
 export type FindProjectOwnerSuspenseQueryHookResult = ReturnType<typeof useFindProjectOwnerSuspenseQuery>;
 export type FindProjectOwnerQueryResult = Apollo.QueryResult<FindProjectOwnerQuery, FindProjectOwnerQueryVariables>;
-export const UpdateUserDocument = gql`
-    mutation UpdateUser($data: UpdateUserInput!) {
-  updateUser(data: $data) {
-    success
-    message
-  }
-}
-    `;
-export type UpdateUserMutationFn = Apollo.MutationFunction<UpdateUserMutation, UpdateUserMutationVariables>;
-
-/**
- * __useUpdateUserMutation__
- *
- * To run a mutation, you first call `useUpdateUserMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUpdateUserMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [updateUserMutation, { data, loading, error }] = useUpdateUserMutation({
- *   variables: {
- *      data: // value for 'data'
- *   },
- * });
- */
-export function useUpdateUserMutation(baseOptions?: Apollo.MutationHookOptions<UpdateUserMutation, UpdateUserMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UpdateUserMutation, UpdateUserMutationVariables>(UpdateUserDocument, options);
-      }
-export type UpdateUserMutationHookResult = ReturnType<typeof useUpdateUserMutation>;
-export type UpdateUserMutationResult = Apollo.MutationResult<UpdateUserMutation>;
-export type UpdateUserMutationOptions = Apollo.BaseMutationOptions<UpdateUserMutation, UpdateUserMutationVariables>;
-export const DeleteUserDocument = gql`
-    mutation DeleteUser($deleteUserId: Float!) {
-  deleteUser(id: $deleteUserId) {
-    message
-    success
-  }
-}
-    `;
-export type DeleteUserMutationFn = Apollo.MutationFunction<DeleteUserMutation, DeleteUserMutationVariables>;
-
-/**
- * __useDeleteUserMutation__
- *
- * To run a mutation, you first call `useDeleteUserMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useDeleteUserMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [deleteUserMutation, { data, loading, error }] = useDeleteUserMutation({
- *   variables: {
- *      deleteUserId: // value for 'deleteUserId'
- *   },
- * });
- */
-export function useDeleteUserMutation(baseOptions?: Apollo.MutationHookOptions<DeleteUserMutation, DeleteUserMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<DeleteUserMutation, DeleteUserMutationVariables>(DeleteUserDocument, options);
-      }
-export type DeleteUserMutationHookResult = ReturnType<typeof useDeleteUserMutation>;
-export type DeleteUserMutationResult = Apollo.MutationResult<DeleteUserMutation>;
-export type DeleteUserMutationOptions = Apollo.BaseMutationOptions<DeleteUserMutation, DeleteUserMutationVariables>;
 export const ListUsersByPseudoDocument = gql`
     query ListUsersByPseudo($pseudo: String!) {
   listUsersByPseudo(pseudo: $pseudo) {
@@ -1553,6 +1863,47 @@ export type ListUsersByPseudoQueryHookResult = ReturnType<typeof useListUsersByP
 export type ListUsersByPseudoLazyQueryHookResult = ReturnType<typeof useListUsersByPseudoLazyQuery>;
 export type ListUsersByPseudoSuspenseQueryHookResult = ReturnType<typeof useListUsersByPseudoSuspenseQuery>;
 export type ListUsersByPseudoQueryResult = Apollo.QueryResult<ListUsersByPseudoQuery, ListUsersByPseudoQueryVariables>;
+export const ListUsersLikesPerProjectDocument = gql`
+    query ListUsersLikesPerProject($projectId: Float!) {
+  listUsersLikesPerProject(projectId: $projectId) {
+    pseudo
+    id
+  }
+}
+    `;
+
+/**
+ * __useListUsersLikesPerProjectQuery__
+ *
+ * To run a query within a React component, call `useListUsersLikesPerProjectQuery` and pass it any options that fit your needs.
+ * When your component renders, `useListUsersLikesPerProjectQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useListUsersLikesPerProjectQuery({
+ *   variables: {
+ *      projectId: // value for 'projectId'
+ *   },
+ * });
+ */
+export function useListUsersLikesPerProjectQuery(baseOptions: Apollo.QueryHookOptions<ListUsersLikesPerProjectQuery, ListUsersLikesPerProjectQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ListUsersLikesPerProjectQuery, ListUsersLikesPerProjectQueryVariables>(ListUsersLikesPerProjectDocument, options);
+      }
+export function useListUsersLikesPerProjectLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ListUsersLikesPerProjectQuery, ListUsersLikesPerProjectQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ListUsersLikesPerProjectQuery, ListUsersLikesPerProjectQueryVariables>(ListUsersLikesPerProjectDocument, options);
+        }
+export function useListUsersLikesPerProjectSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<ListUsersLikesPerProjectQuery, ListUsersLikesPerProjectQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<ListUsersLikesPerProjectQuery, ListUsersLikesPerProjectQueryVariables>(ListUsersLikesPerProjectDocument, options);
+        }
+export type ListUsersLikesPerProjectQueryHookResult = ReturnType<typeof useListUsersLikesPerProjectQuery>;
+export type ListUsersLikesPerProjectLazyQueryHookResult = ReturnType<typeof useListUsersLikesPerProjectLazyQuery>;
+export type ListUsersLikesPerProjectSuspenseQueryHookResult = ReturnType<typeof useListUsersLikesPerProjectSuspenseQuery>;
+export type ListUsersLikesPerProjectQueryResult = Apollo.QueryResult<ListUsersLikesPerProjectQuery, ListUsersLikesPerProjectQueryVariables>;
 export const ListUsersAccessesProjectDocument = gql`
     query ListUsersAccessesProject($projectId: Float!) {
   listUsersAccessesProject(project_id: $projectId) {
@@ -1612,3 +1963,47 @@ export type ListUsersAccessesProjectQueryHookResult = ReturnType<typeof useListU
 export type ListUsersAccessesProjectLazyQueryHookResult = ReturnType<typeof useListUsersAccessesProjectLazyQuery>;
 export type ListUsersAccessesProjectSuspenseQueryHookResult = ReturnType<typeof useListUsersAccessesProjectSuspenseQuery>;
 export type ListUsersAccessesProjectQueryResult = Apollo.QueryResult<ListUsersAccessesProjectQuery, ListUsersAccessesProjectQueryVariables>;
+export const ListUsersWithAccessesDocument = gql`
+    query ListUsersWithAccesses($projectId: Float!) {
+  listUsersAccessesProject(project_id: $projectId) {
+    user {
+      pseudo
+      id
+    }
+    role
+  }
+}
+    `;
+
+/**
+ * __useListUsersWithAccessesQuery__
+ *
+ * To run a query within a React component, call `useListUsersWithAccessesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useListUsersWithAccessesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useListUsersWithAccessesQuery({
+ *   variables: {
+ *      projectId: // value for 'projectId'
+ *   },
+ * });
+ */
+export function useListUsersWithAccessesQuery(baseOptions: Apollo.QueryHookOptions<ListUsersWithAccessesQuery, ListUsersWithAccessesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ListUsersWithAccessesQuery, ListUsersWithAccessesQueryVariables>(ListUsersWithAccessesDocument, options);
+      }
+export function useListUsersWithAccessesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ListUsersWithAccessesQuery, ListUsersWithAccessesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ListUsersWithAccessesQuery, ListUsersWithAccessesQueryVariables>(ListUsersWithAccessesDocument, options);
+        }
+export function useListUsersWithAccessesSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<ListUsersWithAccessesQuery, ListUsersWithAccessesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<ListUsersWithAccessesQuery, ListUsersWithAccessesQueryVariables>(ListUsersWithAccessesDocument, options);
+        }
+export type ListUsersWithAccessesQueryHookResult = ReturnType<typeof useListUsersWithAccessesQuery>;
+export type ListUsersWithAccessesLazyQueryHookResult = ReturnType<typeof useListUsersWithAccessesLazyQuery>;
+export type ListUsersWithAccessesSuspenseQueryHookResult = ReturnType<typeof useListUsersWithAccessesSuspenseQuery>;
+export type ListUsersWithAccessesQueryResult = Apollo.QueryResult<ListUsersWithAccessesQuery, ListUsersWithAccessesQueryVariables>;

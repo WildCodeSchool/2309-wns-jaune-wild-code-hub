@@ -11,7 +11,7 @@ import { ProjectsGrid } from "@/components/ProjectsGrid";
 import { NextPageWithLayout } from "../_app";
 
 const LikedProjects: NextPageWithLayout = () => {
-  const [projects, setProjects] = useState<Project[]>([]);
+  const [projects, setProjects] = useState<Omit<Project, "files">[]>([]);
 
   const userId = Cookies.get("id");
 
@@ -23,21 +23,14 @@ const LikedProjects: NextPageWithLayout = () => {
         variables: {
           userId,
         },
+        onCompleted(data) {
+          setProjects(data.listLikeProject);
+        },
       });
       // data?.listLikeProject && setProjects(data?.listLikeProject);
     }
   }, [userId, getProjects, data]);
 
-  useEffect(() => {
-    if (data?.listLikeProject) {
-      // Transform the data to match the Project type if necessary
-      const transformedProjects = data.listLikeProject.map((project) => ({
-        ...project,
-        files: project.files || [], // Assuming files should be an empty array if not provided
-      }));
-      setProjects(transformedProjects);
-    }
-  }, [data]);
   return (
     <ProfilePageContainer>
       <Heading fontSize={"3cqw"}>Welcome to your Workspace</Heading>

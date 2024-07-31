@@ -16,26 +16,20 @@ interface ShareListPeopleProps {
   users : FindAllInfoUserAccessesProject[] | null;
 }
 
-interface MutationContext {
-  id: number;
-  role: string;
-  pseudo: string;
-}
-
 const ShareListPeople: React.FC<ShareListPeopleProps> = ({ users }) => {
 
   const { showAlert } = CustomToast();
   const [currentPage, setCurrentPage] = useState<number>(1);
   const userPerPage: number = 4;
-  const indexLast = currentPage * userPerPage;
-  const indexFirst = indexLast - userPerPage;
+  const indexLast: number = currentPage * userPerPage;
+  const indexFirst: number = indexLast - userPerPage;
 
   const pagination = () : FindAllInfoUserAccessesProject[] | undefined => {
     const filterOwner = users?.filter((user: FindAllInfoUserAccessesProject) => user.role !== "OWNER");
     return filterOwner?.slice(indexFirst, indexLast);
   };
 
-  const next = (): void => {
+  const next: () => void = (): void => {
     if(!users) 
       return showAlert("error", "Please complete all fields in the form!");
     if (!(currentPage < Math.ceil(users?.length / userPerPage))) 
@@ -43,7 +37,7 @@ const ShareListPeople: React.FC<ShareListPeopleProps> = ({ users }) => {
     setCurrentPage(currentPage + 1);
   };
   
-  const previous = (): void => {
+  const previous: () => void = (): void => {
     if(!users) 
       return showAlert("error", "Please complete all fields in the form!");
     if (!(currentPage > 1)) 

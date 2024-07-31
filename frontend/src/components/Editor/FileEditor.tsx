@@ -1,14 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import MonacoEditor, { OnChange } from "@monaco-editor/react";
 import { editor } from "monaco-editor";
-
-interface File {
-  id: number;
-  name: string;
-  extension: string;
-  content: string;
-  language: string;
-}
+import { File } from "@/types/graphql";
 
 interface Props {
   code: string;
@@ -18,19 +11,28 @@ interface Props {
   language: string | undefined;
 }
 
-const FileEditor: React.FC<Props> = ({ code, setCode, file, setData, language }) => {
+const FileEditor: React.FC<Props> = ({
+  code,
+  setCode,
+  file,
+  setData,
+  language,
+}) => {
   const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
-
+  const monacoRef = useRef<typeof import("monaco-editor") | null>(null);
   const handleChange: OnChange = (value) => {
+
     if (value && file) {
       setCode(value);
       setData((prevData) =>
-        prevData.map((item) => (item.id === file.id ? { ...item, content: value } : item))
+        prevData.map((item) =>
+          item.id === file.id ? { ...item, content: value } : item
+        )
       );
     }
   };
 
-  const defaultTheme = (monaco: any) => {
+  const defaultTheme: (monaco: any) => void = (monaco: any) => {
     monaco.editor.defineTheme("theme", {
       base: "vs-dark",
       inherit: true,
@@ -41,8 +43,11 @@ const FileEditor: React.FC<Props> = ({ code, setCode, file, setData, language })
     });
   };
 
-  const handleEditorDidMount = (editor: any, monaco: any) => { //A ne pas suprimmée editor ! Obliger pour Monaco
+  const handleEditorDidMount: (editor: any, monaco: any) => void = (editor: any, monaco: any) => {
+    //A ne pas suprimmée (editor : any) ! Obliger pour Monaco
     if (!monaco) return;
+    editorRef.current = editor;
+    monacoRef.current = monaco;
     defaultTheme(monaco);
     monaco.editor.setTheme("theme");
   };
@@ -60,10 +65,17 @@ const FileEditor: React.FC<Props> = ({ code, setCode, file, setData, language })
     };
   }, []);
 
+    useEffect(() => {
+    if (editorRef.current && language && monacoRef.current) {
+      const model = editorRef.current.getModel();
+      if (model) {
+        monacoRef.current.editor.setModelLanguage(model, language);
+      }
+    }
+  }, [language]);
+
   return (
     <MonacoEditor
-      width="100%"
-      height="50%"
       language={language || "javascript"}
       value={code}
       onChange={handleChange}

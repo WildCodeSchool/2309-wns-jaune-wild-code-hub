@@ -17,7 +17,6 @@ import components from "@/styles/theme/components";
 import { LOGIN } from "@/requetes/queries/auth.queries";
 import { InputLogin, LoginQuery, LoginQueryVariables } from "@/types/graphql";
 import { useLazyQuery } from "@apollo/client";
-// import { checkRegex, emailRegex, pseudoRegex } from "@/regex";
 import CustomToast from '@/components/ToastCustom/CustomToast';
 
 const Login = () => {
@@ -125,32 +124,32 @@ const Login = () => {
                                 <Input color="placeholder" bg="white" type='text' name='emailOrPseudo' value={formData.emailOrPseudo} onChange={handleInputChange} />
                                 <FormErrorMessage>{errors.emailOrPseudo}</FormErrorMessage>
                             </FormControl>
-                                <FormControl isInvalid={!!errors.password} mb={2}>
-                                    <FormLabel color="text">Choose your Password *</FormLabel>
-                                    <InputGroup>
-                                        <Input color="placeholder" bg="white" type={showPassword ? 'text' : 'password'} name='password' value={formData.password} onChange={handleInputChange} />
-                                        <InputRightElement>
-                                            <img onClick={togglePasswordVisibility} src={!showPassword ? '/eyePasswordVisible.png' : '/eyePasswordNotVisible.png'} alt="Eye Password" style={{ cursor: "pointer" }} />
-                                        </InputRightElement>
-                                    </InputGroup>
-                                    <FormErrorMessage>{errors.password}</FormErrorMessage>
-                                </FormControl>
-                                <Box textAlign="center">
-                                    <Box mt={5}>
-                                        <Link href='/auth/forgetpassword'>
-                                            <Text fontSize='xs' color="primary" as='b'>Forget password ?</Text>
-                                        </Link>
-                                    </Box>
-                                    <Box mt={5}>
-                                        <Text fontSize='xs' color="grey" as='b'>Don&apos;t have an account?</Text>
-                                        <Link href='/auth/register'>
-                                            <Text fontSize='xs' color="accent" as='b'>Sign up</Text >
-                                        </Link>
-                                    </Box>
-                                <Button type="submit" variant="secondary" mt={5}>
-                                    Sign In
-                                </Button>
-                            </Box>
+                            <FormControl isInvalid={!!errors.password} mb={2}>
+                                <FormLabel color="text">Choose your Password *</FormLabel>
+                                <InputGroup>
+                                    <Input color="placeholder" bg="white" type={showPassword ? 'text' : 'password'} name='password' value={formData.password} onChange={handleInputChange} />
+                                    <InputRightElement>
+                                        <img onClick={togglePasswordVisibility} src={!showPassword ? '/eyePasswordVisible.png' : '/eyePasswordNotVisible.png'} alt="Eye Password" style={{ cursor: "pointer" }} />
+                                    </InputRightElement>
+                                </InputGroup>
+                                <FormErrorMessage>{errors.password}</FormErrorMessage>
+                            </FormControl>
+                            <Box textAlign="center">
+                                <Box mt={5}>
+                                    <Link href='/auth/forgetpassword'>
+                                        <Text fontSize='xs' color="primary" as='b'>Forget password ?</Text>
+                                    </Link>
+                                </Box>
+                                <Box mt={5}>
+                                    <Text fontSize='xs' color="grey" as='b'>Don&apos;t have an account?</Text>
+                                    <Link href='/auth/register'>
+                                        <Text fontSize='xs' color="accent" as='b'>Sign up</Text >
+                                    </Link>
+                                </Box>
+                            <Button type="submit" variant="secondary" mt={5}>
+                                Sign In
+                            </Button>
+                        </Box>
                         </form>
                     </main>
                 </Box>

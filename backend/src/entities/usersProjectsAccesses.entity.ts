@@ -99,7 +99,7 @@ export class FindAllInfoUserAccessesProject {
   created_at: Date;
 
   @Field({ nullable: false })
-  updated_at:Date;
+  updated_at: Date;
 
   @Field(() => User, { nullable: true })
   user: User;
@@ -110,13 +110,11 @@ export class FindAllInfoUserAccessesProject {
 
 @ObjectType()
 export class UserAccessProjectResponse {
-
   @Field(() => [FindAllInfoUserAccessesProject], { nullable: false })
-  listUsersAccessesProjectData : [FindAllInfoUserAccessesProject];
+  listUsersAccessesProjectData: [FindAllInfoUserAccessesProject];
 
   @Field(() => Message, { nullable: true })
   message: Message;
-
 }
 
 @ObjectType()
