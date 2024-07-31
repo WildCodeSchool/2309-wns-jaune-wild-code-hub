@@ -196,6 +196,7 @@ const Editor: NextPageWithLayout = () => {
             setFile={setFile}
             setProject={setProject}
             setData={setData}
+            data={data}
           />
         </Panel>
         <PanelResizeHandle

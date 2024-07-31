@@ -25,6 +25,7 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import FileItemList from "./FileItemList"
 import AddFile from "@/components/Editor/FileManagementEditor/AddFile";
+import DownloadFile from "./FileManagementEditor/DownloadFile";
 
 type InfosPanelProps = {
   project: Project | null;
@@ -33,6 +34,7 @@ type InfosPanelProps = {
   setFile: React.Dispatch<React.SetStateAction<File | null>>;
   setProject: React.Dispatch<React.SetStateAction<Project | null>>;
   setData: React.Dispatch<React.SetStateAction<File[]>>;
+  data: File[];
 };
 
 export type GenerateLanguageProps =  {
@@ -41,7 +43,7 @@ export type GenerateLanguageProps =  {
   language : string,
 }
 
-const InfosPanel = ({ project, setOpenFiles, setCode, setFile, setProject, setData }: InfosPanelProps) => {
+const InfosPanel = ({ project, setOpenFiles, setCode, setFile, setProject, setData, data }: InfosPanelProps) => {
   const router = useRouter();
   const [maxAvatar, setMaxAvatar] = useState<number>(9);
   const [owner, setOwner] = useState<
@@ -167,6 +169,10 @@ const InfosPanel = ({ project, setOpenFiles, setCode, setFile, setProject, setDa
                     setCode={setCode}
                     setFile={setFile}
                     generateLanguage={generateLanguage}
+                  />
+                  <DownloadFile 
+                    data={data}
+                    project={project}
                   />
                   <Flex flexDirection={"column"}>
                     {project?.files
