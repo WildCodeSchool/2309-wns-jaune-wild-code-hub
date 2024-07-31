@@ -1,5 +1,5 @@
 import EditorPanel from "@/components/Editor/EditorPanel";
-import InfosPanel from "@/components/Editor/InfosPanel";
+import InfosPanel from "@/components/Editor/InfoPanel/InfosPanel";
 import View from "@/components/Editor/View";
 import CustomToast from "@/components/ToastCustom/CustomToast";
 import { PROJECT_BY_ID } from "@/requetes/queries/project.queries";

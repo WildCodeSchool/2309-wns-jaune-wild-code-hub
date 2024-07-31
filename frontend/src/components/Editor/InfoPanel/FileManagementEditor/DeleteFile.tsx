@@ -18,7 +18,7 @@ import {
   File,
 } from '@/types/graphql';
 import { useMutation } from "@apollo/client";
-import { GenerateLanguageProps } from "@/components/Editor/InfosPanel";
+import { GenerateLanguageProps } from "@/components/Editor/InfoPanel/InfosPanel";
 
 interface DeleteFileProps {
   file: File;

@@ -1,6 +1,6 @@
 import { Box, Button, Flex, Text } from "@chakra-ui/react";
 import React, { Dispatch, useEffect, useRef } from "react";
-import UpdateListFilesEditor from "./FileManagementEditor/UpdateListFilesEditor";
+import UpdateListFilesEditor from "./InfoPanel/FileManagementEditor/UpdateListFilesEditor";
 import FileEditor from "./FileEditor";
 import FileInfo from "./FileInfo";
 import { FindAllInfoUserAccessesProject, Project, File } from "@/types/graphql";

@@ -1,10 +1,10 @@
 import { File, Project } from "@/types/graphql";
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import {  Button, Flex, IconButton, Tooltip } from "@chakra-ui/react";
-import CSSIcon from "./Icons/CSSIcon";
-import DefaultFileIcon from "./Icons/DefaultFile";
-import HTMLIcon from "./Icons/HTMLIcon";
-import JSIcon from "./Icons/JSIcon";
+import CSSIcon from "../Icons/CSSIcon";
+import DefaultFileIcon from "../Icons/DefaultFile";
+import HTMLIcon from "../Icons/HTMLIcon";
+import JSIcon from "../Icons/JSIcon";
 import { GenerateLanguageProps } from "./InfosPanel";
 import DeleteFile from "./FileManagementEditor/DeleteFile";
 import UpdateFile from "./FileManagementEditor/UpdateFile";

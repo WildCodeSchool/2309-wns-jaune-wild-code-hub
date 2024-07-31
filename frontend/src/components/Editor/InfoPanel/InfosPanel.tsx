@@ -24,7 +24,7 @@ import {
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import FileItemList from "./FileItemList"
-import AddFile from "@/components/Editor/FileManagementEditor/AddFile";
+import AddFile from "@/components/Editor/InfoPanel/FileManagementEditor/AddFile";
 import DownloadFile from "./FileManagementEditor/DownloadFile";
 import Cookies from "js-cookie";
 
