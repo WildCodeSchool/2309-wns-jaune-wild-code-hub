@@ -44,55 +44,55 @@ const FileItemList = ({ file, handleOpenFiles, project, setProject, setData, set
   UpdateFileMutationVariables
   >(UPDATE_FILE, {
   onCompleted: (data) => {
-      if (data?.updateFile?.success) {
-        setOpenFiles((prevOpenFiles) => {
-          const newOpenFiles = prevOpenFiles.filter((f) => +f.id !== +file.id);
-          if (newOpenFiles.length === 0) {
-            setFile(null);
-            setCode("");
-          } else if (Number(file?.id) ===  +file.id) {
-            setFile(newOpenFiles[newOpenFiles.length - 1]);
-            setCode(newOpenFiles[newOpenFiles.length - 1].content);
-          }
-          return newOpenFiles;
-        });
+    if (data?.updateFile?.success) {
+      setOpenFiles((prevOpenFiles) => {
+        const newOpenFiles = prevOpenFiles.filter((f) => +f.id !== +file.id);
+        if (newOpenFiles.length === 0) {
+          setFile(null);
+          setCode("");
+        } else if (Number(file?.id) ===  +file.id) {
+          setFile(newOpenFiles[newOpenFiles.length - 1]);
+          setCode(newOpenFiles[newOpenFiles.length - 1].content);
+        }
+        return newOpenFiles;
+      });
 
-        setData((prevFiles) => {
-          const updatedFiles = prevFiles.map((f) => 
+      setData((prevFiles) => {
+        const updatedFiles = prevFiles.map((f) => 
+          f.id === file.id ? { ...f, name: generateLanguage(nameFile, extentionFile).name, extension: generateLanguage(nameFile, extentionFile).extension, language : generateLanguage(nameFile, extentionFile).language } : f
+        );
+        return updatedFiles;
+      });
+  
+      setProject((prevProject) => {
+        if (prevProject) {
+          const updatedFiles = prevProject.files.map((f) => 
             f.id === file.id ? { ...f, name: generateLanguage(nameFile, extentionFile).name, extension: generateLanguage(nameFile, extentionFile).extension, language : generateLanguage(nameFile, extentionFile).language } : f
           );
-          return updatedFiles;
-        });
-    
-        setProject((prevProject) => {
-          if (prevProject) {
-            const updatedFiles = prevProject.files.map((f) => 
-              f.id === file.id ? { ...f, name: generateLanguage(nameFile, extentionFile).name, extension: generateLanguage(nameFile, extentionFile).extension, language : generateLanguage(nameFile, extentionFile).language } : f
-            );
-            return { ...prevProject, files: updatedFiles };
-          }
-          return prevProject;
-        });
-        
-        showAlert("success", data?.updateFile?.message);
-        setIsModalUpdateOpen(false);
-      } else {
-        showAlert(
-          "error",
-          data?.updateFile?.message ? 
+          return { ...prevProject, files: updatedFiles };
+        }
+        return prevProject;
+      });
+      
+      showAlert("success", data?.updateFile?.message);
+      setIsModalUpdateOpen(false);
+    } else {
+      showAlert(
+        "error",
+        data?.updateFile?.message ? 
           data?.updateFile?.message
         :
           "We are sorry, there seems to be an error with the server. Please try again later."
-        );
-      }
+      );
+    }
   },
   onError(error) {
     showAlert(
-    'error',
-    error.message ?
-      error.message
-    :
-      "We are sorry, there seems to be an error with the server. Please try again later."
+      'error',
+      error.message ?
+        error.message
+      :
+        "We are sorry, there seems to be an error with the server. Please try again later."
     );
   }
   });
@@ -248,7 +248,7 @@ const FileItemList = ({ file, handleOpenFiles, project, setProject, setData, set
       </GenericModal>
       <GenericModal isOpen={isModalUpdateOpen} onClose={closeModalUpdate} title="Edit file">
         <Box display="flex" justifyContent="center" alignItems="center" height="100%">
-          <Box width="100%" maxWidth="250px" textAlign="center">
+          <Box width="100%" maxWidth="250px">
             <Text color="white" mb={2}>Enter Name of the File </Text>
             <Input 
               color="black"
@@ -259,7 +259,7 @@ const FileItemList = ({ file, handleOpenFiles, project, setProject, setData, set
               onChange={(e) => setNameFile(e.target.value)} 
               mb={2}
               />
-              <Text color="white" mb={2}>Languge</Text>
+              <Text color="white" mb={2}>Language</Text>
               <Select
                 size="sm"
                 width="100%"
