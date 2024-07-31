@@ -12,7 +12,7 @@ import {
   DeleteFileMutationVariables,
   UpdateFileMutation,
   UpdateFileMutationVariables,
-} from '@/types/graphql'
+} from '@/types/graphql';
 import { DELETE_FILE, UPDATE_FILE } from "@/requetes/mutations/file.mutations";
 import CustomToast from '@/components/ToastCustom/CustomToast';
 import { useMutation } from "@apollo/client";

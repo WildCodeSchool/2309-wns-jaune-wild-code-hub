@@ -51,12 +51,6 @@ export class FileResolver {
         throw new Error("You must be an owner or editor to create this file!");
     }
 
-    const file = await new FilesService().findByName(
-      data.name,
-      data.project_id
-    );
-    if (file) throw new Error("This name of project is already in use!");
-
     const checkDuplicateFileProject = await new FilesService().findFileDuplicate(
       data.project_id,
       data.name,
@@ -102,7 +96,7 @@ export class FileResolver {
     );
 
     if (checkDuplicateFileProject && checkDuplicateFileProject.id !== data.id)
-      throw new Error("You do not have the right to update a new file with the same name and using the same language!");
+      throw new Error("You do not have the right to modify this file because a file with the same name and using the same language already exists.");
 
     const { id, ...otherData } = data;
     const updateFile = await new FilesService().update(id, otherData);

@@ -26,3 +26,18 @@ export const UPDATE_FILE = gql`
     }
   }
 `;
+
+export const CREATE_FILE = gql`
+  mutation createFile($data: CreateFileInput!) {
+    createFile(data: $data) {
+      id
+      name
+      type
+      language
+      extension
+      content
+      created_at
+      update_at
+    }
+  }
+`;

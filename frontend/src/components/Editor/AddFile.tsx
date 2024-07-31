@@ -1,10 +1,7 @@
 import React, { useState } from "react";
 import {
-  FormControl,
-  FormLabel,
   Input,
   Button,
-  FormErrorMessage,
   Tooltip,
   IconButton,
   ButtonGroup,
@@ -12,36 +9,85 @@ import {
   Select,
   Text,
 } from "@chakra-ui/react";
-import { checkRegex, fileNamePattern } from "@/regex";
 import { AddIcon } from "@chakra-ui/icons";
 import CustomToast from '@/components/ToastCustom/CustomToast';
 import GenericModal from "../GenericModal";
+import { CREATE_FILE } from "@/requetes/mutations/file.mutations";
+import {
+  CreateFileMutation,
+  CreateFileMutationVariables,
+  Project,
+  File,
+} from '@/types/graphql';
+import { useMutation } from "@apollo/client";
+import { GenerateLanguageProps } from "./InfosPanel";
 
 interface AddFileProps {
-  addFile?: (fileName: string) => void;
+  project: Project | null;
+  setProject: React.Dispatch<React.SetStateAction<Project | null>>;
+  setData: React.Dispatch<React.SetStateAction<File[]>>;
+  setOpenFiles: React.Dispatch<React.SetStateAction<File[]>>;
+  setCode: React.Dispatch<React.SetStateAction<string>>;
+  setFile: React.Dispatch<React.SetStateAction<File | null>>;
+  generateLanguage : (name : string, extention : string) => GenerateLanguageProps;
 }
 
-const AddFile: React.FC<AddFileProps> = ({ addFile }) => {
+const AddFile: React.FC<AddFileProps> = ({project, setProject, setData, setOpenFiles, setCode, setFile, generateLanguage} : AddFileProps) => {
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [nameFile, setNameFile] = useState<string>("");
   const [extentionFile, setExtentionFile] = useState<string>("");
 
   const { showAlert } = CustomToast();
-  // const handleSubmit: (event: React.FormEvent) => void = (event: React.FormEvent) => {
-  //   event.preventDefault();
+  const [createFile] = useMutation<
+  CreateFileMutation,
+  CreateFileMutationVariables
+  >(CREATE_FILE, {
+  onCompleted: (data) => {
+    const newFile: File = {
+      id: data.createFile.id,
+      name: data.createFile.name,
+      type: data.createFile.type,
+      language: data.createFile.language,
+      extension: data.createFile.extension,
+      content: data.createFile.content,
+      created_at: data.createFile.created_at,
+      update_at: data.createFile.update_at,
+      __typename: "File",
+    };
 
-  //   if (!checkRegex(fileNamePattern, fileName)) {
-  //     setError(
-  //       "File name must be in the format 'name.extension' and the extension must be js, css, or html."
-  //     );
-  //     return;
-  //   }
 
-  //   addFile(fileName);
-  //   setFileName("");
-  //   setError("");
-  // };
+    setOpenFiles((prevState) => {
+      return [...prevState, newFile];
+    }),
+
+    setCode(newFile.content),
+    setFile(newFile)
+
+    setData((prevFiles) => {
+      return [ ...prevFiles, newFile ];
+    });
+
+    setProject((prevProject) => {
+      if (prevProject) {
+        return { ...prevProject, files: [...prevProject.files, newFile ] };
+      }
+      return prevProject;
+    });
+    
+    showAlert("success", "The file has been created successfully!");
+    setIsModalOpen(false);
+  },
+  onError(error) {
+    showAlert(
+      'error',
+      error.message ?
+        error.message
+      :
+        "We are sorry, there seems to be an error with the server. Please try again later."
+    );
+  }
+  });
 
   const openModal: () => void  = () => {
     setIsModalOpen(true);
@@ -52,11 +98,23 @@ const AddFile: React.FC<AddFileProps> = ({ addFile }) => {
   };
 
   const handleClick: () => void  = () => {
-    // console.log("add file")
+    if (!project)
+      return showAlert("error", "Please wait while the project loads!");
+
     if (!nameFile || !extentionFile )
       return showAlert("error", "Please complete all fields in the form!");
-
-    
+    createFile({
+      variables: {
+        data : {
+          name : generateLanguage(nameFile, extentionFile).name,
+          extension : generateLanguage(nameFile, extentionFile).extension,
+          language : generateLanguage(nameFile, extentionFile).language,
+          type : "file",
+          content : "",
+          project_id : +project?.id
+        }
+      },
+    });
   };
 
   return (
@@ -108,7 +166,7 @@ const AddFile: React.FC<AddFileProps> = ({ addFile }) => {
                 Cancel
               </Button>
               <Button type="button" variant="secondary" onClick={handleClick}>
-                Update File
+                Create File
               </Button>
             </ButtonGroup>
           </Box>

@@ -159,7 +159,15 @@ const InfosPanel = ({ project, setOpenFiles, setCode, setFile, setProject, setDa
                   </AccordionButton>
                 </h2>
                 <AccordionPanel pb={4}>
-                  <AddFile />
+                  <AddFile
+                    project={project}
+                    setProject={setProject}
+                    setData={setData}
+                    setOpenFiles={setOpenFiles}
+                    setCode={setCode}
+                    setFile={setFile}
+                    generateLanguage={generateLanguage}
+                  />
                   <Flex flexDirection={"column"}>
                     {project?.files
                       ? project.files.map((file) => (
