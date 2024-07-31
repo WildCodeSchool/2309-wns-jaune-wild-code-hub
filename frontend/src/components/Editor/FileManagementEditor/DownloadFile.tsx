@@ -15,29 +15,38 @@ interface DownloadFileProps {
 const DownloadFile: React.FC<DownloadFileProps> = ({ data, project }: DownloadFileProps) => {
   const { showAlert } = CustomToast();
 
-  const sanitizeContent = (content: string) => {
-    return DOMPurify.sanitize(content);
+  const sanitizeContent = (content: string): string => {
+    try {
+      return DOMPurify.sanitize(content);
+    } catch (error) {
+      showAlert("error", "Download stop, check your code!");
+      throw new Error("Sanitization failed");
+    }
   };
 
-  const handleCkick: () => void = (): void => {
+  const handleClick: () => void = async (): Promise<any> => {
     if (!project) {
       return showAlert("error", "Please wait while the project loads!");
     }
 
     const zip = new JSZip();
 
-    data.forEach((file) => {
-      const sanitizedContent = sanitizeContent(file.content);
-      const sanitizedFileName = DOMPurify.sanitize(`${file.name}.${file.extension}`);
-      zip.file(sanitizedFileName, sanitizedContent);
-    });
+    try {
+      data.forEach((file) => {
+        const sanitizedContent = sanitizeContent(file.content);
+        const sanitizedFileName = sanitizeContent(`${file.name}.${file.extension}`);
+        zip.file(sanitizedFileName, sanitizedContent);
+      });
 
-    zip.generateAsync({ type: "blob" }).then((content) => {
-      const sanitizedProjectName = DOMPurify.sanitize(project.name);
+      const content = await zip.generateAsync({ type: "blob" });
+      const sanitizedProjectName = sanitizeContent(project.name);
       saveAs(content, `${sanitizedProjectName}.zip`);
-    });
 
-    showAlert("success", "Download in progress...");
+      showAlert("success", "Download in progress...");
+    } catch (error) {
+      console.error("Error processing files:", error);
+      showAlert("error", "Failed to download the project files. Please try again.");
+    }
   };
 
   return (
@@ -47,7 +56,7 @@ const DownloadFile: React.FC<DownloadFileProps> = ({ data, project }: DownloadFi
         aria-label="Download the project files"
         variant={"ghost"}
         icon={<DownloadIcon boxSize={3} />}
-        onClick={handleCkick}
+        onClick={handleClick}
       />
     </Tooltip>
   );
