@@ -181,8 +181,7 @@ const Editor: NextPageWithLayout = () => {
     <Flex
       id="editor-page"
       height={"100vh"}
-      width={"100vw"}
-      p={"0rem 0.5rem 0.5rem 0rem"}
+      width={"98.9vw"}
       style={{ contain: "size" }}
       bg={"background"}
       pt={"5rem"}
