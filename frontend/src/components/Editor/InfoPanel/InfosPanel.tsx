@@ -328,21 +328,6 @@ const InfosPanel = ({ project, setOpenFiles, setCode, setFile, setProject, setDa
             </Flex>
           </AccordionPanel>
         </AccordionItem>
-        {/* 
-        one day there will be copmment in this project */}
-        {/* <AccordionItem>
-          <h2>
-            <AccordionButton>
-              <Box as="span" flex="1" textAlign="left">
-                Comment
-              </Box>
-              <AccordionIcon />
-            </AccordionButton>
-          </h2>
-          <AccordionPanel pb={4}>
-            <Flex flexDirection={"column"}></Flex>
-          </AccordionPanel>
-        </AccordionItem> */}
       </Accordion>
     </Flex>
   );
