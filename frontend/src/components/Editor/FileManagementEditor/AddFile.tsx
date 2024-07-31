@@ -11,7 +11,7 @@ import {
 } from "@chakra-ui/react";
 import { AddIcon } from "@chakra-ui/icons";
 import CustomToast from '@/components/ToastCustom/CustomToast';
-import GenericModal from "../GenericModal";
+import GenericModal from "@/components/GenericModal";
 import { CREATE_FILE } from "@/requetes/mutations/file.mutations";
 import {
   CreateFileMutation,
@@ -20,7 +20,7 @@ import {
   File,
 } from '@/types/graphql';
 import { useMutation } from "@apollo/client";
-import { GenerateLanguageProps } from "./InfosPanel";
+import { GenerateLanguageProps } from "@/components/Editor/InfosPanel";
 
 interface AddFileProps {
   project: Project | null;
