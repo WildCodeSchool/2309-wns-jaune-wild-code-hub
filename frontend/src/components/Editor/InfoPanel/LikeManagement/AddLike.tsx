@@ -15,7 +15,7 @@ interface AddLikeProps {
   setSupporters: React.Dispatch<React.SetStateAction<GetSupportersProps[]>>;
   supporters : GetSupportersProps[];
   meInfoUser : GetSupportersProps | null;
-  project: Project | null;
+  project: Project;
 }
 
 const AddLike: React.FC<AddLikeProps> = ({ setSupporters, supporters, meInfoUser, project}: AddLikeProps) => {
@@ -52,8 +52,6 @@ const AddLike: React.FC<AddLikeProps> = ({ setSupporters, supporters, meInfoUser
   const handleClick: () => void = (): void => {
     if (!meInfoUser || !supporters)
       return showAlert("error", "Please log in to use this feature!");
-    if (!project)
-      return showAlert("error", "Please wait while the project loads!");
     
     addLikeProject({
       variables: {

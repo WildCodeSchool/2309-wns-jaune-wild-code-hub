@@ -131,6 +131,10 @@ const Editor: NextPageWithLayout = () => {
   }, [data]);
 
   useEffect(() => {
+    console.log("les information de project by id", projectById);
+    console.log("router.query.id ", router.query)
+    console.log("router.query.id typeof ", typeof router.query)
+    console.log(router)
     if (
       projectById?.error?.message ===
       "Access denied! You need to be authenticated to perform this action!"
@@ -155,7 +159,7 @@ const Editor: NextPageWithLayout = () => {
       setData(projectById?.data?.findProjectById.files);
       setProject(projectById?.data?.findProjectById);
     }
-  }, [projectById, router]);
+  }, [projectById, router.query]);
 
   useEffect(() => {
     if (userData?.data?.listUsersAccessesProject) {

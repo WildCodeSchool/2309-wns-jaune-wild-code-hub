@@ -147,7 +147,7 @@ const InfosPanel = ({ project, setOpenFiles, setCode, setFile, setProject, setDa
         <Heading size={"md"} textAlign={"center"}>
           {project?.name}
           {
-            meLike ?
+            meLike && project ?
               <DeleteLike setSupporters={setSupporters} supporters={supporters} meInfoUser={meInfoUser} project={project}/>
             :
               <AddLike setSupporters={setSupporters} supporters={supporters} meInfoUser={meInfoUser} project={project}/>

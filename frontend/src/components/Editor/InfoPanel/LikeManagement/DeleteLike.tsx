@@ -15,7 +15,7 @@ interface DeleteLikeProps {
   setSupporters: React.Dispatch<React.SetStateAction<GetSupportersProps[]>>;
   supporters : GetSupportersProps[];
   meInfoUser : GetSupportersProps | null;
-  project: Project | null;
+  project: Project;
 }
 
 const DeleteLike: React.FC<DeleteLikeProps> = ({ setSupporters, supporters, meInfoUser, project }: DeleteLikeProps) => {
@@ -53,8 +53,6 @@ const DeleteLike: React.FC<DeleteLikeProps> = ({ setSupporters, supporters, meIn
   const handleClick: () => void = (): void => {
     if (!meInfoUser || !supporters)
       return showAlert("error", "Please log in to use this feature!");
-    if (!project)
-      return showAlert("error", "Please wait while the project loads!");
 
     deleteLikeProject({
       variables: {
