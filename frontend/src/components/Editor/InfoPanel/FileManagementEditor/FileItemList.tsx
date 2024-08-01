@@ -1,6 +1,5 @@
 import { File, Project } from "@/types/graphql";
-import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
-import {  Button, Flex, IconButton, Tooltip } from "@chakra-ui/react";
+import {  Button, Flex } from "@chakra-ui/react";
 import CSSIcon from "../../../../Icons/CSSIcon";
 import DefaultFileIcon from "../../../../Icons/DefaultFile";
 import HTMLIcon from "../../../../Icons/HTMLIcon";
