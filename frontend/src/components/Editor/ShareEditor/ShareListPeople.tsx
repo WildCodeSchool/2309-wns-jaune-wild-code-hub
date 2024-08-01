@@ -16,7 +16,9 @@ interface ShareListPeopleProps {
   users : FindAllInfoUserAccessesProject[] | null;
 }
 
-const ShareListPeople: React.FC<ShareListPeopleProps> = ({ users }) => {
+const ShareListPeople: React.FC<ShareListPeopleProps> = ({
+  users
+}) => {
 
   const { showAlert } = CustomToast();
   const [currentPage, setCurrentPage] = useState<number>(1);

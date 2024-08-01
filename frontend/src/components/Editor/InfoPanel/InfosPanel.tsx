@@ -45,7 +45,17 @@ type InfosPanelProps = {
   users :  FindAllInfoUserAccessesProject[] | null;
 };
 
-const InfosPanel = ({ project, setOpenFiles, setCode, setFile, setProject, setData, data, listUserAuthorisationSave, users }: InfosPanelProps) => {
+const InfosPanel = ({
+  project,
+  setOpenFiles,
+  setCode,
+  setFile,
+  setProject,
+  setData,
+  data,
+  listUserAuthorisationSave,
+  users
+}: InfosPanelProps) => {
   
   const [maxAvatar, setMaxAvatar] = useState<number>(9);
   const [owner, setOwner] = useState<GetOwnerUserProps | null | undefined>(null);

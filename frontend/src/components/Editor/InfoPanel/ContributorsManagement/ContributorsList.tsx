@@ -14,7 +14,9 @@ interface ContributorsListProps {
   users : FindAllInfoUserAccessesProject[] | null;
 }
 
-const ContributorsList: React.FC<ContributorsListProps> = ({ users }: ContributorsListProps) => {
+const ContributorsList: React.FC<ContributorsListProps> = ({
+  users
+}: ContributorsListProps) => {
 
   const router = useRouter();
 

@@ -32,7 +32,15 @@ interface AddFileProps {
   generateLanguage : (name : string, extention : string) => GenerateLanguageProps;
 }
 
-const AddFile: React.FC<AddFileProps> = ({project, setProject, setData, setOpenFiles, setCode, setFile, generateLanguage} : AddFileProps) => {
+const AddFile: React.FC<AddFileProps> = ({
+  project,
+  setProject,
+  setData,
+  setOpenFiles,
+  setCode,
+  setFile,
+  generateLanguage
+} : AddFileProps) => {
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [nameFile, setNameFile] = useState<string>("");

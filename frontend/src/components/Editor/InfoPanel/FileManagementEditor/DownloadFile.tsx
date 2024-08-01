@@ -12,7 +12,11 @@ interface DownloadFileProps {
   project: Project | null;
 }
 
-const DownloadFile: React.FC<DownloadFileProps> = ({ data, project }: DownloadFileProps) => {
+const DownloadFile: React.FC<DownloadFileProps> = ({ 
+  data,
+  project
+}: DownloadFileProps) => {
+  
   const { showAlert } = CustomToast();
 
   const sanitizeContent = (content: string): string => {

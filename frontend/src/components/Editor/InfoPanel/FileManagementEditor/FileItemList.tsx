@@ -21,7 +21,18 @@ type Props = {
   authorizeProject: boolean;
 };
 
-const FileItemList = ({ file, handleOpenFiles, project, setProject, setData, setOpenFiles, setCode, setFile, generateLanguage, authorizeProject }: Props) => {
+const FileItemList = ({
+  file,
+  handleOpenFiles,
+  project,
+  setProject,
+  setData,
+  setOpenFiles,
+  setCode,
+  setFile,
+  generateLanguage,
+  authorizeProject
+}: Props) => {
 
   return (
     <Flex justifyContent={"space-between"} width={"100%"}>

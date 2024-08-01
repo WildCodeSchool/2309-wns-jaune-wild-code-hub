@@ -18,7 +18,12 @@ interface AddLikeProps {
   project: Project;
 }
 
-const AddLike: React.FC<AddLikeProps> = ({ setSupporters, supporters, meInfoUser, project}: AddLikeProps) => {
+const AddLike: React.FC<AddLikeProps> = ({
+  setSupporters,
+  supporters,
+  meInfoUser,
+  project
+}: AddLikeProps) => {
 
   const { showAlert } = CustomToast();
 

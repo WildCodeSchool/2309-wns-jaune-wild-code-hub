@@ -12,7 +12,9 @@ interface ShareURLProps {
   project: Project | null;
 }
 
-const ShareURL: React.FC<ShareURLProps> = ({ project }) => {
+const ShareURL: React.FC<ShareURLProps> = ({
+  project
+}) => {
 
   const { showAlert } = CustomToast();
   const [currentUrl, setCurrentUrl] = useState<string>("");
