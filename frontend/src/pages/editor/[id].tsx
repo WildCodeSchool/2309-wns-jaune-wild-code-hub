@@ -197,6 +197,7 @@ const Editor: NextPageWithLayout = () => {
             setData={setData}
             data={data}
             listUserAuthorisationSave={listUserAuthorisationSave}
+            users={users}
           />
         </Panel>
         <PanelResizeHandle

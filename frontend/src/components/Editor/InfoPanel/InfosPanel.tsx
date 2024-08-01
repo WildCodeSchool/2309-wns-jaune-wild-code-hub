@@ -42,13 +42,13 @@ type InfosPanelProps = {
   setData: React.Dispatch<React.SetStateAction<File[]>>;
   data: File[];
   listUserAuthorisationSave :  FindAllInfoUserAccessesProject[] | null;
+  users :  FindAllInfoUserAccessesProject[] | null;
 };
 
-const InfosPanel = ({ project, setOpenFiles, setCode, setFile, setProject, setData, data, listUserAuthorisationSave }: InfosPanelProps) => {
+const InfosPanel = ({ project, setOpenFiles, setCode, setFile, setProject, setData, data, listUserAuthorisationSave, users }: InfosPanelProps) => {
   
   const [maxAvatar, setMaxAvatar] = useState<number>(9);
   const [owner, setOwner] = useState<GetOwnerUserProps | null | undefined>(null);
-  const [contributors, setContributors] = useState<GetContributorsProps[] | null>(null);
   const [supporters, setSupporters] = useState<GetSupportersProps[]>([]);
   const [meLike, setMeLike] = useState<boolean>(false);
   const [meInfoUser, setMeInfoUser] = useState<GetSupportersProps | null>(null);
@@ -58,20 +58,6 @@ const InfosPanel = ({ project, setOpenFiles, setCode, setFile, setProject, setDa
 
   useEffect(() => {
     if (project) {
-      getContributors({
-        variables: {
-          projectId: +project.id,
-        },
-        onCompleted(data) {
-          setContributors(
-            data.listUsersAccessesProject.filter((user) => user.role != "OWNER")
-          );
-          setOwner(
-            data.listUsersAccessesProject.find((user) => user.role === "OWNER")
-              ?.user
-          );
-        },
-      });
       getSupporters({
         variables: {
           projectId: +project.id,
@@ -85,7 +71,6 @@ const InfosPanel = ({ project, setOpenFiles, setCode, setFile, setProject, setDa
 
   useEffect(() => {
     const getCookieIdUser = Cookies.get("id");
-    const getCookiePseudoUser = Cookies.get("pseudo");
     if (supporters) {
       const checkLike = supporters.filter(user => user.id == getCookieIdUser);
       if (checkLike.length !== 0)
@@ -242,7 +227,7 @@ const InfosPanel = ({ project, setOpenFiles, setCode, setFile, setProject, setDa
             <Flex flexDirection={"column"} gap={2}>
               <ProjectInfo project={project} owner={owner} /> 
               <Divider orientation="horizontal" />
-              <ContributorsList contributors={contributors} />
+              <ContributorsList users={users} />
               <Divider orientation="horizontal" />
               <LikeList supporters={supporters} maxAvatar={maxAvatar} setMaxAvatar={setMaxAvatar} />
             </Flex>

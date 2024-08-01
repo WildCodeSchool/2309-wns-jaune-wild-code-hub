@@ -8,13 +8,13 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import { GetContributorsProps } from "@/types/InfosPanel";
+import { FindAllInfoUserAccessesProject } from "@/types/graphql";
 
 interface ContributorsListProps {
-  contributors : GetContributorsProps[] | null;
+  users : FindAllInfoUserAccessesProject[] | null;
 }
 
-const ContributorsList: React.FC<ContributorsListProps> = ({ contributors }: ContributorsListProps) => {
+const ContributorsList: React.FC<ContributorsListProps> = ({ users }: ContributorsListProps) => {
 
   const router = useRouter();
 
@@ -27,12 +27,12 @@ const ContributorsList: React.FC<ContributorsListProps> = ({ contributors }: Con
           bgColor="primary"
           color={"black"}
         >
-          {contributors?.length || 0}
+          {users?.length || 0}
         </Badge>
       </Stack>
       <AvatarGroup spacing={1} flexWrap={"wrap"} size={"sm"} max={9}>
-        {contributors && contributors.length > 0 ? (
-          contributors?.map((contributor) => {
+        {users && users.length > 0 ? (
+          users?.map((contributor) => {
             const { user } = contributor;
             return (
               <Avatar
