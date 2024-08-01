@@ -29,6 +29,11 @@ import DownloadFile from "./FileManagementEditor/DownloadFile";
 import Cookies from "js-cookie";
 import ContributorsList from "./ContributorsManagement/ContributorsList";
 import ProjectInfo from "./ProjectInfo";
+import { 
+  GenerateLanguageProps,
+  GetContributorsProps,
+  GetOwnerUserProps,
+} from "@/types/InfosPanel";
 
 type InfosPanelProps = {
   project: Project | null;
@@ -39,32 +44,6 @@ type InfosPanelProps = {
   setData: React.Dispatch<React.SetStateAction<File[]>>;
   data: File[];
 };
-
-export type GenerateLanguageProps =  {
-  name : string,
-  extension : string,
-  language : string,
-}
-
-export type GetContributorsProps = {
-  __typename?: "FindAllInfoUserAccessesProject";
-  role: string;
-  user?: {
-    __typename?: "User";
-    pseudo: string;
-    id: string;
-  } | null;
-  created_at?: string;
-  project_id?: string;
-  updated_at?: string;
-  user_id?: string;
-}
-
-export type GetOwnerUserProps = {
-  __typename?: "User";
-  pseudo: string;
-  id: string;
-}
 
 const InfosPanel = ({ project, setOpenFiles, setCode, setFile, setProject, setData, data }: InfosPanelProps) => {
   

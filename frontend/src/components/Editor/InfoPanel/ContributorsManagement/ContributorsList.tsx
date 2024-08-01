@@ -8,7 +8,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import { GetContributorsProps } from "../InfosPanel";
+import { GetContributorsProps } from "@/types/InfosPanel";
 
 interface ContributorsListProps {
   contributors : GetContributorsProps[] | null;

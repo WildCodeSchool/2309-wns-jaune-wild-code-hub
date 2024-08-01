@@ -8,7 +8,7 @@ import {
 import { 
   Project,
 } from "@/types/graphql";
-import { GetOwnerUserProps } from "./InfosPanel";
+import { GetOwnerUserProps } from "@/types/InfosPanel";
 import { useRouter } from "next/router";
 
 interface ProjectInfoProps {
