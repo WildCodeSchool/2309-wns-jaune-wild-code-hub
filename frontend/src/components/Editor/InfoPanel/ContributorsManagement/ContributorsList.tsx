@@ -25,7 +25,7 @@ const ContributorsList: React.FC<ContributorsListProps> = ({
   useEffect(() => {
     if (users) {
       setContributors(
-        users?.filter(user => user.role !== "OWNER")
+        users?.filter(user => user.role === "EDITOR")
       )
     }
   }, [users])
