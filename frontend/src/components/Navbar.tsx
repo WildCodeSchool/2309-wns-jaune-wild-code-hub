@@ -12,7 +12,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { Project } from "@/types/graphql";
 import Searchbar from "./Searchbar";
 import Cookies from "js-cookie";
-import { useParams, usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import BurgerMenu from "./BurgerMenu";
 
 const Navbar = () => {
@@ -21,15 +21,16 @@ const Navbar = () => {
   const pathname = usePathname();
   const [user, setUser] = useState<string | undefined>(undefined);
   const pseudo = Cookies.get("pseudo");
+
   useEffect(() => {
     setUser(pseudo);
   }, [pseudo]);
-  const isDesktop = useBreakpointValue({ base: false, md: true });
 
+  const isDesktop = useBreakpointValue({ base: false, md: true });
 
   const handleSearchResults = (results: Project[]) => {
     setProjects(results);
-  };  
+  };
 
   return (
     <>
