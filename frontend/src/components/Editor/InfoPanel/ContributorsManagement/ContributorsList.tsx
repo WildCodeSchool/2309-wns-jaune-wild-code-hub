@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Avatar,
   AvatarGroup,
@@ -18,7 +18,18 @@ const ContributorsList: React.FC<ContributorsListProps> = ({
   users
 }: ContributorsListProps) => {
 
+  const [contributors , setContributors ] = useState<FindAllInfoUserAccessesProject[] | null>(null);
+  
+
   const router = useRouter();
+
+  useEffect(() => {
+    if (users) {
+      setContributors(
+        users?.filter(user => user.role !== "OWNER")
+      )
+    }
+  }, [users])
 
   return (
     <Box width={"100%"}>
@@ -29,12 +40,12 @@ const ContributorsList: React.FC<ContributorsListProps> = ({
           bgColor="primary"
           color={"black"}
         >
-          {users?.length || 0}
+          {contributors?.length || 0}
         </Badge>
       </Stack>
       <AvatarGroup spacing={1} flexWrap={"wrap"} size={"sm"} max={9}>
-        {users && users.length > 0 ? (
-          users?.map((contributor) => {
+        {contributors && contributors.length > 0 ? (
+          contributors?.map((contributor) => {
             const { user } = contributor;
             return (
               <Avatar
