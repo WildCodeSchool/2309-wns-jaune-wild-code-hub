@@ -1,5 +1,5 @@
 import EditorPanel from "@/components/Editor/EditorPanel";
-import InfosPanel from "@/components/Editor/InfosPanel";
+import InfosPanel from "@/components/Editor/InfoPanel/InfosPanel";
 import View from "@/components/Editor/View";
 import CustomToast from "@/components/ToastCustom/CustomToast";
 import { PROJECT_BY_ID } from "@/requetes/queries/project.queries";
@@ -65,25 +65,25 @@ const Editor: NextPageWithLayout = () => {
       .join("\n");
 
     return `
-            <html>
-                <head>
-                    <style>${cssCode}</style>
-                </head>
-                <body>
-                    ${htmlCode}
-                    <script>
-                        (function() {
-                            const originalLog = console.log;
-                            console.log = function(...args) {
-                                const logMessage = args.map(arg => typeof arg === 'string' ? arg : JSON.stringify(arg)).join(' ');
-                                originalLog.apply(console, args);
-                                window.parent.postMessage({ type: 'console-log', message: logMessage, rawArgs: args }, '*');
-                            };
-                            ${jsCode}
-                        })();
-                    </script>
-                </body>
-            </html>
+          <html>
+              <head>
+                  <style>${cssCode}</style>
+              </head>
+              <body>
+                  ${htmlCode}
+                  <script>
+                      (function() {
+                          const originalLog = console.log;
+                          console.log = function(...args) {
+                              const logMessage = args.map(arg => typeof arg === 'string' ? arg : JSON.stringify(arg)).join(' ');
+                              originalLog.apply(console, args);
+                              window.parent.postMessage({ type: 'console-log', message: logMessage, rawArgs: args }, '*');
+                          };
+                          ${jsCode}
+                      })();
+                  </script>
+              </body>
+          </html>
         `;
   };
 
@@ -131,6 +131,10 @@ const Editor: NextPageWithLayout = () => {
   }, [data]);
 
   useEffect(() => {
+    console.log("les information de project by id", projectById);
+    console.log("router.query.id ", router.query)
+    console.log("router.query.id typeof ", typeof router.query)
+    console.log(router)
     if (
       projectById?.error?.message ===
       "Access denied! You need to be authenticated to perform this action!"
@@ -155,7 +159,7 @@ const Editor: NextPageWithLayout = () => {
       setData(projectById?.data?.findProjectById.files);
       setProject(projectById?.data?.findProjectById);
     }
-  }, [projectById, router]);
+  }, [projectById, router.query]);
 
   useEffect(() => {
     if (userData?.data?.listUsersAccessesProject) {
@@ -181,8 +185,7 @@ const Editor: NextPageWithLayout = () => {
     <Flex
       id="editor-page"
       height={"100vh"}
-      width={"100vw"}
-      p={"0rem 0.5rem 0.5rem 0rem"}
+      width={"98.9vw"}
       style={{ contain: "size" }}
       bg={"background"}
       pt={"5rem"}

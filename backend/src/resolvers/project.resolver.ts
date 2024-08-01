@@ -37,6 +37,7 @@ export class ProjectResolver {
     @Arg("id") id: string,
     @Ctx() context: MyContext
   ): Promise<Project | undefined> {
+    
     if (isNaN(+id)) throw new Error("Specify a correct id");
 
     const projectById = await new ProjectsService().findById(+id);

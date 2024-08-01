@@ -121,7 +121,6 @@ export type MutationAddAccessProjectArgs = {
 
 export type MutationAddLikeProjectArgs = {
   projectId: Scalars['Float']['input'];
-  userId: Scalars['Float']['input'];
 };
 
 
@@ -147,7 +146,6 @@ export type MutationDeleteFileArgs = {
 
 export type MutationDeleteLikeProjectArgs = {
   projectId: Scalars['Float']['input'];
-  userId: Scalars['Float']['input'];
 };
 
 
@@ -589,12 +587,12 @@ export type MessageResolvers<ContextType = any, ParentType extends ResolversPare
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
   addAccessProject?: Resolver<ResolversTypes['UserAccessProjectResponse'], ParentType, ContextType, RequireFields<MutationAddAccessProjectArgs, 'data'>>;
-  addLikeProject?: Resolver<ResolversTypes['Message'], ParentType, ContextType, RequireFields<MutationAddLikeProjectArgs, 'projectId' | 'userId'>>;
+  addLikeProject?: Resolver<ResolversTypes['Message'], ParentType, ContextType, RequireFields<MutationAddLikeProjectArgs, 'projectId'>>;
   createFile?: Resolver<ResolversTypes['File'], ParentType, ContextType, RequireFields<MutationCreateFileArgs, 'data'>>;
   createProject?: Resolver<ResolversTypes['Project'], ParentType, ContextType, RequireFields<MutationCreateProjectArgs, 'data'>>;
   deleteAccessProject?: Resolver<ResolversTypes['Message'], ParentType, ContextType, RequireFields<MutationDeleteAccessProjectArgs, 'data'>>;
   deleteFile?: Resolver<ResolversTypes['Message'], ParentType, ContextType, RequireFields<MutationDeleteFileArgs, 'id'>>;
-  deleteLikeProject?: Resolver<ResolversTypes['Message'], ParentType, ContextType, RequireFields<MutationDeleteLikeProjectArgs, 'projectId' | 'userId'>>;
+  deleteLikeProject?: Resolver<ResolversTypes['Message'], ParentType, ContextType, RequireFields<MutationDeleteLikeProjectArgs, 'projectId'>>;
   deleteProject?: Resolver<ResolversTypes['Message'], ParentType, ContextType, RequireFields<MutationDeleteProjectArgs, 'id'>>;
   deleteUser?: Resolver<ResolversTypes['Message'], ParentType, ContextType, RequireFields<MutationDeleteUserArgs, 'data'>>;
   register?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationRegisterArgs, 'data'>>;

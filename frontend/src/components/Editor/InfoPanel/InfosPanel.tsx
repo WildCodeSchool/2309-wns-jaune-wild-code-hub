@@ -11,21 +11,27 @@ import {
   AccordionIcon,
   AccordionItem,
   AccordionPanel,
-  Avatar,
-  AvatarGroup,
-  Badge,
   Box,
   Divider,
   Flex,
   Heading,
-  Stack,
-  Text
 } from "@chakra-ui/react";
-import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import FileItemList from "./FileItemList"
-import AddFile from "@/components/Editor/FileManagementEditor/AddFile";
+import FileItemList from "./FileManagementEditor/FileItemList"
+import AddFile from "@/components/Editor/InfoPanel/FileManagementEditor/AddFile";
 import DownloadFile from "./FileManagementEditor/DownloadFile";
+import Cookies from "js-cookie";
+import ContributorsList from "./ContributorsManagement/ContributorsList";
+import ProjectInfo from "./ProjectInfo";
+import { 
+  GenerateLanguageProps,
+  GetContributorsProps,
+  GetOwnerUserProps,
+  GetSupportersProps,
+} from "@/types/InfosPanel";
+import LikeList from "./LikeManagement/LikeList";
+import AddLike from "./LikeManagement/AddLike";
+import DeleteLike from "./LikeManagement/DeleteLike";
 
 type InfosPanelProps = {
   project: Project | null;
@@ -37,44 +43,18 @@ type InfosPanelProps = {
   data: File[];
 };
 
-export type GenerateLanguageProps =  {
-  name : string,
-  extension : string,
-  language : string,
-}
-
 const InfosPanel = ({ project, setOpenFiles, setCode, setFile, setProject, setData, data }: InfosPanelProps) => {
-  const router = useRouter();
+  
   const [maxAvatar, setMaxAvatar] = useState<number>(9);
-  const [owner, setOwner] = useState<
-    | {
-        __typename?: "User";
-        pseudo: string;
-        id: string;
-      }
-    | null
-    | undefined
-  >(null);
-
-  const [contributors, setContributors] = useState<Array<{
-    __typename?: "FindAllInfoUserAccessesProject";
-    role: string;
-    user?: {
-      __typename?: "User";
-      pseudo: string;
-      id: string;
-    } | null;
-  }> | null>(null);
-  const [supporters, setSupporters] = useState<
-    {
-      __typename?: "User";
-      pseudo: string;
-      id: string;
-    }[]
-  >([]);
+  const [owner, setOwner] = useState<GetOwnerUserProps | null | undefined>(null);
+  const [contributors, setContributors] = useState<GetContributorsProps[] | null>(null);
+  const [supporters, setSupporters] = useState<GetSupportersProps[]>([]);
+  const [meLike, setMeLike] = useState<boolean>(false);
+  const [meInfoUser, setMeInfoUser] = useState<GetSupportersProps | null>(null)
 
   const [getContributors] = useListUsersWithAccessesLazyQuery();
   const [getSupporters] = useListUsersLikesPerProjectLazyQuery();
+
   useEffect(() => {
     if (project) {
       getContributors({
@@ -101,6 +81,28 @@ const InfosPanel = ({ project, setOpenFiles, setCode, setFile, setProject, setDa
       });
     }
   }, [project, getContributors, getSupporters]);
+
+  useEffect(() => {
+    const getCookieIdUser = Cookies.get("id");
+    if (supporters) {
+      const checkLike = supporters.filter(user => user.id == getCookieIdUser);
+      if (checkLike.length !== 0)
+        setMeLike(true);
+      else
+        setMeLike(false);     
+    }
+  }, [supporters])
+
+  useEffect(() => {
+    const getCookieIdUser = Cookies.get("id");
+    const getCookiePseudoUser = Cookies.get("pseudo");
+    if (!getCookieIdUser || !getCookiePseudoUser)
+      return;
+    setMeInfoUser({
+      id: getCookieIdUser,
+      pseudo: getCookiePseudoUser,
+    })
+  }, [meInfoUser])
 
   const handleOpenFiles: (fileId: number) => void = (fileId: number) => {
     if (project) {
@@ -144,9 +146,14 @@ const InfosPanel = ({ project, setOpenFiles, setCode, setFile, setProject, setDa
       <Flex flexDirection={"column"} textAlign={"center"} paddingBlock={4}>
         <Heading size={"md"} textAlign={"center"}>
           {project?.name}
+          {
+            meLike && project ?
+              <DeleteLike setSupporters={setSupporters} supporters={supporters} meInfoUser={meInfoUser} project={project}/>
+            :
+              <AddLike setSupporters={setSupporters} supporters={supporters} meInfoUser={meInfoUser} project={project}/>
+          }
         </Heading>
       </Flex>
-
       <Accordion allowToggle defaultIndex={[0]}>
         <AccordionItem position={"relative"}>
           {({ isExpanded }) => {
@@ -208,127 +215,14 @@ const InfosPanel = ({ project, setOpenFiles, setCode, setFile, setProject, setDa
           </h2>
           <AccordionPanel pb={4}>
             <Flex flexDirection={"column"} gap={2}>
-              <Flex
-                width={"100%"}
-                alignItems={"center"}
-                flexDirection={"column"}
-                gap={2}
-                pb={2}
-              >
-                {owner && (
-                  <Avatar
-                    size={"md"}
-                    key={owner?.id}
-                    name={owner?.pseudo}
-                    onClick={() => router.push(`/user/${owner?.id}`)}
-                    title={`See ${owner?.pseudo} profile`}
-                    _hover={{
-                      cursor: "pointer",
-                    }}
-                  />
-                )}
-              </Flex>
+              <ProjectInfo project={project} owner={owner} /> 
               <Divider orientation="horizontal" />
-              <Box>
-                Created :{" "}
-                {project?.created_at &&
-                  new Date(project.created_at).toLocaleDateString()}
-              </Box>
+              <ContributorsList contributors={contributors} />
               <Divider orientation="horizontal" />
-              <Box>
-                Last Update :{" "}
-                {project?.update_at &&
-                  new Date(project.update_at).toLocaleDateString()}
-              </Box>
-              <Divider orientation="horizontal" />
-              <Box width={"100%"}>
-                <Stack direction={"row"} alignItems={"center"}>
-                  <Text>Contributors : </Text>
-                  <Badge
-                    height={"fit-content"}
-                    bgColor="primary"
-                    color={"black"}
-                  >
-                    {contributors?.length || 0}
-                  </Badge>
-                </Stack>
-                <AvatarGroup spacing={1} flexWrap={"wrap"} size={"sm"} max={9}>
-                  {contributors && contributors.length > 0 ? (
-                    contributors?.map((contributor) => {
-                      const { user } = contributor;
-                      return (
-                        <Avatar
-                          key={user?.id}
-                          name={user?.pseudo}
-                          onClick={() => router.push(`/user/${user?.id}`)}
-                          title={`See ${user?.pseudo} profile`}
-                          _hover={{
-                            cursor: "pointer",
-                          }}
-                        />
-                      );
-                    })
-                  ) : (
-                    <Text>No contributors on this project</Text>
-                  )}
-                </AvatarGroup>
-              </Box>
-              <Divider orientation="horizontal" />
-              <Box width={"100%"}>
-                <Stack direction={"row"} alignItems={"center"}>
-                  <Text>Likes : </Text>
-                  <Badge height={"fit-content"} bgColor="secondary">
-                    {supporters.length}
-                  </Badge>
-                </Stack>
-                <AvatarGroup spacing={1} flexWrap={"wrap"} size={"sm"}>
-                  {supporters?.map((user, index) => {
-                    if (index < maxAvatar) {
-                      return (
-                        <Avatar
-                          key={user?.id}
-                          name={user?.pseudo}
-                          title={`See ${user?.pseudo} profile`}
-                          _hover={{
-                            cursor: "pointer",
-                          }}
-                          onClick={() => router.push(`/user/${user.id}`)}
-                        />
-                      );
-                    }
-                  })}
-                  {supporters.length > maxAvatar && (
-                    <Avatar
-                      title="Show all users"
-                      _hover={{
-                        cursor: "pointer",
-                      }}
-                      name={`+${supporters.length - maxAvatar}`}
-                      getInitials={(name) => name}
-                      backgroundColor={"grey"}
-                      onClick={() => setMaxAvatar(supporters.length)}
-                    />
-                  )}
-                </AvatarGroup>
-              </Box>
+              <LikeList supporters={supporters} maxAvatar={maxAvatar} setMaxAvatar={setMaxAvatar} />
             </Flex>
           </AccordionPanel>
         </AccordionItem>
-        {/* 
-        one day there will be copmment in this project */}
-        {/* <AccordionItem>
-          <h2>
-            <AccordionButton>
-              <Box as="span" flex="1" textAlign="left">
-                Comment
-              </Box>
-              <AccordionIcon />
-            </AccordionButton>
-          </h2>
-          <AccordionPanel pb={4}>
-            <Flex flexDirection={"column"}></Flex>
-          </AccordionPanel>
-        </AccordionItem> */}
       </Accordion>
     </Flex>
   );
