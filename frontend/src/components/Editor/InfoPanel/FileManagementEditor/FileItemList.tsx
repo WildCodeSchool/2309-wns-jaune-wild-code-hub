@@ -18,9 +18,10 @@ type Props = {
   setCode: React.Dispatch<React.SetStateAction<string>>;
   setFile: React.Dispatch<React.SetStateAction<File | null>>;
   generateLanguage : (name : string, extention : string) => GenerateLanguageProps;
+  authorizeProject: boolean;
 };
 
-const FileItemList = ({ file, handleOpenFiles, project, setProject, setData, setOpenFiles, setCode, setFile, generateLanguage }: Props) => {
+const FileItemList = ({ file, handleOpenFiles, project, setProject, setData, setOpenFiles, setCode, setFile, generateLanguage, authorizeProject }: Props) => {
 
   return (
     <Flex justifyContent={"space-between"} width={"100%"}>
@@ -42,25 +43,30 @@ const FileItemList = ({ file, handleOpenFiles, project, setProject, setData, set
         {file.name}
       </Button>
       <Flex alignItems={"center"}>
-        <UpdateFile
-          file={file}
-          setProject={setProject}
-          setData={setData}
-          setOpenFiles={setOpenFiles}
-          setCode={setCode}
-          setFile={setFile}
-          generateLanguage={generateLanguage}
-        /> 
-        <DeleteFile
-          file={file}
-          project={project}
-          setProject={setProject}
-          setData={setData}
-          setOpenFiles={setOpenFiles}
-          setCode={setCode}
-          setFile={setFile}
-          generateLanguage={generateLanguage}
-        />
+        {
+          authorizeProject &&
+          <>
+            <UpdateFile
+              file={file}
+              setProject={setProject}
+              setData={setData}
+              setOpenFiles={setOpenFiles}
+              setCode={setCode}
+              setFile={setFile}
+              generateLanguage={generateLanguage}
+            /> 
+            <DeleteFile
+              file={file}
+              project={project}
+              setProject={setProject}
+              setData={setData}
+              setOpenFiles={setOpenFiles}
+              setCode={setCode}
+              setFile={setFile}
+              generateLanguage={generateLanguage}
+            />
+          </>
+        }
       </Flex>
     </Flex>
   );

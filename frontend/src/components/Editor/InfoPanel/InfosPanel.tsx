@@ -1,4 +1,4 @@
-import { File as EditorFile } from "@/types/graphql";
+import { File as EditorFile, FindAllInfoUserAccessesProject } from "@/types/graphql";
 import {
   Project,
   useListUsersLikesPerProjectLazyQuery,
@@ -41,17 +41,18 @@ type InfosPanelProps = {
   setProject: React.Dispatch<React.SetStateAction<Project | null>>;
   setData: React.Dispatch<React.SetStateAction<File[]>>;
   data: File[];
+  listUserAuthorisationSave :  FindAllInfoUserAccessesProject[] | null;
 };
 
-const InfosPanel = ({ project, setOpenFiles, setCode, setFile, setProject, setData, data }: InfosPanelProps) => {
+const InfosPanel = ({ project, setOpenFiles, setCode, setFile, setProject, setData, data, listUserAuthorisationSave }: InfosPanelProps) => {
   
   const [maxAvatar, setMaxAvatar] = useState<number>(9);
   const [owner, setOwner] = useState<GetOwnerUserProps | null | undefined>(null);
   const [contributors, setContributors] = useState<GetContributorsProps[] | null>(null);
   const [supporters, setSupporters] = useState<GetSupportersProps[]>([]);
   const [meLike, setMeLike] = useState<boolean>(false);
-  const [meInfoUser, setMeInfoUser] = useState<GetSupportersProps | null>(null)
-
+  const [meInfoUser, setMeInfoUser] = useState<GetSupportersProps | null>(null);
+  const [authorizeProject, setAuthorizeProject] = useState<boolean>(false);
   const [getContributors] = useListUsersWithAccessesLazyQuery();
   const [getSupporters] = useListUsersLikesPerProjectLazyQuery();
 
@@ -97,14 +98,29 @@ const InfosPanel = ({ project, setOpenFiles, setCode, setFile, setProject, setDa
   useEffect(() => {
     const getCookieIdUser = Cookies.get("id");
     const getCookiePseudoUser = Cookies.get("pseudo");
-    if (!getCookieIdUser || !getCookiePseudoUser)
+    if (!getCookieIdUser || !getCookiePseudoUser) {
       setMeInfoUser(null);
-    else
+    } else {
       setMeInfoUser({
         id: getCookieIdUser,
         pseudo: getCookiePseudoUser,
-      })   
+      })
+    }
   }, [])
+
+  useEffect(() => {
+    const getCookieIdUser = Cookies.get("id");
+    if(getCookieIdUser) {
+      const checkAuthorisationSave = listUserAuthorisationSave?.find(
+        (user: FindAllInfoUserAccessesProject) =>
+          user.user_id === +getCookieIdUser
+      );
+      if(checkAuthorisationSave)
+        setAuthorizeProject(true);
+      else
+        setAuthorizeProject(false);
+    }
+  }, [listUserAuthorisationSave])
 
   const handleOpenFiles: (fileId: number) => void = (fileId: number) => {
     if (project) {
@@ -173,15 +189,18 @@ const InfosPanel = ({ project, setOpenFiles, setCode, setFile, setProject, setDa
                   </AccordionButton>
                 </h2>
                 <AccordionPanel pb={4}>
-                  <AddFile
-                    project={project}
-                    setProject={setProject}
-                    setData={setData}
-                    setOpenFiles={setOpenFiles}
-                    setCode={setCode}
-                    setFile={setFile}
-                    generateLanguage={generateLanguage}
-                  />
+                  {
+                    authorizeProject &&
+                    <AddFile
+                      project={project}
+                      setProject={setProject}
+                      setData={setData}
+                      setOpenFiles={setOpenFiles}
+                      setCode={setCode}
+                      setFile={setFile}
+                      generateLanguage={generateLanguage}
+                    />
+                  }
                   <DownloadFile 
                     data={data}
                     project={project}
@@ -200,6 +219,7 @@ const InfosPanel = ({ project, setOpenFiles, setCode, setFile, setProject, setDa
                             setCode={setCode}
                             setFile={setFile}
                             generateLanguage={generateLanguage}
+                            authorizeProject={authorizeProject}
                           />
                         ))
                       : "There will be files here in the near futur"}
