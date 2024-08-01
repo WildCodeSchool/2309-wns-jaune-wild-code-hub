@@ -64,7 +64,7 @@ export class UserResolver {
     return userByPseudo;
   }
 
-  @Query(() => Message)
+  @Mutation(() => Message)
   async login(@Arg("infos") infos: InputLogin, @Ctx() ctx: MyContext) {
     let user;
     if (!infos.email && !infos.pseudo) {

@@ -15,9 +15,9 @@ import {
     useBreakpointValue,
   } from '@chakra-ui/react';
 import components from "@/styles/theme/components";
-import { LOGIN } from "@/requetes/queries/auth.queries";
-import { InputLogin, LoginQuery, LoginQueryVariables } from "@/types/graphql";
-import { useLazyQuery } from "@apollo/client";
+import { LOGIN } from "@/requetes/mutations/auth.mutations";
+import { InputLogin, LoginMutation, LoginMutationVariables } from "@/types/graphql";
+import { useMutation } from "@apollo/client";
 import CustomToast from '@/components/ToastCustom/CustomToast';
 
 const Login = () => {
@@ -25,9 +25,9 @@ const Login = () => {
     const router = useRouter();
     const { showAlert } = CustomToast();
 
-    const [login, { error }] = useLazyQuery<
-        LoginQuery,
-        LoginQueryVariables
+    const [login, { error }] = useMutation<
+        LoginMutation,
+        LoginMutationVariables
     >(LOGIN, {
         onCompleted: (data) => {
             if (data.login.success) {

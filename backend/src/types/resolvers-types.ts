@@ -105,6 +105,7 @@ export type Mutation = {
   deleteLikeProject: Message;
   deleteProject: Message;
   deleteUser: Message;
+  login: Message;
   register: User;
   updateAccessProject: Message;
   updateFile: Message;
@@ -156,6 +157,11 @@ export type MutationDeleteProjectArgs = {
 
 export type MutationDeleteUserArgs = {
   data: DeleteUserInput;
+};
+
+
+export type MutationLoginArgs = {
+  infos: InputLogin;
 };
 
 
@@ -233,7 +239,6 @@ export type Query = {
   listUsersByPseudo: Array<User>;
   listUsersByRole: Array<User>;
   listUsersLikesPerProject: Array<User>;
-  login: Message;
   logout: Message;
 };
 
@@ -347,11 +352,6 @@ export type QueryListUsersByRoleArgs = {
 
 export type QueryListUsersLikesPerProjectArgs = {
   projectId: Scalars['Float']['input'];
-};
-
-
-export type QueryLoginArgs = {
-  infos: InputLogin;
 };
 
 export type UpdateFileInput = {
@@ -595,6 +595,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   deleteLikeProject?: Resolver<ResolversTypes['Message'], ParentType, ContextType, RequireFields<MutationDeleteLikeProjectArgs, 'projectId'>>;
   deleteProject?: Resolver<ResolversTypes['Message'], ParentType, ContextType, RequireFields<MutationDeleteProjectArgs, 'id'>>;
   deleteUser?: Resolver<ResolversTypes['Message'], ParentType, ContextType, RequireFields<MutationDeleteUserArgs, 'data'>>;
+  login?: Resolver<ResolversTypes['Message'], ParentType, ContextType, RequireFields<MutationLoginArgs, 'infos'>>;
   register?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationRegisterArgs, 'data'>>;
   updateAccessProject?: Resolver<ResolversTypes['Message'], ParentType, ContextType, RequireFields<MutationUpdateAccessProjectArgs, 'data'>>;
   updateFile?: Resolver<ResolversTypes['Message'], ParentType, ContextType, RequireFields<MutationUpdateFileArgs, 'data'>>;
@@ -647,7 +648,6 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   listUsersByPseudo?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryListUsersByPseudoArgs, 'pseudo'>>;
   listUsersByRole?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryListUsersByRoleArgs, 'role'>>;
   listUsersLikesPerProject?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryListUsersLikesPerProjectArgs, 'projectId'>>;
-  login?: Resolver<ResolversTypes['Message'], ParentType, ContextType, RequireFields<QueryLoginArgs, 'infos'>>;
   logout?: Resolver<ResolversTypes['Message'], ParentType, ContextType>;
 }>;
 

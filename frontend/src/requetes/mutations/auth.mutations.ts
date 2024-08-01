@@ -14,3 +14,12 @@ export const REGISTER = gql`
     }
   }
 `;
+
+export const LOGIN = gql`
+  mutation Login($infos: InputLogin!) {
+    login(infos: $infos) {
+      success
+      message
+    }
+  }
+`;
