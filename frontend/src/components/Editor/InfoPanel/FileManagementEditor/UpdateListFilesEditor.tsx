@@ -76,6 +76,8 @@ const UpdateListFilesEditor: React.FC<UpdateListFilesEditorProps> = ({
       } else {
         showAlert("error", "You are not authorized to save files!");
       }
+    } else {
+      showAlert("error", "Access denied! You need to be authenticated to perform this action!");
     }
   };
 
