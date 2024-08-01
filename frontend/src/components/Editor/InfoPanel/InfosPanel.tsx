@@ -33,7 +33,11 @@ import {
   GenerateLanguageProps,
   GetContributorsProps,
   GetOwnerUserProps,
+  GetSupportersProps,
 } from "@/types/InfosPanel";
+import LikeList from "./LikeManagement/LikeList";
+import AddLike from "./LikeManagement/AddLike";
+import DeleteLike from "./LikeManagement/DeleteLike";
 
 type InfosPanelProps = {
   project: Project | null;
@@ -53,13 +57,7 @@ const InfosPanel = ({ project, setOpenFiles, setCode, setFile, setProject, setDa
 
   const [contributors, setContributors] = useState<GetContributorsProps[] | null>(null);
 
-  const [supporters, setSupporters] = useState<
-    {
-      __typename?: "User";
-      pseudo: string;
-      id: string;
-    }[]
-  >([]);
+  const [supporters, setSupporters] = useState<GetSupportersProps[]>([]);
 
   const [meLike, setMeLike] = useState<boolean>(false);
 
@@ -211,45 +209,9 @@ const InfosPanel = ({ project, setOpenFiles, setCode, setFile, setProject, setDa
             <Flex flexDirection={"column"} gap={2}>
               <ProjectInfo project={project} owner={owner} /> 
               <Divider orientation="horizontal" />
-                <ContributorsList contributors={contributors} />
+              <ContributorsList contributors={contributors} />
               <Divider orientation="horizontal" />
-              <Box width={"100%"}>
-                <Stack direction={"row"} alignItems={"center"}>
-                  <Text>Likes : </Text>
-                  <Badge height={"fit-content"} bgColor="secondary">
-                    {supporters.length}
-                  </Badge>
-                </Stack>
-                <AvatarGroup spacing={1} flexWrap={"wrap"} size={"sm"}>
-                  {supporters?.map((user, index) => {
-                    if (index < maxAvatar) {
-                      return (
-                        <Avatar
-                          key={user?.id}
-                          name={user?.pseudo}
-                          title={`See ${user?.pseudo} profile`}
-                          _hover={{
-                            cursor: "pointer",
-                          }}
-                          onClick={() => router.push(`/user/${user.id}`)}
-                        />
-                      );
-                    }
-                  })}
-                  {supporters.length > maxAvatar && (
-                    <Avatar
-                      title="Show all users"
-                      _hover={{
-                        cursor: "pointer",
-                      }}
-                      name={`+${supporters.length - maxAvatar}`}
-                      getInitials={(name) => name}
-                      backgroundColor={"grey"}
-                      onClick={() => setMaxAvatar(supporters.length)}
-                    />
-                  )}
-                </AvatarGroup>
-              </Box>
+              <LikeList supporters={supporters} maxAvatar={maxAvatar} setMaxAvatar={setMaxAvatar} />
             </Flex>
           </AccordionPanel>
         </AccordionItem>
