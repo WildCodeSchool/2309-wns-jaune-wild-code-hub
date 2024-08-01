@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Flex,
@@ -8,23 +8,31 @@ import {
   SlideFade,
   Button,
 } from "@chakra-ui/react";
-import { HamburgerIcon, ChevronRightIcon, SettingsIcon, CloseIcon } from "@chakra-ui/icons";
+import { HamburgerIcon, SettingsIcon, CloseIcon } from "@chakra-ui/icons";
 import NextLink from "next/link";
 import Searchbar from "./Searchbar";
 import { usePathname, useRouter } from "next/navigation";
 import MeSidebar from "./Sidebar/MeSidebarContent";
 import { Project } from "@/types/graphql";
-
+import Cookies from "js-cookie";
 
 const BurgerMenu = () => {
+
   const [isOpen, setIsOpen] = useState(false);
   const [projects, setProjects] = useState<Omit<Project, "files">[]>([]);
+  const [user, setUser] = useState<string | undefined>(undefined);
+
   const pathname = usePathname();
   const router = useRouter();
+  const pseudo = Cookies.get("pseudo");
 
   const handleSearchResults = (results: Project[]) => {
     setProjects(results);
-  };  
+  }; 
+
+  useEffect(() => {
+    setUser(pseudo);
+  }, [pseudo]);
 
   return (
     <Box position="fixed" top="1rem" right="1rem" zIndex="1000">
@@ -63,31 +71,42 @@ const BurgerMenu = () => {
           transform={isOpen ? "rotate(180deg)" : "rotate(0)"}
           transition="transform 0.3s ease-in-out"
         />
-      
+
         <SlideFade in={isOpen} offsetX="100vw">
-          <Box>                   
-            <Button
-              variant="ghost"
-              w="50%"
-              mt="1rem"
-              onClick={() => {
-                setIsOpen(false);
-                router.push("/auth/login");
-              }}
-            >
-              Log in
-            </Button>
-            <Button
-              variant="primary"
-              w="50%"
-              mt="1rem"
-              onClick={() => {
-                setIsOpen(false);
-                router.push("/auth/register");
-              }}
-            >
-              Sign In
-            </Button>
+          <Box>    
+          {
+            !user ?
+            <>
+              <Button
+                variant="ghost"
+                w="50%"
+                mt="1rem"
+                onClick={() => {
+                  setIsOpen(false);
+                  router.push("/auth/login");
+                }}
+              >
+                Log in
+              </Button>
+              <Button
+                variant="primary"
+                w="50%"
+                mt="1rem"
+                onClick={() => {
+                  setIsOpen(false);
+                  router.push("/auth/register");
+                }}
+              >
+                Sign In
+              </Button>
+            </>
+          :
+          <Flex justifyContent="center">
+              <Button onClick={() => router.push("/auth/logout")}>
+                Log out
+              </Button>
+          </Flex>
+          }               
 
             <Flex 
               w={"260%"}
@@ -95,7 +114,11 @@ const BurgerMenu = () => {
             >
               <Searchbar onResults={handleSearchResults} />
             </Flex> 
-           <MeSidebar />
+            
+            <Box mr={20} mt={10}>
+             <MeSidebar />
+            </Box>
+
           </Box>
         </SlideFade>
      
