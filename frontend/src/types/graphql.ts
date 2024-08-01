@@ -122,7 +122,6 @@ export type MutationAddAccessProjectArgs = {
 
 export type MutationAddLikeProjectArgs = {
   projectId: Scalars['Float']['input'];
-  userId: Scalars['Float']['input'];
 };
 
 
@@ -148,7 +147,6 @@ export type MutationDeleteFileArgs = {
 
 export type MutationDeleteLikeProjectArgs = {
   projectId: Scalars['Float']['input'];
-  userId: Scalars['Float']['input'];
 };
 
 
@@ -488,6 +486,20 @@ export type DeleteUserMutationVariables = Exact<{
 
 
 export type DeleteUserMutation = { __typename?: 'Mutation', deleteUser: { __typename?: 'Message', message: string, success: boolean } };
+
+export type AddLikeProjectMutationVariables = Exact<{
+  projectId: Scalars['Float']['input'];
+}>;
+
+
+export type AddLikeProjectMutation = { __typename?: 'Mutation', addLikeProject: { __typename?: 'Message', message: string, success: boolean } };
+
+export type DeleteLikeProjectMutationVariables = Exact<{
+  projectId: Scalars['Float']['input'];
+}>;
+
+
+export type DeleteLikeProjectMutation = { __typename?: 'Mutation', deleteLikeProject: { __typename?: 'Message', message: string, success: boolean } };
 
 export type UpdateAccessProjectMutationVariables = Exact<{
   data: UpdateUserProjectAccessesInput;
@@ -1008,6 +1020,74 @@ export function useDeleteUserMutation(baseOptions?: Apollo.MutationHookOptions<D
 export type DeleteUserMutationHookResult = ReturnType<typeof useDeleteUserMutation>;
 export type DeleteUserMutationResult = Apollo.MutationResult<DeleteUserMutation>;
 export type DeleteUserMutationOptions = Apollo.BaseMutationOptions<DeleteUserMutation, DeleteUserMutationVariables>;
+export const AddLikeProjectDocument = gql`
+    mutation AddLikeProject($projectId: Float!) {
+  addLikeProject(projectId: $projectId) {
+    message
+    success
+  }
+}
+    `;
+export type AddLikeProjectMutationFn = Apollo.MutationFunction<AddLikeProjectMutation, AddLikeProjectMutationVariables>;
+
+/**
+ * __useAddLikeProjectMutation__
+ *
+ * To run a mutation, you first call `useAddLikeProjectMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddLikeProjectMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addLikeProjectMutation, { data, loading, error }] = useAddLikeProjectMutation({
+ *   variables: {
+ *      projectId: // value for 'projectId'
+ *   },
+ * });
+ */
+export function useAddLikeProjectMutation(baseOptions?: Apollo.MutationHookOptions<AddLikeProjectMutation, AddLikeProjectMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AddLikeProjectMutation, AddLikeProjectMutationVariables>(AddLikeProjectDocument, options);
+      }
+export type AddLikeProjectMutationHookResult = ReturnType<typeof useAddLikeProjectMutation>;
+export type AddLikeProjectMutationResult = Apollo.MutationResult<AddLikeProjectMutation>;
+export type AddLikeProjectMutationOptions = Apollo.BaseMutationOptions<AddLikeProjectMutation, AddLikeProjectMutationVariables>;
+export const DeleteLikeProjectDocument = gql`
+    mutation DeleteLikeProject($projectId: Float!) {
+  deleteLikeProject(projectId: $projectId) {
+    message
+    success
+  }
+}
+    `;
+export type DeleteLikeProjectMutationFn = Apollo.MutationFunction<DeleteLikeProjectMutation, DeleteLikeProjectMutationVariables>;
+
+/**
+ * __useDeleteLikeProjectMutation__
+ *
+ * To run a mutation, you first call `useDeleteLikeProjectMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteLikeProjectMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteLikeProjectMutation, { data, loading, error }] = useDeleteLikeProjectMutation({
+ *   variables: {
+ *      projectId: // value for 'projectId'
+ *   },
+ * });
+ */
+export function useDeleteLikeProjectMutation(baseOptions?: Apollo.MutationHookOptions<DeleteLikeProjectMutation, DeleteLikeProjectMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteLikeProjectMutation, DeleteLikeProjectMutationVariables>(DeleteLikeProjectDocument, options);
+      }
+export type DeleteLikeProjectMutationHookResult = ReturnType<typeof useDeleteLikeProjectMutation>;
+export type DeleteLikeProjectMutationResult = Apollo.MutationResult<DeleteLikeProjectMutation>;
+export type DeleteLikeProjectMutationOptions = Apollo.BaseMutationOptions<DeleteLikeProjectMutation, DeleteLikeProjectMutationVariables>;
 export const UpdateAccessProjectDocument = gql`
     mutation UpdateAccessProject($data: UpdateUserProjectAccessesInput!) {
   updateAccessProject(data: $data) {

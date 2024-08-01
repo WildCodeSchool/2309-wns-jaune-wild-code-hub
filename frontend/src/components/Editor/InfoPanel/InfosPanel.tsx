@@ -135,7 +135,6 @@ const InfosPanel = ({ project, setOpenFiles, setCode, setFile, setProject, setDa
           {project?.name} {meLike ? <DeleteLike/> : <AddLike/>}
         </Heading>
       </Flex>
-
       <Accordion allowToggle defaultIndex={[0]}>
         <AccordionItem position={"relative"}>
           {({ isExpanded }) => {
