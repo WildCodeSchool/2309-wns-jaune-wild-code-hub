@@ -97,7 +97,7 @@ const BurgerMenu = () => {
                   router.push("/auth/register");
                 }}
               >
-                Sign In
+                Sign Up
               </Button>
             </>
           :
