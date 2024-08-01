@@ -84,12 +84,13 @@ const InfosPanel = ({ project, setOpenFiles, setCode, setFile, setProject, setDa
 
   useEffect(() => {
     const getCookieIdUser = Cookies.get("id");
+    const getCookiePseudoUser = Cookies.get("pseudo");
     if (supporters) {
       const checkLike = supporters.filter(user => user.id == getCookieIdUser);
       if (checkLike.length !== 0)
         setMeLike(true);
       else
-        setMeLike(false);     
+        setMeLike(false);  
     }
   }, [supporters])
 
@@ -97,12 +98,13 @@ const InfosPanel = ({ project, setOpenFiles, setCode, setFile, setProject, setDa
     const getCookieIdUser = Cookies.get("id");
     const getCookiePseudoUser = Cookies.get("pseudo");
     if (!getCookieIdUser || !getCookiePseudoUser)
-      return;
-    setMeInfoUser({
-      id: getCookieIdUser,
-      pseudo: getCookiePseudoUser,
-    })
-  }, [meInfoUser])
+      setMeInfoUser(null);
+    else
+      setMeInfoUser({
+        id: getCookieIdUser,
+        pseudo: getCookiePseudoUser,
+      })   
+  }, [])
 
   const handleOpenFiles: (fileId: number) => void = (fileId: number) => {
     if (project) {
@@ -146,12 +148,12 @@ const InfosPanel = ({ project, setOpenFiles, setCode, setFile, setProject, setDa
       <Flex flexDirection={"column"} textAlign={"center"} paddingBlock={4}>
         <Heading size={"md"} textAlign={"center"}>
           {project?.name}
-          {
+          {/* {
             meLike && project ?
               <DeleteLike setSupporters={setSupporters} supporters={supporters} meInfoUser={meInfoUser} project={project}/>
             :
               <AddLike setSupporters={setSupporters} supporters={supporters} meInfoUser={meInfoUser} project={project}/>
-          }
+          } */}
         </Heading>
       </Flex>
       <Accordion allowToggle defaultIndex={[0]}>
