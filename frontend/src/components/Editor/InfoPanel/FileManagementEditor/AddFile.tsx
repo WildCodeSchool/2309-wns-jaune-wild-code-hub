@@ -132,7 +132,7 @@ const AddFile: React.FC<AddFileProps> = ({
           size={"xs"}
           aria-label="Add file"
           variant={"ghost"}
-          icon={<AddIcon boxSize={3} />}
+          icon={<AddIcon boxSize={4} />}
           onClick={openModal}
         />
       </Tooltip>

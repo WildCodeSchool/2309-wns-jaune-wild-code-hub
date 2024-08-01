@@ -12,6 +12,7 @@ import {
   AccordionItem,
   AccordionPanel,
   Box,
+  Center,
   Divider,
   Flex,
   Heading,
@@ -158,16 +159,18 @@ const InfosPanel = ({
     <Flex height={"100%"} flexDirection={"column"}>
       <Flex flexDirection={"column"} textAlign={"center"} paddingBlock={4}>
         <Heading size={"md"} textAlign={"center"}>
-          {project?.name}
-          {
-            project ?
-              meLike ?
-                <DeleteLike setSupporters={setSupporters} supporters={supporters} meInfoUser={meInfoUser} project={project}/>
+          <Flex justifyContent="space-evenly">
+            {project?.name} 
+            {
+              project ?
+                meLike ?
+                  <DeleteLike setSupporters={setSupporters} supporters={supporters} meInfoUser={meInfoUser} project={project}/>
+                :
+                  <AddLike setSupporters={setSupporters} supporters={supporters} meInfoUser={meInfoUser} project={project} />
               :
-                <AddLike setSupporters={setSupporters} supporters={supporters} meInfoUser={meInfoUser} project={project} />
-            :
-            null
-          }
+              null
+            }
+          </Flex>
         </Heading>
       </Flex>
       <Accordion allowToggle defaultIndex={[0]}>
@@ -184,22 +187,24 @@ const InfosPanel = ({
                   </AccordionButton>
                 </h2>
                 <AccordionPanel pb={4}>
-                  {
-                    authorizeProject &&
-                    <AddFile
+                  <Flex justifyContent="flex-end" pb={5}>
+                    {
+                      authorizeProject &&
+                      <AddFile
+                        project={project}
+                        setProject={setProject}
+                        setData={setData}
+                        setOpenFiles={setOpenFiles}
+                        setCode={setCode}
+                        setFile={setFile}
+                        generateLanguage={generateLanguage}
+                      />
+                    }
+                    <DownloadFile 
+                      data={data}
                       project={project}
-                      setProject={setProject}
-                      setData={setData}
-                      setOpenFiles={setOpenFiles}
-                      setCode={setCode}
-                      setFile={setFile}
-                      generateLanguage={generateLanguage}
                     />
-                  }
-                  <DownloadFile 
-                    data={data}
-                    project={project}
-                  />
+                  </Flex>
                   <Flex flexDirection={"column"}>
                     {project?.files
                       ? project.files.map((file) => (

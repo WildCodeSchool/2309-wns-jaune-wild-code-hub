@@ -59,7 +59,7 @@ const DownloadFile: React.FC<DownloadFileProps> = ({
         size={"xs"}
         aria-label="Download the project files"
         variant={"ghost"}
-        icon={<DownloadIcon boxSize={3} />}
+        icon={<DownloadIcon boxSize={5} />}
         onClick={handleClick}
       />
     </Tooltip>
