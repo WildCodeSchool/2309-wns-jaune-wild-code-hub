@@ -10,6 +10,7 @@ const DeleteLike: React.FC<DeleteLikeProps> = ({}: DeleteLikeProps) => {
 
   return (
     <>
+    <p>delete like</p>
     </>
   );
 };
