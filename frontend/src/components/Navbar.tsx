@@ -75,7 +75,7 @@ const Navbar = () => {
                   variant="primary"
                   onClick={() => router.push("/auth/register")}
                 >
-                  Sign In
+                  Sign Up
                 </Button>
               )}
             </Box>
