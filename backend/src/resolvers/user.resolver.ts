@@ -219,21 +219,25 @@ export class UserResolver {
   @Authorized()
   @Mutation(() => Message)
   async addLikeProject(
-    @Arg("userId") userId: number,
-    @Arg("projectId") projectId: number
+    @Arg("projectId") projectId: number,
+    @Ctx() ctx: MyContext
   ) {
+
+    if (!ctx.user)
+      throw new Error("Access denied! You need to be authenticated to perform this action!");
+
     const likedProjects = await new UsersService().likeProject(
-      userId,
+      ctx.user.id,
       projectId
     );
 
     const m = new Message();
 
     if (likedProjects) {
-      m.message = "You liked";
+      m.message = "Your Like has been successfully saved!";
       m.success = true;
     } else {
-      m.message = "Unable to like";
+      m.message = "Your like could not be saved";
       m.success = false;
     }
 
@@ -243,21 +247,25 @@ export class UserResolver {
   @Authorized()
   @Mutation(() => Message)
   async deleteLikeProject(
-    @Arg("userId") userId: number,
-    @Arg("projectId") projectId: number
+    @Arg("projectId") projectId: number,
+    @Ctx() ctx: MyContext
   ) {
+
+    if (!ctx.user)
+      throw new Error("Access denied! You need to be authenticated to perform this action!");
+
     const likedProjects = await new UsersService().dislikeProject(
-      userId,
+      ctx.user.id,
       projectId
     );
 
     const m = new Message();
 
     if (likedProjects) {
-      m.message = "like deleted";
+      m.message = "Your like has been successfully removed!";
       m.success = true;
     } else {
-      m.message = "unable to remove like";
+      m.message = "Your like could not be removed.";
       m.success = false;
     }
 

@@ -11,17 +11,11 @@ import {
   AccordionIcon,
   AccordionItem,
   AccordionPanel,
-  Avatar,
-  AvatarGroup,
-  Badge,
   Box,
   Divider,
   Flex,
   Heading,
-  Stack,
-  Text
 } from "@chakra-ui/react";
-import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import FileItemList from "./FileManagementEditor/FileItemList"
 import AddFile from "@/components/Editor/InfoPanel/FileManagementEditor/AddFile";
@@ -51,14 +45,10 @@ type InfosPanelProps = {
 
 const InfosPanel = ({ project, setOpenFiles, setCode, setFile, setProject, setData, data }: InfosPanelProps) => {
   
-  const router = useRouter();
   const [maxAvatar, setMaxAvatar] = useState<number>(9);
   const [owner, setOwner] = useState<GetOwnerUserProps | null | undefined>(null);
-
   const [contributors, setContributors] = useState<GetContributorsProps[] | null>(null);
-
   const [supporters, setSupporters] = useState<GetSupportersProps[]>([]);
-
   const [meLike, setMeLike] = useState<boolean>(false);
 
   const [getContributors] = useListUsersWithAccessesLazyQuery();
@@ -142,7 +132,7 @@ const InfosPanel = ({ project, setOpenFiles, setCode, setFile, setProject, setDa
     <Flex height={"100%"} flexDirection={"column"}>
       <Flex flexDirection={"column"} textAlign={"center"} paddingBlock={4}>
         <Heading size={"md"} textAlign={"center"}>
-          {project?.name} {meLike ? "oui" : "non"}
+          {project?.name} {meLike ? <AddLike/> : <DeleteLike/>}
         </Heading>
       </Flex>
 
