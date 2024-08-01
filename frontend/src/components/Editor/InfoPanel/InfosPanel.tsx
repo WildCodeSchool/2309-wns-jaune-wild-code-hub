@@ -23,10 +23,11 @@ import {
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import FileItemList from "./FileItemList"
+import FileItemList from "./FileManagementEditor/FileItemList"
 import AddFile from "@/components/Editor/InfoPanel/FileManagementEditor/AddFile";
 import DownloadFile from "./FileManagementEditor/DownloadFile";
 import Cookies from "js-cookie";
+import ContributorsList from "./ContributorsManagement/ContributorsList";
 
 type InfosPanelProps = {
   project: Project | null;
@@ -44,7 +45,22 @@ export type GenerateLanguageProps =  {
   language : string,
 }
 
+export type GetContributorsProps = {
+  __typename?: "FindAllInfoUserAccessesProject";
+  role: string;
+  user?: {
+    __typename?: "User";
+    pseudo: string;
+    id: string;
+  } | null;
+  created_at?: string;
+  project_id?: string;
+  updated_at?: string;
+  user_id?: string;
+}
+
 const InfosPanel = ({ project, setOpenFiles, setCode, setFile, setProject, setData, data }: InfosPanelProps) => {
+  
   const router = useRouter();
   const [maxAvatar, setMaxAvatar] = useState<number>(9);
   const [owner, setOwner] = useState<
@@ -57,15 +73,8 @@ const InfosPanel = ({ project, setOpenFiles, setCode, setFile, setProject, setDa
     | undefined
   >(null);
 
-  const [contributors, setContributors] = useState<Array<{
-    __typename?: "FindAllInfoUserAccessesProject";
-    role: string;
-    user?: {
-      __typename?: "User";
-      pseudo: string;
-      id: string;
-    } | null;
-  }> | null>(null);
+  const [contributors, setContributors] = useState<GetContributorsProps[] | null>(null);
+
   const [supporters, setSupporters] = useState<
     {
       __typename?: "User";
@@ -255,38 +264,7 @@ const InfosPanel = ({ project, setOpenFiles, setCode, setFile, setProject, setDa
                   new Date(project.update_at).toLocaleDateString()}
               </Box>
               <Divider orientation="horizontal" />
-              <Box width={"100%"}>
-                <Stack direction={"row"} alignItems={"center"}>
-                  <Text>Contributors : </Text>
-                  <Badge
-                    height={"fit-content"}
-                    bgColor="primary"
-                    color={"black"}
-                  >
-                    {contributors?.length || 0}
-                  </Badge>
-                </Stack>
-                <AvatarGroup spacing={1} flexWrap={"wrap"} size={"sm"} max={9}>
-                  {contributors && contributors.length > 0 ? (
-                    contributors?.map((contributor) => {
-                      const { user } = contributor;
-                      return (
-                        <Avatar
-                          key={user?.id}
-                          name={user?.pseudo}
-                          onClick={() => router.push(`/user/${user?.id}`)}
-                          title={`See ${user?.pseudo} profile`}
-                          _hover={{
-                            cursor: "pointer",
-                          }}
-                        />
-                      );
-                    })
-                  ) : (
-                    <Text>No contributors on this project</Text>
-                  )}
-                </AvatarGroup>
-              </Box>
+                <ContributorsList contributors={contributors} />
               <Divider orientation="horizontal" />
               <Box width={"100%"}>
                 <Stack direction={"row"} alignItems={"center"}>
