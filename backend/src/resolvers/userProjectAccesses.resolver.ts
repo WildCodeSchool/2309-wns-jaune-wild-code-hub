@@ -14,14 +14,12 @@ import { Project } from "../entities/project.entity";
 @Resolver()
 export class UserProjectAccessesResolver {
 
-  @Authorized()
   @Query(() => [FindAllInfoUserAccessesProject])
   async listUsersAccessesProject (@Arg("project_id") project_id: number) {
     const listAccesProject = await new UserProjectAccessesService().findUsersByAccessesProject(project_id);
     return listAccesProject;
   }
 
-  @Authorized()
   @Query(() => [FindAllInfoUserAccessesProject])
   async listProjectsAccessesUser (@Arg("user_id") user_id: number) {
     const listAccesProject = await new UserProjectAccessesService().findProjectsByAccessesUser(user_id);

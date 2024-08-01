@@ -50,9 +50,11 @@ const InfosPanel = ({ project, setOpenFiles, setCode, setFile, setProject, setDa
   const [contributors, setContributors] = useState<GetContributorsProps[] | null>(null);
   const [supporters, setSupporters] = useState<GetSupportersProps[]>([]);
   const [meLike, setMeLike] = useState<boolean>(false);
+  const [meInfoUser, setMeInfoUser] = useState<GetSupportersProps | null>(null)
 
   const [getContributors] = useListUsersWithAccessesLazyQuery();
   const [getSupporters] = useListUsersLikesPerProjectLazyQuery();
+
   useEffect(() => {
     if (project) {
       getContributors({
@@ -90,6 +92,17 @@ const InfosPanel = ({ project, setOpenFiles, setCode, setFile, setProject, setDa
         setMeLike(false);     
     }
   }, [supporters])
+
+  useEffect(() => {
+    const getCookieIdUser = Cookies.get("id");
+    const getCookiePseudoUser = Cookies.get("pseudo");
+    if (!getCookieIdUser || !getCookiePseudoUser)
+      return;
+    setMeInfoUser({
+      id: getCookieIdUser,
+      pseudo: getCookiePseudoUser,
+    })
+  }, [meInfoUser])
 
   const handleOpenFiles: (fileId: number) => void = (fileId: number) => {
     if (project) {
@@ -135,9 +148,9 @@ const InfosPanel = ({ project, setOpenFiles, setCode, setFile, setProject, setDa
           {project?.name}
           {
             meLike ?
-              <DeleteLike/>
+              <DeleteLike setSupporters={setSupporters} supporters={supporters} meInfoUser={meInfoUser} project={project}/>
             :
-              <AddLike/>
+              <AddLike setSupporters={setSupporters} supporters={supporters} meInfoUser={meInfoUser} project={project}/>
           }
         </Heading>
       </Flex>
