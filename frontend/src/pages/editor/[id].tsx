@@ -65,25 +65,25 @@ const Editor: NextPageWithLayout = () => {
       .join("\n");
 
     return `
-            <html>
-                <head>
-                    <style>${cssCode}</style>
-                </head>
-                <body>
-                    ${htmlCode}
-                    <script>
-                        (function() {
-                            const originalLog = console.log;
-                            console.log = function(...args) {
-                                const logMessage = args.map(arg => typeof arg === 'string' ? arg : JSON.stringify(arg)).join(' ');
-                                originalLog.apply(console, args);
-                                window.parent.postMessage({ type: 'console-log', message: logMessage, rawArgs: args }, '*');
-                            };
-                            ${jsCode}
-                        })();
-                    </script>
-                </body>
-            </html>
+          <html>
+              <head>
+                  <style>${cssCode}</style>
+              </head>
+              <body>
+                  ${htmlCode}
+                  <script>
+                      (function() {
+                          const originalLog = console.log;
+                          console.log = function(...args) {
+                              const logMessage = args.map(arg => typeof arg === 'string' ? arg : JSON.stringify(arg)).join(' ');
+                              originalLog.apply(console, args);
+                              window.parent.postMessage({ type: 'console-log', message: logMessage, rawArgs: args }, '*');
+                          };
+                          ${jsCode}
+                      })();
+                  </script>
+              </body>
+          </html>
         `;
   };
 

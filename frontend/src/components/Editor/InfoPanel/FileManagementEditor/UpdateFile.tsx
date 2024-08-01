@@ -20,7 +20,7 @@ import {
   File,
 } from '@/types/graphql';
 import { useMutation } from "@apollo/client";
-import { GenerateLanguageProps } from "@/components/Editor/InfoPanel/InfosPanel";
+import { GenerateLanguageProps } from "@/types/InfosPanel";
 
 interface UpdateFileProps {
   file: File;

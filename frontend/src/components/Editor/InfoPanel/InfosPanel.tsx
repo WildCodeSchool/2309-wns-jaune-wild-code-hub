@@ -132,7 +132,13 @@ const InfosPanel = ({ project, setOpenFiles, setCode, setFile, setProject, setDa
     <Flex height={"100%"} flexDirection={"column"}>
       <Flex flexDirection={"column"} textAlign={"center"} paddingBlock={4}>
         <Heading size={"md"} textAlign={"center"}>
-          {project?.name} {meLike ? <DeleteLike/> : <AddLike/>}
+          {project?.name}
+          {
+            meLike ?
+              <DeleteLike/>
+            :
+              <AddLike/>
+          }
         </Heading>
       </Flex>
       <Accordion allowToggle defaultIndex={[0]}>
