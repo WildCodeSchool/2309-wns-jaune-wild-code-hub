@@ -1,4 +1,4 @@
-import { Flex, IconButton, Input, Spinner, Box, List, ListItem, Text, LinkOverlay } from "@chakra-ui/react";
+import { Flex, IconButton, Input, Spinner, Box, List, ListItem, Text, Link } from "@chakra-ui/react";
 import { SearchIcon } from "@chakra-ui/icons";
 import React, { useState, ChangeEvent, useEffect } from "react";
 import { useLazyQuery } from "@apollo/client";
@@ -60,7 +60,6 @@ const Searchbar = ({ onResults }: SearchbarProps) => {
           pl="1rem"
           placeholder="Search for projects"
           border="transparent"
-          _focus={{ outline: "none" }}
           outline="none"
           value={searchTerm}
           onChange={handleSearch}
@@ -71,30 +70,30 @@ const Searchbar = ({ onResults }: SearchbarProps) => {
           icon={loading ? <Spinner size="xs" /> : <SearchIcon />}
           bg="primary"
           color="black"
-        ></IconButton>
+        />
       </Flex>
       {searchTerm && results.length > 0 && (
         <Box
           position="absolute"
-          mt="2.5rem"
-          width={{ base: "250px", sm: "40%" }}
+          mt="3rem"
           bg="black"
           borderRadius="md"
           boxShadow="md"
-          maxHeight="150px"
+          maxHeight="100px"  
           overflowY="auto"
           zIndex={1}
+          width="40%" 
         >
-          <List spacing={2}>
-            {results.map((project) => (
-              <ListItem key={project.id} p="0.4rem" _hover={{ bg: "grey" }}>
-                <LinkOverlay as={NextLink} href={`/editor/${project.id}`} onClick={handleResultClick}>
-                  <Text>{project.name}</Text>
-                </LinkOverlay>
-              </ListItem>
-            ))}
-          </List>
-        </Box>
+        <List spacing={1} p={1}>  
+          {results.map((project) => (
+            <ListItem key={project.id} _hover={{ bg: "grey" }}>
+              <Link as={NextLink} href={`/editor/${project.id}`} onClick={handleResultClick} display="block" p="0.5rem">  {/* Réduit le padding de chaque lien */}
+                <Text fontSize="sm">{project.name}</Text> 
+              </Link>
+            </ListItem>
+          ))}
+        </List>
+      </Box>
       )}
     </Flex>
   );

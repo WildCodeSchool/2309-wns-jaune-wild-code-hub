@@ -19,7 +19,6 @@ const ContributorsList: React.FC<ContributorsListProps> = ({
 }: ContributorsListProps) => {
 
   const [contributors , setContributors ] = useState<FindAllInfoUserAccessesProject[] | null>(null);
-  
 
   const router = useRouter();
 
