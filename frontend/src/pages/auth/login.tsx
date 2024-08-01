@@ -12,6 +12,7 @@ import {
     InputRightElement,
     Text,
     Link,
+    useBreakpointValue,
   } from '@chakra-ui/react';
 import components from "@/styles/theme/components";
 import { LOGIN } from "@/requetes/queries/auth.queries";
@@ -112,46 +113,46 @@ const Login = () => {
         setShowPassword(!showPassword);
     }
 
+    const titleFontSize = useBreakpointValue({ base: "2xl", sm:"4xl",  md: "5xl" });
+
     return (
         <Box {...components.Box.main} bgColor={"background"} bgRepeat={"no-repeat"} bgImage="url(/BGForm.png)">
             <Box {...components.Box.containerBox} p={30}>
-                <Text fontSize='5xl' color="white" as='b' mb={10}>Connect to your Hub !</Text >
-                <Box {...components.Box.form} p={2}>
-                    <main>
-                        <form onSubmit={handleSubmitVerify}>
-                            <FormControl isInvalid={!!errors.emailOrPseudo} mb={2}>
-                                <FormLabel color="text">Enter your Email or Pseudo*</FormLabel>
-                                <Input color="placeholder" bg="white" type='text' name='emailOrPseudo' value={formData.emailOrPseudo} onChange={handleInputChange} />
-                                <FormErrorMessage>{errors.emailOrPseudo}</FormErrorMessage>
-                            </FormControl>
-                            <FormControl isInvalid={!!errors.password} mb={2}>
-                                <FormLabel color="text">Choose your Password *</FormLabel>
-                                <InputGroup>
-                                    <Input color="placeholder" bg="white" type={showPassword ? 'text' : 'password'} name='password' value={formData.password} onChange={handleInputChange} />
-                                    <InputRightElement>
-                                        <img onClick={togglePasswordVisibility} src={!showPassword ? '/eyePasswordVisible.png' : '/eyePasswordNotVisible.png'} alt="Eye Password" style={{ cursor: "pointer" }} />
-                                    </InputRightElement>
-                                </InputGroup>
-                                <FormErrorMessage>{errors.password}</FormErrorMessage>
-                            </FormControl>
-                            <Box textAlign="center">
-                                <Box mt={5}>
-                                    <Link href='/auth/forgetpassword'>
-                                        <Text fontSize='xs' color="primary" as='b'>Forget password ?</Text>
-                                    </Link>
-                                </Box>
-                                <Box mt={5}>
-                                    <Text fontSize='xs' color="grey" as='b'>Don&apos;t have an account?</Text>
-                                    <Link href='/auth/register'>
-                                        <Text fontSize='xs' color="accent" as='b'>Sign up</Text >
-                                    </Link>
-                                </Box>
-                            <Button type="submit" variant="secondary" mt={5}>
-                                Sign In
-                            </Button>
-                        </Box>
-                        </form>
-                    </main>
+                <Text fontSize={titleFontSize} color="white" as='b' mb={10}>Connect to your Hub !</Text >
+                <Box {...components.Box.form} w="95%" p={2}>
+                    <form onSubmit={handleSubmitVerify}>
+                        <FormControl isInvalid={!!errors.emailOrPseudo} mb={2}>
+                            <FormLabel color="text">Enter your Email or Pseudo*</FormLabel>
+                            <Input color="placeholder" bg="white" type='text' name='emailOrPseudo' value={formData.emailOrPseudo} onChange={handleInputChange} />
+                            <FormErrorMessage>{errors.emailOrPseudo}</FormErrorMessage>
+                        </FormControl>
+                        <FormControl isInvalid={!!errors.password} mb={2}>
+                            <FormLabel color="text">Choose your Password *</FormLabel>
+                            <InputGroup>
+                                <Input color="placeholder" bg="white" type={showPassword ? 'text' : 'password'} name='password' value={formData.password} onChange={handleInputChange} />
+                                <InputRightElement>
+                                    <img onClick={togglePasswordVisibility} src={!showPassword ? '/eyePasswordVisible.png' : '/eyePasswordNotVisible.png'} alt="Eye Password" style={{ cursor: "pointer" }} />
+                                </InputRightElement>
+                            </InputGroup>
+                            <FormErrorMessage>{errors.password}</FormErrorMessage>
+                        </FormControl>
+                        <Box textAlign="center">
+                            <Box mt={5}>
+                                <Link href='/auth/forgetpassword'>
+                                    <Text fontSize='xs' color="primary" as='b'>Forget password ?</Text>
+                                </Link>
+                            </Box>
+                            <Box mt={5}>
+                                <Text fontSize='xs' color="grey" as='b'>Don&apos;t have an account?</Text>
+                                <Link href='/auth/register'>
+                                    <Text fontSize='xs' color="accent" as='b'>Sign up</Text >
+                                </Link>
+                            </Box>
+                        <Button type="submit" variant="secondary" mt={5}>
+                            Sign In
+                        </Button>
+                    </Box>
+                    </form>
                 </Box>
             </Box>
         </Box>
