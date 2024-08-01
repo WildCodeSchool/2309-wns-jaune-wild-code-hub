@@ -28,6 +28,7 @@ import AddFile from "@/components/Editor/InfoPanel/FileManagementEditor/AddFile"
 import DownloadFile from "./FileManagementEditor/DownloadFile";
 import Cookies from "js-cookie";
 import ContributorsList from "./ContributorsManagement/ContributorsList";
+import ProjectInfo from "./ProjectInfo";
 
 type InfosPanelProps = {
   project: Project | null;
@@ -59,19 +60,17 @@ export type GetContributorsProps = {
   user_id?: string;
 }
 
+export type GetOwnerUserProps = {
+  __typename?: "User";
+  pseudo: string;
+  id: string;
+}
+
 const InfosPanel = ({ project, setOpenFiles, setCode, setFile, setProject, setData, data }: InfosPanelProps) => {
   
   const router = useRouter();
   const [maxAvatar, setMaxAvatar] = useState<number>(9);
-  const [owner, setOwner] = useState<
-    | {
-        __typename?: "User";
-        pseudo: string;
-        id: string;
-      }
-    | null
-    | undefined
-  >(null);
+  const [owner, setOwner] = useState<GetOwnerUserProps | null | undefined>(null);
 
   const [contributors, setContributors] = useState<GetContributorsProps[] | null>(null);
 
@@ -231,38 +230,7 @@ const InfosPanel = ({ project, setOpenFiles, setCode, setFile, setProject, setDa
           </h2>
           <AccordionPanel pb={4}>
             <Flex flexDirection={"column"} gap={2}>
-              <Flex
-                width={"100%"}
-                alignItems={"center"}
-                flexDirection={"column"}
-                gap={2}
-                pb={2}
-              >
-                {owner && (
-                  <Avatar
-                    size={"md"}
-                    key={owner?.id}
-                    name={owner?.pseudo}
-                    onClick={() => router.push(`/user/${owner?.id}`)}
-                    title={`See ${owner?.pseudo} profile`}
-                    _hover={{
-                      cursor: "pointer",
-                    }}
-                  />
-                )}
-              </Flex>
-              <Divider orientation="horizontal" />
-              <Box>
-                Created :{" "}
-                {project?.created_at &&
-                  new Date(project.created_at).toLocaleDateString()}
-              </Box>
-              <Divider orientation="horizontal" />
-              <Box>
-                Last Update :{" "}
-                {project?.update_at &&
-                  new Date(project.update_at).toLocaleDateString()}
-              </Box>
+              <ProjectInfo project={project} owner={owner} /> 
               <Divider orientation="horizontal" />
                 <ContributorsList contributors={contributors} />
               <Divider orientation="horizontal" />
