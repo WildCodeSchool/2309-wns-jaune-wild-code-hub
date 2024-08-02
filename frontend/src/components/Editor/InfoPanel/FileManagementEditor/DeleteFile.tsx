@@ -31,7 +31,16 @@ interface DeleteFileProps {
   generateLanguage : (name : string, extention : string) => GenerateLanguageProps;
 }
 
-const DeleteFile : React.FC<DeleteFileProps> = ({ file, project, setProject, setData, setOpenFiles, setCode, setFile, generateLanguage} : DeleteFileProps) => {
+const DeleteFile : React.FC<DeleteFileProps> = ({
+  file,
+  project,
+  setProject,
+  setData,
+  setOpenFiles,
+  setCode,
+  setFile,
+  generateLanguage
+} : DeleteFileProps) => {
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 

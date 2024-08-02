@@ -14,7 +14,10 @@ interface SettingInfoProps {
   users: FindAllInfoUserAccessesProject[] | null;
 }
 
-const SettingInfo: React.FC<SettingInfoProps> = ({ users, project}) => {
+const SettingInfo: React.FC<SettingInfoProps> = ({
+  users,
+  project
+}) => {
 
   const [pseudo, setPseudo] = useState<string | undefined>("");
   const [nameProject, setNameProject] = useState<string | undefined>("");

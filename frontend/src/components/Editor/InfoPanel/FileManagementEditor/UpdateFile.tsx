@@ -32,7 +32,15 @@ interface UpdateFileProps {
   generateLanguage : (name : string, extention : string) => GenerateLanguageProps;
 }
 
-const UpdateFile : React.FC<UpdateFileProps> = ({ file, setProject, setData, setOpenFiles, setCode, setFile, generateLanguage} : UpdateFileProps) => {
+const UpdateFile : React.FC<UpdateFileProps> = ({
+  file,
+  setProject,
+  setData,
+  setOpenFiles,
+  setCode,
+  setFile,
+  generateLanguage
+} : UpdateFileProps) => {
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [nameFile, setNameFile] = useState<string>(file.name);

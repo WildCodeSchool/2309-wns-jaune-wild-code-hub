@@ -12,7 +12,11 @@ interface DownloadFileProps {
   project: Project | null;
 }
 
-const DownloadFile: React.FC<DownloadFileProps> = ({ data, project }: DownloadFileProps) => {
+const DownloadFile: React.FC<DownloadFileProps> = ({ 
+  data,
+  project
+}: DownloadFileProps) => {
+  
   const { showAlert } = CustomToast();
 
   const sanitizeContent = (content: string): string => {
@@ -55,7 +59,7 @@ const DownloadFile: React.FC<DownloadFileProps> = ({ data, project }: DownloadFi
         size={"xs"}
         aria-label="Download the project files"
         variant={"ghost"}
-        icon={<DownloadIcon boxSize={3} />}
+        icon={<DownloadIcon boxSize={5} />}
         onClick={handleClick}
       />
     </Tooltip>

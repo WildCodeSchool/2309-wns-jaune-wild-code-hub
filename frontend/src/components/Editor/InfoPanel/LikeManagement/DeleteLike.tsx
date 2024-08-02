@@ -18,7 +18,12 @@ interface DeleteLikeProps {
   project: Project;
 }
 
-const DeleteLike: React.FC<DeleteLikeProps> = ({ setSupporters, supporters, meInfoUser, project }: DeleteLikeProps) => {
+const DeleteLike: React.FC<DeleteLikeProps> = ({
+  setSupporters,
+  supporters,
+  meInfoUser,
+  project
+}: DeleteLikeProps) => {
   
   const { showAlert } = CustomToast();
 

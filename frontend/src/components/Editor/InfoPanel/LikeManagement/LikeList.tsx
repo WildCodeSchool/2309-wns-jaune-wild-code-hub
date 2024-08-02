@@ -18,7 +18,11 @@ interface LikeListProps {
   setMaxAvatar: React.Dispatch<React.SetStateAction<number>>;
 }
 
-const LikeList: React.FC<LikeListProps> = ({ supporters, maxAvatar, setMaxAvatar }: LikeListProps) => {
+const LikeList: React.FC<LikeListProps> = ({
+  supporters,
+  maxAvatar,
+  setMaxAvatar
+}: LikeListProps) => {
   
   const router = useRouter();
 

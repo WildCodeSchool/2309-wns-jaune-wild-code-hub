@@ -25,7 +25,7 @@ export class FileResolver {
     return files;
   }
 
-  @Query(() => [File])
+  @Query(() => File)
   async findFileById(@Arg("id") id: string) {
     const fileById = await new FilesService().findById(+id);
     if (!fileById) throw new Error("File does not exit");
@@ -113,7 +113,30 @@ export class FileResolver {
 
   @Authorized()
   @Mutation(() => [Message])
-  async updateMultipleFiles(@Arg("data", () => [UpdateFileInput]) data: UpdateFileInput[]) {
+  async updateMultipleFiles(@Arg("data", () => [UpdateFileInput]) data: UpdateFileInput[], @Ctx() context: MyContext) {
+
+    if (context.user == null)
+      throw new Error("Access denied! You need to be authenticated to perform this action!");
+
+    if (data.length === 0)
+      throw new Error("Please create at least one file to save it!");
+    
+    const fileById = await new FilesService().findById(data[0].id);
+    if (!fileById) throw new Error("File does not exit");
+
+    if (context.user.role !== "ADMIN") {
+      const listUsersAccessesProject = await new UserProjectAccessesService().findUsersByAccessesProject(+fileById.project.id);
+  
+      const findUserRoleAccessesProject = listUsersAccessesProject.find(user => user.user_id === context.user?.id);
+  
+      if (!findUserRoleAccessesProject)
+        throw new Error("You do not have access to this project!");
+  
+      if (findUserRoleAccessesProject.role === "VIEWER")
+        throw new Error("You must be an owner or editor to delete this file!");
+      
+    }
+    
     const messages = await new FilesService().updateMultiple(data);
     return messages;
   }

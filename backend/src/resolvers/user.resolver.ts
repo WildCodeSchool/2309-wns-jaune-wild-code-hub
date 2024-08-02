@@ -14,6 +14,12 @@ import { SignJWT } from "jose";
 import { MyContext } from "..";
 import Cookies from "cookies";
 import { Project } from "../entities/project.entity";
+import {
+  emailRegex,
+  pseudoRegex,
+  passwordRegex,
+  checkRegex
+} from "../regex";
 
 @Resolver()
 export class UserResolver {
@@ -25,7 +31,7 @@ export class UserResolver {
     return users;
   }
 
-  @Authorized()
+  @Authorized(["ADMIN"])
   @Query(() => [User])
   async listUsersByRole(@Arg("role") role: ROLE) {
     const users = await new UsersService().listByRole(role);
@@ -48,7 +54,7 @@ export class UserResolver {
     return userById;
   }
 
-
+  @Authorized(["ADMIN"])
   @Query(() => User)
   async findUserByEmail(@Arg("email") email: string) {
     const userByEmail = await new UsersService().findByEmail(email);
@@ -56,6 +62,7 @@ export class UserResolver {
     return userByEmail;
   }
 
+  @Authorized(["ADMIN"])
   @Query(() => User)
   async findUserByPseudo(@Arg("pseudo") pseudo: string) {
     const userByPseudo = await new UsersService().findByPseudo(pseudo);
@@ -64,7 +71,7 @@ export class UserResolver {
     return userByPseudo;
   }
 
-  @Query(() => Message)
+  @Mutation(() => Message)
   async login(@Arg("infos") infos: InputLogin, @Ctx() ctx: MyContext) {
     let user;
     if (!infos.email && !infos.pseudo) {
@@ -115,6 +122,15 @@ export class UserResolver {
     } else if (pseudo) {
       throw new Error("This pseudo is already in use!");
     }
+    
+    if (!checkRegex(emailRegex, data.email))
+      throw new Error("Invaid format email.");
+
+    if (!checkRegex(pseudoRegex, data.pseudo))
+      throw new Error("Invaid format pseudo.");
+
+    if (!checkRegex(passwordRegex, data.password) || data.password.length < 8)
+      throw new Error("Requires at least 1 uppercase letter, 1 number, and 1 special character. (8 minimum characters for password)");
 
     const newUser = await new UsersService().create(data);
     return newUser;
@@ -142,7 +158,7 @@ export class UserResolver {
     }
 
     if (data?.pseudo) {
-      const checkUserPseudo = await new UsersService().findByEmail(data?.email);
+      const checkUserPseudo = await new UsersService().findByPseudo(data?.pseudo);
       if (checkUserPseudo)
         throw new Error("This pseudo already exists in our database!");
     }
@@ -183,6 +199,15 @@ export class UserResolver {
     const m = new Message();
 
     if (delUser) {
+
+      if (ctx.user.role !== "ADMIN" && data.id == ctx.user.id) {
+        ctx.res?.clearCookie("token");
+      }
+
+      if (ctx.user.role === "ADMIN" && data.id == ctx.user.id) {
+        ctx.res?.clearCookie("token");
+      }
+
       m.message = "User deleted!";
       m.success = true;
     } else {
@@ -197,23 +222,13 @@ export class UserResolver {
   @Query(() => Message)
   async logout(@Ctx() ctx: MyContext) {
     if (ctx.user) {
-      let cookies = new Cookies(ctx.req, ctx.res);
-      cookies.set("token");
+      ctx.res.clearCookie("token");
     }
     const m = new Message();
     m.message = "You have been disconnected !";
     m.success = true;
 
     return m;
-  }
-
-  @Query(() => [Project])
-  async listLikeProject(@Arg("userId") userId: string) {
-    const projects = await new UsersService().listLikedProjects(+userId);
-    if (projects.length === 0) {
-      throw new Error("You have no plans !");
-    }
-    return projects;
   }
 
   @Authorized()

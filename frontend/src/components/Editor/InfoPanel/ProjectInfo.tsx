@@ -16,7 +16,10 @@ interface ProjectInfoProps {
   owner : GetOwnerUserProps | null | undefined;
 }
 
-const ProjectInfo: React.FC<ProjectInfoProps> = ({ project, owner }: ProjectInfoProps) => {
+const ProjectInfo: React.FC<ProjectInfoProps> = ({
+  project,
+  owner
+}: ProjectInfoProps) => {
   
   const router = useRouter();
 

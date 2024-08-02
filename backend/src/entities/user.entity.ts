@@ -190,7 +190,6 @@ export class Message {
   message: string;
 }
 
-
 @InputType()
 export class DeleteUserInput {
   @Field(() => ID)

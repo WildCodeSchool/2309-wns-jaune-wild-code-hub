@@ -123,3 +123,13 @@ export const LIST_PUBLIC_PROJECTS_OWNED_BY_USER = gql`
   }
 `;
 
+export const LIST_PROJECTS_PUBLIC_LIKE_BY_USER = gql`
+  query ListProjectsPublicLikeByUser($userId: Float!) {
+    listProjectsPublicLikeByUser(userID: $userId) {
+      category
+      name
+      id
+    }
+  }
+`;
+

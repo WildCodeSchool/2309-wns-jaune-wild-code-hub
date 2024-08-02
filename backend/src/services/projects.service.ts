@@ -1,5 +1,5 @@
 import { validate } from "class-validator";
-import { ILike, In, Like, Repository } from "typeorm";
+import { getRepository, ILike, In, Like, Repository } from "typeorm";
 import {
   CreateProjectInput,
   Project,
@@ -13,6 +13,7 @@ import datasource from "../lib/db";
 import FilesService from "./files.service";
 import { File } from "../entities/file.entity";
 import UserProjectAccessesService from "./userProjectAccesses.service";
+import { User } from "../entities/user.entity";
 
 export default class ProjectsService {
   db: Repository<Project>;
@@ -52,8 +53,8 @@ export default class ProjectsService {
   async listPublicProjectsByName(name: string) {
   const projects = await this.db.find({
    where: {
-        name: ILike(`%${name}%`),
-        private: false,
+      name: ILike(`%${name}%`),
+      private: false,
     },
     relations: ["files"],
     });
@@ -122,6 +123,36 @@ export default class ProjectsService {
     });
 
     return userAccesses;
+  }
+
+  async listProjectsPublicLikeByUser(userId: number) {
+    const userRepository = datasource.getRepository(User);
+    const user = await userRepository.findOne({
+      where: { id: userId },
+      relations: ["likedProjects", "likedProjects.files"],
+    });
+
+    if (!user) {
+      throw new Error("User not found!");
+    }
+
+    const publicLikedProjects = user.likedProjects.filter(project => !project.private);
+
+    return publicLikedProjects;
+  }
+
+  async listLikedProjects(userId: number) {
+    const userRepository = datasource.getRepository(User);
+    const user = await userRepository.findOne({
+      where: { id: userId },
+      relations: ["likedProjects"],
+    });
+
+    if (!user) {
+      throw new Error("User not found!");
+    }
+
+    return user.likedProjects;
   }
 
   async create(data: CreateProjectInput, userId: number) {

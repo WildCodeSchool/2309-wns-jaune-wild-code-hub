@@ -29,7 +29,11 @@ interface SettingManagementProps {
   setIsSettingsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const SettingManagement: React.FC<SettingManagementProps> = ({ project, setProject, setIsSettingsModalOpen }) => {
+const SettingManagement: React.FC<SettingManagementProps> = ({
+  project,
+  setProject,
+  setIsSettingsModalOpen
+}) => {
 
   const router = useRouter();
 

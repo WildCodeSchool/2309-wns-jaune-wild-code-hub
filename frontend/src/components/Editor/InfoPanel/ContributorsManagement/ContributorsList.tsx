@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Avatar,
   AvatarGroup,
@@ -8,15 +8,27 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import { GetContributorsProps } from "@/types/InfosPanel";
+import { FindAllInfoUserAccessesProject } from "@/types/graphql";
 
 interface ContributorsListProps {
-  contributors : GetContributorsProps[] | null;
+  users : FindAllInfoUserAccessesProject[] | null;
 }
 
-const ContributorsList: React.FC<ContributorsListProps> = ({ contributors }: ContributorsListProps) => {
+const ContributorsList: React.FC<ContributorsListProps> = ({
+  users
+}: ContributorsListProps) => {
+
+  const [contributors , setContributors ] = useState<FindAllInfoUserAccessesProject[] | null>(null);
 
   const router = useRouter();
+
+  useEffect(() => {
+    if (users) {
+      setContributors(
+        users?.filter(user => user.role === "EDITOR")
+      )
+    }
+  }, [users])
 
   return (
     <Box width={"100%"}>

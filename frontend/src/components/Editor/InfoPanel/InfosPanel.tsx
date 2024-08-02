@@ -1,4 +1,4 @@
-import { File as EditorFile } from "@/types/graphql";
+import { File as EditorFile, FindAllInfoUserAccessesProject } from "@/types/graphql";
 import {
   Project,
   useListUsersLikesPerProjectLazyQuery,
@@ -41,36 +41,33 @@ type InfosPanelProps = {
   setProject: React.Dispatch<React.SetStateAction<Project | null>>;
   setData: React.Dispatch<React.SetStateAction<File[]>>;
   data: File[];
+  listUserAuthorisationSave :  FindAllInfoUserAccessesProject[] | null;
+  users :  FindAllInfoUserAccessesProject[] | null;
 };
 
-const InfosPanel = ({ project, setOpenFiles, setCode, setFile, setProject, setData, data }: InfosPanelProps) => {
+const InfosPanel = ({
+  project,
+  setOpenFiles,
+  setCode,
+  setFile,
+  setProject,
+  setData,
+  data,
+  listUserAuthorisationSave,
+  users
+}: InfosPanelProps) => {
   
   const [maxAvatar, setMaxAvatar] = useState<number>(9);
   const [owner, setOwner] = useState<GetOwnerUserProps | null | undefined>(null);
-  const [contributors, setContributors] = useState<GetContributorsProps[] | null>(null);
   const [supporters, setSupporters] = useState<GetSupportersProps[]>([]);
   const [meLike, setMeLike] = useState<boolean>(false);
-  const [meInfoUser, setMeInfoUser] = useState<GetSupportersProps | null>(null)
-
+  const [meInfoUser, setMeInfoUser] = useState<GetSupportersProps | null>(null);
+  const [authorizeProject, setAuthorizeProject] = useState<boolean>(false);
   const [getContributors] = useListUsersWithAccessesLazyQuery();
   const [getSupporters] = useListUsersLikesPerProjectLazyQuery();
 
   useEffect(() => {
     if (project) {
-      getContributors({
-        variables: {
-          projectId: +project.id,
-        },
-        onCompleted(data) {
-          setContributors(
-            data.listUsersAccessesProject.filter((user) => user.role != "OWNER")
-          );
-          setOwner(
-            data.listUsersAccessesProject.find((user) => user.role === "OWNER")
-              ?.user
-          );
-        },
-      });
       getSupporters({
         variables: {
           projectId: +project.id,
@@ -84,7 +81,6 @@ const InfosPanel = ({ project, setOpenFiles, setCode, setFile, setProject, setDa
 
   useEffect(() => {
     const getCookieIdUser = Cookies.get("id");
-    const getCookiePseudoUser = Cookies.get("pseudo");
     if (supporters) {
       const checkLike = supporters.filter(user => user.id == getCookieIdUser);
       if (checkLike.length !== 0)
@@ -97,14 +93,36 @@ const InfosPanel = ({ project, setOpenFiles, setCode, setFile, setProject, setDa
   useEffect(() => {
     const getCookieIdUser = Cookies.get("id");
     const getCookiePseudoUser = Cookies.get("pseudo");
-    if (!getCookieIdUser || !getCookiePseudoUser)
+    if (!getCookieIdUser || !getCookiePseudoUser) {
       setMeInfoUser(null);
-    else
+    } else {
       setMeInfoUser({
         id: getCookieIdUser,
         pseudo: getCookiePseudoUser,
-      })   
+      })
+    }
   }, [])
+
+  useEffect(() => {
+    const getCookieIdUser = Cookies.get("id");
+    if(getCookieIdUser) {
+      const checkAuthorisationSave = listUserAuthorisationSave?.find(
+        (user: FindAllInfoUserAccessesProject) =>
+          user.user_id === +getCookieIdUser
+      );
+      if(checkAuthorisationSave)
+        setAuthorizeProject(true);
+      else
+        setAuthorizeProject(false);
+      const findOwner = listUserAuthorisationSave?.find(user => user.role === "OWNER");
+       if (findOwner) {
+         setOwner({
+           pseudo : findOwner?.user?.pseudo ?? "",
+           id : findOwner?.user?.id ?? ""
+         });  
+       }
+    }
+  }, [listUserAuthorisationSave])
 
   const handleOpenFiles: (fileId: number) => void = (fileId: number) => {
     if (project) {
@@ -147,16 +165,24 @@ const InfosPanel = ({ project, setOpenFiles, setCode, setFile, setProject, setDa
     <Flex height={"100%"} flexDirection={"column"}>
       <Flex flexDirection={"column"} textAlign={"center"} paddingBlock={4}>
         <Heading size={"md"} textAlign={"center"}>
-          {project?.name}
-          {
-            project ?
-              meLike ?
-                <DeleteLike setSupporters={setSupporters} supporters={supporters} meInfoUser={meInfoUser} project={project}/>
-              :
-                <AddLike setSupporters={setSupporters} supporters={supporters} meInfoUser={meInfoUser} project={project} />
-            :
-            null
-          }
+          <Flex justifyContent="space-evenly">
+            {project?.name} 
+            <Box>
+              {
+                project ?
+                  meLike ?
+                    <DeleteLike setSupporters={setSupporters} supporters={supporters} meInfoUser={meInfoUser} project={project}/>
+                  :
+                    <AddLike setSupporters={setSupporters} supporters={supporters} meInfoUser={meInfoUser} project={project} />
+                :
+                null
+              }
+              <DownloadFile 
+                data={data}
+                project={project}
+              />
+            </Box>
+          </Flex>
         </Heading>
       </Flex>
       <Accordion allowToggle defaultIndex={[0]}>
@@ -173,36 +199,38 @@ const InfosPanel = ({ project, setOpenFiles, setCode, setFile, setProject, setDa
                   </AccordionButton>
                 </h2>
                 <AccordionPanel pb={4}>
-                  <AddFile
-                    project={project}
-                    setProject={setProject}
-                    setData={setData}
-                    setOpenFiles={setOpenFiles}
-                    setCode={setCode}
-                    setFile={setFile}
-                    generateLanguage={generateLanguage}
-                  />
-                  <DownloadFile 
-                    data={data}
-                    project={project}
-                  />
+                  <Flex justifyContent="flex-end" pb={5}>
+                    {
+                      authorizeProject &&
+                      <AddFile
+                        project={project}
+                        setProject={setProject}
+                        setData={setData}
+                        setOpenFiles={setOpenFiles}
+                        setCode={setCode}
+                        setFile={setFile}
+                        generateLanguage={generateLanguage}
+                      />
+                    }
+                  </Flex>
                   <Flex flexDirection={"column"}>
                     {project?.files
                       ? project.files.map((file) => (
-                          <FileItemList
-                            key={file.id}
-                            file={file}
-                            handleOpenFiles={handleOpenFiles}
-                            project={project}
-                            setProject={setProject}
-                            setData={setData}
-                            setOpenFiles={setOpenFiles}
-                            setCode={setCode}
-                            setFile={setFile}
-                            generateLanguage={generateLanguage}
-                          />
-                        ))
-                      : "There will be files here in the near futur"}
+                        <FileItemList
+                          key={file.id}
+                          file={file}
+                          handleOpenFiles={handleOpenFiles}
+                          project={project}
+                          setProject={setProject}
+                          setData={setData}
+                          setOpenFiles={setOpenFiles}
+                          setCode={setCode}
+                          setFile={setFile}
+                          generateLanguage={generateLanguage}
+                          authorizeProject={authorizeProject}
+                        />
+                      ))
+                    : "There will be files here in the near futur"}
                   </Flex>
                 </AccordionPanel>
               </>
@@ -222,7 +250,7 @@ const InfosPanel = ({ project, setOpenFiles, setCode, setFile, setProject, setDa
             <Flex flexDirection={"column"} gap={2}>
               <ProjectInfo project={project} owner={owner} /> 
               <Divider orientation="horizontal" />
-              <ContributorsList contributors={contributors} />
+              <ContributorsList users={users} />
               <Divider orientation="horizontal" />
               <LikeList supporters={supporters} maxAvatar={maxAvatar} setMaxAvatar={setMaxAvatar} />
             </Flex>
