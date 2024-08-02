@@ -8,8 +8,8 @@ import {
   UpdateDateColumn,
   OneToMany,
 } from "typeorm";
-import { Length, Min } from "class-validator";
-import { Field, Float, ID, InputType, ObjectType } from "type-graphql";
+import { Length } from "class-validator";
+import { Field, ID, InputType, ObjectType } from "type-graphql";
 import { User } from "./user.entity";
 import { UsersProjectsAccesses } from "./usersProjectsAccesses.entity";
 import { File } from "./file.entity";
