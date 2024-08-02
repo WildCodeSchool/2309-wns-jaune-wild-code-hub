@@ -12,7 +12,6 @@ import {
   AccordionItem,
   AccordionPanel,
   Box,
-  Center,
   Divider,
   Flex,
   Heading,
@@ -217,21 +216,21 @@ const InfosPanel = ({
                   <Flex flexDirection={"column"}>
                     {project?.files
                       ? project.files.map((file) => (
-                          <FileItemList
-                            key={file.id}
-                            file={file}
-                            handleOpenFiles={handleOpenFiles}
-                            project={project}
-                            setProject={setProject}
-                            setData={setData}
-                            setOpenFiles={setOpenFiles}
-                            setCode={setCode}
-                            setFile={setFile}
-                            generateLanguage={generateLanguage}
-                            authorizeProject={authorizeProject}
-                          />
-                        ))
-                      : "There will be files here in the near futur"}
+                        <FileItemList
+                          key={file.id}
+                          file={file}
+                          handleOpenFiles={handleOpenFiles}
+                          project={project}
+                          setProject={setProject}
+                          setData={setData}
+                          setOpenFiles={setOpenFiles}
+                          setCode={setCode}
+                          setFile={setFile}
+                          generateLanguage={generateLanguage}
+                          authorizeProject={authorizeProject}
+                        />
+                      ))
+                    : "There will be files here in the near futur"}
                   </Flex>
                 </AccordionPanel>
               </>
