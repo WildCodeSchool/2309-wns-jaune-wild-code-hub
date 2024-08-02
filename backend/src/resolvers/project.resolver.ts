@@ -124,7 +124,6 @@ export class ProjectResolver {
     return projects;
   }
 
-  @Authorized()
   @Query(() => [UserAccessProjectOutput])
   async listPublicProjectsOwnedByUser(@Arg("id") id: string) {
     const projects = await new ProjectsService().ListPublicOwnedByUser(+id);

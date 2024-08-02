@@ -39,7 +39,7 @@ export class UserResolver {
     return users;
   }
 
-  @Authorized()
+
   @Query(() => User)
   async findUserById(@Arg("id") id: string) {
     if (isNaN(+id)) throw new Error("Specify a correct id");
