@@ -35,7 +35,11 @@ const checkToken = async (token: string | undefined, request: NextRequest) => {
   }
   if (!token) {
     if (
-      // request.nextUrl.pathname.startsWith("/editor/*") ||
+      request.nextUrl.pathname.startsWith("/me") ||
+      request.nextUrl.pathname.startsWith("/me/projects") ||
+      request.nextUrl.pathname.startsWith("/me/shared") ||
+      request.nextUrl.pathname.startsWith("/me/liked") ||
+      request.nextUrl.pathname.startsWith("/me/settings") ||
       request.nextUrl.pathname.startsWith("/privateAdmin")
     ) {
       response = NextResponse.redirect(new URL("/auth/login", request.url));

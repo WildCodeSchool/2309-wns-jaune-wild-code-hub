@@ -39,7 +39,7 @@ export class UserResolver {
     return users;
   }
 
-  @Authorized(["ADMIN"])
+  @Authorized()
   @Query(() => User)
   async findUserById(@Arg("id") id: string) {
     if (isNaN(+id)) throw new Error("Specify a correct id");
@@ -128,7 +128,7 @@ export class UserResolver {
     if (!ctx.user)
       throw new Error("Access denied! You need to be authenticated to perform this action!");
 
-    if (ctx.user.role !== "ADMIN" && data.id !== ctx.user.id)
+    if (ctx.user.role !== "ADMIN" && data.id != ctx.user.id)
       throw new Error("You must be a site administrator to do this action!"); 
 
     const { id, ...otherData } = data;
@@ -167,7 +167,7 @@ export class UserResolver {
     if (!ctx.user)
       throw new Error("Access denied! You need to be authenticated to perform this action!");
 
-    if (ctx.user.role !== "ADMIN" && data.id !== ctx.user.id)
+    if (ctx.user.role !== "ADMIN" && data.id != ctx.user.id)
       throw new Error("You must be a site administrator to do this action!"); 
 
     const user = await new UsersService().findById(data.id);
@@ -185,7 +185,12 @@ export class UserResolver {
 
     if (delUser) {
 
-      if (ctx.user.role !== "ADMIN" && data.id === ctx.user.id) {
+      if (ctx.user.role !== "ADMIN" && data.id == ctx.user.id) {
+        let cookies = new Cookies(ctx.req, ctx.res);
+        cookies.set("token");
+      }
+
+      if (ctx.user.role === "ADMIN" && data.id == ctx.user.id) {
         let cookies = new Cookies(ctx.req, ctx.res);
         cookies.set("token");
       }
