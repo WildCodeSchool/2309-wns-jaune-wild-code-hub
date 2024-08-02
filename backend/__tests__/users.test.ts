@@ -167,7 +167,7 @@ describe("Test for a new user", () => {
           firstname : "Toto",
           pseudo : "Toto",
           email : "toto@gmail.com",
-          password: "toto",
+          password: "Alexdu78R!&q",
           ban : false,
           role: "ADMIN",
           run_counter : 1
@@ -190,7 +190,7 @@ describe("Test for a new user", () => {
           firstname : "Toto",
           pseudo : "Toto",
           email : "toto@gmail.com",
-          password: "toto",
+          password: "TOTOTOTO!a1",
           ban : false,
           role: "ADMIN",
           run_counter : 1
@@ -213,7 +213,7 @@ describe("Test for a new user", () => {
           firstname : "Toto",
           pseudo : "Totso",
           email : "toto@gmail.com",
-          password: "toto",
+          password: "TOTOTOTO!a1",
           ban : false,
           role: "ADMIN",
           run_counter : 1
@@ -236,7 +236,7 @@ describe("Test for a new user", () => {
           firstname : "Toto",
           pseudo : "Toto",
           email : "totsso@gmail.com",
-          password: "toto",
+          password: "TOTOTOTO!a1",
           ban : false,
           role: "ADMIN",
           run_counter : 1
@@ -260,7 +260,7 @@ describe("Test for a new user", () => {
           firstname : "Toto",
           pseudo : "tata",
           email : "tata@gmail.com",
-          password: "tata",
+          password: "TOTOTOTO!a1",
           ban : false,
           run_counter : 1
         }
@@ -428,7 +428,7 @@ describe("Test for a new user", () => {
         variables: {
           data : {
             id : 1,
-            password : "toto"
+            password : "TOTOTOTO!a1"
           }
         }   
       },

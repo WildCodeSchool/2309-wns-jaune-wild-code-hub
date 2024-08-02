@@ -14,6 +14,12 @@ import { SignJWT } from "jose";
 import { MyContext } from "..";
 import Cookies from "cookies";
 import { Project } from "../entities/project.entity";
+import {
+  emailRegex,
+  pseudoRegex,
+  passwordRegex,
+  checkRegex
+} from "../regex";
 
 @Resolver()
 export class UserResolver {
@@ -116,6 +122,15 @@ export class UserResolver {
     } else if (pseudo) {
       throw new Error("This pseudo is already in use!");
     }
+    
+    if (!checkRegex(emailRegex, data.email))
+      throw new Error("Invaid format email.");
+
+    if (!checkRegex(pseudoRegex, data.pseudo))
+      throw new Error("Invaid format pseudo.");
+
+    if (!checkRegex(passwordRegex, data.password) || data.password.length < 8)
+      throw new Error("Requires at least 1 uppercase letter, 1 number, and 1 special character. (8 minimum characters for password)");
 
     const newUser = await new UsersService().create(data);
     return newUser;

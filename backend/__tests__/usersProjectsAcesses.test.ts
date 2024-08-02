@@ -146,7 +146,7 @@ describe("Test for a new user accesses project", () => {
           firstname : "Toto",
           pseudo : "Toto",
           email : "toto@gmail.com",
-          password: "toto",
+          password: "TOTOTOTO!a1",
           ban : false,
           role: "ADMIN",
           run_counter : 1
