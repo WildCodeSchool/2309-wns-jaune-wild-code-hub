@@ -25,7 +25,7 @@ export class FileResolver {
     return files;
   }
 
-  @Query(() => [File])
+  @Query(() => File)
   async findFileById(@Arg("id") id: string) {
     const fileById = await new FilesService().findById(+id);
     if (!fileById) throw new Error("File does not exit");

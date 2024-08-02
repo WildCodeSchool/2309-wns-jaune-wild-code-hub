@@ -48,7 +48,7 @@ const LIST_PROJECTS = `#graphql
 `;
 
 const LIST_FILES= `#graphql
-  query Files($projectId: String!) {
+  query File($projectId: String!) {
     listFilesByProject(project_id: $projectId) {            
       id
       name
@@ -62,6 +62,38 @@ const LIST_FILES= `#graphql
   }
 `;
 
+const FIND_FILE_BY_ID = `#graphql
+  query File($findFileByIdId: String!) {
+    findFileById(id: $findFileByIdId) {            
+      id
+      name
+      type
+      language
+      extension
+      content
+      created_at
+      update_at
+    }
+  }
+`;
+
+const UPDATE_FILE  = `#graphql
+  mutation File ($data: UpdateFileInput!) {
+    updateFile(data: $data) {
+      success
+      message
+    }
+  }
+`;
+
+const DELETE_FILE  = `#graphql
+  mutation File ($deleteFileId: Float!) {
+    deleteFile(id: $deleteFileId) {
+      success
+      message
+    }
+  }
+`;
 
 const FIND_PROJECT_BY_ID = `#graphql
   query Project ($id: String!) {
@@ -147,6 +179,19 @@ const DELETE_PROJECT = `#graphql
 type ResponseDataCreateUser = {
   register: User;
 }
+
+type ResponseDataUpdateFile = {
+  updateFile: Message;
+}
+
+type ResponseDataDeleteFile = {
+  deleteFile: Message;
+}
+
+type ResponseDataFindFileByID = {
+  findFileById: File;
+}
+
 
 type ResponseDataUpdateUserAccessesProject = {
   updateAccessProject: Message;
@@ -304,6 +349,55 @@ describe("Test for a new project", () => {
 
     assert(response.body.kind === "single");
     expect(response.body.singleResult.data?.listFilesByProject).toHaveLength(3);
+  });
+
+  it("Update File one ", async () => {
+    const response = await server.executeOperation<ResponseDataUpdateFile>({
+      query: UPDATE_FILE,
+      variables: {
+        "data": {
+          "id": 1,
+          "name": "toto",
+          "language": "html",
+          "extension": "html",
+          "type": "file",
+          "content": "<p>toto</p>"
+        }
+      },
+    },
+    {
+      contextValue : {
+        user : {
+          id : 1,
+          role : "ADMIN"
+        }
+      }
+    }
+  );
+    assert(response.body.kind === "single");
+    expect(response.body.singleResult.data?.updateFile.success).toEqual(true);
+  });
+
+  it("Find File one rename toto", async () => {
+    const response = await server.executeOperation<ResponseDataFindFileByID>({
+      query: FIND_FILE_BY_ID,
+      variables: {
+        findFileByIdId : "1"
+      },
+    },
+    {
+      contextValue : {
+        user : {
+          id : 1,
+          role : "ADMIN"
+        }
+      }
+    }
+  );
+    assert(response.body.kind === "single");
+    console.error("response?.body?.singleResult?.errors", response?.body?.singleResult?.errors)
+    console.log("response.body.singleResult.data?.findFileById", response.body.singleResult.data?.findFileById)
+    expect(response.body.singleResult.data?.findFileById.name).toEqual("toto");
   });
 
   it("Update project", async () => {
