@@ -400,6 +400,26 @@ describe("Test for a new project", () => {
     expect(response.body.singleResult.data?.findFileById.name).toEqual("toto");
   });
 
+  it("Delete file toto", async () => {
+    const response = await server.executeOperation<ResponseDataDeleteFile>({
+      query: DELETE_FILE,
+      variables: {
+        deleteFileId : 1
+      },
+    },
+    {
+      contextValue : {
+        user : {
+          id : 1,
+          role : "ADMIN"
+        }
+      }
+    }
+  );
+    assert(response.body.kind === "single");
+    expect(response.body.singleResult.data?.deleteFile.success).toEqual(true);
+  });
+
   it("Update project", async () => {
     const response = await server.executeOperation<ResponseDataUpdate>({
       query: UPDATE_PROJECT,
