@@ -10,7 +10,7 @@ import datasource from "../src/lib/db_test";
 import { EntityTarget, Repository } from "typeorm";
 import assert from "assert";
 import { UserProjectAccessesResolver } from "../src/resolvers/userProjectAccesses.resolver";
-import { UsersProjectsAccesses, UserAccessProjectResponse, CreateUserProjectAccessesInput } from "../src/entities/usersProjectsAccesses.entity";
+import { UsersProjectsAccesses } from "../src/entities/usersProjectsAccesses.entity";
 import { UserResolver } from "../src/resolvers/user.resolver";
 
 export const CREATE_USER = `#graphql
@@ -46,6 +46,22 @@ const LIST_PROJECTS = `#graphql
     }
   }
 `;
+
+const LIST_FILES= `#graphql
+  query Files($projectId: String!) {
+    listFilesByProject(project_id: $projectId) {            
+      id
+      name
+      type
+      language
+      extension
+      content
+      created_at
+      update_at
+    }
+  }
+`;
+
 
 const FIND_PROJECT_BY_ID = `#graphql
   query Project ($id: String!) {
@@ -138,6 +154,10 @@ type ResponseDataUpdateUserAccessesProject = {
 
 type ResponseDataListProject = {
   listProjects: Project[];
+}
+
+type ResponseDataListFiles = {
+  listFilesByProject: File[];
 }
 
 type ResponseDataListProjectByCategory = {
@@ -272,6 +292,18 @@ describe("Test for a new project", () => {
 
     assert(response.body.kind === "single");
     expect(response.body.singleResult.data?.listProjects).toHaveLength(1);
+  });
+
+  it("Checking the creation of the three code files when creating the project", async () => {
+    const response = await server.executeOperation<ResponseDataListFiles>({
+      query: LIST_FILES,
+      variables: {
+        "projectId": "1"
+      },
+    });
+
+    assert(response.body.kind === "single");
+    expect(response.body.singleResult.data?.listFilesByProject).toHaveLength(3);
   });
 
   it("Update project", async () => {
