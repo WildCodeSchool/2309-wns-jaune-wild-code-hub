@@ -52,8 +52,8 @@ export default class ProjectsService {
   async listPublicProjectsByName(name: string) {
   const projects = await this.db.find({
    where: {
-        name: ILike(`%${name}%`),
-        private: false,
+      name: ILike(`%${name}%`),
+      private: false,
     },
     relations: ["files"],
     });

@@ -5,7 +5,7 @@ import SidebarLayout from "@/components/Sidebar/SidebarLayout";
 import { checkRegex, emailRegex, passwordRegex, pseudoRegex } from "@/regex";
 import {
   UpdateUserInput,
-  // useDeleteUserMutation,
+  useDeleteUserMutation,
   useFindUserByIdLazyQuery,
   User,
   useUpdateUserMutation,
@@ -32,7 +32,7 @@ const Settings: NextPageWithLayout = () => {
   const router = useRouter();
   const [getUser, { loading, error }] = useFindUserByIdLazyQuery();
   const [updateUser] = useUpdateUserMutation();
-  // const [deleteUser] = useDeleteUserMutation();
+  const [deleteUser] = useDeleteUserMutation();
 
   useEffect(() => {
     userId &&

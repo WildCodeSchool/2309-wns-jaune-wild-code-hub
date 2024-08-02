@@ -184,6 +184,12 @@ export class UserResolver {
     const m = new Message();
 
     if (delUser) {
+
+      if (ctx.user.role !== "ADMIN" && data.id === ctx.user.id) {
+        let cookies = new Cookies(ctx.req, ctx.res);
+        cookies.set("token");
+      }
+
       m.message = "User deleted!";
       m.success = true;
     } else {
