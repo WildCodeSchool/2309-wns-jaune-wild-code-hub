@@ -25,7 +25,8 @@ import UserProjectAccessesService from "../services/userProjectAccesses.service"
 
 @Resolver()
 export class ProjectResolver {
-  @Authorized()
+
+
   @Query(() => [Project])
   async listProjects() {
     const projects = await new ProjectsService().list();
@@ -139,7 +140,7 @@ export class ProjectResolver {
     if (!context.user)
       throw new Error(
         "Access denied! You need to be authenticated to perform this action!"
-      );
+    );
     const project = await new ProjectsService().findByName(data.name);
     if (project) throw new Error("This name of project is already in use!");
     const newProject = await new ProjectsService().create(
@@ -201,7 +202,7 @@ export class ProjectResolver {
     );
 
     if (dataOwner?.role !== "OWNER" && ctx.user.role !== "ADMIN")
-      throw new Error("You must be the owner of the project to modify it!");
+      throw new Error("You must be the owner of the project to delete it!");
 
     const delProject = await new ProjectsService().delete(id);
     const m = new Message();

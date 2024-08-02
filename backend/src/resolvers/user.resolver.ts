@@ -25,7 +25,7 @@ export class UserResolver {
     return users;
   }
 
-  @Authorized()
+  @Authorized(["ADMIN"])
   @Query(() => [User])
   async listUsersByRole(@Arg("role") role: ROLE) {
     const users = await new UsersService().listByRole(role);
@@ -39,7 +39,7 @@ export class UserResolver {
     return users;
   }
 
-
+  @Authorized(["ADMIN"])
   @Query(() => User)
   async findUserById(@Arg("id") id: string) {
     if (isNaN(+id)) throw new Error("Specify a correct id");
@@ -48,7 +48,7 @@ export class UserResolver {
     return userById;
   }
 
-
+  @Authorized(["ADMIN"])
   @Query(() => User)
   async findUserByEmail(@Arg("email") email: string) {
     const userByEmail = await new UsersService().findByEmail(email);
@@ -56,6 +56,7 @@ export class UserResolver {
     return userByEmail;
   }
 
+  @Authorized(["ADMIN"])
   @Query(() => User)
   async findUserByPseudo(@Arg("pseudo") pseudo: string) {
     const userByPseudo = await new UsersService().findByPseudo(pseudo);
@@ -127,7 +128,7 @@ export class UserResolver {
     if (!ctx.user)
       throw new Error("Access denied! You need to be authenticated to perform this action!");
 
-    if (ctx.user.role !== "ADMIN" && data.id != ctx.user.id)
+    if (ctx.user.role !== "ADMIN" && data.id !== ctx.user.id)
       throw new Error("You must be a site administrator to do this action!"); 
 
     const { id, ...otherData } = data;
@@ -142,7 +143,7 @@ export class UserResolver {
     }
 
     if (data?.pseudo) {
-      const checkUserPseudo = await new UsersService().findByEmail(data?.email);
+      const checkUserPseudo = await new UsersService().findByPseudo(data?.pseudo);
       if (checkUserPseudo)
         throw new Error("This pseudo already exists in our database!");
     }
@@ -166,7 +167,7 @@ export class UserResolver {
     if (!ctx.user)
       throw new Error("Access denied! You need to be authenticated to perform this action!");
 
-    if (ctx.user.role !== "ADMIN" && data.id != ctx.user.id)
+    if (ctx.user.role !== "ADMIN" && data.id !== ctx.user.id)
       throw new Error("You must be a site administrator to do this action!"); 
 
     const user = await new UsersService().findById(data.id);
