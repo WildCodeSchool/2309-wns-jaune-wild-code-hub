@@ -144,7 +144,7 @@ const Settings: NextPageWithLayout = () => {
         onCompleted(data) {
           if (data.deleteUser.success) {
             showAlert("success", data.deleteUser.message);
-            router.refresh()
+            router.push("/me");
           } else {
             showAlert("error", data.deleteUser.message);
           }

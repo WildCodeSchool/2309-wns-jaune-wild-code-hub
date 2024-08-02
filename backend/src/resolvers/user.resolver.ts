@@ -186,13 +186,11 @@ export class UserResolver {
     if (delUser) {
 
       if (ctx.user.role !== "ADMIN" && data.id == ctx.user.id) {
-        let cookies = new Cookies(ctx.req, ctx.res);
-        cookies.set("token");
+        ctx.res?.clearCookie("token");
       }
 
       if (ctx.user.role === "ADMIN" && data.id == ctx.user.id) {
-        let cookies = new Cookies(ctx.req, ctx.res);
-        cookies.set("token");
+        ctx.res?.clearCookie("token");
       }
 
       m.message = "User deleted!";
@@ -209,8 +207,7 @@ export class UserResolver {
   @Query(() => Message)
   async logout(@Ctx() ctx: MyContext) {
     if (ctx.user) {
-      let cookies = new Cookies(ctx.req, ctx.res);
-      cookies.set("token");
+      ctx.res.clearCookie("token");
     }
     const m = new Message();
     m.message = "You have been disconnected !";
