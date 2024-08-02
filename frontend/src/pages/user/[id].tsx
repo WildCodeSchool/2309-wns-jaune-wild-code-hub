@@ -89,7 +89,7 @@ const UserProfile: NextPageWithLayout = () => {
         gap={"3rem"}
       >
         <Heading textAlign={"center"} size={"lg"}>
-          Welcome to {user.pseudo}&apos;s Workspace
+          Welcome to {user.pseudo}&apos;s Workspace Public
         </Heading>
         {projects ? <ProjectsGrid projects={projects} /> : <Loader />}
       </Flex>

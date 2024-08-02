@@ -4,19 +4,14 @@ import { useRouter } from "next/router";
 import { NextPageWithLayout } from "../../_app";
 import { Suspense, useEffect, useState } from "react";
 import {
-  ListFilesByProjectQueryVariables,
-  ListPublicProjectsQuery,
   Project,
-  useFindUserByIdLazyQuery,
-  useFindUserInfosByIdLazyQuery,
-  useListPublicOwnedByUserLazyQuery,
-  User,
+  useFindUserInfosByIdLazyQuery
 } from "@/types/graphql";
 import Loader from "@/components/Loader";
 import { WarningIcon } from "@chakra-ui/icons";
 import { ProjectsGrid } from "@/components/ProjectsGrid";
-import { useLazyQuery } from "@apollo/client";
-import { LIST_PUBLIC_PROJECTS_OWNED_BY_USER } from "@/requetes/queries/project.queries";
+import { LIST_PROJECTS_PUBLIC_LIKE_BY_USER } from "@/requetes/queries/project.queries";
+import { useQuery } from "@apollo/client";
 
 type UserProfile = {
   __typename?: "User";
@@ -35,7 +30,11 @@ const UserProfile: NextPageWithLayout = () => {
   const [projects, setProjects] =
     useState<Pick<Project, "id" | "category" | "name">[]>();
 
-  const [getProjects] = useListPublicOwnedByUserLazyQuery();
+    console.log("router.query.id", router.query.id)
+  // const [getProjects] = useListPublicOwnedByUserLazyQuery();
+  const listProjectsPublicLikeByUser = useQuery(LIST_PROJECTS_PUBLIC_LIKE_BY_USER, {
+    variables: { userId: router.query.id && +router.query.id },
+  });
 
   const [getUser, { loading, error }] = useFindUserInfosByIdLazyQuery();
   useEffect(() => {
@@ -46,19 +45,12 @@ const UserProfile: NextPageWithLayout = () => {
         },
         onCompleted(data) {
           setUser(data.findUserById);
-          getProjects({
-            variables: {
-              listPublicProjectsOwnedByUserId: data.findUserById.id,
-            },
-            onCompleted(data) {
-              setProjects(
-                data.listPublicProjectsOwnedByUser.map((item) => item.project)
-              );
-            },
-          });
         },
       });
-  }, [router, getUser, getProjects]);
+      if (listProjectsPublicLikeByUser) {
+        setProjects(listProjectsPublicLikeByUser?.data?.listProjectsPublicLikeByUser);
+      }
+  }, [router, getUser, listProjectsPublicLikeByUser]);
 
   const Loading = () => {
     return (
@@ -95,7 +87,7 @@ const UserProfile: NextPageWithLayout = () => {
         gap={"3rem"}
       >
         <Heading textAlign={"center"} size={"lg"}>
-          Welcome to {user.pseudo}&apos;s Liked
+          Welcome to {user.pseudo}&apos;s Liked Public
         </Heading>
         {projects ? <ProjectsGrid projects={projects} /> : <Loader />}
       </Flex>

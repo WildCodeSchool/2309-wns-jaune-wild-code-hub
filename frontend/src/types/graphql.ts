@@ -217,7 +217,7 @@ export type Project = {
 export type Query = {
   __typename?: 'Query';
   countLikesPerProject: Scalars['Int']['output'];
-  findFileById: Array<File>;
+  findFileById: File;
   findProjectById: Project;
   findProjectByName: Project;
   findProjectOwner: User;
@@ -232,6 +232,7 @@ export type Query = {
   listProjectsByCategory: Array<Project>;
   listProjectsByUser: Array<Project>;
   listProjectsByUserWithRole: Array<UserAccessProjectOutput>;
+  listProjectsPublicLikeByUser: Array<Project>;
   listPublicProjects: PaginatedProjects;
   listPublicProjectsByName: Array<Project>;
   listPublicProjectsOwnedByUser: Array<UserAccessProjectOutput>;
@@ -317,6 +318,11 @@ export type QueryListProjectsByUserArgs = {
 export type QueryListProjectsByUserWithRoleArgs = {
   id: Scalars['String']['input'];
   userRole?: InputMaybe<Array<Scalars['String']['input']>>;
+};
+
+
+export type QueryListProjectsPublicLikeByUserArgs = {
+  userID: Scalars['Float']['input'];
 };
 
 
@@ -603,6 +609,13 @@ export type ListPublicOwnedByUserQueryVariables = Exact<{
 
 
 export type ListPublicOwnedByUserQuery = { __typename?: 'Query', listPublicProjectsOwnedByUser: Array<{ __typename?: 'UserAccessProjectOutput', project: { __typename?: 'Project', id: string, name: string, category: string } }> };
+
+export type ListProjectsPublicLikeByUserQueryVariables = Exact<{
+  userId: Scalars['Float']['input'];
+}>;
+
+
+export type ListProjectsPublicLikeByUserQuery = { __typename?: 'Query', listProjectsPublicLikeByUser: Array<{ __typename?: 'Project', category: string, name: string, id: string }> };
 
 export type FindUserByIdQueryVariables = Exact<{
   findUserByIdId: Scalars['String']['input'];
@@ -1762,6 +1775,48 @@ export type ListPublicOwnedByUserQueryHookResult = ReturnType<typeof useListPubl
 export type ListPublicOwnedByUserLazyQueryHookResult = ReturnType<typeof useListPublicOwnedByUserLazyQuery>;
 export type ListPublicOwnedByUserSuspenseQueryHookResult = ReturnType<typeof useListPublicOwnedByUserSuspenseQuery>;
 export type ListPublicOwnedByUserQueryResult = Apollo.QueryResult<ListPublicOwnedByUserQuery, ListPublicOwnedByUserQueryVariables>;
+export const ListProjectsPublicLikeByUserDocument = gql`
+    query ListProjectsPublicLikeByUser($userId: Float!) {
+  listProjectsPublicLikeByUser(userID: $userId) {
+    category
+    name
+    id
+  }
+}
+    `;
+
+/**
+ * __useListProjectsPublicLikeByUserQuery__
+ *
+ * To run a query within a React component, call `useListProjectsPublicLikeByUserQuery` and pass it any options that fit your needs.
+ * When your component renders, `useListProjectsPublicLikeByUserQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useListProjectsPublicLikeByUserQuery({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *   },
+ * });
+ */
+export function useListProjectsPublicLikeByUserQuery(baseOptions: Apollo.QueryHookOptions<ListProjectsPublicLikeByUserQuery, ListProjectsPublicLikeByUserQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ListProjectsPublicLikeByUserQuery, ListProjectsPublicLikeByUserQueryVariables>(ListProjectsPublicLikeByUserDocument, options);
+      }
+export function useListProjectsPublicLikeByUserLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ListProjectsPublicLikeByUserQuery, ListProjectsPublicLikeByUserQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ListProjectsPublicLikeByUserQuery, ListProjectsPublicLikeByUserQueryVariables>(ListProjectsPublicLikeByUserDocument, options);
+        }
+export function useListProjectsPublicLikeByUserSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<ListProjectsPublicLikeByUserQuery, ListProjectsPublicLikeByUserQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<ListProjectsPublicLikeByUserQuery, ListProjectsPublicLikeByUserQueryVariables>(ListProjectsPublicLikeByUserDocument, options);
+        }
+export type ListProjectsPublicLikeByUserQueryHookResult = ReturnType<typeof useListProjectsPublicLikeByUserQuery>;
+export type ListProjectsPublicLikeByUserLazyQueryHookResult = ReturnType<typeof useListProjectsPublicLikeByUserLazyQuery>;
+export type ListProjectsPublicLikeByUserSuspenseQueryHookResult = ReturnType<typeof useListProjectsPublicLikeByUserSuspenseQuery>;
+export type ListProjectsPublicLikeByUserQueryResult = Apollo.QueryResult<ListProjectsPublicLikeByUserQuery, ListProjectsPublicLikeByUserQueryVariables>;
 export const FindUserByIdDocument = gql`
     query FindUserById($findUserByIdId: String!) {
   findUserById(id: $findUserByIdId) {
