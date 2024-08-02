@@ -154,6 +154,7 @@ const Editor: NextPageWithLayout = () => {
     } else {
       setData(projectById?.data?.findProjectById.files);
       setProject(projectById?.data?.findProjectById);
+      console.log(projectById?.data?.findProjectById.files)
     }
   }, [projectById, router.query]);
 
