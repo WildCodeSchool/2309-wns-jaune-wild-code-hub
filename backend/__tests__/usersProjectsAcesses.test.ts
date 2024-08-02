@@ -10,7 +10,7 @@ import datasource from "../src/lib/db_test";
 import { EntityTarget, Repository } from "typeorm";
 import assert from "assert";
 import { UserProjectAccessesResolver } from "../src/resolvers/userProjectAccesses.resolver";
-import { UsersProjectsAccesses, UserAccessProjectResponse, CreateUserProjectAccessesInput, FindAllInfoUserAccessesProject } from "../src/entities/usersProjectsAccesses.entity";
+import { UsersProjectsAccesses, FindAllInfoUserAccessesProject } from "../src/entities/usersProjectsAccesses.entity";
 import { UserResolver } from "../src/resolvers/user.resolver";
 
 const CREATE_USER = `#graphql
