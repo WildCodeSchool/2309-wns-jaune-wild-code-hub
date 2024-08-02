@@ -420,6 +420,18 @@ describe("Test for a new project", () => {
     expect(response.body.singleResult.data?.deleteFile.success).toEqual(true);
   });
 
+  it("Checking that there are only 2 files left after deleting the toto.html file!", async () => {
+    const response = await server.executeOperation<ResponseDataListFiles>({
+      query: LIST_FILES,
+      variables: {
+        "projectId": "1"
+      },
+    });
+
+    assert(response.body.kind === "single");
+    expect(response.body.singleResult.data?.listFilesByProject).toHaveLength(2);
+  });
+
   it("Update project", async () => {
     const response = await server.executeOperation<ResponseDataUpdate>({
       query: UPDATE_PROJECT,
