@@ -130,6 +130,21 @@ export class ProjectResolver {
     return projects;
   }
 
+  @Query(() => [Project])
+  async listProjectsPublicLikeByUser(@Arg("userID") userID: number) {
+    const projects = await new ProjectsService().listProjectsPublicLikeByUser(userID);
+    return projects;
+  }
+
+  @Query(() => [Project])
+  async listLikeProject(@Arg("userId") userId: string) {
+    const projects = await new ProjectsService().listLikedProjects(+userId);
+    if (projects.length === 0) {
+      throw new Error("You have no plans !");
+    }
+    return projects;
+  }
+
   @Authorized()
   @Mutation(() => Project)
   async createProject(
@@ -227,4 +242,5 @@ export class ProjectResolver {
     const projects = await new ProjectsService().listLikedUsers(projectId);
     return projects;
   }
+
 }

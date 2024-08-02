@@ -57,7 +57,7 @@ const ProfileSidebarContent = () => {
             // Add external links
             */}
             <CustomLink href={`/user/${user.id}`}>Workspace</CustomLink>
-            <CustomLink href="/user/liked">Liked</CustomLink>
+            <CustomLink href={`/user/${user.id}/liked`}>Liked</CustomLink>
           </Flex>
         </Flex>
       )}

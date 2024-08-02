@@ -231,15 +231,6 @@ export class UserResolver {
     return m;
   }
 
-  @Query(() => [Project])
-  async listLikeProject(@Arg("userId") userId: string) {
-    const projects = await new UsersService().listLikedProjects(+userId);
-    if (projects.length === 0) {
-      throw new Error("You have no plans !");
-    }
-    return projects;
-  }
-
   @Authorized()
   @Mutation(() => Message)
   async addLikeProject(

@@ -101,19 +101,6 @@ export default class UsersService {
     return await this.db.remove(userToDelete);
   }
 
-  async listLikedProjects(userId: number) {
-    const user = await this.db.findOne({
-      where: { id: userId },
-      relations: ["likedProjects"],
-    });
-
-    if (!user) {
-      throw new Error("User not found!");
-    }
-
-    return user.likedProjects;
-  }
-
   async likeProject(userId: number, projectId: number) {
     const projectRepository = datasource.getRepository(Project);
 
