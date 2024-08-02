@@ -168,15 +168,21 @@ const InfosPanel = ({
         <Heading size={"md"} textAlign={"center"}>
           <Flex justifyContent="space-evenly">
             {project?.name} 
-            {
-              project ?
-                meLike ?
-                  <DeleteLike setSupporters={setSupporters} supporters={supporters} meInfoUser={meInfoUser} project={project}/>
+            <Box>
+              {
+                project ?
+                  meLike ?
+                    <DeleteLike setSupporters={setSupporters} supporters={supporters} meInfoUser={meInfoUser} project={project}/>
+                  :
+                    <AddLike setSupporters={setSupporters} supporters={supporters} meInfoUser={meInfoUser} project={project} />
                 :
-                  <AddLike setSupporters={setSupporters} supporters={supporters} meInfoUser={meInfoUser} project={project} />
-              :
-              null
-            }
+                null
+              }
+              <DownloadFile 
+                data={data}
+                project={project}
+              />
+            </Box>
           </Flex>
         </Heading>
       </Flex>
@@ -207,10 +213,6 @@ const InfosPanel = ({
                         generateLanguage={generateLanguage}
                       />
                     }
-                    <DownloadFile 
-                      data={data}
-                      project={project}
-                    />
                   </Flex>
                   <Flex flexDirection={"column"}>
                     {project?.files
