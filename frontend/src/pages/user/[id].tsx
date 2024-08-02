@@ -2,21 +2,16 @@ import SidebarLayout from "@/components/Sidebar/SidebarLayout";
 import { Center, Flex, Heading, Stack, Text } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { NextPageWithLayout } from "../_app";
-import { Suspense, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
-  ListFilesByProjectQueryVariables,
-  ListPublicProjectsQuery,
   Project,
-  useFindUserByIdLazyQuery,
   useFindUserInfosByIdLazyQuery,
   useListPublicOwnedByUserLazyQuery,
-  User,
 } from "@/types/graphql";
 import Loader from "@/components/Loader";
 import { WarningIcon } from "@chakra-ui/icons";
 import { ProjectsGrid } from "@/components/ProjectsGrid";
-import { useLazyQuery } from "@apollo/client";
-import { LIST_PUBLIC_PROJECTS_OWNED_BY_USER } from "@/requetes/queries/project.queries";
+
 type UserProfile = {
   __typename?: "User";
   id: string;

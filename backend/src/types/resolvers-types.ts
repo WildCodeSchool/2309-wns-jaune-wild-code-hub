@@ -216,7 +216,7 @@ export type Project = {
 export type Query = {
   __typename?: 'Query';
   countLikesPerProject: Scalars['Int']['output'];
-  findFileById: Array<File>;
+  findFileById: File;
   findProjectById: Project;
   findProjectByName: Project;
   findProjectOwner: User;
@@ -231,6 +231,7 @@ export type Query = {
   listProjectsByCategory: Array<Project>;
   listProjectsByUser: Array<Project>;
   listProjectsByUserWithRole: Array<UserAccessProjectOutput>;
+  listProjectsPublicLikeByUser: Array<Project>;
   listPublicProjects: PaginatedProjects;
   listPublicProjectsByName: Array<Project>;
   listPublicProjectsOwnedByUser: Array<UserAccessProjectOutput>;
@@ -316,6 +317,11 @@ export type QueryListProjectsByUserArgs = {
 export type QueryListProjectsByUserWithRoleArgs = {
   id: Scalars['String']['input'];
   userRole?: InputMaybe<Array<Scalars['String']['input']>>;
+};
+
+
+export type QueryListProjectsPublicLikeByUserArgs = {
+  userID: Scalars['Float']['input'];
 };
 
 
@@ -625,7 +631,7 @@ export type ProjectResolvers<ContextType = any, ParentType extends ResolversPare
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
   countLikesPerProject?: Resolver<ResolversTypes['Int'], ParentType, ContextType, RequireFields<QueryCountLikesPerProjectArgs, 'projectId'>>;
-  findFileById?: Resolver<Array<ResolversTypes['File']>, ParentType, ContextType, RequireFields<QueryFindFileByIdArgs, 'id'>>;
+  findFileById?: Resolver<ResolversTypes['File'], ParentType, ContextType, RequireFields<QueryFindFileByIdArgs, 'id'>>;
   findProjectById?: Resolver<ResolversTypes['Project'], ParentType, ContextType, RequireFields<QueryFindProjectByIdArgs, 'id'>>;
   findProjectByName?: Resolver<ResolversTypes['Project'], ParentType, ContextType, RequireFields<QueryFindProjectByNameArgs, 'name'>>;
   findProjectOwner?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<QueryFindProjectOwnerArgs, 'projectId'>>;
@@ -640,6 +646,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   listProjectsByCategory?: Resolver<Array<ResolversTypes['Project']>, ParentType, ContextType, RequireFields<QueryListProjectsByCategoryArgs, 'category'>>;
   listProjectsByUser?: Resolver<Array<ResolversTypes['Project']>, ParentType, ContextType, RequireFields<QueryListProjectsByUserArgs, 'id'>>;
   listProjectsByUserWithRole?: Resolver<Array<ResolversTypes['UserAccessProjectOutput']>, ParentType, ContextType, RequireFields<QueryListProjectsByUserWithRoleArgs, 'id'>>;
+  listProjectsPublicLikeByUser?: Resolver<Array<ResolversTypes['Project']>, ParentType, ContextType, RequireFields<QueryListProjectsPublicLikeByUserArgs, 'userID'>>;
   listPublicProjects?: Resolver<ResolversTypes['PaginatedProjects'], ParentType, ContextType, RequireFields<QueryListPublicProjectsArgs, 'limit' | 'offset'>>;
   listPublicProjectsByName?: Resolver<Array<ResolversTypes['Project']>, ParentType, ContextType, RequireFields<QueryListPublicProjectsByNameArgs, 'name'>>;
   listPublicProjectsOwnedByUser?: Resolver<Array<ResolversTypes['UserAccessProjectOutput']>, ParentType, ContextType, RequireFields<QueryListPublicProjectsOwnedByUserArgs, 'id'>>;
