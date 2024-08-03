@@ -114,14 +114,15 @@ const InfosPanel = ({
         setAuthorizeProject(true);
       else
         setAuthorizeProject(false);
-      const findOwner = listUserAuthorisationSave?.find(user => user.role === "OWNER");
-       if (findOwner) {
-         setOwner({
-           pseudo : findOwner?.user?.pseudo ?? "",
-           id : findOwner?.user?.id ?? ""
-         });  
-       }
     }
+    const findOwner = listUserAuthorisationSave?.find(user => user.role === "OWNER");
+    console.log("findOwner", findOwner)
+     if (findOwner) {
+       setOwner({
+         pseudo : findOwner?.user?.pseudo ?? "",
+         id : findOwner?.user?.id ?? ""
+       });  
+     }
   }, [listUserAuthorisationSave])
 
   const handleOpenFiles: (fileId: number) => void = (fileId: number) => {
