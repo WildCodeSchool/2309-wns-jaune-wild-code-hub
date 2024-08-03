@@ -152,14 +152,25 @@ export class UserResolver {
 
     if (data?.email) {
       const checkUserEmail = await new UsersService().findByEmail(data?.email);
-      if (checkUserEmail)
+      if (checkUserEmail && data.id != checkUserEmail.id)
         throw new Error("This email already exists in our database!");
+
+      if (!checkRegex(emailRegex, data.email))
+        throw new Error("Invaid format email.");
     }
 
     if (data?.pseudo) {
       const checkUserPseudo = await new UsersService().findByPseudo(data?.pseudo);
-      if (checkUserPseudo)
+      if (checkUserPseudo && data.id != checkUserPseudo.id)
         throw new Error("This pseudo already exists in our database!");
+
+      if (!checkRegex(pseudoRegex, data.pseudo))
+        throw new Error("Invaid format pseudo.");
+    }
+
+    if (data?.password) {
+      if (!checkRegex(passwordRegex, data.password) || data.password.length < 8)
+        throw new Error("Requires at least 1 uppercase letter, 1 number, and 1 special character. (8 minimum characters for password)");
     }
 
     const updateUser = await new UsersService().update(+id, otherData);
