@@ -38,7 +38,7 @@ export class UserResolver {
     return users;
   }
 
-  @Authorized()
+
   @Query(() => [User])
   async listUsersByPseudo(@Arg("pseudo") pseudo: string) {
     const users = await new UsersService().listUsersByPseudo(pseudo);
@@ -54,7 +54,6 @@ export class UserResolver {
     return userById;
   }
 
-  @Authorized(["ADMIN"])
   @Query(() => User)
   async findUserByEmail(@Arg("email") email: string) {
     const userByEmail = await new UsersService().findByEmail(email);
@@ -62,7 +61,7 @@ export class UserResolver {
     return userByEmail;
   }
 
-  @Authorized(["ADMIN"])
+
   @Query(() => User)
   async findUserByPseudo(@Arg("pseudo") pseudo: string) {
     const userByPseudo = await new UsersService().findByPseudo(pseudo);
