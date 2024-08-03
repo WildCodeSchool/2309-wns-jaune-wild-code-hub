@@ -5,40 +5,53 @@ import SidebarLayout from "@/components/Sidebar/SidebarLayout";
 import { checkRegex, emailRegex, passwordRegex, pseudoRegex } from "@/regex";
 import {
   UpdateUserInput,
-  // useDeleteUserMutation,
+  useDeleteUserMutation,
   useFindUserByIdLazyQuery,
   User,
   useUpdateUserMutation,
 } from "@/types/graphql";
 import {
+  Box,
   Button,
   ButtonGroup,
   Flex,
   FormLabel,
   Heading,
+  Input,
+  InputGroup,
+  InputRightElement,
   Text,
 } from "@chakra-ui/react";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
-import { ChangeEvent, MouseEvent, useEffect, useState } from "react";
+import { ChangeEvent, MouseEvent, use, useEffect, useState } from "react";
 import { NextPageWithLayout } from "../_app";
+import GenericModal from "@/components/GenericModal";
+import CustomToast from "@/components/ToastCustom/CustomToast";
 
 const Settings: NextPageWithLayout = () => {
+
   const userId = Cookies.get("id");
   const [user, setUser] = useState<
     (Partial<User> & { confirmPassword?: string }) | undefined
   >();
   const [errors, setErrors] = useState<Record<any, any>>({});
-  const router = useRouter();
   const [getUser, { loading, error }] = useFindUserByIdLazyQuery();
   const [updateUser] = useUpdateUserMutation();
-  // const [deleteUser] = useDeleteUserMutation();
+  const [deleteUser] = useDeleteUserMutation();
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [passwordDeleteAccount, setPasswordDeleteAccount] = useState<string>("");
+  const [showPassword, setShowPassword] = useState(false);
+
+  const router = useRouter();
+  const { showAlert } = CustomToast();
 
   useEffect(() => {
     userId &&
       getUser({
         variables: { findUserByIdId: userId },
         onCompleted(data) {
+          console.log("data")
           setUser(data.findUserById);
         },
       });
@@ -89,7 +102,6 @@ const Settings: NextPageWithLayout = () => {
     }
   };
   const handleSubmit = (e: MouseEvent<HTMLButtonElement>) => {
-    //TODO Change for open modal and update user only after modal confirmation
     e.preventDefault();
     if (user && userId) {
       const userForm: UpdateUserInput = {
@@ -104,31 +116,71 @@ const Settings: NextPageWithLayout = () => {
           data: userForm,
         },
         onCompleted(data) {
-          setUser((prevState) => ({
-            ...prevState,
-            password: "",
-            confirmPassword: "",
-          }));
+          if (data?.updateUser.success) {
+            showAlert("success", "Your information should be saved!");
+            setUser((prevState) => ({
+              ...prevState,
+              password: "",
+              confirmPassword: "",
+            }));
+          } else {
+            showAlert("error", data?.updateUser.message);
+          }
         },
-        onError(error, clientOptions) {
-          console.log("data", error.message);
+        onError(error) {
+          showAlert(
+            'error',
+            error.message ?
+              error.message
+            :
+              "We are sorry, there seems to be an error with the server. Please try again later."
+          );
         },
       });
     }
   };
   const handleDeleteAccount = () => {
-    console.log("progess...")
-    //TODO add confirmation modal
-    // userId &&
-    //   deleteUser({
-    //     variables: {
-    //       deleteUserId: +userId,
-    //     },
-    //     onCompleted(data, clientOptions) {
-    //       router.push("/");
-    //     },
-    //   });
+    if (passwordDeleteAccount.length === 0)
+      return showAlert("error", "Please confirm with your password to delete the account!");
+
+    console.log(userId)
+    userId &&
+      deleteUser({
+        variables: {
+          data : {
+            id : userId,
+            password : passwordDeleteAccount
+          }
+        },
+        onCompleted(data) {
+          if (data.deleteUser.success) {
+            showAlert("success", data.deleteUser.message);
+            router.push("/me");
+          } else {
+            showAlert("error", data.deleteUser.message);
+          }
+        },
+        onError(error) {
+          showAlert(
+            'error',
+            error.message ?
+              error.message
+            :
+              "We are sorry, there seems to be an error with the server. Please try again later."
+          );
+        }
+      });
   };
+
+  const openModal: () => void  = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal: () => void  = () => {
+    setIsModalOpen(false);
+  };
+
+
   return (
     <Flex
       padding={"2rem"}
@@ -227,13 +279,40 @@ const Settings: NextPageWithLayout = () => {
               >
                 Confirm Change
               </Button>
-              <Button variant="outline" onClick={handleDeleteAccount}>
+              <Button variant="outline" onClick={openModal}>
                 Delete Account
               </Button>
             </ButtonGroup>
           </form>
         </Flex>
       )}
+      <GenericModal isOpen={isModalOpen} onClose={closeModal} title="Deleting account">
+        <Box display="flex" justifyContent="center" alignItems="center" height="100%">
+          <Box width="100%" maxWidth="250px" textAlign="center">
+            <Text color="white" mb={25}>
+            Deleting your account will wipe all your info and data from Wild Code Hub. This action is irreversible.
+            </Text>
+            <Text color="white" mb={25}>
+              Are you sure you want to delete your account ?
+            </Text>
+            <FormLabel color="text">Confirm with your password</FormLabel>
+            <InputGroup>
+                <Input color="placeholder" bg="white" type={showPassword ? 'text' : 'password'} name='password' value={passwordDeleteAccount} onChange={(e) => setPasswordDeleteAccount(e.target.value)} />
+                <InputRightElement>
+                  <img onClick={() => setShowPassword(!showPassword)} src={!showPassword ? '/eyePasswordVisible.png' : '/eyePasswordNotVisible.png'} alt="Eye Password" style={{ cursor: "pointer" }} />
+                </InputRightElement>
+            </InputGroup>
+            <ButtonGroup spacing={5} mt={5} display="flex" justifyContent="center">
+              <Button type="button" variant="outline" onClick={closeModal}>
+                Cancel
+              </Button>
+              <Button type="button" variant="primary" onClick={handleDeleteAccount}>
+                {"Yes, I'm sure"}
+              </Button>
+            </ButtonGroup>
+          </Box>
+        </Box>
+      </GenericModal>
     </Flex>
   );
 };

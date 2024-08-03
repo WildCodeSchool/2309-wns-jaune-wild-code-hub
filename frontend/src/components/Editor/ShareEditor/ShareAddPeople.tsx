@@ -27,7 +27,9 @@ interface UserOption {
   label: string;
 }
 
-const ShareAddPeople: React.FC<ShareAddPeopleProps> = ({ setUsers }) => {
+const ShareAddPeople: React.FC<ShareAddPeopleProps> = ({
+  setUsers
+}) => {
 
   const router = useRouter();
 

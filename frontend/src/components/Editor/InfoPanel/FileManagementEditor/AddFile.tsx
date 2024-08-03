@@ -20,7 +20,7 @@ import {
   File,
 } from '@/types/graphql';
 import { useMutation } from "@apollo/client";
-import { GenerateLanguageProps } from "@/components/Editor/InfosPanel";
+import { GenerateLanguageProps } from "@/types/InfosPanel";
 
 interface AddFileProps {
   project: Project | null;
@@ -32,7 +32,15 @@ interface AddFileProps {
   generateLanguage : (name : string, extention : string) => GenerateLanguageProps;
 }
 
-const AddFile: React.FC<AddFileProps> = ({project, setProject, setData, setOpenFiles, setCode, setFile, generateLanguage} : AddFileProps) => {
+const AddFile: React.FC<AddFileProps> = ({
+  project,
+  setProject,
+  setData,
+  setOpenFiles,
+  setCode,
+  setFile,
+  generateLanguage
+} : AddFileProps) => {
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [nameFile, setNameFile] = useState<string>("");
@@ -124,7 +132,7 @@ const AddFile: React.FC<AddFileProps> = ({project, setProject, setData, setOpenF
           size={"xs"}
           aria-label="Add file"
           variant={"ghost"}
-          icon={<AddIcon boxSize={3} />}
+          icon={<AddIcon boxSize={4} />}
           onClick={openModal}
         />
       </Tooltip>

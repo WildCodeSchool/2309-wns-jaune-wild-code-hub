@@ -18,7 +18,7 @@ import {
   File,
 } from '@/types/graphql';
 import { useMutation } from "@apollo/client";
-import { GenerateLanguageProps } from "@/components/Editor/InfosPanel";
+import { GenerateLanguageProps } from "@/types/InfosPanel";
 
 interface DeleteFileProps {
   file: File;
@@ -31,7 +31,16 @@ interface DeleteFileProps {
   generateLanguage : (name : string, extention : string) => GenerateLanguageProps;
 }
 
-const DeleteFile : React.FC<DeleteFileProps> = ({ file, project, setProject, setData, setOpenFiles, setCode, setFile, generateLanguage} : DeleteFileProps) => {
+const DeleteFile : React.FC<DeleteFileProps> = ({
+  file,
+  project,
+  setProject,
+  setData,
+  setOpenFiles,
+  setCode,
+  setFile,
+  generateLanguage
+} : DeleteFileProps) => {
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 

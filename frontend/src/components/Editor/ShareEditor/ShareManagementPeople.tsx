@@ -37,7 +37,10 @@ interface MutationContext {
   pseudo: string;
 }
 
-const ShareManagementPeople: React.FC<ShareManagementPeopleProps> = ({ users, setUsers }) => {
+const ShareManagementPeople: React.FC<ShareManagementPeopleProps> = ({
+  users,
+  setUsers
+}) => {
 
     const { showAlert } = CustomToast();
     const router = useRouter();

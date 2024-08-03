@@ -106,6 +106,7 @@ export type Mutation = {
   deleteLikeProject: Message;
   deleteProject: Message;
   deleteUser: Message;
+  login: Message;
   register: User;
   updateAccessProject: Message;
   updateFile: Message;
@@ -122,7 +123,6 @@ export type MutationAddAccessProjectArgs = {
 
 export type MutationAddLikeProjectArgs = {
   projectId: Scalars['Float']['input'];
-  userId: Scalars['Float']['input'];
 };
 
 
@@ -148,7 +148,6 @@ export type MutationDeleteFileArgs = {
 
 export type MutationDeleteLikeProjectArgs = {
   projectId: Scalars['Float']['input'];
-  userId: Scalars['Float']['input'];
 };
 
 
@@ -159,6 +158,11 @@ export type MutationDeleteProjectArgs = {
 
 export type MutationDeleteUserArgs = {
   data: DeleteUserInput;
+};
+
+
+export type MutationLoginArgs = {
+  infos: InputLogin;
 };
 
 
@@ -213,7 +217,7 @@ export type Project = {
 export type Query = {
   __typename?: 'Query';
   countLikesPerProject: Scalars['Int']['output'];
-  findFileById: Array<File>;
+  findFileById: File;
   findProjectById: Project;
   findProjectByName: Project;
   findProjectOwner: User;
@@ -228,6 +232,7 @@ export type Query = {
   listProjectsByCategory: Array<Project>;
   listProjectsByUser: Array<Project>;
   listProjectsByUserWithRole: Array<UserAccessProjectOutput>;
+  listProjectsPublicLikeByUser: Array<Project>;
   listPublicProjects: PaginatedProjects;
   listPublicProjectsByName: Array<Project>;
   listPublicProjectsOwnedByUser: Array<UserAccessProjectOutput>;
@@ -236,7 +241,6 @@ export type Query = {
   listUsersByPseudo: Array<User>;
   listUsersByRole: Array<User>;
   listUsersLikesPerProject: Array<User>;
-  login: Message;
   logout: Message;
 };
 
@@ -317,6 +321,11 @@ export type QueryListProjectsByUserWithRoleArgs = {
 };
 
 
+export type QueryListProjectsPublicLikeByUserArgs = {
+  userID: Scalars['Float']['input'];
+};
+
+
 export type QueryListPublicProjectsArgs = {
   limit?: Scalars['Int']['input'];
   offset?: Scalars['Int']['input'];
@@ -350,11 +359,6 @@ export type QueryListUsersByRoleArgs = {
 
 export type QueryListUsersLikesPerProjectArgs = {
   projectId: Scalars['Float']['input'];
-};
-
-
-export type QueryLoginArgs = {
-  infos: InputLogin;
 };
 
 export type UpdateFileInput = {
@@ -426,6 +430,13 @@ export type RegisterMutationVariables = Exact<{
 
 export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'User', pseudo: string, run_counter: number, role: string, password: string, lastname: string, firstname: string, email: string, ban: boolean } };
 
+export type LoginMutationVariables = Exact<{
+  infos: InputLogin;
+}>;
+
+
+export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'Message', success: boolean, message: string } };
+
 export type UpdateMultipleFilesMutationVariables = Exact<{
   data: Array<UpdateFileInput> | UpdateFileInput;
 }>;
@@ -489,6 +500,20 @@ export type DeleteUserMutationVariables = Exact<{
 
 export type DeleteUserMutation = { __typename?: 'Mutation', deleteUser: { __typename?: 'Message', message: string, success: boolean } };
 
+export type AddLikeProjectMutationVariables = Exact<{
+  projectId: Scalars['Float']['input'];
+}>;
+
+
+export type AddLikeProjectMutation = { __typename?: 'Mutation', addLikeProject: { __typename?: 'Message', message: string, success: boolean } };
+
+export type DeleteLikeProjectMutationVariables = Exact<{
+  projectId: Scalars['Float']['input'];
+}>;
+
+
+export type DeleteLikeProjectMutation = { __typename?: 'Mutation', deleteLikeProject: { __typename?: 'Message', message: string, success: boolean } };
+
 export type UpdateAccessProjectMutationVariables = Exact<{
   data: UpdateUserProjectAccessesInput;
 }>;
@@ -509,13 +534,6 @@ export type AddAccessProjectMutationVariables = Exact<{
 
 
 export type AddAccessProjectMutation = { __typename?: 'Mutation', addAccessProject: { __typename?: 'UserAccessProjectResponse', listUsersAccessesProjectData: Array<{ __typename?: 'FindAllInfoUserAccessesProject', role: string, project_id: number, user_id: number, created_at: any, updated_at: any, user?: { __typename?: 'User', pseudo: string, email: string, firstname: string, lastname: string, id: string, password: string, role: string, ban: boolean, run_counter: number, last_login: any, created_at: any, update_at: any } | null, project?: { __typename?: 'Project', id: string, name: string, private: boolean, created_at: any, category: string, update_at: any, files: Array<{ __typename?: 'File', id: string, name: string, type: string, language: string, extension: string, content: string, update_at: any, created_at: any }> } | null }>, message?: { __typename?: 'Message', success: boolean, message: string } | null } };
-
-export type LoginQueryVariables = Exact<{
-  infos: InputLogin;
-}>;
-
-
-export type LoginQuery = { __typename?: 'Query', login: { __typename?: 'Message', success: boolean, message: string } };
 
 export type LogoutQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -591,6 +609,13 @@ export type ListPublicOwnedByUserQueryVariables = Exact<{
 
 
 export type ListPublicOwnedByUserQuery = { __typename?: 'Query', listPublicProjectsOwnedByUser: Array<{ __typename?: 'UserAccessProjectOutput', project: { __typename?: 'Project', id: string, name: string, category: string } }> };
+
+export type ListProjectsPublicLikeByUserQueryVariables = Exact<{
+  userId: Scalars['Float']['input'];
+}>;
+
+
+export type ListProjectsPublicLikeByUserQuery = { __typename?: 'Query', listProjectsPublicLikeByUser: Array<{ __typename?: 'Project', category: string, name: string, id: string }> };
 
 export type FindUserByIdQueryVariables = Exact<{
   findUserByIdId: Scalars['String']['input'];
@@ -682,6 +707,40 @@ export function useRegisterMutation(baseOptions?: Apollo.MutationHookOptions<Reg
 export type RegisterMutationHookResult = ReturnType<typeof useRegisterMutation>;
 export type RegisterMutationResult = Apollo.MutationResult<RegisterMutation>;
 export type RegisterMutationOptions = Apollo.BaseMutationOptions<RegisterMutation, RegisterMutationVariables>;
+export const LoginDocument = gql`
+    mutation Login($infos: InputLogin!) {
+  login(infos: $infos) {
+    success
+    message
+  }
+}
+    `;
+export type LoginMutationFn = Apollo.MutationFunction<LoginMutation, LoginMutationVariables>;
+
+/**
+ * __useLoginMutation__
+ *
+ * To run a mutation, you first call `useLoginMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useLoginMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [loginMutation, { data, loading, error }] = useLoginMutation({
+ *   variables: {
+ *      infos: // value for 'infos'
+ *   },
+ * });
+ */
+export function useLoginMutation(baseOptions?: Apollo.MutationHookOptions<LoginMutation, LoginMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<LoginMutation, LoginMutationVariables>(LoginDocument, options);
+      }
+export type LoginMutationHookResult = ReturnType<typeof useLoginMutation>;
+export type LoginMutationResult = Apollo.MutationResult<LoginMutation>;
+export type LoginMutationOptions = Apollo.BaseMutationOptions<LoginMutation, LoginMutationVariables>;
 export const UpdateMultipleFilesDocument = gql`
     mutation updateMultipleFiles($data: [UpdateFileInput!]!) {
   updateMultipleFiles(data: $data) {
@@ -1008,6 +1067,74 @@ export function useDeleteUserMutation(baseOptions?: Apollo.MutationHookOptions<D
 export type DeleteUserMutationHookResult = ReturnType<typeof useDeleteUserMutation>;
 export type DeleteUserMutationResult = Apollo.MutationResult<DeleteUserMutation>;
 export type DeleteUserMutationOptions = Apollo.BaseMutationOptions<DeleteUserMutation, DeleteUserMutationVariables>;
+export const AddLikeProjectDocument = gql`
+    mutation AddLikeProject($projectId: Float!) {
+  addLikeProject(projectId: $projectId) {
+    message
+    success
+  }
+}
+    `;
+export type AddLikeProjectMutationFn = Apollo.MutationFunction<AddLikeProjectMutation, AddLikeProjectMutationVariables>;
+
+/**
+ * __useAddLikeProjectMutation__
+ *
+ * To run a mutation, you first call `useAddLikeProjectMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddLikeProjectMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addLikeProjectMutation, { data, loading, error }] = useAddLikeProjectMutation({
+ *   variables: {
+ *      projectId: // value for 'projectId'
+ *   },
+ * });
+ */
+export function useAddLikeProjectMutation(baseOptions?: Apollo.MutationHookOptions<AddLikeProjectMutation, AddLikeProjectMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AddLikeProjectMutation, AddLikeProjectMutationVariables>(AddLikeProjectDocument, options);
+      }
+export type AddLikeProjectMutationHookResult = ReturnType<typeof useAddLikeProjectMutation>;
+export type AddLikeProjectMutationResult = Apollo.MutationResult<AddLikeProjectMutation>;
+export type AddLikeProjectMutationOptions = Apollo.BaseMutationOptions<AddLikeProjectMutation, AddLikeProjectMutationVariables>;
+export const DeleteLikeProjectDocument = gql`
+    mutation DeleteLikeProject($projectId: Float!) {
+  deleteLikeProject(projectId: $projectId) {
+    message
+    success
+  }
+}
+    `;
+export type DeleteLikeProjectMutationFn = Apollo.MutationFunction<DeleteLikeProjectMutation, DeleteLikeProjectMutationVariables>;
+
+/**
+ * __useDeleteLikeProjectMutation__
+ *
+ * To run a mutation, you first call `useDeleteLikeProjectMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteLikeProjectMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteLikeProjectMutation, { data, loading, error }] = useDeleteLikeProjectMutation({
+ *   variables: {
+ *      projectId: // value for 'projectId'
+ *   },
+ * });
+ */
+export function useDeleteLikeProjectMutation(baseOptions?: Apollo.MutationHookOptions<DeleteLikeProjectMutation, DeleteLikeProjectMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteLikeProjectMutation, DeleteLikeProjectMutationVariables>(DeleteLikeProjectDocument, options);
+      }
+export type DeleteLikeProjectMutationHookResult = ReturnType<typeof useDeleteLikeProjectMutation>;
+export type DeleteLikeProjectMutationResult = Apollo.MutationResult<DeleteLikeProjectMutation>;
+export type DeleteLikeProjectMutationOptions = Apollo.BaseMutationOptions<DeleteLikeProjectMutation, DeleteLikeProjectMutationVariables>;
 export const UpdateAccessProjectDocument = gql`
     mutation UpdateAccessProject($data: UpdateUserProjectAccessesInput!) {
   updateAccessProject(data: $data) {
@@ -1151,47 +1278,6 @@ export function useAddAccessProjectMutation(baseOptions?: Apollo.MutationHookOpt
 export type AddAccessProjectMutationHookResult = ReturnType<typeof useAddAccessProjectMutation>;
 export type AddAccessProjectMutationResult = Apollo.MutationResult<AddAccessProjectMutation>;
 export type AddAccessProjectMutationOptions = Apollo.BaseMutationOptions<AddAccessProjectMutation, AddAccessProjectMutationVariables>;
-export const LoginDocument = gql`
-    query Login($infos: InputLogin!) {
-  login(infos: $infos) {
-    success
-    message
-  }
-}
-    `;
-
-/**
- * __useLoginQuery__
- *
- * To run a query within a React component, call `useLoginQuery` and pass it any options that fit your needs.
- * When your component renders, `useLoginQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useLoginQuery({
- *   variables: {
- *      infos: // value for 'infos'
- *   },
- * });
- */
-export function useLoginQuery(baseOptions: Apollo.QueryHookOptions<LoginQuery, LoginQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<LoginQuery, LoginQueryVariables>(LoginDocument, options);
-      }
-export function useLoginLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<LoginQuery, LoginQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<LoginQuery, LoginQueryVariables>(LoginDocument, options);
-        }
-export function useLoginSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<LoginQuery, LoginQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<LoginQuery, LoginQueryVariables>(LoginDocument, options);
-        }
-export type LoginQueryHookResult = ReturnType<typeof useLoginQuery>;
-export type LoginLazyQueryHookResult = ReturnType<typeof useLoginLazyQuery>;
-export type LoginSuspenseQueryHookResult = ReturnType<typeof useLoginSuspenseQuery>;
-export type LoginQueryResult = Apollo.QueryResult<LoginQuery, LoginQueryVariables>;
 export const LogoutDocument = gql`
     query Logout {
   logout {
@@ -1689,6 +1775,48 @@ export type ListPublicOwnedByUserQueryHookResult = ReturnType<typeof useListPubl
 export type ListPublicOwnedByUserLazyQueryHookResult = ReturnType<typeof useListPublicOwnedByUserLazyQuery>;
 export type ListPublicOwnedByUserSuspenseQueryHookResult = ReturnType<typeof useListPublicOwnedByUserSuspenseQuery>;
 export type ListPublicOwnedByUserQueryResult = Apollo.QueryResult<ListPublicOwnedByUserQuery, ListPublicOwnedByUserQueryVariables>;
+export const ListProjectsPublicLikeByUserDocument = gql`
+    query ListProjectsPublicLikeByUser($userId: Float!) {
+  listProjectsPublicLikeByUser(userID: $userId) {
+    category
+    name
+    id
+  }
+}
+    `;
+
+/**
+ * __useListProjectsPublicLikeByUserQuery__
+ *
+ * To run a query within a React component, call `useListProjectsPublicLikeByUserQuery` and pass it any options that fit your needs.
+ * When your component renders, `useListProjectsPublicLikeByUserQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useListProjectsPublicLikeByUserQuery({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *   },
+ * });
+ */
+export function useListProjectsPublicLikeByUserQuery(baseOptions: Apollo.QueryHookOptions<ListProjectsPublicLikeByUserQuery, ListProjectsPublicLikeByUserQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ListProjectsPublicLikeByUserQuery, ListProjectsPublicLikeByUserQueryVariables>(ListProjectsPublicLikeByUserDocument, options);
+      }
+export function useListProjectsPublicLikeByUserLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ListProjectsPublicLikeByUserQuery, ListProjectsPublicLikeByUserQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ListProjectsPublicLikeByUserQuery, ListProjectsPublicLikeByUserQueryVariables>(ListProjectsPublicLikeByUserDocument, options);
+        }
+export function useListProjectsPublicLikeByUserSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<ListProjectsPublicLikeByUserQuery, ListProjectsPublicLikeByUserQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<ListProjectsPublicLikeByUserQuery, ListProjectsPublicLikeByUserQueryVariables>(ListProjectsPublicLikeByUserDocument, options);
+        }
+export type ListProjectsPublicLikeByUserQueryHookResult = ReturnType<typeof useListProjectsPublicLikeByUserQuery>;
+export type ListProjectsPublicLikeByUserLazyQueryHookResult = ReturnType<typeof useListProjectsPublicLikeByUserLazyQuery>;
+export type ListProjectsPublicLikeByUserSuspenseQueryHookResult = ReturnType<typeof useListProjectsPublicLikeByUserSuspenseQuery>;
+export type ListProjectsPublicLikeByUserQueryResult = Apollo.QueryResult<ListProjectsPublicLikeByUserQuery, ListProjectsPublicLikeByUserQueryVariables>;
 export const FindUserByIdDocument = gql`
     query FindUserById($findUserByIdId: String!) {
   findUserById(id: $findUserByIdId) {

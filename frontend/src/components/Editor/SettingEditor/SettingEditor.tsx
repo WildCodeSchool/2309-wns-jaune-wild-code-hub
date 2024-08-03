@@ -21,6 +21,7 @@ const SettingEditor: React.FC<SettingEditorProps> = ({
   checkOwner,
   users,
 }) => {
+  
   const { showAlert } = CustomToast();
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
 

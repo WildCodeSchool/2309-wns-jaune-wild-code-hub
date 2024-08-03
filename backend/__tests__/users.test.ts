@@ -167,7 +167,7 @@ describe("Test for a new user", () => {
           firstname : "Toto",
           pseudo : "Toto",
           email : "toto@gmail.com",
-          password: "toto",
+          password: "Alexdu78R!&q",
           ban : false,
           role: "ADMIN",
           run_counter : 1
@@ -190,7 +190,7 @@ describe("Test for a new user", () => {
           firstname : "Toto",
           pseudo : "Toto",
           email : "toto@gmail.com",
-          password: "toto",
+          password: "TOTOTOTO!a1",
           ban : false,
           role: "ADMIN",
           run_counter : 1
@@ -213,7 +213,7 @@ describe("Test for a new user", () => {
           firstname : "Toto",
           pseudo : "Totso",
           email : "toto@gmail.com",
-          password: "toto",
+          password: "TOTOTOTO!a1",
           ban : false,
           role: "ADMIN",
           run_counter : 1
@@ -236,7 +236,7 @@ describe("Test for a new user", () => {
           firstname : "Toto",
           pseudo : "Toto",
           email : "totsso@gmail.com",
-          password: "toto",
+          password: "TOTOTOTO!a1",
           ban : false,
           role: "ADMIN",
           run_counter : 1
@@ -260,7 +260,7 @@ describe("Test for a new user", () => {
           firstname : "Toto",
           pseudo : "tata",
           email : "tata@gmail.com",
-          password: "tata",
+          password: "TOTOTOTO!a1",
           ban : false,
           run_counter : 1
         }
@@ -417,6 +417,10 @@ describe("Test for a new user", () => {
         expect(response?.body?.singleResult?.errors[0]?.message).toEqual('Please note, the client does not exist');
       }
     });
+    function generateFakeToken() {
+      return "fake-jwt-token";
+    }
+    
 
     it("Delete user", async () => { 
       const response = await server.executeOperation<ResponseDataDelete>({
@@ -424,7 +428,7 @@ describe("Test for a new user", () => {
         variables: {
           data : {
             id : 1,
-            password : "toto"
+            password : "TOTOTOTO!a1"
           }
         }   
       },
@@ -434,10 +438,12 @@ describe("Test for a new user", () => {
             id : "1",
             role : "ADMIN"
           }
-        }
+        },
+
       }
     );
       assert(response.body.kind === "single");
+      console.error("response?.body?.singleResult?.errors", response?.body?.singleResult?.errors)
       expect(response.body.singleResult.data?.deleteUser?.success).toEqual(true);
     });
 });

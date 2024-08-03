@@ -25,7 +25,8 @@ import UserProjectAccessesService from "../services/userProjectAccesses.service"
 
 @Resolver()
 export class ProjectResolver {
-  @Authorized()
+
+
   @Query(() => [Project])
   async listProjects() {
     const projects = await new ProjectsService().list();
@@ -37,6 +38,7 @@ export class ProjectResolver {
     @Arg("id") id: string,
     @Ctx() context: MyContext
   ): Promise<Project | undefined> {
+    
     if (isNaN(+id)) throw new Error("Specify a correct id");
 
     const projectById = await new ProjectsService().findById(+id);
@@ -122,10 +124,24 @@ export class ProjectResolver {
     return projects;
   }
 
-  @Authorized()
   @Query(() => [UserAccessProjectOutput])
   async listPublicProjectsOwnedByUser(@Arg("id") id: string) {
     const projects = await new ProjectsService().ListPublicOwnedByUser(+id);
+    return projects;
+  }
+
+  @Query(() => [Project])
+  async listProjectsPublicLikeByUser(@Arg("userID") userID: number) {
+    const projects = await new ProjectsService().listProjectsPublicLikeByUser(userID);
+    return projects;
+  }
+
+  @Query(() => [Project])
+  async listLikeProject(@Arg("userId") userId: string) {
+    const projects = await new ProjectsService().listLikedProjects(+userId);
+    if (projects.length === 0) {
+      throw new Error("You have no plans !");
+    }
     return projects;
   }
 
@@ -138,9 +154,10 @@ export class ProjectResolver {
     if (!context.user)
       throw new Error(
         "Access denied! You need to be authenticated to perform this action!"
-      );
+    );
     const project = await new ProjectsService().findByName(data.name);
     if (project) throw new Error("This name of project is already in use!");
+    
     const newProject = await new ProjectsService().create(
       data,
       context?.user?.id
@@ -200,7 +217,7 @@ export class ProjectResolver {
     );
 
     if (dataOwner?.role !== "OWNER" && ctx.user.role !== "ADMIN")
-      throw new Error("You must be the owner of the project to modify it!");
+      throw new Error("You must be the owner of the project to delete it!");
 
     const delProject = await new ProjectsService().delete(id);
     const m = new Message();
@@ -226,4 +243,5 @@ export class ProjectResolver {
     const projects = await new ProjectsService().listLikedUsers(projectId);
     return projects;
   }
+
 }

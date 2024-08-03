@@ -10,7 +10,7 @@ import datasource from "../src/lib/db_test";
 import { EntityTarget, Repository } from "typeorm";
 import assert from "assert";
 import { UserProjectAccessesResolver } from "../src/resolvers/userProjectAccesses.resolver";
-import { UsersProjectsAccesses, UserAccessProjectResponse, CreateUserProjectAccessesInput } from "../src/entities/usersProjectsAccesses.entity";
+import { UsersProjectsAccesses } from "../src/entities/usersProjectsAccesses.entity";
 import { UserResolver } from "../src/resolvers/user.resolver";
 
 export const CREATE_USER = `#graphql
@@ -43,6 +43,54 @@ const LIST_PROJECTS = `#graphql
     listProjects {            
       id
       name
+    }
+  }
+`;
+
+const LIST_FILES= `#graphql
+  query File($projectId: String!) {
+    listFilesByProject(project_id: $projectId) {            
+      id
+      name
+      type
+      language
+      extension
+      content
+      created_at
+      update_at
+    }
+  }
+`;
+
+const FIND_FILE_BY_ID = `#graphql
+  query File($findFileByIdId: String!) {
+    findFileById(id: $findFileByIdId) {            
+      id
+      name
+      type
+      language
+      extension
+      content
+      created_at
+      update_at
+    }
+  }
+`;
+
+const UPDATE_FILE  = `#graphql
+  mutation File ($data: UpdateFileInput!) {
+    updateFile(data: $data) {
+      success
+      message
+    }
+  }
+`;
+
+const DELETE_FILE  = `#graphql
+  mutation File ($deleteFileId: Float!) {
+    deleteFile(id: $deleteFileId) {
+      success
+      message
     }
   }
 `;
@@ -132,12 +180,29 @@ type ResponseDataCreateUser = {
   register: User;
 }
 
+type ResponseDataUpdateFile = {
+  updateFile: Message;
+}
+
+type ResponseDataDeleteFile = {
+  deleteFile: Message;
+}
+
+type ResponseDataFindFileByID = {
+  findFileById: File;
+}
+
+
 type ResponseDataUpdateUserAccessesProject = {
   updateAccessProject: Message;
 }
 
 type ResponseDataListProject = {
   listProjects: Project[];
+}
+
+type ResponseDataListFiles = {
+  listFilesByProject: File[];
 }
 
 type ResponseDataListProjectByCategory = {
@@ -216,7 +281,7 @@ describe("Test for a new project", () => {
           firstname : "Toto",
           pseudo : "Toto",
           email : "toto@gmail.com",
-          password: "toto",
+          password: "TOTOTOTO!a1",
           ban : false,
           role: "ADMIN",
           run_counter : 1
@@ -272,6 +337,99 @@ describe("Test for a new project", () => {
 
     assert(response.body.kind === "single");
     expect(response.body.singleResult.data?.listProjects).toHaveLength(1);
+  });
+
+  it("Checking the creation of the three code files when creating the project", async () => {
+    const response = await server.executeOperation<ResponseDataListFiles>({
+      query: LIST_FILES,
+      variables: {
+        "projectId": "1"
+      },
+    });
+
+    assert(response.body.kind === "single");
+    expect(response.body.singleResult.data?.listFilesByProject).toHaveLength(3);
+  });
+
+  it("Update File one ", async () => {
+    const response = await server.executeOperation<ResponseDataUpdateFile>({
+      query: UPDATE_FILE,
+      variables: {
+        "data": {
+          "id": 1,
+          "name": "toto",
+          "language": "html",
+          "extension": "html",
+          "type": "file",
+          "content": "<p>toto</p>"
+        }
+      },
+    },
+    {
+      contextValue : {
+        user : {
+          id : 1,
+          role : "ADMIN"
+        }
+      }
+    }
+  );
+    assert(response.body.kind === "single");
+    expect(response.body.singleResult.data?.updateFile.success).toEqual(true);
+  });
+
+  it("Find File one rename toto", async () => {
+    const response = await server.executeOperation<ResponseDataFindFileByID>({
+      query: FIND_FILE_BY_ID,
+      variables: {
+        findFileByIdId : "1"
+      },
+    },
+    {
+      contextValue : {
+        user : {
+          id : 1,
+          role : "ADMIN"
+        }
+      }
+    }
+  );
+    assert(response.body.kind === "single");
+    console.error("response?.body?.singleResult?.errors", response?.body?.singleResult?.errors)
+    console.log("response.body.singleResult.data?.findFileById", response.body.singleResult.data?.findFileById)
+    expect(response.body.singleResult.data?.findFileById.name).toEqual("toto");
+  });
+
+  it("Delete file toto", async () => {
+    const response = await server.executeOperation<ResponseDataDeleteFile>({
+      query: DELETE_FILE,
+      variables: {
+        deleteFileId : 1
+      },
+    },
+    {
+      contextValue : {
+        user : {
+          id : 1,
+          role : "ADMIN"
+        }
+      }
+    }
+  );
+    assert(response.body.kind === "single");
+    expect(response.body.singleResult.data?.deleteFile.success).toEqual(true);
+  });
+
+  it("Checking that there are only 2 files left after deleting the toto.html file!", async () => {
+    const response = await server.executeOperation<ResponseDataListFiles>({
+      query: LIST_FILES,
+      variables: {
+        "projectId": "1"
+      },
+    });
+
+    assert(response.body.kind === "single");
+    expect(response.body.singleResult.data?.listFilesByProject).toHaveLength(2);
   });
 
   it("Update project", async () => {

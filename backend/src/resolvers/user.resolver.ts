@@ -14,6 +14,12 @@ import { SignJWT } from "jose";
 import { MyContext } from "..";
 import Cookies from "cookies";
 import { Project } from "../entities/project.entity";
+import {
+  emailRegex,
+  pseudoRegex,
+  passwordRegex,
+  checkRegex
+} from "../regex";
 
 @Resolver()
 export class UserResolver {
@@ -25,14 +31,14 @@ export class UserResolver {
     return users;
   }
 
-  @Authorized()
+  @Authorized(["ADMIN"])
   @Query(() => [User])
   async listUsersByRole(@Arg("role") role: ROLE) {
     const users = await new UsersService().listByRole(role);
     return users;
   }
 
-  @Authorized()
+
   @Query(() => [User])
   async listUsersByPseudo(@Arg("pseudo") pseudo: string) {
     const users = await new UsersService().listUsersByPseudo(pseudo);
@@ -48,13 +54,13 @@ export class UserResolver {
     return userById;
   }
 
-
   @Query(() => User)
   async findUserByEmail(@Arg("email") email: string) {
     const userByEmail = await new UsersService().findByEmail(email);
     if (!userByEmail) throw new Error("Please note, the client does not exist");
     return userByEmail;
   }
+
 
   @Query(() => User)
   async findUserByPseudo(@Arg("pseudo") pseudo: string) {
@@ -64,7 +70,7 @@ export class UserResolver {
     return userByPseudo;
   }
 
-  @Query(() => Message)
+  @Mutation(() => Message)
   async login(@Arg("infos") infos: InputLogin, @Ctx() ctx: MyContext) {
     let user;
     if (!infos.email && !infos.pseudo) {
@@ -115,6 +121,15 @@ export class UserResolver {
     } else if (pseudo) {
       throw new Error("This pseudo is already in use!");
     }
+    
+    if (!checkRegex(emailRegex, data.email))
+      throw new Error("Invaid format email.");
+
+    if (!checkRegex(pseudoRegex, data.pseudo))
+      throw new Error("Invaid format pseudo.");
+
+    if (!checkRegex(passwordRegex, data.password) || data.password.length < 8)
+      throw new Error("Requires at least 1 uppercase letter, 1 number, and 1 special character. (8 minimum characters for password)");
 
     const newUser = await new UsersService().create(data);
     return newUser;
@@ -137,14 +152,25 @@ export class UserResolver {
 
     if (data?.email) {
       const checkUserEmail = await new UsersService().findByEmail(data?.email);
-      if (checkUserEmail)
+      if (checkUserEmail && data.id != checkUserEmail.id)
         throw new Error("This email already exists in our database!");
+
+      if (!checkRegex(emailRegex, data.email))
+        throw new Error("Invaid format email.");
     }
 
     if (data?.pseudo) {
-      const checkUserPseudo = await new UsersService().findByEmail(data?.email);
-      if (checkUserPseudo)
+      const checkUserPseudo = await new UsersService().findByPseudo(data?.pseudo);
+      if (checkUserPseudo && data.id != checkUserPseudo.id)
         throw new Error("This pseudo already exists in our database!");
+
+      if (!checkRegex(pseudoRegex, data.pseudo))
+        throw new Error("Invaid format pseudo.");
+    }
+
+    if (data?.password) {
+      if (!checkRegex(passwordRegex, data.password) || data.password.length < 8)
+        throw new Error("Requires at least 1 uppercase letter, 1 number, and 1 special character. (8 minimum characters for password)");
     }
 
     const updateUser = await new UsersService().update(+id, otherData);
@@ -183,6 +209,15 @@ export class UserResolver {
     const m = new Message();
 
     if (delUser) {
+
+      if (ctx.user.role !== "ADMIN" && data.id == ctx.user.id) {
+        ctx.res?.clearCookie("token");
+      }
+
+      if (ctx.user.role === "ADMIN" && data.id == ctx.user.id) {
+        ctx.res?.clearCookie("token");
+      }
+
       m.message = "User deleted!";
       m.success = true;
     } else {
@@ -197,8 +232,7 @@ export class UserResolver {
   @Query(() => Message)
   async logout(@Ctx() ctx: MyContext) {
     if (ctx.user) {
-      let cookies = new Cookies(ctx.req, ctx.res);
-      cookies.set("token");
+      ctx.res.clearCookie("token");
     }
     const m = new Message();
     m.message = "You have been disconnected !";
@@ -207,33 +241,28 @@ export class UserResolver {
     return m;
   }
 
-  @Query(() => [Project])
-  async listLikeProject(@Arg("userId") userId: string) {
-    const projects = await new UsersService().listLikedProjects(+userId);
-    if (projects.length === 0) {
-      throw new Error("You have no plans !");
-    }
-    return projects;
-  }
-
   @Authorized()
   @Mutation(() => Message)
   async addLikeProject(
-    @Arg("userId") userId: number,
-    @Arg("projectId") projectId: number
+    @Arg("projectId") projectId: number,
+    @Ctx() ctx: MyContext
   ) {
+
+    if (!ctx.user)
+      throw new Error("Access denied! You need to be authenticated to perform this action!");
+
     const likedProjects = await new UsersService().likeProject(
-      userId,
+      ctx.user.id,
       projectId
     );
 
     const m = new Message();
 
     if (likedProjects) {
-      m.message = "You liked";
+      m.message = "Your Like has been successfully saved!";
       m.success = true;
     } else {
-      m.message = "Unable to like";
+      m.message = "Your like could not be saved";
       m.success = false;
     }
 
@@ -243,21 +272,25 @@ export class UserResolver {
   @Authorized()
   @Mutation(() => Message)
   async deleteLikeProject(
-    @Arg("userId") userId: number,
-    @Arg("projectId") projectId: number
+    @Arg("projectId") projectId: number,
+    @Ctx() ctx: MyContext
   ) {
+
+    if (!ctx.user)
+      throw new Error("Access denied! You need to be authenticated to perform this action!");
+
     const likedProjects = await new UsersService().dislikeProject(
-      userId,
+      ctx.user.id,
       projectId
     );
 
     const m = new Message();
 
     if (likedProjects) {
-      m.message = "like deleted";
+      m.message = "Your like has been successfully removed!";
       m.success = true;
     } else {
-      m.message = "unable to remove like";
+      m.message = "Your like could not be removed.";
       m.success = false;
     }
 
@@ -269,4 +302,5 @@ export class UserResolver {
     const projectOwner = await new UsersService().findOwner(+projectId);
     return projectOwner;
   }
+  
 }

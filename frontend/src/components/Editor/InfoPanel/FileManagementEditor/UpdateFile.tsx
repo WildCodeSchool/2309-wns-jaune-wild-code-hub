@@ -20,7 +20,7 @@ import {
   File,
 } from '@/types/graphql';
 import { useMutation } from "@apollo/client";
-import { GenerateLanguageProps } from "@/components/Editor/InfosPanel";
+import { GenerateLanguageProps } from "@/types/InfosPanel";
 
 interface UpdateFileProps {
   file: File;
@@ -32,7 +32,15 @@ interface UpdateFileProps {
   generateLanguage : (name : string, extention : string) => GenerateLanguageProps;
 }
 
-const UpdateFile : React.FC<UpdateFileProps> = ({ file, setProject, setData, setOpenFiles, setCode, setFile, generateLanguage} : UpdateFileProps) => {
+const UpdateFile : React.FC<UpdateFileProps> = ({
+  file,
+  setProject,
+  setData,
+  setOpenFiles,
+  setCode,
+  setFile,
+  generateLanguage
+} : UpdateFileProps) => {
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [nameFile, setNameFile] = useState<string>(file.name);
