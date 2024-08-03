@@ -177,44 +177,6 @@ export default class ProjectsService {
     return savedProject;
   }
 
-  async createDefaultFiles(projectId: number) {
-    const defaultFiles = [
-      {
-        name: "index",
-        type: "file",
-        language: "html",
-        extension: "html",
-        content: "",
-        project: { id: projectId },
-      },
-      {
-        name: "style",
-        type: "file",
-        language: "css",
-        extension: "css",
-        content: "",
-        project: { id: projectId },
-      },
-      {
-        name: "index",
-        type: "file",
-        language: "javascript",
-        extension: "js",
-        content: "",
-        project: { id: projectId },
-      },
-    ];
-    const files: File[] = [];
-    for (const fileData of defaultFiles) {
-      const savedFile = await new FilesService().create({
-        ...fileData,
-        project_id: projectId,
-      });
-      files.push(savedFile);
-    }
-    return files;
-  }
-
   async update(id: number, data: Omit<UpdateProjectInput, "id">) {
     const projectToUpdate = await this.findById(id);
     if (!projectToUpdate) {
