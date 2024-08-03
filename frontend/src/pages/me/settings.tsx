@@ -51,6 +51,7 @@ const Settings: NextPageWithLayout = () => {
       getUser({
         variables: { findUserByIdId: userId },
         onCompleted(data) {
+          console.log("data")
           setUser(data.findUserById);
         },
       });
@@ -101,7 +102,6 @@ const Settings: NextPageWithLayout = () => {
     }
   };
   const handleSubmit = (e: MouseEvent<HTMLButtonElement>) => {
-    //TODO Change for open modal and update user only after modal confirmation
     e.preventDefault();
     if (user && userId) {
       const userForm: UpdateUserInput = {
@@ -116,14 +116,25 @@ const Settings: NextPageWithLayout = () => {
           data: userForm,
         },
         onCompleted(data) {
-          setUser((prevState) => ({
-            ...prevState,
-            password: "",
-            confirmPassword: "",
-          }));
+          if (data?.updateUser.success) {
+            showAlert("success", "Your information should be saved!");
+            setUser((prevState) => ({
+              ...prevState,
+              password: "",
+              confirmPassword: "",
+            }));
+          } else {
+            showAlert("error", data?.updateUser.message);
+          }
         },
-        onError(error, clientOptions) {
-          console.log("data", error.message);
+        onError(error) {
+          showAlert(
+            'error',
+            error.message ?
+              error.message
+            :
+              "We are sorry, there seems to be an error with the server. Please try again later."
+          );
         },
       });
     }
