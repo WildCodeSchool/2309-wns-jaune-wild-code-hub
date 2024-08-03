@@ -157,6 +157,7 @@ export class ProjectResolver {
     );
     const project = await new ProjectsService().findByName(data.name);
     if (project) throw new Error("This name of project is already in use!");
+    
     const newProject = await new ProjectsService().create(
       data,
       context?.user?.id

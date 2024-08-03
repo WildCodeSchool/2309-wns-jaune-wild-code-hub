@@ -302,4 +302,5 @@ export class UserResolver {
     const projectOwner = await new UsersService().findOwner(+projectId);
     return projectOwner;
   }
+  
 }
