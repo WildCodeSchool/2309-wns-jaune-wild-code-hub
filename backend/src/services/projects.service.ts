@@ -156,6 +156,10 @@ export default class ProjectsService {
   }
 
   async create(data: CreateProjectInput, userId: number) {
+
+    const project = await new ProjectsService().findByName(data.name);
+    if (project) throw new Error("This name of project is already in use!");
+    
     const newProject = this.db.create(data);
     const savedProject = await this.db.save(newProject);
     if (!savedProject)

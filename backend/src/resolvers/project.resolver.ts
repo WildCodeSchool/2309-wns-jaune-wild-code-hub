@@ -26,7 +26,7 @@ import UserProjectAccessesService from "../services/userProjectAccesses.service"
 @Resolver()
 export class ProjectResolver {
 
-
+  @Authorized(["ADMIN"])
   @Query(() => [Project])
   async listProjects() {
     const projects = await new ProjectsService().list();
@@ -46,7 +46,8 @@ export class ProjectResolver {
     if (!projectById)
       throw new Error("Please note, the project does not exist");
 
-    if (!projectById.private) return projectById;
+    if (!projectById.private || context.user?.role === "ADMIN")
+      return projectById;
 
     if (projectById.private && context.user == null)
       throw new Error(
@@ -155,9 +156,7 @@ export class ProjectResolver {
       throw new Error(
         "Access denied! You need to be authenticated to perform this action!"
     );
-    const project = await new ProjectsService().findByName(data.name);
-    if (project) throw new Error("This name of project is already in use!");
-    
+
     const newProject = await new ProjectsService().create(
       data,
       context?.user?.id
