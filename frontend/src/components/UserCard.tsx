@@ -87,11 +87,11 @@ const UserCard = ({ user }: Props) => {
               <Text color={"gray.500"}>
                 { 
                   user?.ban ? 
-                    <Tag size='lg' colorScheme='red' borderRadius='full'>
+                    <Tag size='sm' colorScheme='red' borderRadius='full'>
                       <TagLabel>Banned</TagLabel>
                     </Tag>
                   :
-                    <Tag size='lg' colorScheme='black' borderRadius='full'>
+                    <Tag size='sm' colorScheme='black' borderRadius='full'>
                       <TagLabel>Not Banned</TagLabel>
                     </Tag>
                 }
