@@ -19,6 +19,7 @@ import {
   Input,
   InputGroup,
   InputRightElement,
+  Select,
   Text,
 } from "@chakra-ui/react";
 import { ChangeEvent, MouseEvent, useEffect, useState } from "react";
@@ -41,7 +42,6 @@ const Settings: NextPageWithLayout = () => {
   const router = useRouter();
   const { showAlert } = CustomToast();
   const userId = Array.isArray(router.query.id) ? router.query.id[0] : router.query.id;
-
   useEffect(() => {
     userId &&
       getUser({
@@ -89,6 +89,7 @@ const Settings: NextPageWithLayout = () => {
         pseudo: user.pseudo,
         firstname: user.firstname,
         lastname: user.lastname,
+        ban: user.ban,
         id: userId,
       };
       updateUser({
@@ -205,6 +206,24 @@ const Settings: NextPageWithLayout = () => {
               label="Lastname"
               onChange={handleInputChange}
             />
+            <Select
+              size="sm"
+              width={"100%"}
+              mr={3}
+              value={user.ban ? "Banned" : "Not Banned"}
+              onChange={(e) => {
+                setUser(prev => ({
+                  ...prev,
+                  ban: e.target.value === "Banned" ? true : false,
+                }));
+              }}
+              bg="white"
+              color="#000000"
+              borderRadius={5}
+            >
+              <option value="Banned" style={{ color :"dark"}}>Banned</option>
+              <option value="Not Banned" style={{ color :"dark"}}>Not Banned</option>
+            </Select>
             <ButtonGroup alignSelf={"center"} spacing={8}>
               <Button
                 variant={"secondary"}
