@@ -3,33 +3,34 @@ import { Button, ButtonGroup, Center, Flex, Heading, Stack, Text } from "@chakra
 import { NextPageWithLayout } from "../../_app";
 import { useEffect, useState } from "react";
 import {
-  Project,
-  useListProjectsLazyQuery,
+  User,
+  useListUsersLazyQuery
 } from "@/types/graphql";
 import Loader from "@/components/Loader";
 import { WarningIcon } from "@chakra-ui/icons";
 import { ProjectsGrid } from "@/components/ProjectsGrid";
 
-const AdminProject: NextPageWithLayout = () => {
+const AdminUsers: NextPageWithLayout = () => {
   
-  const [projects, setProjects] =
-    useState<Omit<Project, "files">[]>([]);
+  const [users, setUsers] =
+    useState<User[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [numberCount, setNumberCount] = useState<number>(1);
 
 
-  const [getProjects, { error, loading, data }] =
-    useListProjectsLazyQuery();
+  const [getUsers, { error, loading, data }] =
+   useListUsersLazyQuery();
 
   useEffect(() => {
-    getProjects({
+    getUsers({
       variables: { offset: 8 * (currentPage - 1), limit: 8 },
       onCompleted(data) {
-        setNumberCount(data.listProjects.total);
-        setProjects(data.listProjects.projects);
+        console.log(data)
+        // setNumberCount(data.listProjects.total);
+        setUsers(data.listUsers.users);
       },
     });
-  }, [currentPage, getProjects, data]);
+  }, [currentPage, getUsers, data]);
 
   const next = () => {
     setCurrentPage(currentPage + 1);
@@ -64,7 +65,7 @@ const AdminProject: NextPageWithLayout = () => {
       </Center>
     );
   } 
-  if (projects) {
+  if (users) {
     return (
       <Flex
         flexDirection={"column"}
@@ -73,11 +74,12 @@ const AdminProject: NextPageWithLayout = () => {
         padding={"3rem 1rem 1rem 1rem"}
         gap={"3rem"}
       >
-        <Heading textAlign={"center"} size={"lg"}>
-          Admin - Users Management 
+        <Heading textAlign={"center"} fontSize={"3cqw"}>
+          Users Management 
         </Heading>
-        {projects ? 
-          <ProjectsGrid projects={projects} admin={true} />
+        {users ? 
+          // <ProjectsGrid projects={projects} admin={true} />
+          "utilisateur charger"
         : 
           <Loader />
         }
@@ -106,8 +108,9 @@ const AdminProject: NextPageWithLayout = () => {
     );
   }
 };
-AdminProject.getLayout = function getLayout(page) {
+
+AdminUsers.getLayout = function getLayout(page) {
   return <SidebarLayout>{page}</SidebarLayout>;
 };
 
-export default AdminProject;
+export default AdminUsers;

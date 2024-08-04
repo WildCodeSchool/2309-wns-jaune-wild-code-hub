@@ -675,6 +675,14 @@ export type ListUsersLikesPerProjectQueryVariables = Exact<{
 
 export type ListUsersLikesPerProjectQuery = { __typename?: 'Query', listUsersLikesPerProject: Array<{ __typename?: 'User', pseudo: string, id: string }> };
 
+export type ListUsersQueryVariables = Exact<{
+  limit: Scalars['Int']['input'];
+  offset: Scalars['Int']['input'];
+}>;
+
+
+export type ListUsersQuery = { __typename?: 'Query', listUsers: { __typename?: 'PaginatedUsers', total: number, offset: number, limit: number, users: Array<{ __typename?: 'User', password: string, email: string, pseudo: string, firstname: string, lastname: string, id: string, role: string, ban: boolean, run_counter: number, last_login: any, created_at: any, update_at: any }> } };
+
 export type ListUsersAccessesProjectQueryVariables = Exact<{
   projectId: Scalars['Float']['input'];
 }>;
@@ -2062,6 +2070,63 @@ export type ListUsersLikesPerProjectQueryHookResult = ReturnType<typeof useListU
 export type ListUsersLikesPerProjectLazyQueryHookResult = ReturnType<typeof useListUsersLikesPerProjectLazyQuery>;
 export type ListUsersLikesPerProjectSuspenseQueryHookResult = ReturnType<typeof useListUsersLikesPerProjectSuspenseQuery>;
 export type ListUsersLikesPerProjectQueryResult = Apollo.QueryResult<ListUsersLikesPerProjectQuery, ListUsersLikesPerProjectQueryVariables>;
+export const ListUsersDocument = gql`
+    query listUsers($limit: Int!, $offset: Int!) {
+  listUsers(limit: $limit, offset: $offset) {
+    users {
+      password
+      email
+      pseudo
+      firstname
+      lastname
+      id
+      role
+      ban
+      run_counter
+      last_login
+      created_at
+      update_at
+    }
+    total
+    offset
+    limit
+  }
+}
+    `;
+
+/**
+ * __useListUsersQuery__
+ *
+ * To run a query within a React component, call `useListUsersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useListUsersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useListUsersQuery({
+ *   variables: {
+ *      limit: // value for 'limit'
+ *      offset: // value for 'offset'
+ *   },
+ * });
+ */
+export function useListUsersQuery(baseOptions: Apollo.QueryHookOptions<ListUsersQuery, ListUsersQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ListUsersQuery, ListUsersQueryVariables>(ListUsersDocument, options);
+      }
+export function useListUsersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ListUsersQuery, ListUsersQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ListUsersQuery, ListUsersQueryVariables>(ListUsersDocument, options);
+        }
+export function useListUsersSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<ListUsersQuery, ListUsersQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<ListUsersQuery, ListUsersQueryVariables>(ListUsersDocument, options);
+        }
+export type ListUsersQueryHookResult = ReturnType<typeof useListUsersQuery>;
+export type ListUsersLazyQueryHookResult = ReturnType<typeof useListUsersLazyQuery>;
+export type ListUsersSuspenseQueryHookResult = ReturnType<typeof useListUsersSuspenseQuery>;
+export type ListUsersQueryResult = Apollo.QueryResult<ListUsersQuery, ListUsersQueryVariables>;
 export const ListUsersAccessesProjectDocument = gql`
     query ListUsersAccessesProject($projectId: Float!) {
   listUsersAccessesProject(project_id: $projectId) {

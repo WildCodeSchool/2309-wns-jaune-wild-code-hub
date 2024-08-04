@@ -73,8 +73,8 @@ const AdminProject: NextPageWithLayout = () => {
         padding={"3rem 1rem 1rem 1rem"}
         gap={"3rem"}
       >
-        <Heading textAlign={"center"} size={"lg"}>
-          Admin - Projects Management
+        <Heading textAlign={"center"} fontSize={"3cqw"}>
+          Projects Management
         </Heading>
         {projects ? 
           <ProjectsGrid projects={projects} admin={true} />

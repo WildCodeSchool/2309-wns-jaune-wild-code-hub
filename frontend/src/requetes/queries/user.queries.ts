@@ -28,9 +28,6 @@ export const FIND_USER_INFOS_BY_ID = gql`
   }
 `;
 
-
-
-
 export const FIND_PROJECT_OWNER = gql`
   query FindProjectOwner($projectId: String!) {
     findProjectOwner(projectId: $projectId) {
@@ -57,3 +54,28 @@ export const LIST_USERS_LIKING_PROJECT = gql`
     }
   }
 `;
+
+export const LIST_USERS = gql`
+  query listUsers($limit: Int!, $offset: Int!) {
+    listUsers(limit: $limit, offset: $offset) {
+      users {
+        password
+        email
+        pseudo
+        firstname
+        lastname
+        id
+        role
+        ban
+        run_counter
+        last_login
+        created_at
+        update_at
+      }
+      total
+      offset
+      limit
+    }
+  }
+`;
+
