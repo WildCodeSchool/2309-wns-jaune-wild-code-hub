@@ -99,6 +99,7 @@ const Settings: NextPageWithLayout = () => {
         onCompleted(data) {
           if (data?.updateUser.success) {
             showAlert("success", "Your information should be saved!");
+            router.push("/admin/users")
           } else {
             showAlert("error", data?.updateUser.message);
           }
