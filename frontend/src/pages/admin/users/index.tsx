@@ -8,7 +8,7 @@ import {
 } from "@/types/graphql";
 import Loader from "@/components/Loader";
 import { WarningIcon } from "@chakra-ui/icons";
-import { ProjectsGrid } from "@/components/ProjectsGrid";
+import { UsersGrid } from "@/components/UsersGrid";
 
 const AdminUsers: NextPageWithLayout = () => {
   
@@ -26,7 +26,7 @@ const AdminUsers: NextPageWithLayout = () => {
       variables: { offset: 8 * (currentPage - 1), limit: 8 },
       onCompleted(data) {
         console.log(data)
-        // setNumberCount(data.listProjects.total);
+        setNumberCount(data.listUsers.total);
         setUsers(data.listUsers.users);
       },
     });
@@ -78,8 +78,7 @@ const AdminUsers: NextPageWithLayout = () => {
           Users Management 
         </Heading>
         {users ? 
-          // <ProjectsGrid projects={projects} admin={true} />
-          "utilisateur charger"
+          <UsersGrid users={users} admin={true} />
         : 
           <Loader />
         }
