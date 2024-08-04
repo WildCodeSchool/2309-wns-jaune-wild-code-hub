@@ -1,5 +1,5 @@
 import { validate } from "class-validator";
-import { ILike, Like, Repository } from "typeorm";
+import { ILike, Repository } from "typeorm";
 import {
   CreateUserInput,
   ROLE,

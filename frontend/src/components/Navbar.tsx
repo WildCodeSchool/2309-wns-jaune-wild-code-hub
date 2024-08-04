@@ -50,13 +50,11 @@ const Navbar = () => {
           <Searchbar onResults={handleSearchResults} />
           {user ? (
             <Box display="flex" gap={"1rem"}>
-              {pathname != "/me" && (
-                <IconButton
-                  aria-label="Go to profile page"
-                  onClick={() => router.push("/me")}
-                  icon={<Avatar name={user} />}
-                />
-              )}
+              <IconButton
+                aria-label="Go to profile page"
+                onClick={() => router.push("/me")}
+                icon={<Avatar name={user} />}
+              />
               <Button onClick={() => router.push("/auth/logout")}>
                 Log out
               </Button>

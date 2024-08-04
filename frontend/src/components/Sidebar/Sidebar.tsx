@@ -89,7 +89,6 @@ const Sidebar = ({ isOpen, setIsOpen }: Props) => {
             height={"100%"}
           >
             {pathname?.startsWith("/me") && <MeSidebar />}
-            {pathname?.startsWith("/editor") && <EditorSidebarContent />}
             {pathname?.startsWith("/user") && <ProfileSidebarContent />}
             {pathname?.startsWith("/admin") &&  <AdminSidebar />}
             <LinkBox

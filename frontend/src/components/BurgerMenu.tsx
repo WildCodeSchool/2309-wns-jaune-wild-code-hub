@@ -13,6 +13,8 @@ import NextLink from "next/link";
 import Searchbar from "./Searchbar";
 import { usePathname, useRouter } from "next/navigation";
 import MeSidebar from "./Sidebar/MeSidebarContent";
+import AdminSidebar from "./Sidebar/AdminSidebarContent";
+import ProfileSidebarContent from "./Sidebar/ProfileSidebarContent";
 import { Project } from "@/types/graphql";
 import Cookies from "js-cookie";
 
@@ -116,7 +118,10 @@ const BurgerMenu = () => {
             </Flex> 
             
             <Box mr={20} mt={10}>
-             <MeSidebar />
+              {pathname?.startsWith("/me") && <MeSidebar />}
+              {pathname?.startsWith("/editor") && <MeSidebar />}
+              {pathname?.startsWith("/user") && <ProfileSidebarContent />}
+              {pathname?.startsWith("/admin") &&  <AdminSidebar />}
             </Box>
 
           </Box>

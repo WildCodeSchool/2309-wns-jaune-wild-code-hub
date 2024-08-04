@@ -203,6 +203,14 @@ export type PaginatedProjects = {
   total: Scalars['Float']['output'];
 };
 
+export type PaginatedUsers = {
+  __typename?: 'PaginatedUsers';
+  limit: Scalars['Float']['output'];
+  offset: Scalars['Float']['output'];
+  total: Scalars['Float']['output'];
+  users: Array<User>;
+};
+
 export type Project = {
   __typename?: 'Project';
   category: Scalars['String']['output'];
@@ -236,7 +244,7 @@ export type Query = {
   listPublicProjects: PaginatedProjects;
   listPublicProjectsByName: Array<Project>;
   listPublicProjectsOwnedByUser: Array<UserAccessProjectOutput>;
-  listUsers: Array<User>;
+  listUsers: PaginatedUsers;
   listUsersAccessesProject: Array<FindAllInfoUserAccessesProject>;
   listUsersByPseudo: Array<User>;
   listUsersByRole: Array<User>;
@@ -345,6 +353,12 @@ export type QueryListPublicProjectsByNameArgs = {
 
 export type QueryListPublicProjectsOwnedByUserArgs = {
   id: Scalars['String']['input'];
+};
+
+
+export type QueryListUsersArgs = {
+  limit?: Scalars['Int']['input'];
+  offset?: Scalars['Int']['input'];
 };
 
 
