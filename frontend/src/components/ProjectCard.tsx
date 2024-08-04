@@ -24,12 +24,14 @@ import {
 import CommentIcon from "../Icons/CommentIcon";
 import HeartIcon from "../Icons/HeartIcon";
 import ShareIcon from "../Icons/ShareIcon";
+import SettingDeleteProject from "./Editor/SettingEditor/SettingDeleteProject";
 
 type Props = {
   project: Pick<Project, "id" | "category" | "name">;
+  admin ?: boolean;
 };
 
-const ProjectCard = ({ project }: Props) => {
+const ProjectCard = ({ project, admin  }: Props) => {
   const { data: { countLikesPerProject: likeCount } = {} } =
     useCountLikesPerProjectQuery({
       variables: {
@@ -62,9 +64,15 @@ const ProjectCard = ({ project }: Props) => {
           backgroundColor="grey"
           height="52%"
           display="flex"
-          alignItems="center"
-          justifyContent="center"
-        ></Box>
+          justifyContent="flex-end"
+        >
+          {admin && 
+            <SettingDeleteProject
+             project={project}
+             admin={admin}
+             />
+          }
+        </Box>
 
         <Avatar
           name={projectOwner?.pseudo}

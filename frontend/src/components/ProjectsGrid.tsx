@@ -4,9 +4,10 @@ import { Project } from "@/types/graphql";
 
 type GridProps = {
   projects: Pick<Project, "id" | "category" | "name">[];
+  admin ?: boolean;
 };
 
-export const ProjectsGrid = ({ projects }: GridProps) => {
+export const ProjectsGrid = ({ projects, admin }: GridProps) => {
   return (
     <Grid
       templateColumns={{
@@ -44,7 +45,11 @@ export const ProjectsGrid = ({ projects }: GridProps) => {
             justifyContent={"center"}
             height={"225px"}
           >
-            <ProjectCard project={project}></ProjectCard>
+            { admin ?
+              <ProjectCard project={project} admin={true} />
+            :
+              <ProjectCard project={project} />
+            }
           </GridItem>
         );
       })}

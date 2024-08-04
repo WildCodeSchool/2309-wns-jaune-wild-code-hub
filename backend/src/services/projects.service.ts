@@ -199,7 +199,7 @@ export default class ProjectsService {
 
     const checkName = await this.findByName(data.name);
 
-    if (checkName) throw new Error("This project name is already taken!");
+    if (checkName && checkName.id != id) throw new Error("This project name is already!");
 
     const projectToSave = this.db.merge(projectToUpdate, {
       ...data,

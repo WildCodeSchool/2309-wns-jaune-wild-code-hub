@@ -1,7 +1,7 @@
 import SidebarLayout from "@/components/Sidebar/SidebarLayout";
 import { Button, ButtonGroup, Center, Flex, Heading, Stack, Text } from "@chakra-ui/react";
 import { NextPageWithLayout } from "../_app";
-import { SetStateAction, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Project,
   useListProjectsLazyQuery,
@@ -76,7 +76,12 @@ const AdminProject: NextPageWithLayout = () => {
         <Heading textAlign={"center"} size={"lg"}>
           Admin - Lists of all projects
         </Heading>
-        {projects ? <ProjectsGrid projects={projects} /> : <Loader />}
+        {projects ? 
+          <ProjectsGrid projects={projects} admin={true} />
+        : 
+          <Loader />
+        }
+
         <ButtonGroup display="flex" alignItems="center" mt="10" ml="4" spacing={4}>
           <Button
             variant={"outline"}
