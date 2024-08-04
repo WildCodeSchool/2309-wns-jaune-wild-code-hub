@@ -226,7 +226,7 @@ export type Query = {
   listAccesProject: Array<Project>;
   listFilesByProject: Array<File>;
   listLikeProject: Array<Project>;
-  listProjects: Array<Project>;
+  listProjects: PaginatedProjects;
   listProjectsAccessesUser: Array<FindAllInfoUserAccessesProject>;
   listProjectsByCategory: Array<Project>;
   listProjectsByUser: Array<Project>;
@@ -296,6 +296,12 @@ export type QueryListFilesByProjectArgs = {
 
 export type QueryListLikeProjectArgs = {
   userId: Scalars['String']['input'];
+};
+
+
+export type QueryListProjectsArgs = {
+  limit?: Scalars['Int']['input'];
+  offset?: Scalars['Int']['input'];
 };
 
 
@@ -641,7 +647,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   listAccesProject?: Resolver<Array<ResolversTypes['Project']>, ParentType, ContextType, RequireFields<QueryListAccesProjectArgs, 'userId'>>;
   listFilesByProject?: Resolver<Array<ResolversTypes['File']>, ParentType, ContextType, RequireFields<QueryListFilesByProjectArgs, 'project_id'>>;
   listLikeProject?: Resolver<Array<ResolversTypes['Project']>, ParentType, ContextType, RequireFields<QueryListLikeProjectArgs, 'userId'>>;
-  listProjects?: Resolver<Array<ResolversTypes['Project']>, ParentType, ContextType>;
+  listProjects?: Resolver<ResolversTypes['PaginatedProjects'], ParentType, ContextType, RequireFields<QueryListProjectsArgs, 'limit' | 'offset'>>;
   listProjectsAccessesUser?: Resolver<Array<ResolversTypes['FindAllInfoUserAccessesProject']>, ParentType, ContextType, RequireFields<QueryListProjectsAccessesUserArgs, 'user_id'>>;
   listProjectsByCategory?: Resolver<Array<ResolversTypes['Project']>, ParentType, ContextType, RequireFields<QueryListProjectsByCategoryArgs, 'category'>>;
   listProjectsByUser?: Resolver<Array<ResolversTypes['Project']>, ParentType, ContextType, RequireFields<QueryListProjectsByUserArgs, 'id'>>;

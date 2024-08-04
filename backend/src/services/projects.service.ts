@@ -21,9 +21,19 @@ export default class ProjectsService {
     this.db = datasource.getRepository(Project);
   }
 
-  async list() {
-    const projects = await this.db.find({ relations: ["files"] });
-    return projects;
+  async list(offset: number = 0, limit: number = 8) {
+    const [projects, total] = await this.db.findAndCount({
+      relations: ["files"],
+      skip: offset,
+      take: limit,
+    });
+
+    return {
+      projects,
+      total,
+      offset,
+      limit,
+    };
   }
 
   async findById(id: number) {

@@ -27,9 +27,12 @@ import UserProjectAccessesService from "../services/userProjectAccesses.service"
 export class ProjectResolver {
 
   @Authorized(["ADMIN"])
-  @Query(() => [Project])
-  async listProjects() {
-    const projects = await new ProjectsService().list();
+  @Query(() => PaginatedProjects)
+  async listProjects(
+    @Arg("offset", () => Int, { defaultValue: 0 }) offset: number,
+    @Arg("limit", () => Int, { defaultValue: 8 }) limit: number
+  ) {
+    const projects = await new ProjectsService().list(offset, limit);
     return projects;
   }
 
