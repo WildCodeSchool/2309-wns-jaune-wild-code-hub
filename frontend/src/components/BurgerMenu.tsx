@@ -22,19 +22,25 @@ const BurgerMenu = () => {
 
   const [isOpen, setIsOpen] = useState(false);
   const [projects, setProjects] = useState<Omit<Project, "files">[]>([]);
-  const [user, setUser] = useState<string | undefined>(undefined);
+  const [pseudo, setPseudo] = useState<string | undefined>(undefined);
+  const [role, setRole] = useState<string | undefined>(undefined);
 
   const pathname = usePathname();
   const router = useRouter();
-  const pseudo = Cookies.get("pseudo");
+  const getPseudo = Cookies.get("pseudo");
+  const getRole = Cookies.get("role");
 
   const handleSearchResults = (results: Project[]) => {
     setProjects(results);
   }; 
 
   useEffect(() => {
-    setUser(pseudo);
-  }, [pseudo]);
+    setPseudo(getPseudo);
+  }, [getPseudo]);
+
+  useEffect(() => {
+    setRole(getRole);
+  }, [getRole]);
 
   return (
     <Box position="fixed" top="1rem" right="1rem" zIndex="1000">
@@ -77,7 +83,7 @@ const BurgerMenu = () => {
         <SlideFade in={isOpen} offsetX="100vw">
           <Box>    
           {
-            !user ?
+            !pseudo ?
             <>
               <Button
                 variant="ghost"
@@ -104,9 +110,15 @@ const BurgerMenu = () => {
             </>
           :
           <Flex justifyContent="center">
-              <Button onClick={() => router.push("/auth/logout")}>
-                Log out
+            {
+              role === "ADMIN" &&
+              <Button variant="secondary" onClick={() => router.push("/admin")}>
+                Administrations
               </Button>
+            }
+            <Button onClick={() => router.push("/auth/logout")}>
+              Log out
+            </Button>
           </Flex>
           }               
 
