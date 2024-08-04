@@ -1,19 +1,34 @@
-import { buildSchema, buildSchemaSync } from "type-graphql";
+import { buildSchema } from "type-graphql";
 import { UserResolver } from "../src/resolvers/user.resolver";
 import { ApolloServer } from "@apollo/server";
 import datasourceInitial from "../src/lib/db"; //on importe la datasource de test
 import datasource from "../src/lib/db_test"; //on importe la datasource initial pour le spyOn
-import { User, Message } from "../src/entities/user.entity";
+import { User, Message, PaginatedUsers } from "../src/entities/user.entity";
 import assert from "assert";
 
 let server: ApolloServer;
 
 //-------------- REQUETE APOLLO -----------------//
 export const LIST_USERS = `#graphql
-  query Users {
-    listUsers {            
-      id
-      pseudo
+  query Users($limit: Int!, $offset: Int!)  {
+    listUsers(limit: $limit, offset: $offset) {
+      users {
+        password
+        email
+        pseudo
+        firstname
+        lastname
+        id
+        role
+        ban
+        run_counter
+        last_login
+        created_at
+        update_at
+      }
+      total
+      offset
+      limit
     }
   }
 `;
@@ -91,7 +106,7 @@ export const DELETE_USER = `#graphql
 //------------------- TYPAGE ---------------------//
 
   type ResponseDataListUser = {
-    listUsers: User[]
+    listUsers: PaginatedUsers
   }
 
   type ResponseDataListUserByRole = {
@@ -151,11 +166,15 @@ afterAll(async () => {
 describe("Test for a new user", () => {
   it("Find 0 users", async () => {
     const response = await server.executeOperation<ResponseDataListUser>({
-      query: LIST_USERS,      
+      query: LIST_USERS,    
+      variables: {
+        offset: 0,
+        limit :8,
+      },  
     });
 
     assert(response.body.kind === "single");
-    expect(response.body.singleResult.data?.listUsers).toHaveLength(0);   
+    expect(response.body.singleResult.data?.listUsers.users).toHaveLength(0);   
   });
 
   it("Create user", async () => { 
@@ -328,10 +347,14 @@ describe("Test for a new user", () => {
 
   it("Find users after creation of the user in the db", async () => {
     const response = await server.executeOperation<ResponseDataListUser>({
-      query: LIST_USERS,    
+      query: LIST_USERS,
+      variables: {
+        offset: 0,
+        limit :8,
+      },    
     });
     assert(response.body.kind === "single");
-    expect(response.body.singleResult.data?.listUsers).toHaveLength(1);
+    expect(response.body.singleResult.data?.listUsers.users).toHaveLength(1);
   });
 
   it("Find list users by role", async () => {
