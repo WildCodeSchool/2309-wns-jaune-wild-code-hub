@@ -11,7 +11,6 @@ import {
 } from "../entities/usersProjectsAccesses.entity";
 import datasource from "../lib/db";
 import FilesService from "./files.service";
-import { File } from "../entities/file.entity";
 import UserProjectAccessesService from "./userProjectAccesses.service";
 import { User } from "../entities/user.entity";
 

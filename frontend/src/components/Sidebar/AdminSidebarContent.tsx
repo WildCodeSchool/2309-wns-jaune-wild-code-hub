@@ -19,7 +19,7 @@ const AdminSidebar = () => {
           </Flex>
           <Flex id="nav" direction={"column"} gap={4}>
             <CustomLink href="/admin">Projects Management</CustomLink>
-            <CustomLink href="/admin/user">Users Management</CustomLink>
+            <CustomLink href="/admin/users">Users Management</CustomLink>
           </Flex>
         </Flex>
       )}

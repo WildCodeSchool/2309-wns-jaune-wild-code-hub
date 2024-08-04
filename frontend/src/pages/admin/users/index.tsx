@@ -1,6 +1,6 @@
 import SidebarLayout from "@/components/Sidebar/SidebarLayout";
 import { Button, ButtonGroup, Center, Flex, Heading, Stack, Text } from "@chakra-ui/react";
-import { NextPageWithLayout } from "../_app";
+import { NextPageWithLayout } from "../../_app";
 import { useEffect, useState } from "react";
 import {
   Project,
@@ -74,7 +74,7 @@ const AdminProject: NextPageWithLayout = () => {
         gap={"3rem"}
       >
         <Heading textAlign={"center"} size={"lg"}>
-          Admin - Projects Management
+          Admin - Users Management 
         </Heading>
         {projects ? 
           <ProjectsGrid projects={projects} admin={true} />

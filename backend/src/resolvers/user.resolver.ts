@@ -84,6 +84,9 @@ export class UserResolver {
       throw new Error("Check your login information !");
     }
 
+    if (user.ban) 
+      throw new Error("You are banned! therefore you do not have the right to access the site!");
+
     const isPasswordValid = await argon2.verify(user.password, infos.password);
     const m = new Message();
     if (isPasswordValid) {
