@@ -19,12 +19,18 @@ const Navbar = () => {
   const [projects, setProjects] = useState<Omit<Project, "files">[]>([]);
   const router = useRouter();
   const pathname = usePathname();
-  const [user, setUser] = useState<string | undefined>(undefined);
-  const pseudo = Cookies.get("pseudo");
+  const [pseudo, setPseudo] = useState<string | undefined>(undefined);
+  const [role, setRole] = useState<string | undefined>(undefined);
+  const getPseudo = Cookies.get("pseudo");
+  const getRole = Cookies.get("role");
 
   useEffect(() => {
-    setUser(pseudo);
-  }, [pseudo]);
+    setPseudo(getPseudo);
+  }, [getPseudo]);
+
+  useEffect(() => {
+    setRole(getRole);
+  }, [getRole]);
 
   const isDesktop = useBreakpointValue({ base: false, md: true });
 
@@ -48,15 +54,19 @@ const Navbar = () => {
             {"< Wild Code Hub />"}
           </Button>
           <Searchbar onResults={handleSearchResults} />
-          {user ? (
+          {pseudo ? (
             <Box display="flex" gap={"1rem"}>
-              {pathname != "/me" && (
-                <IconButton
-                  aria-label="Go to profile page"
-                  onClick={() => router.push("/me")}
-                  icon={<Avatar name={user} />}
-                />
-              )}
+              {
+                role === "ADMIN" &&
+                <Button variant="secondary" onClick={() => router.push("/admin")}>
+                  Administrations
+                </Button>
+              }
+              <IconButton
+                aria-label="Go to profile page"
+                onClick={() => router.push("/me")}
+                icon={<Avatar name={pseudo} />}
+              />
               <Button onClick={() => router.push("/auth/logout")}>
                 Log out
               </Button>

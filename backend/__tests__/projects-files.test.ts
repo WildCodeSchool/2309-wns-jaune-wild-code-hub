@@ -39,11 +39,20 @@ mutation UsersProjectsAccesses ($data: UpdateUserProjectAccessesInput!) {
 
 // Define GraphQL Queries and Mutations
 const LIST_PROJECTS = `#graphql
-  query Projects {
-    listProjects {            
+  query Projects($limit: Int!, $offset: Int!) {
+    listProjects (limit: $limit, offset: $offset){            
+      projects {
       id
       name
+      category
+      private
+      created_at
+      update_at
     }
+    total
+    offset
+    limit
+   }
   }
 `;
 
@@ -198,7 +207,7 @@ type ResponseDataUpdateUserAccessesProject = {
 }
 
 type ResponseDataListProject = {
-  listProjects: Project[];
+  listProjects: PaginatedProjects;
 }
 
 type ResponseDataListFiles = {
@@ -295,13 +304,19 @@ describe("Test for a new project", () => {
     expect(response.body.singleResult.data?.register?.firstname).toEqual("Toto");
   });
 
+
+
   it("Find 0 projects", async () => {
     const response = await server.executeOperation<ResponseDataListProject>({
       query: LIST_PROJECTS,
+       variables: {
+        offset: 0,
+        limit :8,
+      },
     });
 
     assert(response.body.kind === "single");
-    expect(response.body.singleResult.data?.listProjects).toHaveLength(0);
+    expect(response.body.singleResult.data?.listProjects.projects).toHaveLength(0);
   });
 
   it("Create project", async () => {
@@ -330,13 +345,17 @@ describe("Test for a new project", () => {
     expect(response.body.singleResult.data?.createProject?.name).toEqual("Project1");
   });
 
-  it("Find 1 project", async () => {
+  it("Find 1 projects", async () => {
     const response = await server.executeOperation<ResponseDataListProject>({
       query: LIST_PROJECTS,
+       variables: {
+        offset: 0,
+        limit :8,
+      },
     });
 
     assert(response.body.kind === "single");
-    expect(response.body.singleResult.data?.listProjects).toHaveLength(1);
+    expect(response.body.singleResult.data?.listProjects.projects).toHaveLength(1);
   });
 
   it("Checking the creation of the three code files when creating the project", async () => {
@@ -395,8 +414,6 @@ describe("Test for a new project", () => {
     }
   );
     assert(response.body.kind === "single");
-    console.error("response?.body?.singleResult?.errors", response?.body?.singleResult?.errors)
-    console.log("response.body.singleResult.data?.findFileById", response.body.singleResult.data?.findFileById)
     expect(response.body.singleResult.data?.findFileById.name).toEqual("toto");
   });
 
@@ -510,10 +527,14 @@ describe("Test for a new project", () => {
   it("Find projects after update", async () => {
     const response = await server.executeOperation<ResponseDataListProject>({
       query: LIST_PROJECTS,
+       variables: {
+        offset: 0,
+        limit :8,
+      },
     });
 
     assert(response.body.kind === "single");
-    expect(response.body.singleResult.data?.listProjects).toHaveLength(1);
+    expect(response.body.singleResult.data?.listProjects.projects).toHaveLength(1);
   });
 
   it("Find list projects by category", async () => {
@@ -562,7 +583,6 @@ describe("Test for a new project", () => {
     });
 
     assert(response.body.kind === "single");
-    console.log('test', JSON.stringify(response.body.singleResult))
     expect(response.body.singleResult.data?.listPublicProjects?.projects).toHaveLength(1);
   });
 

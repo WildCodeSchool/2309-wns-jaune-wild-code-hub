@@ -4,9 +4,10 @@ import { useEffect, useState } from "react";
 import { CustomLink } from "../CustomLink";
 import { useRouter } from "next/router";
 
-const MeSidebar = () => {
-
+const AdminSidebar = () => {
+  
   const router = useRouter();
+  
   const [user, setUser] = useState<Record<string, string> | null>(null);
   const pseudo = Cookies.get("pseudo");
 
@@ -14,13 +15,12 @@ const MeSidebar = () => {
     pseudo && setUser({ pseudo });
   }, [pseudo]);
 
-
   return (
     <>
       {user && (
         <Flex id="top-nav" pl={"2rem"} direction={"column"} gap={12}>
           <Flex id="user" gap={4} alignItems={"center"}>
-          <IconButton
+            <IconButton
               aria-label="Go to profile page"
               onClick={() => router.push("/me")}
               icon={<Avatar name={user.pseudo} />}
@@ -28,10 +28,8 @@ const MeSidebar = () => {
             <Text>{user.pseudo}</Text>
           </Flex>
           <Flex id="nav" direction={"column"} gap={4}>
-            <CustomLink href="/me">My Workspace</CustomLink>
-            <CustomLink href="/me/projects">My projects</CustomLink>
-            <CustomLink href="/me/shared">Shared with me</CustomLink>
-            <CustomLink href="/me/liked">Liked</CustomLink>
+            <CustomLink href="/admin">Projects Management</CustomLink>
+            <CustomLink href="/admin/users">Users Management</CustomLink>
           </Flex>
         </Flex>
       )}
@@ -39,4 +37,4 @@ const MeSidebar = () => {
   );
 };
 
-export default MeSidebar;
+export default AdminSidebar;

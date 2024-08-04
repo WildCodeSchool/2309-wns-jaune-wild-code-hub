@@ -17,6 +17,8 @@ import MeSidebar from "./MeSidebarContent";
 import EditorSidebarContent from "./EditorSidebarContent";
 import ProfileSidebarContent from "./ProfileSidebarContent";
 
+import AdminSidebar from "./AdminSidebarContent";
+
 type Props = {
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -87,9 +89,8 @@ const Sidebar = ({ isOpen, setIsOpen }: Props) => {
             height={"100%"}
           >
             {pathname?.startsWith("/me") && <MeSidebar />}
-            {pathname?.startsWith("/editor") && <EditorSidebarContent />}
             {pathname?.startsWith("/user") && <ProfileSidebarContent />}
-
+            {pathname?.startsWith("/admin") &&  <AdminSidebar />}
             <LinkBox
               width="fit-content"
               _hover={{

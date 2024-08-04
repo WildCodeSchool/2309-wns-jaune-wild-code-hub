@@ -40,7 +40,8 @@ const checkToken = async (token: string | undefined, request: NextRequest) => {
       request.nextUrl.pathname.startsWith("/me/shared") ||
       request.nextUrl.pathname.startsWith("/me/liked") ||
       request.nextUrl.pathname.startsWith("/me/settings") ||
-      request.nextUrl.pathname.startsWith("/privateAdmin")
+      request.nextUrl.pathname.startsWith("/admin") ||
+      request.nextUrl.pathname.startsWith("/admin/users")
     ) {
       response = NextResponse.redirect(new URL("/auth/login", request.url));
     } else {
@@ -61,7 +62,9 @@ const checkToken = async (token: string | undefined, request: NextRequest) => {
       ) {
       response = NextResponse.redirect(new URL("/", request.url));
     } else if (
-        request.nextUrl.pathname.startsWith("/privateAdmin") &&
+        request.nextUrl.pathname.startsWith("/admin") &&
+        payload.role !== "ADMIN" ||
+        request.nextUrl.pathname.startsWith("/admin/users") &&
         payload.role !== "ADMIN"
       ) {
         response = NextResponse.redirect(new URL("/400", request.url));

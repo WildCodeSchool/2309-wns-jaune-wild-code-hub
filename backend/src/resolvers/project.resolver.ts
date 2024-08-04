@@ -26,10 +26,13 @@ import UserProjectAccessesService from "../services/userProjectAccesses.service"
 @Resolver()
 export class ProjectResolver {
 
-
-  @Query(() => [Project])
-  async listProjects() {
-    const projects = await new ProjectsService().list();
+  @Authorized(["ADMIN"])
+  @Query(() => PaginatedProjects)
+  async listProjects(
+    @Arg("offset", () => Int, { defaultValue: 0 }) offset: number,
+    @Arg("limit", () => Int, { defaultValue: 8 }) limit: number
+  ) {
+    const projects = await new ProjectsService().list(offset, limit);
     return projects;
   }
 
@@ -46,7 +49,8 @@ export class ProjectResolver {
     if (!projectById)
       throw new Error("Please note, the project does not exist");
 
-    if (!projectById.private) return projectById;
+    if (!projectById.private || context.user?.role === "ADMIN")
+      return projectById;
 
     if (projectById.private && context.user == null)
       throw new Error(
@@ -155,9 +159,7 @@ export class ProjectResolver {
       throw new Error(
         "Access denied! You need to be authenticated to perform this action!"
     );
-    const project = await new ProjectsService().findByName(data.name);
-    if (project) throw new Error("This name of project is already in use!");
-    
+
     const newProject = await new ProjectsService().create(
       data,
       context?.user?.id

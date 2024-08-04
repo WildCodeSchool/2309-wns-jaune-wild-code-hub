@@ -1,13 +1,14 @@
 import { Grid, GridItem } from "@chakra-ui/react";
 import ProjectCard from "./ProjectCard";
-import { Project } from "@/types/graphql";
+import { User } from "@/types/graphql";
+import UserCard from "./UserCard";
 
-type GridProps = {
-  projects: Pick<Project, "id" | "category" | "name">[];
+type UsersGridProps = {
+  users: User[];
   admin ?: boolean;
 };
 
-export const ProjectsGrid = ({ projects, admin }: GridProps) => {
+export const UsersGrid = ({ users, admin }: UsersGridProps) => {
   return (
     <Grid
       templateColumns={{
@@ -37,18 +38,18 @@ export const ProjectsGrid = ({ projects, admin }: GridProps) => {
       }}
       paddingRight="1rem"
     >
-      {projects.map((project, id) => {
+      {users.map((user, id) => {
         return (
           <GridItem
-            key={project.id + id}
+            key={user.id + id}
             display={"flex"}
             justifyContent={"center"}
             height={"225px"}
           >
             { admin ?
-              <ProjectCard project={project} admin={true} />
+              <UserCard user={user} admin={true} />
             :
-              <ProjectCard project={project} />
+              <UserCard user={user} />
             }
           </GridItem>
         );

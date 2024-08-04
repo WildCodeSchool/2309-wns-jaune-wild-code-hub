@@ -1,5 +1,5 @@
 import { validate } from "class-validator";
-import { ILike, Like, Repository } from "typeorm";
+import { ILike, Repository } from "typeorm";
 import {
   CreateUserInput,
   ROLE,
@@ -20,8 +20,18 @@ export default class UsersService {
     this.db = datasource.getRepository(User);
   }
 
-  async list() {
-    return this.db.find();
+  async list(offset: number = 0, limit: number = 8) {
+    const [users, total] = await this.db.findAndCount({
+      skip: offset,
+      take: limit,
+    });
+
+    return {
+      users,
+      total,
+      offset,
+      limit,
+    };
   }
 
   async listByRole(role: ROLE) {

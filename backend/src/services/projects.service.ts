@@ -11,7 +11,6 @@ import {
 } from "../entities/usersProjectsAccesses.entity";
 import datasource from "../lib/db";
 import FilesService from "./files.service";
-import { File } from "../entities/file.entity";
 import UserProjectAccessesService from "./userProjectAccesses.service";
 import { User } from "../entities/user.entity";
 
@@ -21,9 +20,19 @@ export default class ProjectsService {
     this.db = datasource.getRepository(Project);
   }
 
-  async list() {
-    const projects = await this.db.find({ relations: ["files"] });
-    return projects;
+  async list(offset: number = 0, limit: number = 8) {
+    const [projects, total] = await this.db.findAndCount({
+      relations: ["files"],
+      skip: offset,
+      take: limit,
+    });
+
+    return {
+      projects,
+      total,
+      offset,
+      limit,
+    };
   }
 
   async findById(id: number) {
@@ -156,6 +165,10 @@ export default class ProjectsService {
   }
 
   async create(data: CreateProjectInput, userId: number) {
+
+    const project = await new ProjectsService().findByName(data.name);
+    if (project) throw new Error("This name of project is already in use!");
+    
     const newProject = this.db.create(data);
     const savedProject = await this.db.save(newProject);
     if (!savedProject)
@@ -185,7 +198,7 @@ export default class ProjectsService {
 
     const checkName = await this.findByName(data.name);
 
-    if (checkName) throw new Error("This project name is already taken!");
+    if (checkName && checkName.id != id) throw new Error("This project name is already!");
 
     const projectToSave = this.db.merge(projectToUpdate, {
       ...data,
