@@ -202,6 +202,14 @@ export type PaginatedProjects = {
   total: Scalars['Float']['output'];
 };
 
+export type PaginatedUsers = {
+  __typename?: 'PaginatedUsers';
+  limit: Scalars['Float']['output'];
+  offset: Scalars['Float']['output'];
+  total: Scalars['Float']['output'];
+  users: Array<User>;
+};
+
 export type Project = {
   __typename?: 'Project';
   category: Scalars['String']['output'];
@@ -235,7 +243,7 @@ export type Query = {
   listPublicProjects: PaginatedProjects;
   listPublicProjectsByName: Array<Project>;
   listPublicProjectsOwnedByUser: Array<UserAccessProjectOutput>;
-  listUsers: Array<User>;
+  listUsers: PaginatedUsers;
   listUsersAccessesProject: Array<FindAllInfoUserAccessesProject>;
   listUsersByPseudo: Array<User>;
   listUsersByRole: Array<User>;
@@ -344,6 +352,12 @@ export type QueryListPublicProjectsByNameArgs = {
 
 export type QueryListPublicProjectsOwnedByUserArgs = {
   id: Scalars['String']['input'];
+};
+
+
+export type QueryListUsersArgs = {
+  limit?: Scalars['Int']['input'];
+  offset?: Scalars['Int']['input'];
 };
 
 
@@ -517,6 +531,7 @@ export type ResolversTypes = ResolversObject<{
   Message: ResolverTypeWrapper<Message>;
   Mutation: ResolverTypeWrapper<{}>;
   PaginatedProjects: ResolverTypeWrapper<PaginatedProjects>;
+  PaginatedUsers: ResolverTypeWrapper<PaginatedUsers>;
   Project: ResolverTypeWrapper<Project>;
   Query: ResolverTypeWrapper<{}>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
@@ -548,6 +563,7 @@ export type ResolversParentTypes = ResolversObject<{
   Message: Message;
   Mutation: {};
   PaginatedProjects: PaginatedProjects;
+  PaginatedUsers: PaginatedUsers;
   Project: Project;
   Query: {};
   String: Scalars['String']['output'];
@@ -624,6 +640,14 @@ export type PaginatedProjectsResolvers<ContextType = any, ParentType extends Res
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
+export type PaginatedUsersResolvers<ContextType = any, ParentType extends ResolversParentTypes['PaginatedUsers'] = ResolversParentTypes['PaginatedUsers']> = ResolversObject<{
+  limit?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  offset?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  total?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  users?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
 export type ProjectResolvers<ContextType = any, ParentType extends ResolversParentTypes['Project'] = ResolversParentTypes['Project']> = ResolversObject<{
   category?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   created_at?: Resolver<ResolversTypes['DateTimeISO'], ParentType, ContextType>;
@@ -656,7 +680,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   listPublicProjects?: Resolver<ResolversTypes['PaginatedProjects'], ParentType, ContextType, RequireFields<QueryListPublicProjectsArgs, 'limit' | 'offset'>>;
   listPublicProjectsByName?: Resolver<Array<ResolversTypes['Project']>, ParentType, ContextType, RequireFields<QueryListPublicProjectsByNameArgs, 'name'>>;
   listPublicProjectsOwnedByUser?: Resolver<Array<ResolversTypes['UserAccessProjectOutput']>, ParentType, ContextType, RequireFields<QueryListPublicProjectsOwnedByUserArgs, 'id'>>;
-  listUsers?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>;
+  listUsers?: Resolver<ResolversTypes['PaginatedUsers'], ParentType, ContextType, RequireFields<QueryListUsersArgs, 'limit' | 'offset'>>;
   listUsersAccessesProject?: Resolver<Array<ResolversTypes['FindAllInfoUserAccessesProject']>, ParentType, ContextType, RequireFields<QueryListUsersAccessesProjectArgs, 'project_id'>>;
   listUsersByPseudo?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryListUsersByPseudoArgs, 'pseudo'>>;
   listUsersByRole?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryListUsersByRoleArgs, 'role'>>;
@@ -699,6 +723,7 @@ export type Resolvers<ContextType = any> = ResolversObject<{
   Message?: MessageResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   PaginatedProjects?: PaginatedProjectsResolvers<ContextType>;
+  PaginatedUsers?: PaginatedUsersResolvers<ContextType>;
   Project?: ProjectResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
