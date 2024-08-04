@@ -316,8 +316,6 @@ describe("Test for a new project", () => {
     });
 
     assert(response.body.kind === "single");
-    console.log(response.body.singleResult.data)
-    console.error("response?.body?.singleResult?.errors", response?.body?.singleResult?.errors)
     expect(response.body.singleResult.data?.listProjects.projects).toHaveLength(0);
   });
 
@@ -357,8 +355,6 @@ describe("Test for a new project", () => {
     });
 
     assert(response.body.kind === "single");
-    console.log(response.body.singleResult.data)
-    console.error("response?.body?.singleResult?.errors", response?.body?.singleResult?.errors)
     expect(response.body.singleResult.data?.listProjects.projects).toHaveLength(1);
   });
 
@@ -538,8 +534,6 @@ describe("Test for a new project", () => {
     });
 
     assert(response.body.kind === "single");
-    console.log(response.body.singleResult.data)
-    console.error("response?.body?.singleResult?.errors", response?.body?.singleResult?.errors)
     expect(response.body.singleResult.data?.listProjects.projects).toHaveLength(1);
   });
 
