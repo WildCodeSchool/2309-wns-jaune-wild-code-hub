@@ -27,7 +27,7 @@ import CommentIcon from "../Icons/CommentIcon";
 import HeartIcon from "../Icons/HeartIcon";
 import ShareIcon from "../Icons/ShareIcon";
 import SettingDeleteProject from "./Editor/SettingEditor/SettingDeleteProject";
-import { SetStateAction, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuery } from "@apollo/client";
 import { LIST_USERS_ACCESSES_PROJECT } from "@/requetes/queries/usersAccessesProjects.queries";
 import ShareEditor from "./Editor/ShareEditor/ShareEditor";

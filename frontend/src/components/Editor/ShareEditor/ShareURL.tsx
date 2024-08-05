@@ -10,10 +10,12 @@ import CustomToast from '@/components/ToastCustom/CustomToast';
 
 interface ShareURLProps {
   project: Project | null | Pick<Project, "id" | "category" | "name">;
+  admin?: boolean;
 }
 
 const ShareURL: React.FC<ShareURLProps> = ({
-  project
+  project,
+  admin,
 }) => {
 
   const { showAlert } = CustomToast();
@@ -21,7 +23,8 @@ const ShareURL: React.FC<ShareURLProps> = ({
 
   useEffect(() => {
     if (project) {
-      const url = `${window.location.origin}${window.location.pathname}`;
+      const url = 
+      admin ? `${window.location.origin}/editor/${project.id}` : `${window.location.origin}${window.location.pathname}`;
       setCurrentUrl(url);
     }
   }, [project]);

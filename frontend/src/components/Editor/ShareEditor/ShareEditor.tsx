@@ -85,29 +85,15 @@ const ShareEditor: React.FC<ShareEditorProps> = ({
             justifyContent="center"
             alignItems="center"
           >
-            
-            {
-              admin ?
-                <Tab
-                  _selected={{
-                    color: "primary",
-                    borderBottom: "2px solid primary",
-                  }}
-                  _focus={{ boxShadow: "none" }}
-                >
-                  Edit project
-                </Tab>
-              :
-                <Tab
-                _selected={{
-                  color: "primary",
-                  borderBottom: "2px solid primary",
-                }}
-                _focus={{ boxShadow: "none" }}
-                >
-                  Share URL
-                </Tab>
-            }
+            <Tab
+            _selected={{
+              color: "primary",
+              borderBottom: "2px solid primary",
+            }}
+            _focus={{ boxShadow: "none" }}
+            >
+              Share URL
+            </Tab>
             {checkOwner || admin ? (
               <Tab
                 _selected={{
@@ -155,7 +141,7 @@ const ShareEditor: React.FC<ShareEditorProps> = ({
           <Box>
             <TabPanels>
               <TabPanel>
-                <ShareURL project={project} />
+                <ShareURL project={project} admin={true} />
               </TabPanel>
               {checkOwner  || admin ? (
                 <TabPanel>
