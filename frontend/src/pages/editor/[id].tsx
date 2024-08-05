@@ -222,6 +222,7 @@ const Editor: NextPageWithLayout = () => {
                 code={code}
                 setFile={setFile}
                 file={file}
+                setProject={setProject}
               />
             </Panel>
             <PanelResizeHandle

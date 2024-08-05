@@ -43,25 +43,25 @@ const SettingManagement: React.FC<SettingManagementProps> = ({
     UpdateProjectMutationVariables
     >(UPDATE_PROJECT, {
     onCompleted: (data) => {
-        if (data?.updateProject?.success) {
-          setProject((prevProject) => {
-              if (prevProject) {
-                  return { ...prevProject, name: nameProject, private: privateProject };
-              }
-              return prevProject;
-          });
-          
-          showAlert("success", data?.updateProject?.message);
-          setIsSettingsModalOpen(false);
-        } else {
-          showAlert(
-            "error",
-            data?.updateProject?.message ? 
-            data?.updateProject?.message
-          :
-            "We are sorry, there seems to be an error with the server. Please try again later."
-          );
-        }
+      if (data?.updateProject?.success) {
+        setProject((prevProject) => {
+          if (prevProject) {
+              return { ...prevProject, name: nameProject, private: privateProject };
+          }
+          return prevProject;
+        });
+        
+        showAlert("success", data?.updateProject?.message);
+        setIsSettingsModalOpen(false);
+      } else {
+        showAlert(
+          "error",
+          data?.updateProject?.message ? 
+          data?.updateProject?.message
+        :
+          "We are sorry, there seems to be an error with the server. Please try again later."
+        );
+      }
     },
     onError(error) {
       showAlert(
