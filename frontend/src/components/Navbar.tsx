@@ -59,7 +59,7 @@ const Navbar = () => {
               {
                 role === "ADMIN" &&
                 <Button variant="secondary" onClick={() => router.push("/admin")}>
-                  Administrations
+                  Administration
                 </Button>
               }
               <IconButton

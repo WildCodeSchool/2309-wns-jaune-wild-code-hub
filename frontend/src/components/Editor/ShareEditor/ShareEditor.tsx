@@ -17,33 +17,31 @@ import ShareManagementPeople from "./ShareManagementPeople";
 import ShareListPeople from "./ShareListPeople";
 
 interface ShareEditorProps {
-  project: Project | null;
-  expectedOrigin: string | undefined;
+  project: Project | null | Pick<Project, "id" | "category" | "name">;
+  expectedOrigin?: string | undefined;
   users: FindAllInfoUserAccessesProject[] | null;
   setUsers: React.Dispatch<
     React.SetStateAction<FindAllInfoUserAccessesProject[] | null>
   >;
-  checkOwner: boolean;
+  checkOwner?: boolean;
+  admin?: boolean;
 }
 
 const ShareEditor: React.FC<ShareEditorProps> = ({
   project,
-  expectedOrigin,
   users,
   setUsers,
   checkOwner,
+  admin,
 }) => {
   
   const { showAlert } = CustomToast();
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
 
   const shareModalOpen: () => void = async () => {
-    if (window.location.origin !== expectedOrigin) return;
-    if (!project) {
-      showAlert("error", "Please wait while the project loads!");
-      return;
-    }
-
+    if (!admin)
+      if (!project)
+        return showAlert("error", "Please wait while the project loads!");
     setIsShareModalOpen(true);
   };
 
@@ -80,7 +78,7 @@ const ShareEditor: React.FC<ShareEditorProps> = ({
             >
               Share URL
             </Tab>
-            {checkOwner ? (
+            {checkOwner  || admin ? (
               <Tab
                 _selected={{
                   color: "primary",
@@ -101,7 +99,7 @@ const ShareEditor: React.FC<ShareEditorProps> = ({
                 List people
               </Tab>
             )}
-            {checkOwner && (
+            {checkOwner  || admin && (
               <Tab
                 _selected={{
                   color: "primary",
@@ -118,18 +116,28 @@ const ShareEditor: React.FC<ShareEditorProps> = ({
               <TabPanel>
                 <ShareURL project={project} />
               </TabPanel>
-              {checkOwner ? (
+              {checkOwner  || admin ? (
                 <TabPanel>
-                  <ShareAddPeople setUsers={setUsers} />
+                  {
+                    admin ?
+                      <ShareAddPeople setUsers={setUsers} project={project} admin={true} />
+                    :
+                      <ShareAddPeople setUsers={setUsers} project={project}/>
+                  }
                 </TabPanel>
               ) : (
                 <TabPanel>
-                  <ShareListPeople users={users} />
+                  <ShareListPeople users={users} admin={true} />
                 </TabPanel>
               )}
-              {checkOwner && (
+              {checkOwner || admin && (
                 <TabPanel>
-                  <ShareManagementPeople users={users} setUsers={setUsers} />
+                  {
+                    admin ? 
+                      <ShareManagementPeople users={users} setUsers={setUsers} admin={true} />
+                    :
+                      <ShareManagementPeople users={users} setUsers={setUsers} />
+                  }
                 </TabPanel>
               )}
             </TabPanels>

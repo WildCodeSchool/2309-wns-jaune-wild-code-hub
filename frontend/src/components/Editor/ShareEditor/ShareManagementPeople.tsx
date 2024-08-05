@@ -29,6 +29,7 @@ import GenericModal from '@/components/GenericModal';
 interface ShareManagementPeopleProps {
   users : FindAllInfoUserAccessesProject[] | null;
   setUsers: React.Dispatch<React.SetStateAction<FindAllInfoUserAccessesProject[] | null>>;
+  admin?: boolean;
 }
 
 interface MutationContext {
@@ -39,7 +40,8 @@ interface MutationContext {
 
 const ShareManagementPeople: React.FC<ShareManagementPeopleProps> = ({
   users,
-  setUsers
+  setUsers,
+  admin,
 }) => {
 
     const { showAlert } = CustomToast();

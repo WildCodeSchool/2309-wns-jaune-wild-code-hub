@@ -9,7 +9,7 @@ import {
 import CustomToast from '@/components/ToastCustom/CustomToast';
 
 interface ShareURLProps {
-  project: Project | null;
+  project: Project | null | Pick<Project, "id" | "category" | "name">;
 }
 
 const ShareURL: React.FC<ShareURLProps> = ({
