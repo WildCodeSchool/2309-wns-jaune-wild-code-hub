@@ -3,7 +3,6 @@ import { FindAllInfoUserAccessesProject } from "@/types/graphql";
 import { 
   Text,
   Box,
-  Select,
   List, 
   ListItem,
   useBreakpointValue,
@@ -14,10 +13,12 @@ import CustomToast from '@/components/ToastCustom/CustomToast';
 
 interface ShareListPeopleProps {
   users : FindAllInfoUserAccessesProject[] | null;
+  admin : boolean;
 }
 
 const ShareListPeople: React.FC<ShareListPeopleProps> = ({
-  users
+  users,
+  admin,
 }) => {
 
   const { showAlert } = CustomToast();
@@ -33,7 +34,7 @@ const ShareListPeople: React.FC<ShareListPeopleProps> = ({
 
   const next: () => void = (): void => {
     if(!users) 
-      return showAlert("error", "Please complete all fields in the form!");
+      return showAlert("error", "Application loading...");
     if (!(currentPage < Math.ceil(users?.length / userPerPage))) 
       return showAlert("error", "You are on the last page!");
     setCurrentPage(currentPage + 1);
@@ -41,7 +42,7 @@ const ShareListPeople: React.FC<ShareListPeopleProps> = ({
   
   const previous: () => void = (): void => {
     if(!users) 
-      return showAlert("error", "Please complete all fields in the form!");
+      return showAlert("error", "Application loading...");
     if (!(currentPage > 1)) 
       return showAlert("error", "You are on the first page!");
     setCurrentPage(currentPage - 1);

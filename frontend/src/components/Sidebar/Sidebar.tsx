@@ -13,8 +13,6 @@ import React from "react";
 
 import { usePathname } from "next/navigation";
 import MeSidebar from "./MeSidebarContent";
-
-import EditorSidebarContent from "./EditorSidebarContent";
 import ProfileSidebarContent from "./ProfileSidebarContent";
 
 import AdminSidebar from "./AdminSidebarContent";

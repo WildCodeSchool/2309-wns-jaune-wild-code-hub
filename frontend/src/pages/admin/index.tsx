@@ -106,6 +106,7 @@ const AdminProject: NextPageWithLayout = () => {
     );
   }
 };
+
 AdminProject.getLayout = function getLayout(page) {
   return <SidebarLayout>{page}</SidebarLayout>;
 };

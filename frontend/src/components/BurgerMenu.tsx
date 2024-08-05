@@ -113,7 +113,7 @@ const BurgerMenu = () => {
             {
               role === "ADMIN" &&
               <Button variant="secondary" onClick={() => router.push("/admin")}>
-                Administrations
+                Administration
               </Button>
             }
             <Button onClick={() => router.push("/auth/logout")}>

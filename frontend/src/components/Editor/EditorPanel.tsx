@@ -17,6 +17,7 @@ type EditorProps = {
   file: File | null;
   setCode: React.Dispatch<React.SetStateAction<string>>;
   setFile: React.Dispatch<React.SetStateAction<File | null>>;
+  setProject: React.Dispatch<React.SetStateAction<Project | null>>;
 };
 
 const EditorPanel = ({
@@ -31,6 +32,7 @@ const EditorPanel = ({
   code,
   setFile,
   file,
+  setProject
 }: EditorProps) => {
 
   const fileBarRef = useRef<HTMLDivElement | null>(null);
@@ -45,16 +47,54 @@ const EditorPanel = ({
         return prevOpenFiles;
       });
     }
-  }, [file, setOpenFiles, setFile, setCode, openFiles]);
+  }, [file, setOpenFiles, setFile, setCode]);
 
   const handleCodeChange: (newCode: string) => void = (newCode: string): void => {
-    setCode(newCode);
-    setData((prevData) =>
-      prevData.map((f) => (f.id === file?.id ? { ...f, content: newCode } : f))
+    setData((prevFiles) =>
+      prevFiles.map((f) =>
+        f.id === file?.id ? { ...f, content: newCode } : f
+      )
     );
-  };
+  
+    setProject((prevProject) => {
+      if (prevProject) {
+        const updatedFiles = prevProject.files.map((f) =>
+          f.id === file?.id ? { ...f, content: newCode } : f
+        );
+        return { ...prevProject, files: updatedFiles };
+      }
+      return prevProject;
+    });
+  
+    setCode(newCode);
 
+    setFile((prevFile) => {
+      if (prevFile && prevFile.id === file?.id) {
+        console.log('Updating file content:', newCode);
+        return { ...prevFile, content: newCode };
+      }
+      return prevFile;
+    });
+  };
+  
   const handleFileClose: (fileId: number) => void = (fileId: number): void => {
+    setData((prevFiles) => {
+      const updatedFiles = prevFiles.map((f) => 
+        +f.id === fileId ? { ...f, content:code } : f
+      );
+      return updatedFiles;
+    });
+
+    setProject((prevProject) => {
+      if (prevProject) {
+        const updatedFiles = prevProject.files.map((f) => 
+          +f.id === fileId  ? { ...f, content:code } : f
+        );
+        return { ...prevProject, files: updatedFiles };
+      }
+      return prevProject;
+    });
+
     setOpenFiles((prevOpenFiles) => {
       const newOpenFiles = prevOpenFiles.filter((f) => +f.id !== fileId);
       if (newOpenFiles.length === 0) {
@@ -74,6 +114,35 @@ const EditorPanel = ({
       fileBarRef.current.scrollLeft += deltaY;
     }
   };
+
+  const toto = (openFile : any) => {
+    console.log("cdl,dd,d,d")
+    setData((prevFiles) => {
+      const updatedFiles = prevFiles.map((f) => 
+        f.id === file?.id ? { ...f, content:code } : f
+      );
+      return updatedFiles;
+    });
+
+    setProject((prevProject) => {
+      if (prevProject) {
+        const updatedFiles = prevProject.files.map((f) => 
+          f.id === file?.id ? { ...f, content:code } : f
+        );
+        return { ...prevProject, files: updatedFiles };
+      }
+      return prevProject;
+    });
+
+    setOpenFiles((prevOpenFiles) => {
+      return prevOpenFiles.map((f) =>
+        f.id === file?.id ? { ...f, content: code } : f
+      );
+    });
+
+    setFile(openFile);
+
+  }
   
   return (
     <>
@@ -101,7 +170,7 @@ const EditorPanel = ({
                 fileName={`${openFile.name}.${openFile.extension}`}
                 onClose={() => handleFileClose(+openFile.id)}
                 isSelected={openFile.id === file?.id}
-                onClick={() => setFile(openFile)}
+                onClick={() => toto(openFile)}
               />
             ))}
         </Flex>

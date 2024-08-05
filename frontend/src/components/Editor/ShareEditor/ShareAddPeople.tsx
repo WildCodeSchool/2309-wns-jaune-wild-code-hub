@@ -3,6 +3,7 @@ import {
   FindAllInfoUserAccessesProject,
   ListUsersByPseudoQuery,
   ListUsersByPseudoQueryVariables,
+  Project,
   User
 } from "@/types/graphql";
 import { Button, Text, Box, Select } from "@chakra-ui/react";
@@ -20,6 +21,8 @@ import { useRouter } from "next/router";
 
 interface ShareAddPeopleProps {
   setUsers: React.Dispatch<React.SetStateAction<FindAllInfoUserAccessesProject[] | null>>;
+  project: Project | null | Pick<Project, "id" | "category" | "name">;
+  admin?: boolean;
 }
 
 interface UserOption {
@@ -28,7 +31,9 @@ interface UserOption {
 }
 
 const ShareAddPeople: React.FC<ShareAddPeopleProps> = ({
-  setUsers
+  setUsers,
+  project,
+  admin,
 }) => {
 
   const router = useRouter();
@@ -105,14 +110,14 @@ const ShareAddPeople: React.FC<ShareAddPeopleProps> = ({
   }
 
   const handleClick: () => void = () => {
-    if (!selectedUser || role.length === 0 || !router.query.id || typeof +router.query.id !== "number") {
+    if (!selectedUser || role.length === 0 || !project) {
       return showAlert("error", "Please complete all fields in the form!");
     }
     addAccessProject({
       variables: {
         data: {
           user_id: +selectedUser.value,
-          project_id: +router.query.id,
+          project_id: +project?.id,
           role: role
         }
       },
@@ -192,6 +197,10 @@ const ShareAddPeople: React.FC<ShareAddPeopleProps> = ({
           <option value="">Select role</option>
           <option value="EDITOR">Editor</option>
           <option value="VIEWER">Viewer</option>
+          {
+            admin &&
+            <option value="OWNER">Owner</option>
+          }
         </Select>
       </Box>
       <Box display="flex" justifyContent="center" mt={10} width="100%" maxWidth="400px">

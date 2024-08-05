@@ -45,32 +45,32 @@ const SettingDeleteProject: React.FC<SettingDeleteProjectProps> = ({
     DeleteProjectMutationVariables
     >(DELETE_PROJECT, {
     onCompleted: (data) => {
-        if (data?.deleteProject?.success) {
-            showAlert("success", data?.deleteProject?.message);
-            if (setIsSettingsModalOpen)
-              setIsSettingsModalOpen(false);
-            if (admin)
-              router.push("/admin")
-            else 
-              router.push('/me')
-        } else {
-            showAlert(
-                "error",
-                data?.deleteProject?.message ? 
-                data?.deleteProject?.message
-                :
-                "We are sorry, there seems to be an error with the server. Please try again later."
-            );
-        }
+      if (data?.deleteProject?.success) {
+        showAlert("success", data?.deleteProject?.message);
+        if (setIsSettingsModalOpen)
+          setIsSettingsModalOpen(false);
+        if (admin)
+          router.push("/admin")
+        else 
+          router.push('/me')
+      } else {
+        showAlert(
+          "error",
+          data?.deleteProject?.message ? 
+          data?.deleteProject?.message
+          :
+          "We are sorry, there seems to be an error with the server. Please try again later."
+        );
+      }
     },
     onError(error) {
-        showAlert(
-        'error',
-        error.message ?
-            error.message
-        :
-            "We are sorry, there seems to be an error with the server. Please try again later."
-        );
+      showAlert(
+      'error',
+      error.message ?
+        error.message
+      :
+        "We are sorry, there seems to be an error with the server. Please try again later."
+      );
     }
     });
 
@@ -106,17 +106,14 @@ const SettingDeleteProject: React.FC<SettingDeleteProjectProps> = ({
               variant={"ghost"}
               icon={<DeleteIcon boxSize={3} />}
               onClick={openModal}
-              zIndex={1}
-              mt={2}
-              mr={2}
             />
           </Tooltip>
         :
-        <Box display="flex" justifyContent="center" mt={3}>
+          <Box display="flex" justifyContent="center" mt={3}>
             <Button type="button" variant="outline" onClick={openModal}>
                 Delete Project
             </Button>
-        </Box>
+          </Box>
       }
       <GenericModal isOpen={isModalOpen} onClose={closeModal} title="Deleting  project">
         <Box display="flex" justifyContent="center" alignItems="center" height="100%">

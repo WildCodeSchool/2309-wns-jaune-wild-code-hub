@@ -22,7 +22,7 @@ export default class ProjectsService {
 
   async list(offset: number = 0, limit: number = 8) {
     const [projects, total] = await this.db.findAndCount({
-      relations: ["files"],
+      relations: ["files", "usersProjectsAccesses"],
       skip: offset,
       take: limit,
     });
