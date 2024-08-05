@@ -3,7 +3,6 @@ import { FindAllInfoUserAccessesProject } from "@/types/graphql";
 import { 
   Text,
   Box,
-  Select,
   List, 
   ListItem,
   useBreakpointValue,

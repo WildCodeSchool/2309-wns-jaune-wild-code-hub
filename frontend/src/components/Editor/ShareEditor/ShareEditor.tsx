@@ -9,12 +9,15 @@ import {
   TabPanels,
   Tab,
   TabPanel,
+  Tooltip,
+  IconButton,
 } from "@chakra-ui/react";
 import CustomToast from "@/components/ToastCustom/CustomToast";
 import ShareURL from "./ShareURL";
 import ShareAddPeople from "./ShareAddPeople";
 import ShareManagementPeople from "./ShareManagementPeople";
 import ShareListPeople from "./ShareListPeople";
+import { EditIcon } from "@chakra-ui/icons";
 
 interface ShareEditorProps {
   project: Project | null | Pick<Project, "id" | "category" | "name">;
@@ -47,6 +50,18 @@ const ShareEditor: React.FC<ShareEditorProps> = ({
 
   return (
     <>
+    {
+      admin ? 
+      <Tooltip label={"Management project"} bgColor={"grey"} color={"text"}>
+      <IconButton
+        size={"xs"}
+        aria-label="Management project"
+        variant={"ghost"}
+        icon={<EditIcon boxSize={3} />}
+        onClick={shareModalOpen}
+      />
+    </Tooltip>
+      : 
       <Button
         type="button"
         variant="secondary"
@@ -56,11 +71,12 @@ const ShareEditor: React.FC<ShareEditorProps> = ({
       >
         Share
       </Button>
+    }
 
       <GenericModal
         isOpen={isShareModalOpen}
         onClose={() => setIsShareModalOpen(false)}
-        title="Share project"
+        title={admin ? "Mangement project" : "Share project"}
       >
         <Tabs>
           <TabList
@@ -69,16 +85,30 @@ const ShareEditor: React.FC<ShareEditorProps> = ({
             justifyContent="center"
             alignItems="center"
           >
-            <Tab
-              _selected={{
-                color: "primary",
-                borderBottom: "2px solid primary",
-              }}
-              _focus={{ boxShadow: "none" }}
-            >
-              Share URL
-            </Tab>
-            {checkOwner  || admin ? (
+            
+            {
+              admin ?
+                <Tab
+                  _selected={{
+                    color: "primary",
+                    borderBottom: "2px solid primary",
+                  }}
+                  _focus={{ boxShadow: "none" }}
+                >
+                  Edit project
+                </Tab>
+              :
+                <Tab
+                _selected={{
+                  color: "primary",
+                  borderBottom: "2px solid primary",
+                }}
+                _focus={{ boxShadow: "none" }}
+                >
+                  Share URL
+                </Tab>
+            }
+            {checkOwner || admin ? (
               <Tab
                 _selected={{
                   color: "primary",
@@ -99,7 +129,18 @@ const ShareEditor: React.FC<ShareEditorProps> = ({
                 List people
               </Tab>
             )}
-            {checkOwner  || admin && (
+            {checkOwner && (
+              <Tab
+                _selected={{
+                  color: "primary",
+                  borderBottom: "2px solid primary",
+                }}
+                _focus={{ boxShadow: "none" }}
+              >
+                Management
+              </Tab>
+            )}
+            {admin && (
               <Tab
                 _selected={{
                   color: "primary",
@@ -122,7 +163,7 @@ const ShareEditor: React.FC<ShareEditorProps> = ({
                     admin ?
                       <ShareAddPeople setUsers={setUsers} project={project} admin={true} />
                     :
-                      <ShareAddPeople setUsers={setUsers} project={project}/>
+                      <ShareAddPeople setUsers={setUsers} project={project} />
                   }
                 </TabPanel>
               ) : (
@@ -130,14 +171,14 @@ const ShareEditor: React.FC<ShareEditorProps> = ({
                   <ShareListPeople users={users} admin={true} />
                 </TabPanel>
               )}
-              {checkOwner || admin && (
+              {checkOwner && (
                 <TabPanel>
-                  {
-                    admin ? 
-                      <ShareManagementPeople users={users} setUsers={setUsers} admin={true} />
-                    :
-                      <ShareManagementPeople users={users} setUsers={setUsers} />
-                  }
+                  <ShareManagementPeople users={users} setUsers={setUsers} project={project}  />
+                </TabPanel>
+              )}
+              {admin && (
+                <TabPanel>
+                  <ShareManagementPeople users={users} setUsers={setUsers} project={project} admin={true} />
                 </TabPanel>
               )}
             </TabPanels>

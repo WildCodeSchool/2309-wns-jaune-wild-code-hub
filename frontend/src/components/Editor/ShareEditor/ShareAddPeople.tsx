@@ -21,7 +21,7 @@ import { useRouter } from "next/router";
 
 interface ShareAddPeopleProps {
   setUsers: React.Dispatch<React.SetStateAction<FindAllInfoUserAccessesProject[] | null>>;
-  project?: Project | null | Pick<Project, "id" | "category" | "name">;
+  project: Project | null | Pick<Project, "id" | "category" | "name">;
   admin?: boolean;
 }
 
@@ -197,6 +197,10 @@ const ShareAddPeople: React.FC<ShareAddPeopleProps> = ({
           <option value="">Select role</option>
           <option value="EDITOR">Editor</option>
           <option value="VIEWER">Viewer</option>
+          {
+            admin &&
+            <option value="OWNER">Owner</option>
+          }
         </Select>
       </Box>
       <Box display="flex" justifyContent="center" mt={10} width="100%" maxWidth="400px">

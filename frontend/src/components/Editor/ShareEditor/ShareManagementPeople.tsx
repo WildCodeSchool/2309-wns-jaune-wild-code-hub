@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FindAllInfoUserAccessesProject } from "@/types/graphql";
+import { FindAllInfoUserAccessesProject, Project } from "@/types/graphql";
 import { 
   Text,
   Box,
@@ -23,13 +23,13 @@ import {
   UPDATE_USERS_ACCESSES_PROJECTS,
   DELETE_USERS_ACCESSES_PROJECTS,
 } from "@/requetes/mutations/usersAccessesProjects.mutations";
-import { useRouter } from "next/router";
 import GenericModal from '@/components/GenericModal';
-
+import { useRouter } from "next/navigation";
 interface ShareManagementPeopleProps {
   users : FindAllInfoUserAccessesProject[] | null;
   setUsers: React.Dispatch<React.SetStateAction<FindAllInfoUserAccessesProject[] | null>>;
   admin?: boolean;
+  project: Project | null | Pick<Project, "id" | "category" | "name">;
 }
 
 interface MutationContext {
@@ -42,10 +42,10 @@ const ShareManagementPeople: React.FC<ShareManagementPeopleProps> = ({
   users,
   setUsers,
   admin,
+  project
 }) => {
 
     const { showAlert } = CustomToast();
-    const router = useRouter();
   
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
     const [userToDelete, setUserToDelete] = useState<{ id: number, pseudo: string | undefined } | null>(null);
@@ -53,8 +53,11 @@ const ShareManagementPeople: React.FC<ShareManagementPeopleProps> = ({
     const userPerPage: number = 4;
     const indexLast: number = currentPage * userPerPage;
     const indexFirst: number = indexLast - userPerPage;
+    const router = useRouter();
 
     const pagination = () : FindAllInfoUserAccessesProject[] | undefined => {
+      if (admin)
+        return users?.slice(indexFirst, indexLast);
       const filterOwner = users?.filter((user: FindAllInfoUserAccessesProject) => user.role !== "OWNER");
       return filterOwner?.slice(indexFirst, indexLast);
     };
@@ -119,7 +122,7 @@ const ShareManagementPeople: React.FC<ShareManagementPeopleProps> = ({
         const updatedUsers = (users ?? []).map(user => 
           user.user_id === mutationContext.id ? { ...user, role: mutationContext.role } : user
         );
-        setUsers(updatedUsers);
+        setUsers(updatedUsers);  // Met à jour l'état local
         showAlert("success", `Changed role to ${mutationContext.role} for user with pseudo: ${mutationContext.pseudo}`);
       } else {
         showAlert("error", data.updateAccessProject.message);
@@ -147,12 +150,12 @@ const ShareManagementPeople: React.FC<ShareManagementPeopleProps> = ({
   };
 
   const confirmDelete: () => void = () => {
-    if (userToDelete && router.query.id) {
+    if (userToDelete && project) {
       deleteAccessProject({
         variables: {
           data: {
             user_id: userToDelete.id,
-            project_id: +router.query.id,
+            project_id: +project.id,
           }
         },
         context: {
@@ -167,14 +170,14 @@ const ShareManagementPeople: React.FC<ShareManagementPeopleProps> = ({
   };
 
   const handleRoleChange: (id: number, role: string, pseudo: string | undefined) => void = (id: number, role: string, pseudo: string | undefined) => {
-    if (!users || !router.query.id || !pseudo || !role)
+    if (!users || !project || !pseudo || !role)
       return showAlert("error", "Please wait while the project loads!");
     updateAccessProject({
       variables: {
         data: {
           user_id: id,
           role: role,
-          project_id: +router.query.id,
+          project_id: +project.id,
         }
       },
       context: {
@@ -214,6 +217,7 @@ const ShareManagementPeople: React.FC<ShareManagementPeopleProps> = ({
                   >
                     <option value="EDITOR" style={{ color :"dark"}}>Editor</option>
                     <option value="VIEWER" style={{ color :"dark"}}>Viewer</option>
+                    {admin && <option value="OWNER">Owner</option>}
                   </Select>
                 <CloseIcon onClick={() => openModal(user.user_id, user.user?.pseudo)} cursor={"pointer"} />
               </ListItem>
