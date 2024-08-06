@@ -14,7 +14,6 @@ import * as argon2 from "argon2";
 import { SignJWT } from "jose";
 import { MyContext } from "..";
 import Cookies from "cookies";
-import { Project } from "../entities/project.entity";
 import {
   emailRegex,
   pseudoRegex,

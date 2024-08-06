@@ -1,9 +1,10 @@
-import { Repository } from "typeorm";
+import { In, Repository } from "typeorm";
 import datasource from "../lib/db";
 import {
   UsersProjectsAccesses,
   CreateUserProjectAccessesInput,
   UpdateUserProjectAccessesInput,
+  UserRole,
 } from "../entities/usersProjectsAccesses.entity";
 import { validate } from "class-validator";
 
@@ -67,5 +68,33 @@ export default class UserProjectAccessesService {
     }
 
     return await this.db.save(userToDeleteAccessesProjectToSave);
+  }
+
+  async ListPublicOwnedByUser(userId: number) {
+    const userAccesses = await this.db.find({
+      where: {
+        user_id: userId,
+        role: UserRole.OWNER,
+        project: { private: false },
+      },
+      relations: ["project.usersProjectsAccesses"],
+    });
+
+    return userAccesses;
+  }
+
+  async ListByUserWithRole(userId: number, userRole?: UserRole[]) {
+    const whereConditions = userRole
+      ? {
+          role: In(userRole),
+          user_id: userId,
+        }
+      : { user_id: userId };
+    const userAccesses = await this.db.find({
+      where: whereConditions,
+      relations: ["project.usersProjectsAccesses"],
+    });
+
+    return userAccesses;
   }
 }

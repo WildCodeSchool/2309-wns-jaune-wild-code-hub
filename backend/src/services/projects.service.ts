@@ -1,5 +1,5 @@
 import { validate } from "class-validator";
-import { getRepository, ILike, In, Like, Repository } from "typeorm";
+import { ILike, Like, Repository } from "typeorm";
 import {
   CreateProjectInput,
   Project,
@@ -99,40 +99,7 @@ export default class ProjectsService {
     });
     return projects;
   }
-  async ListByUserWithRole(userId: number, userRole?: UserRole[]) {
-    const userProjectAccessesRepository = datasource.getRepository(
-      UsersProjectsAccesses
-    );
-    const whereConditions = userRole
-      ? {
-          role: In(userRole),
-          user_id: userId,
-        }
-      : { user_id: userId };
-    const userAccesses = await userProjectAccessesRepository.find({
-      where: whereConditions,
-      relations: ["project.usersProjectsAccesses"],
-    });
 
-    return userAccesses;
-  }
-
-  async ListPublicOwnedByUser(userId: number) {
-    const userProjectAccessesRepository = datasource.getRepository(
-      UsersProjectsAccesses
-    );
-
-    const userAccesses = await userProjectAccessesRepository.find({
-      where: {
-        user_id: userId,
-        role: UserRole.OWNER,
-        project: { private: false },
-      },
-      relations: ["project.usersProjectsAccesses"],
-    });
-
-    return userAccesses;
-  }
 
   async listProjectsPublicLikeByUser(userId: number) {
     const userRepository = datasource.getRepository(User);

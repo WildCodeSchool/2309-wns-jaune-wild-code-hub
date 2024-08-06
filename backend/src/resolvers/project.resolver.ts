@@ -17,8 +17,6 @@ import { Message, User } from "../entities/user.entity";
 import { MyContext } from "../index";
 import {
   FindAllInfoUserAccessesProject,
-  UserAccessProjectOutput,
-  UserRole,
 } from "../entities/usersProjectsAccesses.entity";
 import ProjectsService from "../services/projects.service";
 import UserProjectAccessesService from "../services/userProjectAccesses.service";
@@ -112,25 +110,6 @@ export class ProjectResolver {
       throw new Error("You must be a site administrator to do this action!");
 
     const projects = await new ProjectsService().listByUserId(+id);
-    return projects;
-  }
-
-  @Authorized()
-  @Query(() => [UserAccessProjectOutput])
-  async listProjectsByUserWithRole(
-    @Arg("id") id: string,
-    @Arg("userRole", () => [String], { nullable: true }) userRole?: UserRole[]
-  ) {
-    const projects = await new ProjectsService().ListByUserWithRole(
-      +id,
-      userRole
-    );
-    return projects;
-  }
-
-  @Query(() => [UserAccessProjectOutput])
-  async listPublicProjectsOwnedByUser(@Arg("id") id: string) {
-    const projects = await new ProjectsService().ListPublicOwnedByUser(+id);
     return projects;
   }
 

@@ -1,4 +1,4 @@
-import { In, Like, Repository } from "typeorm";
+import { Repository } from "typeorm";
 import datasource from "../lib/db";
 import {
   File,
