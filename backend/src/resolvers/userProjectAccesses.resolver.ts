@@ -8,6 +8,8 @@ import {
   UpdateUserProjectAccessesInput,
   FindAllInfoUserAccessesProject,
   UserAccessProjectResponse,
+  UserAccessProjectOutput,
+  UserRole,
 } from "../entities/usersProjectsAccesses.entity";
 import { Project } from "../entities/project.entity";
 
@@ -134,6 +136,25 @@ export class UserProjectAccessesResolver {
   async listAccesProject(@Arg("userId") userId: number) {
     const listAccesProject = await new UserProjectAccessesService().findUsersByAccessesProject(userId);
     return listAccesProject;
+  }
+
+  @Query(() => [UserAccessProjectOutput])
+  async listPublicProjectsOwnedByUser(@Arg("id") id: string) {
+    const projects = await new UserProjectAccessesService().ListPublicOwnedByUser(+id);
+    return projects;
+  }
+
+  @Authorized()
+  @Query(() => [UserAccessProjectOutput])
+  async listProjectsByUserWithRole(
+    @Arg("id") id: string,
+    @Arg("userRole", () => [String], { nullable: true }) userRole?: UserRole[]
+  ) {
+    const projects = await new UserProjectAccessesService().ListByUserWithRole(
+      +id,
+      userRole
+    );
+    return projects;
   }
 
 }
