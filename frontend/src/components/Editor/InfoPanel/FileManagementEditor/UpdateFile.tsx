@@ -67,7 +67,6 @@ const UpdateFile : React.FC<UpdateFileProps> = ({
         return newOpenFiles;
       });
 
-
       setData((prevFiles) => {
         const updatedFiles = prevFiles.map((f) => 
           f.id === file.id ? { ...f, name: generateLanguage(nameFile, extentionFile).name, extension: generateLanguage(nameFile, extentionFile).extension, language : generateLanguage(nameFile, extentionFile).language } : f

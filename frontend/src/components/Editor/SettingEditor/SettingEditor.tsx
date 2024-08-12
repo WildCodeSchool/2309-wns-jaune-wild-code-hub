@@ -12,6 +12,7 @@ interface SettingEditorProps {
   setProject: React.Dispatch<React.SetStateAction<Project | null>>;
   checkOwner: boolean;
   users: FindAllInfoUserAccessesProject[] | null;
+  admin?: boolean
 }
 
 const SettingEditor: React.FC<SettingEditorProps> = ({

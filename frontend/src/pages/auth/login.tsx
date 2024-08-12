@@ -39,7 +39,13 @@ const Login = () => {
         },
         onError: (error) => {
             console.log(error);
-            showAlert("error", "We are sorry, there seems to be an error with the server. Please try again later.")
+            showAlert(
+                'error',
+                error.message ?
+                  error.message
+                :
+                  "We are sorry, there seems to be an error with the server. Please try again later."
+            );
           },
     });
 

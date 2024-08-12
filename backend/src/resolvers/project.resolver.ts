@@ -17,8 +17,6 @@ import { Message, User } from "../entities/user.entity";
 import { MyContext } from "../index";
 import {
   FindAllInfoUserAccessesProject,
-  UserAccessProjectOutput,
-  UserRole,
 } from "../entities/usersProjectsAccesses.entity";
 import ProjectsService from "../services/projects.service";
 import UserProjectAccessesService from "../services/userProjectAccesses.service";
@@ -26,10 +24,13 @@ import UserProjectAccessesService from "../services/userProjectAccesses.service"
 @Resolver()
 export class ProjectResolver {
 
-
-  @Query(() => [Project])
-  async listProjects() {
-    const projects = await new ProjectsService().list();
+  @Authorized(["ADMIN"])
+  @Query(() => PaginatedProjects)
+  async listProjects(
+    @Arg("offset", () => Int, { defaultValue: 0 }) offset: number,
+    @Arg("limit", () => Int, { defaultValue: 8 }) limit: number
+  ) {
+    const projects = await new ProjectsService().list(offset, limit);
     return projects;
   }
 
@@ -46,7 +47,8 @@ export class ProjectResolver {
     if (!projectById)
       throw new Error("Please note, the project does not exist");
 
-    if (!projectById.private) return projectById;
+    if (!projectById.private || context.user?.role === "ADMIN")
+      return projectById;
 
     if (projectById.private && context.user == null)
       throw new Error(
@@ -111,25 +113,6 @@ export class ProjectResolver {
     return projects;
   }
 
-  @Authorized()
-  @Query(() => [UserAccessProjectOutput])
-  async listProjectsByUserWithRole(
-    @Arg("id") id: string,
-    @Arg("userRole", () => [String], { nullable: true }) userRole?: UserRole[]
-  ) {
-    const projects = await new ProjectsService().ListByUserWithRole(
-      +id,
-      userRole
-    );
-    return projects;
-  }
-
-  @Query(() => [UserAccessProjectOutput])
-  async listPublicProjectsOwnedByUser(@Arg("id") id: string) {
-    const projects = await new ProjectsService().ListPublicOwnedByUser(+id);
-    return projects;
-  }
-
   @Query(() => [Project])
   async listProjectsPublicLikeByUser(@Arg("userID") userID: number) {
     const projects = await new ProjectsService().listProjectsPublicLikeByUser(userID);
@@ -155,9 +138,7 @@ export class ProjectResolver {
       throw new Error(
         "Access denied! You need to be authenticated to perform this action!"
     );
-    const project = await new ProjectsService().findByName(data.name);
-    if (project) throw new Error("This name of project is already in use!");
-    
+
     const newProject = await new ProjectsService().create(
       data,
       context?.user?.id
