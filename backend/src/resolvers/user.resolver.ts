@@ -149,6 +149,15 @@ export class UserResolver {
 
     if (ctx.user.role !== "ADMIN" && data.id != ctx.user.id)
       throw new Error("You must be a site administrator to do this action!"); 
+    
+    if (ctx.user.role !== "ADMIN" && data?.role)
+      throw new Error("You do not have the right to change your role!"); 
+
+    if (ctx.user.role !== "ADMIN" && data?.ban)
+      throw new Error("You do not have the right to ban or unban a user!");
+
+    if (ctx.user.role !== "ADMIN" && data?.run_counter)
+      throw new Error("You do not have the right to change the value of the number of runs carried out over the last 24 hours!"); 
 
     const { id, ...otherData } = data;
     if (otherData.password) {

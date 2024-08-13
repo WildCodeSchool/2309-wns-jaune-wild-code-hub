@@ -27,7 +27,6 @@ const LikedProjects: NextPageWithLayout = () => {
           setProjects(data.listLikeProject);
         },
       });
-      // data?.listLikeProject && setProjects(data?.listLikeProject);
     }
   }, [userId, getProjects, data]);
 
