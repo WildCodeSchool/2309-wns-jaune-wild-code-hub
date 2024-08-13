@@ -1,5 +1,5 @@
 import { validate } from "class-validator";
-import { getRepository, ILike, In, Like, Repository } from "typeorm";
+import { ILike, Like, Repository } from "typeorm";
 import {
   CreateProjectInput,
   Project,
@@ -11,7 +11,6 @@ import {
 } from "../entities/usersProjectsAccesses.entity";
 import datasource from "../lib/db";
 import FilesService from "./files.service";
-import { File } from "../entities/file.entity";
 import UserProjectAccessesService from "./userProjectAccesses.service";
 import { User } from "../entities/user.entity";
 
@@ -21,9 +20,19 @@ export default class ProjectsService {
     this.db = datasource.getRepository(Project);
   }
 
-  async list() {
-    const projects = await this.db.find({ relations: ["files"] });
-    return projects;
+  async list(offset: number = 0, limit: number = 8) {
+    const [projects, total] = await this.db.findAndCount({
+      relations: ["files", "usersProjectsAccesses"],
+      skip: offset,
+      take: limit,
+    });
+
+    return {
+      projects,
+      total,
+      offset,
+      limit,
+    };
   }
 
   async findById(id: number) {
@@ -90,40 +99,7 @@ export default class ProjectsService {
     });
     return projects;
   }
-  async ListByUserWithRole(userId: number, userRole?: UserRole[]) {
-    const userProjectAccessesRepository = datasource.getRepository(
-      UsersProjectsAccesses
-    );
-    const whereConditions = userRole
-      ? {
-          role: In(userRole),
-          user_id: userId,
-        }
-      : { user_id: userId };
-    const userAccesses = await userProjectAccessesRepository.find({
-      where: whereConditions,
-      relations: ["project.usersProjectsAccesses"],
-    });
 
-    return userAccesses;
-  }
-
-  async ListPublicOwnedByUser(userId: number) {
-    const userProjectAccessesRepository = datasource.getRepository(
-      UsersProjectsAccesses
-    );
-
-    const userAccesses = await userProjectAccessesRepository.find({
-      where: {
-        user_id: userId,
-        role: UserRole.OWNER,
-        project: { private: false },
-      },
-      relations: ["project.usersProjectsAccesses"],
-    });
-
-    return userAccesses;
-  }
 
   async listProjectsPublicLikeByUser(userId: number) {
     const userRepository = datasource.getRepository(User);
@@ -156,6 +132,10 @@ export default class ProjectsService {
   }
 
   async create(data: CreateProjectInput, userId: number) {
+
+    const project = await new ProjectsService().findByName(data.name);
+    if (project) throw new Error("This name of project is already in use!");
+    
     const newProject = this.db.create(data);
     const savedProject = await this.db.save(newProject);
     if (!savedProject)
@@ -185,7 +165,7 @@ export default class ProjectsService {
 
     const checkName = await this.findByName(data.name);
 
-    if (checkName) throw new Error("This project name is already taken!");
+    if (checkName && checkName.id != id) throw new Error("This project name is already!");
 
     const projectToSave = this.db.merge(projectToUpdate, {
       ...data,

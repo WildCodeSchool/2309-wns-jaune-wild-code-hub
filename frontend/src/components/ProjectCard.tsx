@@ -1,7 +1,9 @@
 import {
+  FindAllInfoUserAccessesProject,
   Project,
   useCountLikesPerProjectQuery,
   useFindProjectOwnerQuery,
+  User,
 } from "@/types/graphql";
 import NextLink from "next/link";
 
@@ -24,12 +26,18 @@ import {
 import CommentIcon from "../Icons/CommentIcon";
 import HeartIcon from "../Icons/HeartIcon";
 import ShareIcon from "../Icons/ShareIcon";
+import SettingDeleteProject from "./Editor/SettingEditor/SettingDeleteProject";
+import { useEffect, useState } from "react";
+import { useQuery } from "@apollo/client";
+import { LIST_USERS_ACCESSES_PROJECT } from "@/requetes/queries/usersAccessesProjects.queries";
+import ShareEditor from "./Editor/ShareEditor/ShareEditor";
 
 type Props = {
   project: Pick<Project, "id" | "category" | "name">;
+  admin ?: boolean;
 };
 
-const ProjectCard = ({ project }: Props) => {
+const ProjectCard = ({ project, admin }: Props) => {
   const { data: { countLikesPerProject: likeCount } = {} } =
     useCountLikesPerProjectQuery({
       variables: {
@@ -42,6 +50,21 @@ const ProjectCard = ({ project }: Props) => {
         projectId: project.id,
       },
     });
+
+    
+    const userData = useQuery(LIST_USERS_ACCESSES_PROJECT, {
+      variables: { projectId: project ? +project.id : null },
+    });
+
+    const [users, setUsers] = useState<FindAllInfoUserAccessesProject[] | null>(null)
+
+
+    useEffect(() => {
+      if (userData?.data?.listUsersAccessesProject && admin) {
+        console.log(userData)
+        setUsers(userData?.data?.listUsersAccessesProject);
+      }
+    }, [userData, admin]);
 
   return (
     <LinkBox
@@ -62,9 +85,28 @@ const ProjectCard = ({ project }: Props) => {
           backgroundColor="grey"
           height="52%"
           display="flex"
-          alignItems="center"
-          justifyContent="center"
-        ></Box>
+          justifyContent="flex-end"
+        >
+          {admin && 
+          <Box
+            zIndex={1}
+            mt={2}
+            mr={2}
+          >
+            <ShareEditor
+              project={project}
+              users={users}
+              setUsers={setUsers}
+              admin={true}
+            />
+
+            <SettingDeleteProject
+             project={project}
+             admin={admin}
+             />
+          </Box>
+          }
+        </Box>
 
         <Avatar
           name={projectOwner?.pseudo}

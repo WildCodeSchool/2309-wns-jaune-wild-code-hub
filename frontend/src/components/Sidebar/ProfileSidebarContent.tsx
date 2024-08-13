@@ -1,4 +1,4 @@
-import { Avatar, Center, Flex, Text, Textarea } from "@chakra-ui/react";
+import { Avatar, Center, Flex, IconButton, Text, Textarea } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { CustomLink } from "../CustomLink";
 import Loader from "../Loader";
@@ -45,7 +45,11 @@ const ProfileSidebarContent = () => {
             flexDirection={"column"}
             pr={"2rem"}
           >
-            <Avatar name={user.pseudo} size={"lg"} />
+            <IconButton
+              aria-label="Go to profile page"
+              onClick={() => router.push("/me")}
+              icon={<Avatar name={user.pseudo} />}
+            />
             <Text>{user.pseudo}</Text>
           </Flex>
           <Flex id="nav" direction={"column"} gap={4}>

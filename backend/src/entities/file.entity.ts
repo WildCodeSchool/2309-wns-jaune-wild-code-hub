@@ -93,16 +93,16 @@ export class UpdateFileInput {
   @Field()
   id: number;
 
-  @Field()
+  @Field({ nullable: true })
   name: string;
 
-  @Field()
+  @Field({ nullable: true })
   language: string;
 
-  @Field()
+  @Field({ nullable: true })
   extension: string;
 
-  @Field()
+  @Field({ nullable: true })
   type: string;
 
   @Field({ nullable: true })

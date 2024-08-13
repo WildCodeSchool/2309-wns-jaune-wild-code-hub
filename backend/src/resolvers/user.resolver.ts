@@ -1,4 +1,4 @@
-import { Arg, Ctx, Mutation, Query, Resolver, Authorized } from "type-graphql";
+import { Arg, Ctx, Mutation, Query, Resolver, Authorized, Int, } from "type-graphql";
 import UsersService from "../services/users.service";
 import {
   User,
@@ -8,26 +8,28 @@ import {
   Message,
   InputLogin,
   DeleteUserInput,
+  PaginatedUsers,
 } from "../entities/user.entity";
 import * as argon2 from "argon2";
 import { SignJWT } from "jose";
 import { MyContext } from "..";
 import Cookies from "cookies";
-import { Project } from "../entities/project.entity";
 import {
   emailRegex,
   pseudoRegex,
   passwordRegex,
   checkRegex
 } from "../regex";
-
 @Resolver()
 export class UserResolver {
 
   @Authorized(["ADMIN"])
-  @Query(() => [User])
-  async listUsers() {
-    const users = await new UsersService().list();
+  @Query(() => PaginatedUsers)
+  async listUsers(
+    @Arg("offset", () => Int, { defaultValue: 0 }) offset: number,
+    @Arg("limit", () => Int, { defaultValue: 8 }) limit: number
+  ) {
+    const users = await new UsersService().list(offset, limit);
     return users;
   }
 
@@ -83,6 +85,9 @@ export class UserResolver {
     if (!user) {
       throw new Error("Check your login information !");
     }
+
+    if (user.ban) 
+      throw new Error("You are banned! therefore you do not have the right to access the site!");
 
     const isPasswordValid = await argon2.verify(user.password, infos.password);
     const m = new Message();

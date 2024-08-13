@@ -13,7 +13,7 @@ import { NextPageWithLayout } from "../_app";
 
 const Workspace: NextPageWithLayout = () => {
   const [projects, setProjects] = useState<Omit<Project, "files">[]>([]);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState<number>(1);
   const [numberCount, setNumberCount] = useState<number>(1);
 
   const [getPublicProjects, { error, loading, data }] =

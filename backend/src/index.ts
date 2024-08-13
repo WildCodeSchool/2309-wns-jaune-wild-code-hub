@@ -45,6 +45,11 @@ async function main() {
 
   await server.start();
 
+  app.use((req, res, next) => {
+    res.setHeader('X-FRAME-OPTIONS', 'DENY');
+    next();
+  });
+
   app.use(
     "/",
     cors<cors.CorsRequest>({

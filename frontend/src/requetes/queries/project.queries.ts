@@ -36,19 +36,6 @@ export const PROJECTS_BY_USER = gql`
   }
 `;
 
-export const PROJECTS = gql`
-  query ListProjects {
-    listProjects {
-      update_at
-      private
-      name
-      id
-      created_at
-      category
-    }
-  }
-`;
-
 export const PROJECTS__WITH_ROLE_BY_USER = gql`
   query ListProjectsByUserWithRole($userId: String!, $userRole: [String!]) {
     listProjectsByUserWithRole(id: $userId, userRole: $userRole) {
@@ -133,3 +120,20 @@ export const LIST_PROJECTS_PUBLIC_LIKE_BY_USER = gql`
   }
 `;
 
+export const LIST_PROJECTS = gql`
+  query listProjects($limit: Int!, $offset: Int!) {
+    listProjects(limit: $limit, offset: $offset) {
+      projects {
+        id
+        name
+        category
+        private
+        created_at
+        update_at
+      }
+      total
+      offset
+      limit
+      }
+  }
+`;

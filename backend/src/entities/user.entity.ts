@@ -198,3 +198,18 @@ export class DeleteUserInput {
   @Field()
   password: string;
 }
+
+@ObjectType()
+export class PaginatedUsers {
+  @Field(() => [User])
+  users: User[];
+
+  @Field()
+  total: number;
+
+  @Field()
+  offset: number;
+
+  @Field()
+  limit: number;
+}
