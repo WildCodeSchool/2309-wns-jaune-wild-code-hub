@@ -281,7 +281,6 @@ describe("Test for a new user", () => {
           email : "tata@gmail.com",
           password: "TOTOTOTO!a1",
           ban : false,
-          run_counter : 1
         }
       }   
     },
@@ -294,6 +293,8 @@ describe("Test for a new user", () => {
     }
   );
     assert(response.body.kind === "single");  
+    console.log('response error', response.body.singleResult.errors)
+    console.log("response ok", response.body.singleResult.data?.updateUser)
     expect(response.body.singleResult.data?.updateUser?.success).toEqual(true);
   });
 

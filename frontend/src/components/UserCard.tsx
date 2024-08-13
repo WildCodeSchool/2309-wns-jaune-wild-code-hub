@@ -45,7 +45,25 @@ const UserCard = ({ user }: Props) => {
           height="52%"
           display="flex"
           justifyContent="flex-end"
-        />
+        >
+          <Box
+          mr={2}
+          mt={2}
+          >
+            <Text color={"gray.500"}>
+              { 
+                user?.role === "ADMIN" ? 
+                  <Tag size='sm' colorScheme='red' borderRadius='full'>
+                    <TagLabel>Admin</TagLabel>
+                  </Tag>
+                :
+                  <Tag size='sm' colorScheme='blue' borderRadius='full'>
+                    <TagLabel>User</TagLabel>
+                  </Tag>
+              }
+            </Text>
+          </Box>
+        </Box>
         
 
         <Avatar
