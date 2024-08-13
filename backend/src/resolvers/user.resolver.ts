@@ -166,7 +166,7 @@ export class UserResolver {
 
     if (data?.email) {
       const checkUserEmail = await new UsersService().findByEmail(data?.email);
-      if (checkUserEmail && data.id != checkUserEmail.id)
+      if (checkUserEmail && data.id !== checkUserEmail.id)
         throw new Error("This email already exists in our database!");
 
       if (!checkRegex(emailRegex, data.email))
