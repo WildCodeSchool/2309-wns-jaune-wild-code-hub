@@ -72,8 +72,8 @@ jobs:
           SECRET_KEY: ${{ secrets.WEBHOOK_SECRET }}
         run: |
           PAYLOAD='{}'
-          SIGNATURE=$(echo -n "$PAYLOAD" | openssl dgst -sha1 -hmac "$SECRET_KEY")
-          SIGNATURE="sha1=$SIGNATURE"
+          SIGNATURE=$(echo -n "$PAYLOAD" | openssl dgst -sha256 -hmac "$SECRET_KEY" | awk '{print $2}')
+          SIGNATURE="sha256=$SIGNATURE"
 
           curl -X POST -H "Content-Type: application/json" -H "X-Hub-Signature: $SIGNATURE" -d "$PAYLOAD" ${{ secrets.WEBHOOK_URL_DEV }}
         # run: |
