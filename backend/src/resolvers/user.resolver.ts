@@ -156,9 +156,6 @@ export class UserResolver {
     if (ctx.user.role !== "ADMIN" && data?.ban)
       throw new Error("You do not have the right to ban or unban a user!");
 
-    if (ctx.user.role !== "ADMIN" && data?.run_counter)
-      throw new Error("You do not have the right to change the value of the number of runs carried out over the last 24 hours!"); 
-
     const { id, ...otherData } = data;
     if (otherData.password) {
       otherData.password = await argon2.hash(otherData.password);

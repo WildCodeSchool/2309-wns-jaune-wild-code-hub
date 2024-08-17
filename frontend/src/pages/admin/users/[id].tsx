@@ -14,11 +14,7 @@ import {
   Button,
   ButtonGroup,
   Flex,
-  FormLabel,
   Heading,
-  Input,
-  InputGroup,
-  InputRightElement,
   Select,
   Text,
 } from "@chakra-ui/react";
@@ -28,13 +24,13 @@ import GenericModal from "@/components/GenericModal";
 import CustomToast from "@/components/ToastCustom/CustomToast";
 import { useRouter } from "next/router";
 
-const Settings: NextPageWithLayout = () => {
+const AdminSettingsUser: NextPageWithLayout = () => {
 
   const [user, setUser] = useState<
   (Partial<User>) | undefined
   >();
   const [errors, setErrors] = useState<Record<any, any>>({});
-  const [getUser, { loading, error }] = useFindUserInfosByIdLazyQuery();
+  const [getUser, { loading }] = useFindUserInfosByIdLazyQuery();
   const [updateUser] = useUpdateUserMutation();
   const [deleteUser] = useDeleteUserMutation();
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -266,8 +262,8 @@ const Settings: NextPageWithLayout = () => {
   );
 };
 
-Settings.getLayout = function getLayout(page) {
+AdminSettingsUser.getLayout = function getLayout(page) {
   return <SidebarLayout>{page}</SidebarLayout>;
 };
 
-export default Settings;
+export default AdminSettingsUser;
