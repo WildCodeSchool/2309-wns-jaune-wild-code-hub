@@ -69,6 +69,7 @@ async function main() {
               token,
               new TextEncoder().encode(process.env.SECRET_KEY)
             );
+            console.log(verify)
             user = await new UserService().findByEmail(verify.payload.email);
           } catch (err) {
             console.log(err);

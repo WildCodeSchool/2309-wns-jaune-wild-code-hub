@@ -1,9 +1,9 @@
 import Button from "./components/Button";
-import Box  from "./components/Box";
+import Box from "./components/Box";
 import ModalBody from "./components/ModalBody";
 import Heading from "./components/Heading";
 
-const components =  {
+const components = {
   Button,
   Box,
   ModalBody,
