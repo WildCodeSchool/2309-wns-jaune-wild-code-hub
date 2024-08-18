@@ -9,6 +9,7 @@ import Loader from "@/components/Loader";
 import { ProfilePageContainer } from "@/components/ProfilePageContainer";
 import { ProjectsGrid } from "@/components/ProjectsGrid";
 import { NextPageWithLayout } from "../_app";
+import CreateProject from "@/components/CreateProject";
 
 const LikedProjects: NextPageWithLayout = () => {
   const [projects, setProjects] = useState<Omit<Project, "files">[]>([]);
@@ -43,7 +44,7 @@ const LikedProjects: NextPageWithLayout = () => {
         <>There is no projects in your workspace !</>
       )}
 
-      <Button variant={"secondary"}>Create a project</Button>
+      <CreateProject />
     </ProfilePageContainer>
   );
 };

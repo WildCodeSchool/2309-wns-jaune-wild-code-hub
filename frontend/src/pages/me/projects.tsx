@@ -11,6 +11,7 @@ import Loader from "@/components/Loader";
 import { ProfilePageContainer } from "@/components/ProfilePageContainer";
 import { ProjectsGrid } from "@/components/ProjectsGrid";
 import { NextPageWithLayout } from "../_app";
+import CreateProject from "@/components/CreateProject";
 
 const Projects: NextPageWithLayout = () => {
   const [projects, setProjects] = useState<Omit<Project, "files">[]>([]);
@@ -47,7 +48,7 @@ const Projects: NextPageWithLayout = () => {
       ) : (
         <>You don&apos;t have any project ! You can create one now</>
       )}
-      <Button variant={"secondary"}>Create a new project</Button>
+      <CreateProject />
     </ProfilePageContainer>
   );
 };
