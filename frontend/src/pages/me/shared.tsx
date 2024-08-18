@@ -11,6 +11,7 @@ import Loader from "@/components/Loader";
 import { ProfilePageContainer } from "@/components/ProfilePageContainer";
 import { ProjectsGrid } from "@/components/ProjectsGrid";
 import { NextPageWithLayout } from "../_app";
+import CreateProject from "@/components/CreateProject";
 
 const SharedWithMe: NextPageWithLayout = () => {
   const [projects, setProjects] = useState<Omit<Project, "files">[]>([]);
@@ -46,7 +47,7 @@ const SharedWithMe: NextPageWithLayout = () => {
       ) : (
         <>You don&apos;t have any project shared by another user !</>
       )}
-      <Button variant={"secondary"}>Create a project</Button>
+      <CreateProject />
     </ProfilePageContainer>
   );
 };
